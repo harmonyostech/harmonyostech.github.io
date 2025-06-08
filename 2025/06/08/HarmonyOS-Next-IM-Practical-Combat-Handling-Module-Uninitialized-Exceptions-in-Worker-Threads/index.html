@@ -27,15 +27,15 @@
 <meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
 <meta property="og:description" content="Background IntroductionDuring the development of the instant messaging (IM) SDK, users reported issues such as delayed message reception and page卡顿 (freezing) when opening interfaces. Since IM involve">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://harmonyostech.github.io/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png">
-<meta property="og:image" content="https://harmonyostech.github.io/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png">
-<meta property="og:image" content="https://harmonyostech.github.io/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98-2.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98-2.png">
 <meta property="article:published_time" content="2025-06-08T08:59:39.000Z">
-<meta property="article:modified_time" content="2025-06-08T09:04:06.512Z">
+<meta property="article:modified_time" content="2025-06-08T09:14:24.374Z">
 <meta property="article:author" content="Qingkouwei">
 <meta property="article:tag" content="HarmonyOS Next">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://harmonyostech.github.io/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png">
 
 <link rel="canonical" href="https://harmonyostech.github.io/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-Module-Uninitialized-Exceptions-in-Worker-Threads/">
 
@@ -180,7 +180,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-06-08 16:59:39 / Modified: 17:04:06" itemprop="dateCreated datePublished" datetime="2025-06-08T16:59:39+08:00">2025-06-08</time>
+              <time title="Created: 2025-06-08 16:59:39 / Modified: 17:14:24" itemprop="dateCreated datePublished" datetime="2025-06-08T16:59:39+08:00">2025-06-08</time>
             </span>
 
           
@@ -198,8 +198,8 @@
 <h4 id="Implementation-Approach"><a href="#Implementation-Approach" class="headerlink" title="Implementation Approach"></a>Implementation Approach</h4><p>The message reception mechanism uses a combination of push and pull. When new messages arrive, they are delivered to the client via long connections, and the client then requests specific message content via HTTP. On Android and iOS, daemon threads are employed: a dedicated thread for pulling new messages, which triggers the message-pulling interface when events occur and blocks to wait when no events are present.  </p>
 <h5 id="Selection-Between-Worker-and-TaskPool"><a href="#Selection-Between-Worker-and-TaskPool" class="headerlink" title="Selection Between Worker and TaskPool"></a>Selection Between Worker and TaskPool</h5><p>The memory-sharing concurrency model refers to multiple threads executing tasks simultaneously while relying on and having access to the same memory. Threads must抢占 (compete for) and lock memory usage before accessing it, with threads that fail to acquire the lock waiting for others to release it. Common concurrency models include memory-sharing and message-communication-based models. The Actor concurrency model is a typical example of the latter, widely adopted because it eliminates complex lock-handling for developers and offers high concurrency. Currently, ArkTS provides two concurrency capabilities—TaskPool and Worker—both based on the Actor model.  </p>
 <p>In the Actor model, each thread is an independent Actor with its own isolated memory. Actors trigger each other’s behaviors through message-passing and cannot directly access each other’s memory. Compared to memory-sharing models, the Actor model isolates memory between threads, eliminating thread contention for shared resources. This allows developers to avoid memory-locking issues and improves development efficiency.  </p>
-<p>The following diagram illustrates how to solve the producer-consumer problem using a memory-sharing model:<br><img src="/../HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png" alt="alt text"> </p>
-<p>The example below briefly demonstrates using the Actor-based TaskPool concurrency capability to solve the producer-consumer problem:<br><img src="/../HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png" alt="alt text"> </p>
+<p>The following diagram illustrates how to solve the producer-consumer problem using a memory-sharing model:<br><img src="/../images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png" alt="alt text"> </p>
+<p>The example below briefly demonstrates using the Actor-based TaskPool concurrency capability to solve the producer-consumer problem:<br><img src="/../images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png" alt="alt text"> </p>
 <p>In the Actor model, threads do not share memory and must use inter-thread communication to pass tasks and results. Non-shared memory threads are analogous to traditional system processes, with independent memory and high inter-thread interaction costs.  </p>
 <p>TaskPool and Worker provide multi-threaded environments for applications to handle time-consuming computational or intensive tasks, preventing task blocking on the main thread and improving system performance and resource utilization.  </p>
 <p>A comparison of TaskPool and Worker implementation characteristics is as follows:  </p>
@@ -385,7 +385,7 @@ bar();
 &#125;  
 </code></pre>
 <ol start="2">
-<li>Right-click the project root in the workspace and select <strong>Code Linter &gt; Full Linter</strong> to perform a full code scan.<br><img src="/../HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98-2.png" alt="alt text"></li>
+<li>Right-click the project root in the workspace and select <strong>Code Linter &gt; Full Linter</strong> to perform a full code scan.<br><img src="/../images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98-2.png" alt="alt text"></li>
 <li>Refactor the code based on the linter’s circular dependency warnings to eliminate the issue.</li>
 </ol>
 
@@ -404,6 +404,13 @@ bar();
 
 
         
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-Logical-Error-Bugs-Caused-by-the-Lack-of-await-in-Asynchronous-Operations/" rel="next" title="HarmonyOS Next IM Practical Combat: Handling Logical Error Bugs Caused by the Lack of await in Asynchronous Operations">
+      HarmonyOS Next IM Practical Combat: Handling Logical Error Bugs Caused by the Lack of await in Asynchronous Operations <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
     
   </article>
@@ -475,7 +482,7 @@ bar();
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
