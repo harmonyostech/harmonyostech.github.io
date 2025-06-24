@@ -28,7 +28,7 @@
 <meta property="og:description" content="HarmonyOS Next IM Combat: Functional Anomaly of Event Cancellation Caused by Dual Navigation LifecyclesBackground IntroductionUsers of the IM application’s chat page reported being unable to view larg">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-06-24T07:09:32.000Z">
-<meta property="article:modified_time" content="2025-06-24T06:56:17.121Z">
+<meta property="article:modified_time" content="2025-06-24T07:11:03.460Z">
 <meta property="article:author" content="Qingkouwei">
 <meta property="article:tag" content="HarmonyOS Next">
 <meta name="twitter:card" content="summary">
@@ -176,7 +176,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-06-24 15:09:32 / Modified: 14:56:17" itemprop="dateCreated datePublished" datetime="2025-06-24T15:09:32+08:00">2025-06-24</time>
+              <time title="Created: 2025-06-24 15:09:32 / Modified: 15:11:03" itemprop="dateCreated datePublished" datetime="2025-06-24T15:09:32+08:00">2025-06-24</time>
             </span>
 
           
@@ -214,7 +214,7 @@
 <p>The lifecycle when navigating from Page A to Page B is: A <code>aboutToAppear</code> → B <code>aboutToAppear</code> → A <code>aboutToDisappear</code>.  </p>
 <p>The root cause was identified: When navigating to the chat page in the home page’s <code>aboutToAppear</code>, the splash screen’s <code>aboutToDisappear</code> had not completed, leaving both <code>Navigation</code> instances active. This caused the chat page to execute <code>aboutToAppear</code> twice. After the splash screen’s <code>aboutToDisappear</code>, the second chat page instance was automatically <code>aboutToDisappear</code>ed, canceling event subscriptions.  </p>
 <h4 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h4><p>After identifying the problem, the fix involved adding a 20ms delay to the chat page navigation, resolving the issue. A more elegant solution is to navigate to the chat page after the splash screen’s <code>aboutDisappear</code> or modify the splash screen to a non-<code>Navigation</code> structure.  </p>
-<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>Step-by-step troubleshooting revealed the root cause: Cold-starting the app with two <code>Navigation</code> components (splash screen and home page) sharing a <code>NavPathStack</code> caused the chat page to be repeatedly created and destroyed when navigating from the home page’s <code>aboutToAppear</code> before the splash screen’s <code>aboutToDisappear</code> completed. This invalidated event subscriptions (as the second page instance did not register event consumption logic). Solutions include delaying navigation, adjusting navigation timing until the splash screen is destroyed, or重构 (restructuring) the splash screen as a non-<code>Navigation</code> to eliminate multi-<code>Navigation</code> coexistence. This case highlights the complexity of <code>Navigation</code> lifecycle management in HarmonyOS, emphasizing the need to strictly follow component mounting&#x2F;unmounting order in multi-page navigation to avoid lifecycle conflicts.  </p>
+<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>Step-by-step troubleshooting revealed the root cause: Cold-starting the app with two <code>Navigation</code> components (splash screen and home page) sharing a <code>NavPathStack</code> caused the chat page to be repeatedly created and destroyed when navigating from the home page’s <code>aboutToAppear</code> before the splash screen’s <code>aboutToDisappear</code> completed. This invalidated event subscriptions (as the second page instance did not register event consumption logic). Solutions include delaying navigation, adjusting navigation timing until the splash screen is destroyed, or restructuring the splash screen as a non-<code>Navigation</code> to eliminate multi-<code>Navigation</code> coexistence. This case highlights the complexity of <code>Navigation</code> lifecycle management in HarmonyOS, emphasizing the need to strictly follow component mounting&#x2F;unmounting order in multi-page navigation to avoid lifecycle conflicts.  </p>
 <blockquote>
 <p>Reference: Component Navigation (Navigation) (Recommended): <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-navigation-navigation#%E9%A1%B5%E9%9D%A2%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-navigation-navigation#%E9%A1%B5%E9%9D%A2%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F</a>  </p>
 </blockquote>
@@ -239,7 +239,10 @@
     <a href="/2025/06/24/HarmonyOS%20Next%20IM%20Combat:%20Sharing%20the%20Optimization%20Process%20for%20Slow%20Database%20Queries/" rel="prev" title="HarmonyOS Next IM Combat: Sharing the Optimization Process for Slow Database Queries">
       <i class="fa fa-chevron-left"></i> HarmonyOS Next IM Combat: Sharing the Optimization Process for Slow Database Queries
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/24/HarmonyOS-Next-IM-Combat-Best-Practices-for-PushKit-in-Assisting-IM-Message-Notification-Scenarios/" rel="next" title="HarmonyOS Next IM Combat: Best Practices for PushKit in Assisting IM Message Notification Scenarios">
+      HarmonyOS Next IM Combat: Best Practices for PushKit in Assisting IM Message Notification Scenarios <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -312,7 +315,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
