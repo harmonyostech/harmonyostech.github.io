@@ -27,11 +27,13 @@
 <meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
 <meta property="og:description" content="Background IntroductionAfter the IM SDK for HarmonyOS Next was integrated into the application and launched, many users reported significant app lag, particularly those with a large number of conversa">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9AWorker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E5%BC%95%E8%B5%B7%E7%9A%84so%E5%8A%A8%E6%80%81%E5%BA%93%E5%B4%A9%E6%BA%83%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86.png">
 <meta property="article:published_time" content="2025-06-08T09:15:15.000Z">
-<meta property="article:modified_time" content="2025-06-08T09:18:00.933Z">
+<meta property="article:modified_time" content="2025-06-24T08:09:14.365Z">
 <meta property="article:author" content="Qingkouwei">
 <meta property="article:tag" content="HarmonyOS Next">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9AWorker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E5%BC%95%E8%B5%B7%E7%9A%84so%E5%8A%A8%E6%80%81%E5%BA%93%E5%B4%A9%E6%BA%83%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86.png">
 
 <link rel="canonical" href="https://harmonyostech.github.io/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-So-Dynamic-Library-Crash-Issues-Caused-by-Worker-Threads/">
 
@@ -174,10 +176,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2025-06-08 17:15:15 / Modified: 17:18:00" itemprop="dateCreated datePublished" datetime="2025-06-08T17:15:15+08:00">2025-06-08</time>
+              <time title="Created: 2025-06-08 17:15:15" itemprop="dateCreated datePublished" datetime="2025-06-08T17:15:15+08:00">2025-06-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-06-24 16:09:14" itemprop="dateModified" datetime="2025-06-24T16:09:14+08:00">2025-06-24</time>
+              </span>
 
           
 
@@ -206,7 +214,7 @@
 
 <p>Using the <code>addr2line</code> tool, we traced the crash to the <code>napi_get_reference_value</code> call in <code>libmarsstn.so</code>, where the <code>env</code> parameter was invalid.</p>
 <p>Further investigation revealed that the <code>env</code> was cached from the main thread during SO initialization (performed on the main thread). Adding logs confirmed that the crash occurred when the main thread used this cached <code>env</code>, which had been overwritten by a worker thread:</p>
-<p>![](..&#x2F;images&#x2F;HarmonyOS Next IM实战：Worker线程中引起的so动态库崩溃问题处理.png)</p>
+<p><img src="/../images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9AWorker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E5%BC%95%E8%B5%B7%E7%9A%84so%E5%8A%A8%E6%80%81%E5%BA%93%E5%B4%A9%E6%BA%83%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86.png" alt="text"></p>
 <p>Logs showed that the <code>napi_module_register</code> function in the SO library was being called from worker threads, overwriting the cached <code>mainEnv_</code> (a singleton in C++). </p>
 <p>In HarmonyOS Next, Worker threads are isolated with their own memory spaces, similar to separate processes. Each Worker thread loads the SO library independently, leading to multiple initializations.</p>
 <h4 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h4><p>To resolve the issue, we ensured that <code>mainEnv_</code> is initialized only once, during the first call from the main thread. We used <code>std::atomic</code> for thread-safe initialization:</p>

@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9A%E5%8F%8CNavigation%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%BC%95%E8%B5%B7%E7%9A%84%E4%BA%8B%E4%BB%B6%E8%A2%AB%E5%8F%96%E6%B6%88%E5%8A%9F%E8%83%BD%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98.png">
 <meta property="article:published_time" content="2025-06-24T07:09:32.000Z">
-<meta property="article:modified_time" content="2025-06-24T08:03:37.148Z">
+<meta property="article:modified_time" content="2025-06-24T08:09:29.285Z">
 <meta property="article:author" content="Qingkouwei">
 <meta property="article:tag" content="HarmonyOS Next">
 <meta name="twitter:card" content="summary">
@@ -178,7 +178,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-06-24 15:09:32 / Modified: 16:03:37" itemprop="dateCreated datePublished" datetime="2025-06-24T15:09:32+08:00">2025-06-24</time>
+              <time title="Created: 2025-06-24 15:09:32 / Modified: 16:09:29" itemprop="dateCreated datePublished" datetime="2025-06-24T15:09:32+08:00">2025-06-24</time>
             </span>
 
           
@@ -198,7 +198,7 @@
 <p>Initially suspected to relate to PushKit, the hypothesis was dismissed when the other app functioned normally. Clicking a notification triggers navigation to the chat page via <code>onNewWant</code>. Expert consultation suggested the issue might stem from multiple <code>Navigation</code> instances in the app.  </p>
 <p>Code review revealed that after a cold start, the app did not immediately navigate to the chat page in <code>onNewWant</code> but waited for the home page to load, then navigated to the chat page in the home page’s <code>aboutToAppear</code>. The app loads a splash screen in <code>onWindowStageCreate</code>, navigates from the splash screen’s <code>aboutToAppear</code> to the home page, and then from the home page’s <code>aboutToAppear</code> to the chat page. The splash screen and home page are two <code>Navigation</code> instances sharing a <code>NavPathStack</code>.  </p>
 <p>Understanding <code>Navigation</code> lifecycles: As a routing container, <code>Navigation</code> lifecycles are hosted on <code>NavDestination</code> components, exposed as component events. Lifecycles fall into three categories: custom component lifecycles, universal component lifecycles, and proprietary lifecycles. <code>aboutToAppear</code> and <code>aboutToDisappear</code> are custom component lifecycles (for the custom component wrapping <code>NavDestination</code>), while <code>onAppear</code> and <code>onDisappear</code> are universal component lifecycles. The remaining lifecycles are unique to <code>NavDestination</code>.  </p>
-<p>Lifecycle timeline:<br><img src="/../images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9A%E5%8F%8CNavigation%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%BC%95%E8%B5%B7%E7%9A%84%E4%BA%8B%E4%BB%B6%E8%A2%AB%E5%8F%96%E6%B6%88%E5%8A%9F%E8%83%BD%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98.png"></p>
+<p>Lifecycle timeline:<br><img src="/../images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9A%E5%8F%8CNavigation%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%BC%95%E8%B5%B7%E7%9A%84%E4%BA%8B%E4%BB%B6%E8%A2%AB%E5%8F%96%E6%B6%88%E5%8A%9F%E8%83%BD%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98.png" alt="text"></p>
 <ul>
 <li><strong>aboutToAppear</strong>: Executed after creating a custom component and before its <code>build()</code> function (before <code>NavDestination</code> creation). Allows modifying state variables, which take effect in the subsequent <code>build()</code> execution.  </li>
 <li><strong>onWillAppear</strong>: Executed after <code>NavDestination</code> creation and before mounting to the component tree. State changes here take effect in the current frame.  </li>
