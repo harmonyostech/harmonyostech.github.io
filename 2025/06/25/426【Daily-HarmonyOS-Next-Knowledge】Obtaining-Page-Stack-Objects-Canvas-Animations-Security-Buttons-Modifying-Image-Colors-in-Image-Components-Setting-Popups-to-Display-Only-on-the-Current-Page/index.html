@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page1. How">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/25/426%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page1. How">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/123a71ca10b754dc5ea030fc4ddddf2b_MD5.jpg">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.04.26.png">
+<meta property="article:published_time" content="2025-06-24T23:25:05.000Z">
+<meta property="article:modified_time" content="2025-06-24T23:27:34.438Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/123a71ca10b754dc5ea030fc4ddddf2b_MD5.jpg">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/25/426%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/426%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 07:25:05 / Modified: 07:27:34" itemprop="dateCreated datePublished" datetime="2025-06-25T07:25:05+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="【Daily-HarmonyOS-Next-Knowledge】Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page"><a href="#【Daily-HarmonyOS-Next-Knowledge】Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page"></a>【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page</h3><h4 id="1-How-to-obtain-the-page-stack-object-in-HarmonyOS"><a href="#1-How-to-obtain-the-page-stack-object-in-HarmonyOS" class="headerlink" title="1. How to obtain the page stack object in HarmonyOS?"></a>1. How to obtain the page stack object in HarmonyOS?</h4><p>How to get the current page hierarchy and the page hierarchy object through the router, such as pages A - B - C, where page C can obtain the list of current page hierarchies and the corresponding page objects.  </p>
+<p>Currently, only information about the current page in the router page stack can be obtained, such as the index, path, page name, and the number of pages in the page stack. Obtaining the list of the page stack is not supported yet.  </p>
+<p>For navigation within and between modules, use <code>Navigation</code> as much as possible, as the router will stop evolving and may not add new capabilities in the future. The tight coupling caused by using <code>Navigation</code> for inter-module navigation can be solved by dynamic imports. The router does not support fine-grained operations on the page stack. For clearing the stack, such as A-B-B1, clearing page B from page B1 is not supported; only <code>clear</code> can be used to remove all pages except the current one. The router does not support skipping more than 32 pages, and the maximum capacity of the page stack is 32 pages. The router’s routing stack only supports obtaining the properties of the top page, including only the current page path and file name. <code>Navigation</code> will continue to evolve, so if capabilities are insufficient, requirements can be planned further. In <code>Navigation</code>, you can use <code>getAllPathName</code> to obtain the names of all <code>NavDestination</code> pages in the stack (for details, refer to Example 2 in the link below: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10</a>)  </p>
+<pre><code class="language-typescript">// Index.ets
+@Entry
+@Component
+struct NavigationExample &#123;
+  pageInfos: NavPathStack = new NavPathStack();
+  isUseInterception: boolean = false;
+
+  registerInterception() &#123;
+    this.pageInfos.setInterception(&#123;
+      // Intercept before page navigation, allowing stack operations that take effect in the current navigation.
+      willShow: (from: NavDestinationContext | &quot;navBar&quot;, to: NavDestinationContext | &quot;navBar&quot;,
+        operation: NavigationOperation, animated: boolean) =&gt; &#123;
+        if (!this.isUseInterception) &#123;
+          return;
+        &#125;
+        if (typeof to === &quot;string&quot;) &#123;
+          console.log(&quot;target page is navigation home&quot;);
+          return;
+        &#125;
+        // Redirect the target page, changing from pageTwo to pageOne.
+        let target: NavDestinationContext = to as NavDestinationContext;
+        if (target.pathInfo.name === &#39;pageTwo&#39;) &#123;
+          target.pathStack.pop();
+          target.pathStack.pushPathByName(&#39;pageOne&#39;, null);
+        &#125;
+      &#125;,
+      // Callback after page navigation; stack operations in this callback refresh on the next navigation.
+      didShow: (from: NavDestinationContext | &quot;navBar&quot;, to: NavDestinationContext | &quot;navBar&quot;,
+        operation: NavigationOperation, isAnimated: boolean) =&gt; &#123;
+        if (!this.isUseInterception) &#123;
+          return;
+        &#125;
+        if (typeof from === &quot;string&quot;) &#123;
+          console.log(&quot;current transition is from navigation home&quot;);
+        &#125; else &#123;
+          console.log(`current transition is from  $&#123;(from as NavDestinationContext).pathInfo.name&#125;`);
+        &#125;
+        if (typeof to === &quot;string&quot;) &#123;
+          console.log(&quot;current transition to is navBar&quot;);
+        &#125; else &#123;
+          console.log(`current transition is to $&#123;(to as NavDestinationContext).pathInfo.name&#125;`);
+        &#125;
+      &#125;,
+      // Triggered when the Navigation single/double bar display state changes.
+      modeChange: (mode: NavigationMode) =&gt; &#123;
+        if (!this.isUseInterception) &#123;
+          return;
+        &#125;
+        console.log(`current navigation mode is $&#123;mode&#125;`);
+      &#125;
+    &#125;);
+  &#125;
+
+  build() &#123;
+    Navigation(this.pageInfos) &#123;
+      Column() &#123;
+        Button(&#39;pushPath&#39;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
+          .width(&#39;80%&#39;)
+          .height(40)
+          .margin(20)
+          .onClick(() =&gt; &#123;
+            this.pageInfos.pushPath(&#123; name: &#39;pageOne&#39; &#125;); // Push the NavDestination page information specified by name onto the stack
+          &#125;);
+        Button(&#39;use interception&#39;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
+          .width(&#39;80%&#39;)
+          .height(40)
+          .margin(20)
+          .onClick(() =&gt; &#123;
+            this.isUseInterception = !this.isUseInterception;
+            if (this.isUseInterception) &#123;
+              this.registerInterception();
+            &#125; else &#123;
+              this.pageInfos.setInterception(undefined);
+            &#125;
+          &#125;);
+      &#125;
+    &#125;.title(&#39;NavIndex&#39;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-Animation-demo-based-on-drawing-canvas-in-HarmonyOS"><a href="#2-Animation-demo-based-on-drawing-canvas-in-HarmonyOS" class="headerlink" title="2. Animation demo based on drawing.canvas in HarmonyOS?"></a>2. Animation demo based on drawing.canvas in HarmonyOS?</h4><p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/blog/topic/03797837883380062">https://developer.huawei.com/consumer/cn/blog/topic/03797837883380062</a>  </p>
+<h4 id="3-Security-button-returns-permission-failure-in-HarmonyOS"><a href="#3-Security-button-returns-permission-failure-in-HarmonyOS" class="headerlink" title="3. Security button returns permission failure in HarmonyOS?"></a>3. Security button returns permission failure in HarmonyOS?</h4><p>The security button returns a permission failure with <code>result</code> as <code>TEMPORARY_AUTHORIZATION_FAILED</code>. How to solve it?  </p>
+<pre><code class="language-typescript">// With default parameters, the icon, text, and background all exist
+SaveButton().onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) =&gt; &#123;
+  if (result === SaveButtonOnClickResult.SUCCESS) &#123;&#125;
+&#125;);
+</code></pre>
+<p>Using a URI to open a file allows continuous writing without time restrictions:  </p>
+<pre><code class="language-typescript">let file = await fs.open(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+</code></pre>
+<p>This requires corresponding permissions, which need to be defined in <code>modules.json5</code>:  </p>
+<pre><code class="language-json5">&#123;
+  &quot;name&quot;: &quot;ohos.permission.WRITE_MEDIA&quot;,
+  &quot;reason&quot;: &quot;$string:EntryAbility_desc&quot;,
+  &quot;usedScene&quot;: &#123;
+    &quot;abilities&quot;: [&quot;EntryAbility&quot;],
+    &quot;when&quot;: &quot;always&quot;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-Can-the-color-of-an-image-be-dynamically-modified-after-setting-a-local-resource-file-in-the-HarmonyOS-Image-component"><a href="#4-Can-the-color-of-an-image-be-dynamically-modified-after-setting-a-local-resource-file-in-the-HarmonyOS-Image-component" class="headerlink" title="4. Can the color of an image be dynamically modified after setting a local resource file in the HarmonyOS Image component?"></a>4. Can the color of an image be dynamically modified after setting a local resource file in the HarmonyOS Image component?</h4><p>Refer to the following document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-image-V5#colorfilter9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-image-V5#colorfilter9</a>  </p>
+<p><code>colorFilter(value: ColorFilter | DrawingColorFilter)</code><br>Sets a color filter effect for the image.<br>When this property is set, the <code>renderMode</code> property has no effect.  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">value</td>
+<td align="left">ColorFilter | DrawingColorFilter</td>
+<td align="left">Yes</td>
+<td align="left">1. Sets a color filter effect for the image with a 4x5 RGBA transformation matrix.<br><br>The first row of the matrix represents the vector value of R (red), the second row represents G (green), the third row represents B (blue), the fourth row represents A (alpha), and the four rows represent the vector values of different RGBA components.<br><br>When the diagonal values of the matrix are 1 and the rest are 0, the original color of the image is maintained.<br><br><strong>Calculation rule:</strong><br><br>If the input filter matrix is:<br><br><img src="/../images/123a71ca10b754dc5ea030fc4ddddf2b_MD5.jpg"><br><br>The pixel is <code>[R, G, B, A]</code><br><br>The filtered color is <code>[R’, G’, B’, A’]</code><br><br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.04.26.png"><br><br>2. Starting from API Version 12, the <code>ColorFilter</code> type from <code>@ohos.graphics.drawing</code> is supported as a parameter.<br><br><strong>Note:</strong><br>For API Version 11 and earlier, this property is not supported for SVG image sources.<br>Starting from API Version 12, the <code>DrawingColorfilter</code> type in this interface is supported for use in meta services, where SVG image sources must have a <code>stroke</code> property.</td>
+</tr>
+</tbody></table>
+<h4 id="5-How-to-set-a-popup-to-display-only-on-the-current-page-in-HarmonyOS"><a href="#5-How-to-set-a-popup-to-display-only-on-the-current-page-in-HarmonyOS" class="headerlink" title="5. How to set a popup to display only on the current page in HarmonyOS?"></a>5. How to set a popup to display only on the current page in HarmonyOS?</h4><p>A popup is used as a notification prompt. When page A shows the popup and then navigates to page B, the popup still appears on page B. Can the popup be set to display only on page A?  </p>
+<p>The current behavior of popups is as described. You can use <code>CustomDialog</code> instead. Refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5</a>  </p>
+<p><strong>Sample demo</strong>:  </p>
+<pre><code class="language-typescript">import router from &#39;@ohos.router&#39;;
+
+@CustomDialog
+export default struct UserPrivacyDialog &#123;
+  controller: CustomDialogController = new CustomDialogController(&#123; builder: &#39;&#39; &#125;);
+  cancel: Function = () =&gt; &#123;&#125;;
+  confirm: Function = () =&gt; &#123;&#125;;
+  visible: Visibility = Visibility.None;
+
+  build() &#123;
+    Column() &#123;
+      Text(&#39;I am a popup&#39;);
+
+      Button(&#39;jump&#39;)
+        .onClick(() =&gt; &#123;
+          router.pushUrl(&#123;
+            url: &#39;pages/Second&#39;
+          &#125;);
+        &#125;)
+        .backgroundColor(0xffffff)
+        .fontColor(Color.Red);
+    &#125;
+    .margin(&#123; top: 22 &#125;)
+    .justifyContent(FlexAlign.SpaceEvenly);
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  @State textValue: string = &#39;Hello World&#39;;
+  @State visible: Visibility = Visibility.None;
+
+  build() &#123;
+    Stack() &#123;
+      Row() &#123;
+        Column() &#123;
+          Button(&#39;click&#39;)
+            .onClick(() =&gt; &#123;
+              if (this.visible === Visibility.Visible) &#123;
+                this.visible = Visibility.None;
+              &#125; else &#123;
+                this.visible = Visibility.Visible;
+              &#125;
+            &#125;)
+            .backgroundColor(0x777474)
+            .fontColor(0x000000);
+        &#125;
+        .width(&#39;100%&#39;);
+      &#125;
+      .height(&#39;100%&#39;)
+      .backgroundColor(0x885555);
+
+      Text(&#39;&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.visible === Visibility.Visible) &#123;
+            this.visible = Visibility.None;
+          &#125; else &#123;
+            this.visible = Visibility.Visible;
+          &#125;
+        &#125;)
+        .width(&#39;100%&#39;)
+        .height(&#39;100%&#39;) // Transparency can be adjusted
+        .opacity(0.16)
+        .backgroundColor(0x000000)
+        .visibility(this.visible);
+
+      Column() &#123;
+        GridRow(&#123;
+          columns: &#123; xs: 1, sm: 4, md: 8, lg: 12 &#125;,
+          breakpoints: &#123;
+            value: [&quot;400vp&quot;, &quot;600vp&quot;, &quot;800vp&quot;],
+            reference: BreakpointsReference.WindowSize
+          &#125;,
+        &#125;) &#123;
+          GridCol(&#123;
+            span: &#123; xs: 1, sm: 2, md: 4, lg: 8 &#125;,
+            offset: &#123; xs: 0, sm: 1, md: 2, lg: 2 &#125;
+          &#125;) &#123;
+            Column() &#123;
+              Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
+                UserPrivacyDialog();
+              &#125;.margin(&#123; bottom: 10 &#125;);
+            &#125;
+            .backgroundColor(0xffffff)
+            .visibility(this.visible)
+            .clip(true)
+            .borderRadius(20);
+          &#125;
+        &#125;
+      &#125;.width(&#39;95%&#39;); // Set popup width
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>Refer to <code>componentUtils.getRectangleById</code>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentutils-V5#componentutilsgetrectanglebyid">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentutils-V5#componentutilsgetrectanglebyid</a>  </p>
+<p><code>getRectangleById(id: string): ComponentInfo</code><br>Obtains the component instance object by component ID and synchronously returns the obtained coordinates and size to the developer through the component instance object.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/25/425%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Feed-Stream-Image-Sizing-List-Component-Extension-Custom-Popups-Media-Listening-List-Item-Swapping/" rel="prev" title="425【Daily HarmonyOS Next Knowledge】 Feed Stream Image Sizing, List Component Extension, Custom Popups, Media Listening, List Item Swapping">
+      <i class="fa fa-chevron-left"></i> 425【Daily HarmonyOS Next Knowledge】 Feed Stream Image Sizing, List Component Extension, Custom Popups, Media Listening, List Item Swapping
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/25/427%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Resource-to-RGBA-Conversion-Web-Component-Safe-Area-Custom-Dialog-Closure-Pixel-Object-Passing-List-Performance-Optimization/" rel="next" title="427【Daily HarmonyOS Next Knowledge】Resource to RGBA Conversion, Web Component Safe Area, Custom Dialog Closure, Pixel Object Passing, List Performance Optimization">
+      427【Daily HarmonyOS Next Knowledge】Resource to RGBA Conversion, Web Component Safe Area, Custom Dialog Closure, Pixel Object Passing, List Performance Optimization <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page"><span class="nav-number">1.</span> <span class="nav-text">【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-obtain-the-page-stack-object-in-HarmonyOS"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to obtain the page stack object in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Animation-demo-based-on-drawing-canvas-in-HarmonyOS"><span class="nav-number">1.2.</span> <span class="nav-text">2. Animation demo based on drawing.canvas in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Security-button-returns-permission-failure-in-HarmonyOS"><span class="nav-number">1.3.</span> <span class="nav-text">3. Security button returns permission failure in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Can-the-color-of-an-image-be-dynamically-modified-after-setting-a-local-resource-file-in-the-HarmonyOS-Image-component"><span class="nav-number">1.4.</span> <span class="nav-text">4. Can the color of an image be dynamically modified after setting a local resource file in the HarmonyOS Image component?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-How-to-set-a-popup-to-display-only-on-the-current-page-in-HarmonyOS"><span class="nav-number">1.5.</span> <span class="nav-text">5. How to set a popup to display only on the current page in HarmonyOS?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
