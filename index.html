@@ -149,6 +149,139 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Getting-App-Package-Name-Popup-Background-Color-Decorator-Nesting-Issues-Regex-Problems-Text-Component-Max-Width-Setting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Getting-App-Package-Name-Popup-Background-Color-Decorator-Nesting-Issues-Regex-Problems-Text-Component-Max-Width-Setting/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Getting App Package Name, Popup Background Color, Decorator Nesting Issues, Regex Problems, Text Component Max Width Setting</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-24 23:54:49 / Modified: 23:56:24" itemprop="dateCreated datePublished" datetime="2025-06-24T23:54:49+08:00">2025-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】-Getting-App-Package-Name-Popup-Background-Color-Decorator-Nesting-Issues-Regex-Problems-Text-Component-Max-Width-Setting"><a href="#【Daily-HarmonyOS-Next-Knowledge】-Getting-App-Package-Name-Popup-Background-Color-Decorator-Nesting-Issues-Regex-Problems-Text-Component-Max-Width-Setting" class="headerlink" title="【Daily HarmonyOS Next Knowledge】 Getting App Package Name, Popup Background Color, Decorator Nesting Issues, Regex Problems, Text Component Max Width Setting"></a>【Daily HarmonyOS Next Knowledge】 Getting App Package Name, Popup Background Color, Decorator Nesting Issues, Regex Problems, Text Component Max Width Setting</h3><h4 id="1-How-to-obtain-the-current-app-package-name-active-AbilityName-and-active-ModuleName-in-a-HAR-package-in-HarmonyOS"><a href="#1-How-to-obtain-the-current-app-package-name-active-AbilityName-and-active-ModuleName-in-a-HAR-package-in-HarmonyOS" class="headerlink" title="1. How to obtain the current app package name, active AbilityName, and active ModuleName in a HAR package in HarmonyOS?"></a>1. How to obtain the current app package name, active AbilityName, and active ModuleName in a HAR package in HarmonyOS?</h4><p>The NFC card reading interface requires passing bundleManager.ElementName, which includes bundleName, abilityName, and moduleName. If the card reading logic is written in a HAR package, how to obtain these values?  </p>
+<pre><code class="language-typescript">import &#123; MainPage &#125; from &#39;harApp/Index&#39;;
+import &#123; common &#125; from &#39;@kit.AbilityKit&#39;;
+import &#123; hilog &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
+const TAG: string = &#39;testTag&#39;
+
+@Entry
+@Component
+struct OutPage &#123;
+  @State message: string = &#39;OutPage&#39;;
+  private bundleName: string = &#39;&#39;
+  private abilityName: string = &#39;&#39;
+  private moduleName: string = &#39;&#39;
+
+  aboutToAppear(): void &#123;
+    let context = getContext() as common.UIAbilityContext
+    hilog.info(0x0000, TAG, &#39;OutPage-bundleName: %&#123;public&#125;s&#39;, context.abilityInfo.bundleName)
+    hilog.info(0x0000, TAG, &#39;OutPage-abilityName: %&#123;public&#125;s&#39;, context.abilityInfo.name)
+    hilog.info(0x0000, TAG, &#39;OutPage-moduleName: %&#123;public&#125;s&#39;, context.abilityInfo.moduleName)
+    this.bundleName = context.abilityInfo.bundleName
+    this.abilityName = context.abilityInfo.name
+    this.moduleName = context.abilityInfo.moduleName
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      MainPage(&#123; bundleName: this.bundleName, abilityName: this.abilityName, moduleName: this.moduleName &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-Does-the-HarmonyOS-popup-window-have-a-built-in-background-color"><a href="#2-Does-the-HarmonyOS-popup-window-have-a-built-in-background-color" class="headerlink" title="2. Does the HarmonyOS popup window have a built-in background color?"></a>2. Does the HarmonyOS popup window have a built-in background color?</h4><p>Currently, custom popups have a default blurred material. To set <code>backgroundColor: Color.Transparent</code>, also disable the blur effect with <code>backgroundBlurStyle: BlurStyle.NONE</code>.  </p>
+<h4 id="3-When-nesting-second-level-decorators-in-HarmonyOS-why-isn’t-the-list-item-control联动-dynamically-updated"><a href="#3-When-nesting-second-level-decorators-in-HarmonyOS-why-isn’t-the-list-item-control联动-dynamically-updated" class="headerlink" title="3. When nesting second-level decorators in HarmonyOS, why isn’t the list item control联动 (dynamically updated)?"></a>3. When nesting second-level decorators in HarmonyOS, why isn’t the list item control联动 (dynamically updated)?</h4><p>Issues with @Observed and @ObjectLink decorators: Nesting class object properties doesn’t trigger updates even with the same annotation format.  </p>
+<p><strong>Cause</strong>: When assigning <code>this.titleList = response.data?.form_info!!</code>, the objects in titleList are not of the “Form_info” type, so @Observed can’t monitor changes.<br><strong>Solution</strong>: Use the third-party library <code>class-transformer</code> to convert data to the “Form_info” type:<br><code>this.titleList = plainToClass(Form_info, response.data?.form_info!!)</code>  </p>
+<h4 id="4-Why-does-TS-code-execute-differently-in-VSCode-and-HarmonyOS-ArkTS"><a href="#4-Why-does-TS-code-execute-differently-in-VSCode-and-HarmonyOS-ArkTS" class="headerlink" title="4. Why does TS code execute differently in VSCode and HarmonyOS ArkTS?"></a>4. Why does TS code execute differently in VSCode and HarmonyOS ArkTS?</h4><p>TS code behaves differently in VSCode and HarmonyOS ArkTS due to ArkTS’s adaptation of regular expressions.<br><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-more-cases-V5#arkts-no-regexp-literals">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-more-cases-V5#arkts-no-regexp-literals</a>  </p>
+<p><strong>Example</strong>:  </p>
+<pre><code class="language-typescript">// Not recommended in ArkTS
+let regex: RegExp = /\s*/g;
+
+// Recommended
+let regexp: RegExp = new RegExp(&#39;\\s*&#39;, &#39;g&#39;);
+
+// Alternative for regex with flags
+const combinedPattern = new RegExp(&quot;&lt;[&gt;]+&gt;(?:[\s\S]*?)&lt;\/[&gt;]+&gt;|\[[^\]]+\]&quot;, &#39;g&#39;);
+</code></pre>
+<h4 id="5-How-to-set-the-maximum-display-width-for-a-HarmonyOS-Text-component"><a href="#5-How-to-set-the-maximum-display-width-for-a-HarmonyOS-Text-component" class="headerlink" title="5. How to set the maximum display width for a HarmonyOS Text component?"></a>5. How to set the maximum display width for a HarmonyOS Text component?</h4><p><strong>Demo</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct TextInputExample2 &#123;
+  controller: TextInputController = new TextInputController()
+  @State text: string = &#39;&#39;
+
+  build() &#123;
+    Column(&#123; space: 20 &#125;) &#123;
+      Text(&#39;1111111111111111111111111111111&#39;.split(&#39;&#39;).join(&#39;\u200B&#39;))
+        .textOverflow(&#123; overflow: TextOverflow.Ellipsis &#125;)
+        .maxLines(1)
+        .fontSize(12)
+        .border(&#123; width: 1 &#125;)
+        .margin(100)
+        .constraintSize(&#123; maxWidth: 200 &#125;)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-size-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-size-V5</a>  </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/Daily-HarmonyOS-Next-Knowledge-URL-Encoding-Resource-Adaptation-Routing-Mixing-Custom-Root-Container-News-related-Examples/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1562,127 +1695,6 @@ class PhotoSelectOptions &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/24/HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice/" class="post-title-link" itemprop="url">HarmonyOS Next Network Packet Capture Configuration Practice</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-24 16:15:41 / Modified: 16:19:37" itemprop="dateCreated datePublished" datetime="2025-06-24T16:15:41+08:00">2025-06-24</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice"><a href="#HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice" class="headerlink" title="HarmonyOS Next Network Packet Capture Configuration Practice"></a>HarmonyOS Next Network Packet Capture Configuration Practice</h1><h4 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h4><p>In mobile application development, packet capture is the best way to debug network requests. Charles, a mainstream packet capture tool in the market, encountered some configuration issues when debugging IM network requests due to HTTPS requests in the testing environment. This article records the entire network request packet capture configuration for HarmonyOS Next.  </p>
-<h4 id="Introduction-to-Charles"><a href="#Introduction-to-Charles" class="headerlink" title="Introduction to Charles"></a>Introduction to Charles</h4><p>Charles is a network debugging and analysis proxy tool used to intercept and view communications between devices and servers. It supports monitoring network traffic of applications, modifying requests and responses, and simulating different network conditions. Key functions include:  </p>
-<ul>
-<li>Intercepting HTTP and HTTPS network packets.  </li>
-<li>Supporting retransmission of network requests for backend debugging.  </li>
-<li>Enabling modification of network request parameters.  </li>
-<li>Allowing interception and dynamic modification of network requests.  </li>
-<li>Simulating slow network conditions.</li>
-</ul>
-<p>To use Charles, configure the application’s requests to be forwarded through the Charles client proxy to the server, enabling packet capture in the Charles client. After starting Charles, it automatically sets the browser to use the proxy without additional configuration. When sending network requests via the browser, Charles directly captures request and response information.  </p>
-<p>The latest version of Charles is 5.0.1, supporting packet capture on Mac, Windows, and Linux systems:<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5.png" alt="Charles运行界面">  </p>
-<h4 id="Charles-Installation"><a href="#Charles-Installation" class="headerlink" title="Charles Installation"></a>Charles Installation</h4><p>Charles installation address: <a target="_blank" rel="noopener" href="https://www.charlesproxy.com/">https://www.charlesproxy.com/</a><br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-1.png" alt="Charles下载页面">  </p>
-<h4 id="Charles-Usage-Steps"><a href="#Charles-Usage-Steps" class="headerlink" title="Charles Usage Steps"></a>Charles Usage Steps</h4><p><strong>Device proxy settings after installation:</strong>  </p>
-<ol>
-<li><p><strong>View Charles IP address</strong> (typically the same as the PC host IP):  </p>
-<ul>
-<li>For Charles IP: Click <strong>Help</strong> → <strong>Local IP Address</strong>.  </li>
-<li>For PC IP (Windows): Open “Run” (Win+R or search in the taskbar), enter “cmd” to open the command line, then type “ipconfig”.  </li>
-<li>For Mac: Obtain from Network Settings.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-2.png" alt="查看Charles IP地址"></li>
-</ul>
-</li>
-<li><p><strong>Set Charles debugging port number:</strong>  </p>
-<ul>
-<li>Click <strong>Proxy</strong> → <strong>SSL Proxy Settings</strong> → Click “Add” under Include → Add <code>“*:*”</code> (Host: <code>“*”</code>, Port: <code>“*”</code>) and <code>“*:443”</code> (Host: <code>“*”</code>, Port: <code>443</code>) → Click “OK”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-3.png" alt="SSL代理设置">  </li>
-<li>Click <strong>Proxy</strong> → <strong>Proxy Settings</strong> → Set “Port” under “HTTP Proxy” (default: 8888) → Check “Enable transparent HTTP proxying” → Click “OK”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-4.png" alt="HTTP代理设置"></li>
-</ul>
-</li>
-<li><p><strong>Connect the phone and PC to the same LAN</strong> and set Wi-Fi to manual proxy with Charles’ IP and port:  </p>
-<ul>
-<li>On the phone, enter the Wi-Fi password page, click “Proxy” before inputting the password, select “Manual”, set “Proxy server hostname” to Charles’ IP and “Server port” to 8888, then connect to Wi-Fi.</li>
-</ul>
-</li>
-</ol>
-<p>At this point, HTTP packets can be captured normally. To capture HTTPS packets, continue with certificate configuration.  </p>
-<h4 id="Certificate-Installation"><a href="#Certificate-Installation" class="headerlink" title="Certificate Installation"></a>Certificate Installation</h4><p><strong>Install Charles root certificate into the PC trust directory:</strong>  </p>
-<ul>
-<li><p>Click <strong>Help</strong> → <strong>SSL Proxying</strong> → <strong>Install Charles Root Certificate</strong> → Click “Install Certificate” → Select storage location (current user or local computer) → Click “Next” → Select “Place all certificates in the following store” → Click “Browse” → Set the certificate storage path to “Trusted Root Certification Authorities”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-5.png" alt="PC证书安装步骤">  </p>
-</li>
-<li><p>Double-click the certificate, select “Trust” and “Always trust”:<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-6.png" alt="证书信任设置"></p>
-</li>
-</ul>
-<p><strong>Import the system root certificate to the phone:</strong><br><strong>Method 1:</strong>  </p>
-<ul>
-<li>Click <strong>Help</strong> → <strong>SSL Proxying</strong> → <strong>Install Charles Root Certificate on a Mobile Device or Remote Browser</strong> → Access <a target="_blank" rel="noopener" href="http://chls.pro/ssl">http://chls.pro/ssl</a> on the phone’s browser → Click “Download Now” to save the certificate to the phone memory.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-7.png" alt="手机证书下载页面"></li>
-</ul>
-<p><strong>Method 2:</strong>  </p>
-<ul>
-<li>On PC, click <strong>Help</strong> → <strong>SSL Proxying</strong> → <strong>Save Charles Root Certificate…</strong> to save the certificate locally as a PEM file. Connect the phone to the PC, upload the PEM file to the phone via DevEco (right-click the target folder, select “Upload…”, then choose the PEM file).<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-8.png" alt="证书文件保存界面"></li>
-</ul>
-<p><strong>Certificate installation steps on the phone:</strong>  </p>
-<ul>
-<li>Go to <strong>Settings</strong> → <strong>Privacy &amp; Security</strong> → Scroll down to click “Advanced” → Select “Certificates &amp; Credentials” → Enter certificate installation options → Choose “Install from storage device” → Click “CA Certificates” → Click “Continue” → Browse to the downloaded certificate location → Select the certificate → Confirm “Certificate installed successfully”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-9.png" alt="手机证书安装操作界面"><br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-10.png" alt="证书安装成功提示"></li>
-</ul>
-<p>HTTPS network requests can now be captured normally. If issues persist, restart Charles and retry.  </p>
-<blockquote>
-<p><strong>Notes:</strong>  </p>
-<ol>
-<li>When configuring the environment, select “Allow” in Charles’ pop-up window to ensure connection with the phone.  </li>
-<li>CRT format certificates are not supported; convert them to PEM format.</li>
-</ol>
-</blockquote>
-<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>This article introduces capturing mobile network requests (including HTTP and HTTPS) via Charles on HarmonyOS Next, detailing SSL certificate installation steps and best practices.  </p>
-<p>##HarmonyOS Core Technology##HarmonyOS Development Tools##DevEco Studio##<br>##Social##</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1752,7 +1764,7 @@ class PhotoSelectOptions &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

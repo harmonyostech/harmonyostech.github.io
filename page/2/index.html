@@ -149,6 +149,127 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/24/HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice/" class="post-title-link" itemprop="url">HarmonyOS Next Network Packet Capture Configuration Practice</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-24 16:15:41 / Modified: 16:19:37" itemprop="dateCreated datePublished" datetime="2025-06-24T16:15:41+08:00">2025-06-24</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice"><a href="#HarmonyOS-Next-Network-Packet-Capture-Configuration-Practice" class="headerlink" title="HarmonyOS Next Network Packet Capture Configuration Practice"></a>HarmonyOS Next Network Packet Capture Configuration Practice</h1><h4 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h4><p>In mobile application development, packet capture is the best way to debug network requests. Charles, a mainstream packet capture tool in the market, encountered some configuration issues when debugging IM network requests due to HTTPS requests in the testing environment. This article records the entire network request packet capture configuration for HarmonyOS Next.  </p>
+<h4 id="Introduction-to-Charles"><a href="#Introduction-to-Charles" class="headerlink" title="Introduction to Charles"></a>Introduction to Charles</h4><p>Charles is a network debugging and analysis proxy tool used to intercept and view communications between devices and servers. It supports monitoring network traffic of applications, modifying requests and responses, and simulating different network conditions. Key functions include:  </p>
+<ul>
+<li>Intercepting HTTP and HTTPS network packets.  </li>
+<li>Supporting retransmission of network requests for backend debugging.  </li>
+<li>Enabling modification of network request parameters.  </li>
+<li>Allowing interception and dynamic modification of network requests.  </li>
+<li>Simulating slow network conditions.</li>
+</ul>
+<p>To use Charles, configure the application’s requests to be forwarded through the Charles client proxy to the server, enabling packet capture in the Charles client. After starting Charles, it automatically sets the browser to use the proxy without additional configuration. When sending network requests via the browser, Charles directly captures request and response information.  </p>
+<p>The latest version of Charles is 5.0.1, supporting packet capture on Mac, Windows, and Linux systems:<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5.png" alt="Charles运行界面">  </p>
+<h4 id="Charles-Installation"><a href="#Charles-Installation" class="headerlink" title="Charles Installation"></a>Charles Installation</h4><p>Charles installation address: <a target="_blank" rel="noopener" href="https://www.charlesproxy.com/">https://www.charlesproxy.com/</a><br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-1.png" alt="Charles下载页面">  </p>
+<h4 id="Charles-Usage-Steps"><a href="#Charles-Usage-Steps" class="headerlink" title="Charles Usage Steps"></a>Charles Usage Steps</h4><p><strong>Device proxy settings after installation:</strong>  </p>
+<ol>
+<li><p><strong>View Charles IP address</strong> (typically the same as the PC host IP):  </p>
+<ul>
+<li>For Charles IP: Click <strong>Help</strong> → <strong>Local IP Address</strong>.  </li>
+<li>For PC IP (Windows): Open “Run” (Win+R or search in the taskbar), enter “cmd” to open the command line, then type “ipconfig”.  </li>
+<li>For Mac: Obtain from Network Settings.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-2.png" alt="查看Charles IP地址"></li>
+</ul>
+</li>
+<li><p><strong>Set Charles debugging port number:</strong>  </p>
+<ul>
+<li>Click <strong>Proxy</strong> → <strong>SSL Proxy Settings</strong> → Click “Add” under Include → Add <code>“*:*”</code> (Host: <code>“*”</code>, Port: <code>“*”</code>) and <code>“*:443”</code> (Host: <code>“*”</code>, Port: <code>443</code>) → Click “OK”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-3.png" alt="SSL代理设置">  </li>
+<li>Click <strong>Proxy</strong> → <strong>Proxy Settings</strong> → Set “Port” under “HTTP Proxy” (default: 8888) → Check “Enable transparent HTTP proxying” → Click “OK”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-4.png" alt="HTTP代理设置"></li>
+</ul>
+</li>
+<li><p><strong>Connect the phone and PC to the same LAN</strong> and set Wi-Fi to manual proxy with Charles’ IP and port:  </p>
+<ul>
+<li>On the phone, enter the Wi-Fi password page, click “Proxy” before inputting the password, select “Manual”, set “Proxy server hostname” to Charles’ IP and “Server port” to 8888, then connect to Wi-Fi.</li>
+</ul>
+</li>
+</ol>
+<p>At this point, HTTP packets can be captured normally. To capture HTTPS packets, continue with certificate configuration.  </p>
+<h4 id="Certificate-Installation"><a href="#Certificate-Installation" class="headerlink" title="Certificate Installation"></a>Certificate Installation</h4><p><strong>Install Charles root certificate into the PC trust directory:</strong>  </p>
+<ul>
+<li><p>Click <strong>Help</strong> → <strong>SSL Proxying</strong> → <strong>Install Charles Root Certificate</strong> → Click “Install Certificate” → Select storage location (current user or local computer) → Click “Next” → Select “Place all certificates in the following store” → Click “Browse” → Set the certificate storage path to “Trusted Root Certification Authorities”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-5.png" alt="PC证书安装步骤">  </p>
+</li>
+<li><p>Double-click the certificate, select “Trust” and “Always trust”:<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-6.png" alt="证书信任设置"></p>
+</li>
+</ul>
+<p><strong>Import the system root certificate to the phone:</strong><br><strong>Method 1:</strong>  </p>
+<ul>
+<li>Click <strong>Help</strong> → <strong>SSL Proxying</strong> → <strong>Install Charles Root Certificate on a Mobile Device or Remote Browser</strong> → Access <a target="_blank" rel="noopener" href="http://chls.pro/ssl">http://chls.pro/ssl</a> on the phone’s browser → Click “Download Now” to save the certificate to the phone memory.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-7.png" alt="手机证书下载页面"></li>
+</ul>
+<p><strong>Method 2:</strong>  </p>
+<ul>
+<li>On PC, click <strong>Help</strong> → <strong>SSL Proxying</strong> → <strong>Save Charles Root Certificate…</strong> to save the certificate locally as a PEM file. Connect the phone to the PC, upload the PEM file to the phone via DevEco (right-click the target folder, select “Upload…”, then choose the PEM file).<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-8.png" alt="证书文件保存界面"></li>
+</ul>
+<p><strong>Certificate installation steps on the phone:</strong>  </p>
+<ul>
+<li>Go to <strong>Settings</strong> → <strong>Privacy &amp; Security</strong> → Scroll down to click “Advanced” → Select “Certificates &amp; Credentials” → Enter certificate installation options → Choose “Install from storage device” → Click “CA Certificates” → Click “Continue” → Browse to the downloaded certificate location → Select the certificate → Confirm “Certificate installed successfully”.<br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-9.png" alt="手机证书安装操作界面"><br><img src="/../images/HarmonyOS%20Next%E7%BD%91%E7%BB%9C%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5-10.png" alt="证书安装成功提示"></li>
+</ul>
+<p>HTTPS network requests can now be captured normally. If issues persist, restart Charles and retry.  </p>
+<blockquote>
+<p><strong>Notes:</strong>  </p>
+<ol>
+<li>When configuring the environment, select “Allow” in Charles’ pop-up window to ensure connection with the phone.  </li>
+<li>CRT format certificates are not supported; convert them to PEM format.</li>
+</ol>
+</blockquote>
+<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>This article introduces capturing mobile network requests (including HTTP and HTTPS) via Charles on HarmonyOS Next, detailing SSL certificate installation steps and best practices.  </p>
+<p>##HarmonyOS Core Technology##HarmonyOS Development Tools##DevEco Studio##<br>##Social##</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/HarmonyOS-Next-IM-Combat-Best-Practices-for-PushKit-in-Assisting-IM-Message-Notification-Scenarios/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1139,7 +1260,7 @@ bar();
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
