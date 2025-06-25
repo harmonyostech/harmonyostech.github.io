@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail1. HarmonyOS lazyForEach related example?lazyForEach principle introduction: https:&#x2F;&#x2F;dev">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Daily HarmonyOS Next Knowledge】 Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/25/502%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Lazy-Loop-Routing-Overlay-Layout-Dark-Mode-Status-Bar-Album-Video-Thumbnail/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail1. HarmonyOS lazyForEach related example?lazyForEach principle introduction: https:&#x2F;&#x2F;dev">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.05.02.png">
+<meta property="article:published_time" content="2025-06-24T23:58:23.000Z">
+<meta property="article:modified_time" content="2025-06-24T23:59:34.654Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.05.02.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/25/502%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Lazy-Loop-Routing-Overlay-Layout-Dark-Mode-Status-Bar-Album-Video-Thumbnail/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【Daily HarmonyOS Next Knowledge】 Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/502%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Lazy-Loop-Routing-Overlay-Layout-Dark-Mode-Status-Bar-Album-Video-Thumbnail/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Daily HarmonyOS Next Knowledge】 Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 07:58:23 / Modified: 07:59:34" itemprop="dateCreated datePublished" datetime="2025-06-25T07:58:23+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Lazy-Loop-Routing-Overlay-Layout-Dark-Mode-Status-Bar-Album-Video-Thumbnail"><a href="#Daily-HarmonyOS-Next-Knowledge-Lazy-Loop-Routing-Overlay-Layout-Dark-Mode-Status-Bar-Album-Video-Thumbnail" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail"></a>[Daily HarmonyOS Next Knowledge] Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail</h3><h4 id="1-HarmonyOS-lazyForEach-related-example"><a href="#1-HarmonyOS-lazyForEach-related-example" class="headerlink" title="1. HarmonyOS lazyForEach related example?"></a>1. HarmonyOS lazyForEach related example?</h4><p><strong>lazyForEach principle introduction</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-best-practices-long-list-V5">https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-best-practices-long-list-V5</a>  </p>
+<p>Lists are one of the most common development scenarios in application development. They can organize messy information into a regular, understandable, and operable form, facilitating users to search for and obtain needed information. Common list scenarios in applications include news lists, shopping cart lists, various leaderboards, etc. With the accumulation of information data, especially in some news apps, shopping apps, and chat apps, list data often reaches tens of thousands of entries. For such long-list applications with large data loading, optimizing the performance of long lists is crucial. A correct and high-performance long-list application can significantly reduce list rendering time, improve page sliding frame rate, reduce application memory usage, and greatly enhance the user experience.  </p>
+<p>For the scenario of long-list loading, this article introduces the following 5 optimization methods. Using these optimizations individually or in combination can optimize list rendering time, page sliding frame rate, application memory usage, etc., and improve performance and user experience:  </p>
+<ul>
+<li><strong>Lazy loading</strong>: Provides the ability to load list data on demand, solving the problems of long loading time and excessive resource occupation caused by一次性 loading of long-list data, which can improve page response speed.  </li>
+<li><strong>List item caching</strong>: Provides the ability to custom adjust the length of list items outside the screen visible area. Combined with lazy loading settings, it can cache list item parameters and improve the list sliding experience through preloading data.  </li>
+<li><strong>Dynamic preloading</strong>: Dynamically adjusts the number of prefetching data outside the screen visible area based on historical task loading time. Combined with lazy loading settings, it can update list data in real-time outside the screen visible area during continuous list sliding, improving the list sliding experience through prefetching and pre-rendering data.  </li>
+<li><strong>Component reuse</strong>: Provides a cache resource pool for reusable component objects. By reusing created and cached component objects, it reduces the overhead of frequent creation and destruction of the same components in a short time, improving component rendering efficiency.  </li>
+<li><strong>Layout optimization</strong>: Uses a flat layout scheme to reduce view nesting levels and the number of components, avoid over-drawing, and improve page rendering efficiency.</li>
+</ul>
+<p>The principle and rendering process of LazyForEach lazy loading are as follows:  </p>
+<ol>
+<li>LazyForEach loads data on demand according to the number of components that can be accommodated in the screen visible area.  </li>
+<li>Creates components based on the loaded data volume, mounts them on the component tree, and constructs a short component tree. That is, it creates and mounts as many ListItem component nodes on the List component root node as the number of list item components that can be displayed on the screen.  </li>
+<li>Only part of the components are displayed in the screen visible area. When components outside the visible area need to be displayed on the screen, the process of data loading, component creation, and component tree mounting must be completed from the beginning until they are rendered on the screen.</li>
+</ol>
+<p>The schematic diagram of its data loading, component tree mounting, and page rendering is as follows:<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.05.02.png"></p>
+<p>LazyForEach realizes on-demand loading, which reduces the time consumption of一次性 loading data and the memory peak value for scenarios with large list data and complex list components. However, during the sliding of long lists, because it is necessary to continuously load new content according to the user’s sliding behavior, this requires additional data requests and processing, which will increase the calculation amount during sliding and affect performance to a certain extent. However, reasonably using the on-demand loading capability of LazyForEach and loading only when the sliding stops or reaches a certain threshold can reduce unnecessary calculations and requests, thereby improving performance and bringing a better experience to users. In short, in scenarios where on-demand loading is implemented, it is necessary to comprehensively consider the balance between performance and user experience, and reasonably optimize the loading logic and rendering method to improve the overall performance.  </p>
+<p><strong>Demo example</strong>:  </p>
+<pre><code class="language-typescript">interface listItem &#123;
+  money: string
+  text: string
+  title: string
+  data: string
+&#125;
+
+class StringData &#123;
+  money: string
+  text: string
+  title: string
+  data: string
+  constructor(money: string, text: string, title: string, data: string) &#123;
+    this.money = money
+    this.text = text
+    this.title = title
+    this.data = data
+  &#125;
+&#125;
+
+class BasicDataSource implements IDataSource &#123;
+  private listeners: DataChangeListener[] = []
+  private originDataArray: StringData[] = []
+
+  public totalCount(): number &#123;
+    return 0
+  &#125;
+
+  public getData(index: number): StringData &#123;
+    return this.originDataArray[index]
+  &#125;
+
+  registerDataChangeListener(listener: DataChangeListener): void &#123;
+    if (this.listeners.indexOf(listener) &lt; 0) &#123;
+      console.info(&#39;add listener&#39;)
+      this.listeners.push(listener)
+    &#125;
+  &#125;
+
+  unregisterDataChangeListener(listener: DataChangeListener): void &#123;
+    const pos = this.listeners.indexOf(listener)
+    if (pos &gt;= 0) &#123;
+      console.info(&#39;remove listener&#39;)
+      this.listeners.splice(pos, 1)
+    &#125;
+  &#125;
+
+  notifyDataReload(): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataReloaded()
+    &#125;)
+  &#125;
+
+  notifyDataAdd(index: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataAdd(index)
+    &#125;)
+  &#125;
+
+  notifyDataChange(index: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataChange(index)
+    &#125;)
+  &#125;
+
+  notifyDataDelete(index: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataDelete(index)
+    &#125;)
+  &#125;
+
+  notifyDataMove(from: number, to: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataMove(from, to)
+    &#125;)
+  &#125;
+&#125;
+
+class MyDataSource extends BasicDataSource &#123;
+  private dataArray: StringData[] = []
+
+  public totalCount(): number &#123;
+    return this.dataArray.length
+  &#125;
+
+  public getData(index: number): StringData &#123;
+    return this.dataArray[index]
+  &#125;
+
+  public addData(index: number, data: StringData): void &#123;
+    this.dataArray.splice(index, 0, data)
+    this.notifyDataAdd(index)
+  &#125;
+
+  public pushData(data: StringData): void &#123;
+    this.dataArray.push(data)
+    this.notifyDataAdd(this.dataArray.length - 1)
+  &#125;
+
+  public reloadData(): void &#123;
+    this.notifyDataReload()
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  private title: string = &#39;我的优惠券&#39;
+  private data: MyDataSource = new MyDataSource()
+  @State listDate: listItem[] = [
+    &#123;
+      money: &#39;￥360&#39;,
+      text: &#39;满3500元立减&#39;,
+      title: &#39;限部分商品使用&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥250&#39;,
+      text: &#39;满2500元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥200&#39;,
+      text: &#39;满1800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥150&#39;,
+      text: &#39;满1300元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥80&#39;,
+      text: &#39;满800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥360&#39;,
+      text: &#39;满3500元立减&#39;,
+      title: &#39;限部分商品使用&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥250&#39;,
+      text: &#39;满2500元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥200&#39;,
+      text: &#39;满1800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥150&#39;,
+      text: &#39;满1300元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥80&#39;,
+      text: &#39;满800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥360&#39;,
+      text: &#39;满3500元立减&#39;,
+      title: &#39;限部分商品使用&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥250&#39;,
+      text: &#39;满2500元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥200&#39;,
+      text: &#39;满1800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥150&#39;,
+      text: &#39;满1300元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥80&#39;,
+      text: &#39;满800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥360&#39;,
+      text: &#39;满3500元立减&#39;,
+      title: &#39;限部分商品使用&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥250&#39;,
+      text: &#39;满2500元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥200&#39;,
+      text: &#39;满1800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥150&#39;,
+      text: &#39;满1300元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥80&#39;,
+      text: &#39;满800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥360&#39;,
+      text: &#39;满3500元立减&#39;,
+      title: &#39;限部分商品使用&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥250&#39;,
+      text: &#39;满2500元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥200&#39;,
+      text: &#39;满1800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥150&#39;,
+      text: &#39;满1300元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥80&#39;,
+      text: &#39;满800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥360&#39;,
+      text: &#39;满3500元立减&#39;,
+      title: &#39;限部分商品使用&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥250&#39;,
+      text: &#39;满2500元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥200&#39;,
+      text: &#39;满1800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥150&#39;,
+      text: &#39;满1300元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;,
+    &#123;
+      money: &#39;￥80&#39;,
+      text: &#39;满800元立减&#39;,
+      title: &#39;适用于体验&#39;,
+      data: &#39;2024.02.23-2024.03.15&#39;
+    &#125;
+  ]
+
+  aboutToAppear(): void &#123;
+    // Simulate data request
+    for (let i = 0; i &lt;= this.listDate.length; i++) &#123;
+      this.data.pushData(new StringData(this.listDate[i].money, this.listDate[i].text, this.listDate[i].title, this.listDate[i].data))
+    &#125;
+    console.log(JSON.stringify(this.data), &#39;[Log]&#39;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Text(this.title)
+        .fontSize(18)
+        .fontWeight(FontWeight.Bold)
+        .fontFamily(&#39;Arial&#39;)
+      Row() &#123;
+        TextInput(&#123; placeholder: &#39;请输入优惠码&#39; &#125;)
+          .width(&#39;75%&#39;)
+          .fontColor(Color.Blue)
+          .fontSize(14)
+          .fontStyle(FontStyle.Italic)
+          .fontWeight(FontWeight.Bold)
+          .fontFamily(&#39;Arial&#39;)
+          .placeholderColor(0x999999)
+          .placeholderFont(&#123; size: 16, weight: FontWeight.Medium, family: &#39;cursive&#39;, style: FontStyle.Italic &#125;)
+        Button(&#39;添加&#39;, &#123; type: ButtonType.Normal, stateEffect: true &#125;)
+          .width(&#39;25%&#39;)
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .backgroundColor(&#39;#cccccc&#39;)
+          .borderRadius(5)
+      &#125;
+      .padding(&#123; top: 35, bottom: 10 &#125;)
+
+      Row() &#123;
+        Text(` 有$&#123;this.data.totalCount()&#125;张优惠券可领用~`)
+          .fontSize(12)
+          .textAlign(TextAlign.End)
+        Text(&#39;&gt;&#39;)
+      &#125;
+      .margin(&#123; bottom: 10 &#125;)
+
+      List(&#123; space: 10 &#125;) &#123;
+        LazyForEach(this.data, (item: listItem) =&gt; &#123;
+          ListItem() &#123;
+            Row() &#123;
+              Column() &#123;
+                Text(item.money)
+                  .margin(&#123; top: 20, bottom: 20 &#125;)
+                  .fontColor(&#39;#f9f4d7&#39;)
+                  .borderRadius(5)
+                Text(item.text)
+                  .textAlign(TextAlign.Center)
+                  .fontSize(12)
+                  .fontColor(&#39;#f9f4d7&#39;)
+                  .borderRadius(5)
+              &#125;
+              .width(&#39;30%&#39;)
+              .height(1
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/25/501%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Component-Names-Navigation-Routing-Frame-Animation-Disabling-Clicks-on-Toggle-Controls-Dynamically-Binding-Element-Position-Properties/" rel="prev" title="501【Daily HarmonyOS Next Knowledge】Obtaining Component Names, Navigation Routing, Frame Animation, Disabling Clicks on Toggle Controls, Dynamically Binding Element Position Properties">
+      <i class="fa fa-chevron-left"></i> 501【Daily HarmonyOS Next Knowledge】Obtaining Component Names, Navigation Routing, Frame Animation, Disabling Clicks on Toggle Controls, Dynamically Binding Element Position Properties
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/25/503%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Grid-Layout-Adaptive-Height-Persistent-Storage-Rounded-Dialogs-Value-Passing-Between-Pages-Emoji-Truncation/" rel="next" title="【Daily HarmonyOS Next Knowledge】 Grid Layout Adaptive Height, Persistent Storage, Rounded Dialogs, Value Passing Between Pages, Emoji Truncation">
+      【Daily HarmonyOS Next Knowledge】 Grid Layout Adaptive Height, Persistent Storage, Rounded Dialogs, Value Passing Between Pages, Emoji Truncation <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Lazy-Loop-Routing-Overlay-Layout-Dark-Mode-Status-Bar-Album-Video-Thumbnail"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Lazy Loop, Routing, Overlay Layout, Dark Mode Status Bar, Album Video Thumbnail</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HarmonyOS-lazyForEach-related-example"><span class="nav-number">1.1.</span> <span class="nav-text">1. HarmonyOS lazyForEach related example?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
