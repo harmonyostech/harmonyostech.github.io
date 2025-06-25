@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues1. Can HarmonyOS provide a demo for using CAPI t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/25/617%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91CAPI-Image-Component-Support-Formats-Hybrid-Development-Listening-to-Animation-Status-and-Context-Acquisition-Issues/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues1. Can HarmonyOS provide a demo for using CAPI t">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-25T03:25:53.000Z">
+<meta property="article:modified_time" content="2025-06-25T03:26:28.966Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/25/617%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91CAPI-Image-Component-Support-Formats-Hybrid-Development-Listening-to-Animation-Status-and-Context-Acquisition-Issues/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/617%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91CAPI-Image-Component-Support-Formats-Hybrid-Development-Listening-to-Animation-Status-and-Context-Acquisition-Issues/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 11:25:53 / Modified: 11:26:28" itemprop="dateCreated datePublished" datetime="2025-06-25T11:25:53+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="【Daily-HarmonyOS-Next-Knowledge】CAPI-Image-Component-Support-Formats-Hybrid-Development-Listening-to-Animation-Status-and-Context-Acquisition-Issues"><a href="#【Daily-HarmonyOS-Next-Knowledge】CAPI-Image-Component-Support-Formats-Hybrid-Development-Listening-to-Animation-Status-and-Context-Acquisition-Issues" class="headerlink" title="【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues"></a>【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues</h3><h4 id="1-Can-HarmonyOS-provide-a-demo-for-using-CAPI-to-create-custom-components"><a href="#1-Can-HarmonyOS-provide-a-demo-for-using-CAPI-to-create-custom-components" class="headerlink" title="1. Can HarmonyOS provide a demo for using CAPI to create custom components?"></a>1. Can HarmonyOS provide a demo for using CAPI to create custom components?</h4><p><strong>Demo sample code:</strong>  </p>
+<pre><code class="language-cpp">#include &lt;functional&gt;
+#include &quot;ArkUI/native_interface.h&quot;
+#include &quot;ArkUI/native_node.h&quot;
+#include &quot;ArkUI/native_type.h&quot;
+#include &quot;drawing_canvas.h&quot;
+#include &quot;drawing_color.h&quot;
+#include &quot;drawing_path.h&quot;
+#include &quot;drawing_pen.h&quot;
+#include &quot;drawing_types.h&quot;
+
+struct UserCallback &#123;
+  std::function&lt;void(ArkUI_NodeCustomEvent* event)&gt; callback;
+&#125;;
+
+class ArkUINativeModule &#123;
+  public:
+    ArkUINativeModule() &#123;
+      OH_ArkUI_QueryModuleInterface(ARKUI_NATIVE_NODE, ArkUI_NativeNodeAPI_1, nodeApi_);
+      // Event handling through a unified entry function.
+      nodeApi_-&gt;registerNodeCustomEventReceiver([](ArkUI_NodeCustomEvent* event) &#123;
+        auto* userData = reinterpret_cast&lt;UserCallback*&gt;(OH_ArkUI_NodeCustomEvent_GetUserData(event));
+        userData-&gt;callback(event);
+      &#125;);
+    &#125;
+
+    ~ArkUINativeModule() &#123;
+      nodeApi_-&gt;unregisterNodeCustomEventReceiver();
+    &#125;
+
+    static ArkUINativeModule* GetInstance() &#123;
+      static ArkUINativeModule nativeModule;
+      return &amp;nativeModule;
+    &#125;
+
+    ArkUI_NativeNodeAPI_1* GetNodeAPI() &#123;
+      return nodeApi_;
+    &#125;
+
+  private:
+    ArkUI_NativeNodeAPI_1* nodeApi_ = nullptr;
+&#125;;
+
+class MyBadge &#123;
+  public:
+    MyBadge() &#123;
+      nativeModule_ = ArkUINativeModule::GetInstance()-&gt;GetNodeAPI();
+      handle_ = nativeModule_-&gt;createNode(ARKUI_NODE_CUSTOM);
+      userCallback_ = new UserCallback();
+      // Set the custom callback.
+      userCallback_-&gt;callback = [this](ArkUI_NodeCustomEvent* event) &#123;
+        auto type = OH_ArkUI_NodeCustomEvent_GetEventType(event);
+        switch (type) &#123;
+          case ARKUI_NODE_CUSTOM_EVENT_ON_MEASURE:
+            OnMeasure(event);
+            break;
+          case ARKUI_NODE_CUSTOM_EVENT_ON_LAYOUT:
+            OnLayout(event);
+            break;
+          case ARKUI_NODE_CUSTOM_EVENT_ON_FOREGROUND_DRAW:
+            OnForegroundDraw(event);
+            break;
+          default:
+            break;
+        &#125;
+      &#125;;
+    &#125;
+</code></pre>
+<h4 id="2-Does-the-HarmonyOS-Image-component-support-HEIC-format-images"><a href="#2-Does-the-HarmonyOS-Image-component-support-HEIC-format-images" class="headerlink" title="2. Does the HarmonyOS Image component support HEIC format images?"></a>2. Does the HarmonyOS Image component support HEIC format images?</h4><p>Additionally, could you explain the internal implementation process of the Image component? Does it use hardware decoding or software decoding for image decoding?  </p>
+<ol>
+<li><p>The Image component supports HEIC format.<br>The internal implementation process of the component is as follows:  </p>
+<ul>
+<li>Default image loading: Data loading → Image decoding → Rendering and display  </li>
+<li>Network image loading: Download image → Data loading → Image decoding → Rendering and display</li>
+</ul>
+</li>
+<li><p>The default decoding method is software decoding. If software decoding fails, hardware decoding will be used.</p>
+</li>
+</ol>
+<h4 id="3-In-HarmonyOS-hybrid-development-for-custom-ArkTS-components-how-does-the-CAPI-side-listen-to-event-callbacks-from-custom-components"><a href="#3-In-HarmonyOS-hybrid-development-for-custom-ArkTS-components-how-does-the-CAPI-side-listen-to-event-callbacks-from-custom-components" class="headerlink" title="3. In HarmonyOS hybrid development, for custom ArkTS components, how does the CAPI side listen to event callbacks from custom components?"></a>3. In HarmonyOS hybrid development, for custom ArkTS components, how does the CAPI side listen to event callbacks from custom components?</h4><p>For event listening functions of custom components, refer to <code>native_node</code>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/native__node_8h-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/native__node_8h-V5</a>  </p>
+<h4 id="4-On-HarmonyOS-does-PAG-support-listening-to-changes-in-animation-event-status"><a href="#4-On-HarmonyOS-does-PAG-support-listening-to-changes-in-animation-event-status" class="headerlink" title="4. On HarmonyOS, does PAG support listening to changes in animation event status?"></a>4. On HarmonyOS, does PAG support listening to changes in animation event status?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-animator-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-animator-V5</a>  </p>
+<h4 id="5-In-HarmonyOS-is-there-a-way-to-obtain-the-Context-through-getContext-in-the-oncreate-method"><a href="#5-In-HarmonyOS-is-there-a-way-to-obtain-the-Context-through-getContext-in-the-oncreate-method" class="headerlink" title="5. In HarmonyOS, is there a way to obtain the Context through getContext in the oncreate method?"></a>5. In HarmonyOS, is there a way to obtain the Context through <code>getContext</code> in the <code>oncreate</code> method?</h4><p>In the <code>oncreate</code> method of <code>uiability</code>, calling <code>getContext</code> returns <code>undefined</code>, but directly accessing <code>this.context</code> works normally. Is there a way to obtain the Context through <code>getContext</code> in <code>oncreate</code>?  </p>
+<p>If the interface is called outside the current page, it may fail to track the Context of the instance, resulting in <code>undefined</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-getcontext-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-getcontext-V5</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/25/616-Daily-HarmonyOS-Next-Knowledge-Global-Font-Non-null-Assertion-Component-Dialog-Usage-List-Scroll-to-Top-Soft-Keyboard-Control/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Global Font, Non-null Assertion, Component Dialog Usage, List Scroll to Top, Soft Keyboard Control">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Global Font, Non-null Assertion, Component Dialog Usage, List Scroll to Top, Soft Keyboard Control
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/25/618-Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse/" rel="next" title="[Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse">
+      [Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91CAPI-Image-Component-Support-Formats-Hybrid-Development-Listening-to-Animation-Status-and-Context-Acquisition-Issues"><span class="nav-number">1.</span> <span class="nav-text">【Daily HarmonyOS Next Knowledge】CAPI, Image Component Support Formats, Hybrid Development, Listening to Animation Status, and Context Acquisition Issues</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Can-HarmonyOS-provide-a-demo-for-using-CAPI-to-create-custom-components"><span class="nav-number">1.1.</span> <span class="nav-text">1. Can HarmonyOS provide a demo for using CAPI to create custom components?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Does-the-HarmonyOS-Image-component-support-HEIC-format-images"><span class="nav-number">1.2.</span> <span class="nav-text">2. Does the HarmonyOS Image component support HEIC format images?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-In-HarmonyOS-hybrid-development-for-custom-ArkTS-components-how-does-the-CAPI-side-listen-to-event-callbacks-from-custom-components"><span class="nav-number">1.3.</span> <span class="nav-text">3. In HarmonyOS hybrid development, for custom ArkTS components, how does the CAPI side listen to event callbacks from custom components?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-On-HarmonyOS-does-PAG-support-listening-to-changes-in-animation-event-status"><span class="nav-number">1.4.</span> <span class="nav-text">4. On HarmonyOS, does PAG support listening to changes in animation event status?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-In-HarmonyOS-is-there-a-way-to-obtain-the-Context-through-getContext-in-the-oncreate-method"><span class="nav-number">1.5.</span> <span class="nav-text">5. In HarmonyOS, is there a way to obtain the Context through getContext in the oncreate method?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
