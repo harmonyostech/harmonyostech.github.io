@@ -564,7 +564,7 @@ struct Index &#123;
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/06/25/414%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates/" class="post-title-link" itemprop="url">414【Daily HarmonyOS Next Knowledge】Intercepting Touch Events, Disabling Side Swipe Back, Data-Driven UI, Text Ellipsis Trigger, Obtaining Component Screen Coordinates</a>
+            <a href="/2025/06/25/414%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Intercepting Touch Events, Disabling Side Swipe Back, Data-Driven UI, Text Ellipsis Trigger, Obtaining Component Screen Coordinates</a>
         </h2>
 
         <div class="post-meta">
@@ -573,8 +573,18 @@ struct Index &#123;
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 06:57:30" itemprop="dateCreated datePublished" datetime="2025-06-25T06:57:30+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 06:57:30 / Modified: 12:25:17" itemprop="dateCreated datePublished" datetime="2025-06-25T06:57:30+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -588,7 +598,172 @@ struct Index &#123;
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates"><a href="#Daily-HarmonyOS-Next-Knowledge-Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Intercepting Touch Events, Disabling Side Swipe Back, Data-Driven UI, Text Ellipsis Trigger, Obtaining Component Screen Coordinates"></a>[Daily HarmonyOS Next Knowledge] Intercepting Touch Events, Disabling Side Swipe Back, Data-Driven UI, Text Ellipsis Trigger, Obtaining Component Screen Coordinates</h3><h4 id="1-How-does-a-HarmonyOS-child-component-intercept-touch-events"><a href="#1-How-does-a-HarmonyOS-child-component-intercept-touch-events" class="headerlink" title="1. How does a HarmonyOS child component intercept touch events?"></a>1. How does a HarmonyOS child component intercept touch events?</h4><p>When nesting a Scroll component within a page, attempting to intercept touch events via <code>event.stopPropagation()</code> in <code>onTouch</code> to prevent the Scroll from scrolling when the child component is swiped, but this approach is ineffective. How to handle this?  </p>
+<pre><code class="language-typescript">Stack() &#123;
+  Canvas(this.pickCanvas)
+&#125;.width(&#39;100%&#39;).height(200).onTouch((event: TouchEvent) =&gt; &#123;
+  event.stopPropagation()
+&#125;)
+</code></pre>
+<p>Try adding <code>.hitTestBehavior(HitTestMode.Block)</code> to the Canvas component.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-hit-test-behavior-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-hit-test-behavior-V5</a>  </p>
+<p>This property sets the touch test mode. The ArkUI framework performs touch tests before event distribution to collect components that should respond to touch events. <code>hitTestBehavior</code> affects touch test results and subsequent event distribution (see <code>HitTestMode</code> enum for details).  </p>
+<p>Long-press the Canvas area to enter Canvas interaction; click outside Canvas to exit and enable Scroll scrolling.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-gestures-tapgesture-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-gestures-tapgesture-V5</a>  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+export struct PageE &#123;
+  @State isCheck: boolean = false;
+  private scrollerView: Scroller = new Scroller()
+  private settings: RenderingContextSettings = new RenderingContextSettings(true)
+  private chartCanvas: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings)
+
+  build() &#123;
+    Flex() &#123;
+      Scroll(this.scrollerView) &#123;
+        Column() &#123;
+          Text(&quot;Scroll Area&quot;).width(&quot;100%&quot;).height(&quot;40%&quot;).backgroundColor(0X330000FF)
+
+          Stack() &#123;
+            Canvas(this.chartCanvas)
+              .width(&#39;100%&#39;)
+              .height(&#39;100%&#39;)
+              .onReady(() =&gt; &#123;
+                let c = this.chartCanvas
+                c.fillStyle = &quot;#f00&quot;
+                c.fillRect(20, 20, c.width - 40, c.height - 40)
+              &#125;)
+              .onTouch((event: TouchEvent) =&gt; &#123;
+                console.log(&quot;111&quot;)
+                // Use touch events for canvas drawing (e.g., chart dragging)
+                // Expect no outer Scroll scrolling during canvas interaction
+              &#125;)
+              .hitTestBehavior(this.isCheck ? HitTestMode.Block : HitTestMode.Default)
+              .gesture(
+                LongPressGesture()
+                  .onAction((event: GestureEvent) =&gt; &#123;
+                    console.log(&quot;111222&quot;)
+                    if (!this.isCheck) &#123;
+                      this.isCheck = !this.isCheck
+                    &#125;
+                  &#125;), GestureMask.IgnoreInternal
+              )
+          &#125;
+          .backgroundColor(&quot;#ffff00&quot;).width(&#39;100%&#39;).height(200)
+
+          Text(&quot;Scroll Area&quot;)
+            .width(&quot;100%&quot;).height(&quot;40%&quot;).backgroundColor(0X330000FF)
+        &#125;
+      &#125;
+      .priorityGesture(
+        TapGesture()
+          .onAction((event: GestureEvent) =&gt; &#123;
+            console.log(&quot;333333&quot;)
+            if (this.isCheck) &#123;
+              this.isCheck = !this.isCheck
+            &#125;
+          &#125;), GestureMask.Normal
+      )
+      .width(&quot;100%&quot;).height(&quot;100%&quot;)
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC).padding(20)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-disable-side-swipe-back-for-popups-on-a-HarmonyOS-page"><a href="#2-How-to-disable-side-swipe-back-for-popups-on-a-HarmonyOS-page" class="headerlink" title="2. How to disable side swipe back for popups on a HarmonyOS page?"></a>2. How to disable side swipe back for popups on a HarmonyOS page?</h4><p>Disabling side swipe back via <code>.onBackPressed(() =&gt; true)</code> on the page, but popups still respond to side swipes.  </p>
+<p>Use <code>onWillDismiss</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-methods-custom-dialog-box.md#customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-methods-custom-dialog-box.md#customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E</a>  </p>
+<h4 id="3-How-does-data-from-a-HarmonyOS-ViewModel-drive-UI-updates"><a href="#3-How-does-data-from-a-HarmonyOS-ViewModel-drive-UI-updates" class="headerlink" title="3. How does data from a HarmonyOS ViewModel drive UI updates?"></a>3. How does data from a HarmonyOS ViewModel drive UI updates?</h4><p>How to use data from a ViewModel to drive UI updates (components can use <code>@State</code> and related decorators for UI updates).  </p>
+<p>Apply <code>@ObjectLink</code> and <code>@Observed</code> class decorators.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%9C%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%BB%99objectlink%E8%A3%85%E9%A5%B0%E7%9A%84%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%9C%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%BB%99objectlink%E8%A3%85%E9%A5%B0%E7%9A%84%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC</a>  </p>
+<h4 id="4-How-to-detect-if-TextOverflow-Ellipsis-is-triggered-for-a-HarmonyOS-Text-component"><a href="#4-How-to-detect-if-TextOverflow-Ellipsis-is-triggered-for-a-HarmonyOS-Text-component" class="headerlink" title="4. How to detect if TextOverflow.Ellipsis is triggered for a HarmonyOS Text component?"></a>4. How to detect if TextOverflow.Ellipsis is triggered for a HarmonyOS Text component?</h4><p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">import measure from &#39;@ohos.measure&#39;
+@Entry
+@Component
+struct MeasurePage &#123;
+  @State rawTitle: string = &quot;1月16日，国务院新闻办公室举行新闻发布会，介绍2024年春运形势及工作安排。从2月9日（除夕）00：00到2月17日（正月初八）24：00，免费9天。1月16日，国务院新闻办公室举行新闻发布会，介绍2024年春运形势及工作安排&quot;
+  @State title: string = this.rawTitle 
+  @State suffixStr: string = &quot;&quot;
+  expanded: Boolean = true
+  titleWidth: number = 350
+  needProcess: boolean = true
+  ellipsis: string = &quot;...&quot;
+  EXPAND_STR: string = &quot;展开&quot;
+  COLLAPSE_STR: string = &quot;收起&quot;
+  MAX_LINES: number = 2;
+  fontSize: number = 16
+
+  aboutToAppear(): void &#123;
+    this.process();
+  &#125;
+  process(): void &#123;
+    if (this.expanded) &#123;
+      this.collapseText();
+    &#125; else &#123;
+      this.expandText();
+    &#125;
+  &#125;
+  expandText(): void &#123;
+    if (this.needProcess) &#123;
+      this.suffixStr = this.COLLAPSE_STR; 
+      this.expanded = true;
+      this.title = this.rawTitle;
+    &#125;
+  &#125;
+  collapseText(): void &#123;
+    if (!this.needProcess) &#123;
+      return;
+    &#125;
+    let titleSize: SizeOptions = measure.measureTextSize(&#123;
+      textContent: this.rawTitle,
+      constraintWidth: this.titleWidth,
+      fontSize: this.fontSize
+    &#125;)
+    let twoLineSize: SizeOptions = measure.measureTextSize(&#123;
+      textContent: this.rawTitle,
+      constraintWidth: this.titleWidth,
+      fontSize: this.fontSize,
+      maxLines: this.MAX_LINES
+    &#125;)
+    if ((titleSize.height as number) == (twoLineSize.height as number)) &#123;
+      this.needProcess = false;
+      return;
+    &#125;
+    let clipTitle: string = this.rawTitle
+    this.suffixStr = this.EXPAND_STR;
+    while ((titleSize.height as number) &gt; (twoLineSize.height as number)) &#123;
+      this.expanded = true;
+      clipTitle = clipTitle.substring(0, clipTitle.length - 1);
+      titleSize = measure.measureTextSize(&#123;
+        textContent: clipTitle + this.ellipsis,
+        constraintWidth: this.titleWidth,
+        fontSize: this.fontSize
+      &#125;)
+    &#125;
+    this.title = clipTitle + this.ellipsis
+    this.expanded = false;
+  &#125;
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text()&#123;
+          Span(this.title)
+        &#125;
+        .fontSize(this.fontSize)
+        .id(&quot;title&quot;)
+        .width(this.titleWidth)
+        if (this.needProcess) &#123;
+          Text(this.suffixStr)
+            .fontColor(Color.Orange)
+            .onClick((event) =&gt; &#123;
+            this.process();
+          &#125;)
+        &#125;
+      &#125;
+      .width(&#39;100%&#39;)
+      .alignItems(HorizontalAlign.Start)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-How-to-obtain-the-screen-coordinates-of-a-view-in-HarmonyOS"><a href="#5-How-to-obtain-the-screen-coordinates-of-a-view-in-HarmonyOS" class="headerlink" title="5. How to obtain the screen coordinates of a view in HarmonyOS?"></a>5. How to obtain the screen coordinates of a view in HarmonyOS?</h4><p>Detailed reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-component-id-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-component-id-V5</a></p>
+
       
     </div>
 
@@ -630,8 +805,18 @@ struct Index &#123;
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 06:55:15" itemprop="dateCreated datePublished" datetime="2025-06-25T06:55:15+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 06:55:15 / Modified: 12:25:18" itemprop="dateCreated datePublished" datetime="2025-06-25T06:55:15+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -645,7 +830,134 @@ struct Index &#123;
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Obtaining-App-Configuration-Information-Map-Type-Global-Popup-Dynamic-Import-Reflection-Default-Keyboard-Popup"><a href="#Daily-HarmonyOS-Next-Knowledge-Obtaining-App-Configuration-Information-Map-Type-Global-Popup-Dynamic-Import-Reflection-Default-Keyboard-Popup" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Obtaining App Configuration Information, Map Type, Global Popup, Dynamic Import Reflection, Default Keyboard Popup"></a>[Daily HarmonyOS Next Knowledge] Obtaining App Configuration Information, Map Type, Global Popup, Dynamic Import Reflection, Default Keyboard Popup</h3><h4 id="1-How-to-obtain-data-from-app-json5-in-HarmonyOS-such-as-bundleName-and-versionName"><a href="#1-How-to-obtain-data-from-app-json5-in-HarmonyOS-such-as-bundleName-and-versionName" class="headerlink" title="1. How to obtain data from app.json5 in HarmonyOS, such as bundleName and versionName?"></a>1. How to obtain data from app.json5 in HarmonyOS, such as bundleName and versionName?</h4><p>To obtain data from app.json5 (e.g., bundleName, versionName), retrieve information via <code>BundleInfo</code>:<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-bundlemanager-bundleinfo-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-bundlemanager-bundleinfo-V5</a>  </p>
+<h4 id="2-What-is-the-Map-type-in-HarmonyOS"><a href="#2-What-is-the-Map-type-in-HarmonyOS" class="headerlink" title="2. What is the Map type in HarmonyOS?"></a>2. What is the Map type in HarmonyOS?</h4><p>When making network requests, how to declare and assign parameters externally.  </p>
+<p>Sample declaration:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> ob &#123;</span><br><span class="line">  <span class="string">&quot;phone&quot;</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="string">&quot;code&quot;</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">p</span>: ob = &#123;</span><br><span class="line">  <span class="string">&quot;phone&quot;</span>: <span class="string">&quot;123142&quot;</span>,</span><br><span class="line">  <span class="string">&quot;code&quot;</span>: <span class="string">&quot;123&quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 3. Error when opening a global popup in HarmonyOS?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Opening a global popup in a normal class throws an error:  </span></span><br></pre></td></tr></table></figure>
+<p>Reason: TypeError<br>Error name: TypeError<br>Error message: is not callable<br>SourceCode:<br>  (parent ? parent : this).observeComponentCreation2((elmtId, isInitialRender) &#x3D;&gt; {<br>    ^  </p>
+<pre><code>
+Reference demo:  
+
+**OpenDialogDemo.ets**  
+```typescript
+import &#123; TestDialog &#125; from &#39;./DialogHelper&#39;;
+
+@Entry
+@Component
+struct OpenDialogDemo &#123;
+  build() &#123;
+    Column() &#123;
+      Text(&#39;Click to Popup&#39;)
+        .margin(&#123; top: 25 &#125;)
+        .fontSize(25)
+        .onClick(() =&gt; &#123;
+          TestDialog();
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>TestDialog.ets</strong>  </p>
+<pre><code class="language-typescript">import &#123; ComponentContent, window &#125; from &#39;@kit.ArkUI&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+import &#123; openOcrBottomDialog &#125; from &#39;./OpenOcrBottomDialog&#39;;
+
+export function TestDialog() &#123;
+  let windowClass = AppStorage.get(&quot;windowStage&quot;) as window.WindowStage;
+  let uiContext = windowClass.getMainWindowSync().getUIContext();
+  let promptAction = uiContext.getPromptAction();
+  let contentNode = new ComponentContent(uiContext, wrapBuilder(openOcrBottomDialog));
+  try &#123;
+    AppStorage.setOrCreate(&quot;contentNode&quot;, contentNode);
+    promptAction.openCustomDialog(contentNode);
+  &#125; catch (error) &#123;
+    let message = (error as BusinessError).message;
+    let code = (error as BusinessError).code;
+    console.error(`OpenCustomDialog args error code is $&#123;code&#125;, message is $&#123;message&#125;`);
+  &#125;
+&#125;
+</code></pre>
+<p><strong>openOcrBottomDialog.ets</strong>  </p>
+<pre><code class="language-typescript">import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+import &#123; window &#125; from &#39;@kit.ArkUI&#39;;
+
+@Builder
+export function openOcrBottomDialog() &#123;
+  Column() &#123;
+    Text(&#39;Content&#39;).fontSize(20).margin(&#123; top: 10, bottom: 10 &#125;);
+
+    Image(&quot;&quot;)
+      .height(1)
+      .width(&#39;100%&#39;)
+      .margin(&#123; left: 10, right: 10 &#125;)
+      .backgroundColor(0xDFDFDF);
+
+    Text(&#39;Take Photo&#39;)
+      .fontSize(20)
+      .margin(&#123; top: 10, bottom: 10 &#125;)
+      .onClick(() =&gt; &#123;
+        let sasasa: ComponentContent = AppStorage.get(&quot;contentNode&quot;) as ComponentContent;
+        console.log(&quot;Test contentNode= &quot; + sasasa);
+        try &#123;
+          let windowClass = AppStorage.get(&quot;windowStage&quot;) as window.WindowStage;
+          let uiContext = windowClass.getMainWindowSync().getUIContext();
+          let promptAction = uiContext.getPromptAction();
+          promptAction.closeCustomDialog(sasasa);
+        &#125; catch (error) &#123;
+          let message = (error as BusinessError).message;
+          let code = (error as BusinessError).code;
+          console.error(`:::OpenCustomDialog args error code is $&#123;code&#125;, message is $&#123;message&#125;`);
+        &#125;
+      &#125;);
+
+    Image(&quot;&quot;)
+      .height(1)
+      .width(&#39;100%&#39;)
+      .margin(&#123; left: 10, right: 10 &#125;)
+      .backgroundColor(0xDFDFDF);
+
+    // Text(&#39;Get from Album&#39;)
+    // .fontSize(20)
+    // .margin(&#123; top: 10, bottom: 10 &#125;)
+    // .onClick(() =&gt; &#123;
+    //   promptAction.closeCustomDialog(contentNode);
+    // &#125;)
+
+    Image(&quot;&quot;)
+      .height(1)
+      .width(&#39;100%&#39;)
+      .margin(&#123; left: 10, right: 10 &#125;)
+      .backgroundColor(0xDFDFDF);
+
+    // Text(&#39;Cancel&#39;)
+    // .fontSize(20)
+    // .margin(&#123; top: 10, bottom: 10 &#125;)
+    // .onClick(() =&gt; &#123;
+    //   promptAction.closeCustomDialog(contentNode);
+    // &#125;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-How-to-dynamically-insert-method-names-in-reflected-classes-using-dynamic-import-reflection-in-HarmonyOS"><a href="#4-How-to-dynamically-insert-method-names-in-reflected-classes-using-dynamic-import-reflection-in-HarmonyOS" class="headerlink" title="4. How to dynamically insert method names in reflected classes using dynamic import reflection in HarmonyOS?"></a>4. How to dynamically insert method names in reflected classes using dynamic import reflection in HarmonyOS?</h4><p>Problem description: When using dynamic import reflection, how to insert method names dynamically (e.g., via variables)?  </p>
+<pre><code class="language-typescript">let filePath = &#39;../plugins/DialogPlugin&#39;;
+let method = &#39;showConfirmDialog&#39;;
+import(filePath).then((ns: ESObject) =&gt; &#123;
+  new ns.default().$(method)() // Not effective  
+  new ns.default().showConfirmDialog() // Effective  
+&#125;);
+</code></pre>
+<p><strong>Solutions</strong>:  </p>
+<ul>
+<li>ArkTS does not support dynamic method calls; use a TS file for dynamic invocation.  </li>
+<li>Alternatively, use template strings to create dynamic method references: <code>variable$&#123;&#125;</code>.</li>
+</ul>
+<h4 id="5-How-to-make-the-keyboard-pop-up-by-default-on-a-SMS-verification-code-interface-in-HarmonyOS"><a href="#5-How-to-make-the-keyboard-pop-up-by-default-on-a-SMS-verification-code-interface-in-HarmonyOS" class="headerlink" title="5. How to make the keyboard pop up by default on a SMS verification code interface in HarmonyOS?"></a>5. How to make the keyboard pop up by default on a SMS verification code interface in HarmonyOS?</h4><p>To enable the keyboard by default:  </p>
+<ul>
+<li>Set <code>.enableKeyboardOnFocus(false)</code> to prevent the keyboard from popping up initially.  </li>
+<li>Use a click event on a blank area to dynamically modify the focus property.  </li>
+<li>For multiple TextInputs, set <code>defaultFocus</code> on the target TextInput to make it the default focus on the page.</li>
+</ul>
+
       
     </div>
 
@@ -687,8 +999,18 @@ struct Index &#123;
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 06:53:43" itemprop="dateCreated datePublished" datetime="2025-06-25T06:53:43+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 06:53:43 / Modified: 12:25:19" itemprop="dateCreated datePublished" datetime="2025-06-25T06:53:43+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -702,7 +1024,137 @@ struct Index &#123;
     <div class="post-body" itemprop="articleBody">
 
       
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Bottom-Placement-Adding-Search-Component-to-Custom-Dialog-Modifying-APP-Name-and-Icon-Page-Navigation-Animation-Options"><a href="#Daily-HarmonyOS-Next-Knowledge-Bottom-Placement-Adding-Search-Component-to-Custom-Dialog-Modifying-APP-Name-and-Icon-Page-Navigation-Animation-Options" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Bottom Placement, Adding Search Component to Custom Dialog, Modifying APP Name and Icon, Page Navigation, Animation Options"></a>[Daily HarmonyOS Next Knowledge] Bottom Placement, Adding Search Component to Custom Dialog, Modifying APP Name and Icon, Page Navigation, Animation Options</h3><h4 id="1-Why-does-setting-the-bottom-position-with-the-initialIndex-property-in-HarmonyOS-not-work-perfectly"><a href="#1-Why-does-setting-the-bottom-position-with-the-initialIndex-property-in-HarmonyOS-not-work-perfectly" class="headerlink" title="1. Why does setting the bottom position with the initialIndex property in HarmonyOS not work perfectly?"></a>1. Why does setting the bottom position with the initialIndex property in HarmonyOS not work perfectly?</h4><p>The bottom position is set using the <code>initialIndex</code> property, but there is a slight offset.  </p>
+<p>Check the height settings between list items and whether dividers are set. Refer to the API documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-service-widget-container-list-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-service-widget-container-list-V5</a>  </p>
+<h4 id="2-When-adding-a-Search-component-to-a-CustomDialogController-in-HarmonyOS-the-soft-keyboard-pushes-the-interface-off-the-screen-when-the-Search-component-is-focused"><a href="#2-When-adding-a-Search-component-to-a-CustomDialogController-in-HarmonyOS-the-soft-keyboard-pushes-the-interface-off-the-screen-when-the-Search-component-is-focused" class="headerlink" title="2. When adding a Search component to a CustomDialogController in HarmonyOS, the soft keyboard pushes the interface off the screen when the Search component is focused?"></a>2. When adding a Search component to a CustomDialogController in HarmonyOS, the soft keyboard pushes the interface off the screen when the Search component is focused?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-sheet-transition-V5#ZH-CN_TOPIC_0000001884917674__bindsheet">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-sheet-transition-V5#ZH-CN_TOPIC_0000001884917674__bindsheet</a>  </p>
+<p>Bind a semi-modal page to a component using the <code>bindSheet</code> property. The size of the semi-modal page can be determined by setting a custom or default built-in height when inserting the component.  </p>
+<p><strong>Replace the custom popup with a semi-modal page using the following demo</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;Click to Show Dialog&#39;;
+  scroller: Scroller = new Scroller();
+  private arr: number[] = [0, 1, 2, 3, 4, 5];
+  controllera: TextInputController = new TextInputController();
+  @State flag: boolean = false;
+  @State TextTest: string = &#39;&#39;;
+  @State TextTest1: string = &#39;&#39;;
+  @State screenHeight: number = 0;
+  // Control the display/hide of the semi-modal transition
+  @State isShowSheet: boolean = false;
+
+  // Build the semi-modal display interface using @Builder
+  @Builder
+  mySheet() &#123;
+    // Use a Stack container to fix the Navigation bar
+    Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;
+      Scroll(this.scroller) &#123;
+        Column() &#123;
+          TextInput(&#123; placeholder: &#39;search...&#39;, controller: this.controllera &#125;)
+            // Disable focus by default
+            .focusable(this.flag)
+            .width(&#39;90%&#39;)
+            .height(40)
+            .backgroundColor(&#39;#FFFFFF&#39;)
+            .margin(&#123; top: 8, bottom: 20 &#125;)
+            // Re-acquire focus on click
+            .onClick(() =&gt; &#123;
+              this.flag = true;
+              this.TextTest1 = &#39;1&#39;;
+            &#125;);
           
+          ForEach(this.arr, (item: number) =&gt; &#123;
+            Text(item.toString())
+              .width(&#39;90%&#39;)
+              .height(150)
+              .backgroundColor(0xFFFFFF)
+              .borderRadius(15)
+              .fontSize(16)
+              .textAlign(TextAlign.Center)
+              .margin(&#123; top: 10 &#125;);
+          &#125;, (item: number) =&gt; item.toString());
+
+          // Space for the keyboard; pushes up content when not empty
+          Text(this.TextTest)
+            .lineHeight(300)
+            .fontColor(&#39;#DCDCDC&#39;);
+          Text(this.TextTest1)
+            .lineHeight(300)
+            .fontColor(&#39;#DCDCDC&#39;);
+        &#125;.width(&#39;100%&#39;);
+      &#125;
+      // Top margin based on the Navigation bar height
+      .margin(&#123; top: 110 &#125;)
+      .scrollable(ScrollDirection.Vertical)
+      .scrollBar(BarState.On)
+      .scrollBarColor(Color.Gray)
+      .scrollBarWidth(0)
+      .onScroll((xOffset: number, yOffset: number) =&gt; &#123;
+        console.info(xOffset + &#39; &#39; + yOffset);
+      &#125;);
+      
+      // Second child component in the Stack; Navigation overlays the Scroll container
+      Navigation() &#123;
+      &#125;
+      .title(&#39;Navigation Title&#39;)
+      .backgroundColor(Color.Yellow)
+      .height(110)
+      .titleMode(NavigationTitleMode.Full)
+      .hideTitleBar(false)
+      .hideToolBar(false);
+      
+      // A button concept to handle keyboard dismissal (not implemented due to lack of keyboard event)
+      Button(&#39;Dismiss Keyboard&#39;)
+        .onClick(() =&gt; &#123;
+          this.TextTest1 = &#39;&#39;;
+          this.flag = false;
+        &#125;)
+        .margin(&#123; top: 10, left: 20 &#125;);
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC);
+  &#125;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+          .bindSheet(this.isShowSheet, this.mySheet(), &#123;
+            showClose: false,
+            height: 700,
+            dragBar: false,
+            onDisappear: () =&gt; &#123;
+              this.isShowSheet = !this.isShowSheet;
+            &#125;
+          &#125;)
+          .onClick(() =&gt; &#123;
+            this.isShowSheet = !this.isShowSheet;
+          &#125;);
+      &#125;
+      .width(&#39;100%&#39;);
+    &#125;
+    .height(&#39;100%&#39;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-Changes-to-the-APP-name-and-icon-in-HarmonyOS-are-not-taking-effect"><a href="#3-Changes-to-the-APP-name-and-icon-in-HarmonyOS-are-not-taking-effect" class="headerlink" title="3. Changes to the APP name and icon in HarmonyOS are not taking effect?"></a>3. Changes to the APP name and icon in HarmonyOS are not taking effect?</h4><p>In a Flutter project, changes to the icon and APP name under the <code>ohos\AppScope\resources</code> path are not reflected.  </p>
+<p><strong>Solution</strong>:  </p>
+<ul>
+<li>In <code>app.json5</code>, <code>icon</code> corresponds to the APP launch icon, and <code>label</code> corresponds to the APP name.</li>
+</ul>
+<h4 id="4-How-to-navigate-between-pages-in-modular-development-in-HarmonyOS"><a href="#4-How-to-navigate-between-pages-in-modular-development-in-HarmonyOS" class="headerlink" title="4. How to navigate between pages in modular development in HarmonyOS?"></a>4. How to navigate between pages in modular development in HarmonyOS?</h4><p>How to navigate between pages when developing modularly using the HAR method? How can the main module use <code>router.pushUrl</code> to navigate to a page in a sub-module?  </p>
+<p><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-routing-V5#%E5%91%BD%E5%90%8D%E8%B7%AF%E7%94%B1">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-routing-V5#%E5%91%BD%E5%90%8D%E8%B7%AF%E7%94%B1</a>  </p>
+<p>To navigate to a page in a shared package (HAR or HSP), use <code>router.pushNamedRoute</code>:  </p>
+<pre><code class="language-typescript">router.pushNamedRoute(&#123;
+  name: &#39;targetRouteName&#39;, // Name of the target route
+  parameters: &#123;
+    // Parameters to pass
+  &#125;
+&#125;);
+</code></pre>
+<h4 id="5-The-local-code-dependency-for-AnimationOptions-in-HarmonyOS-cannot-be-found"><a href="#5-The-local-code-dependency-for-AnimationOptions-in-HarmonyOS-cannot-be-found" class="headerlink" title="5. The local code dependency for AnimationOptions in HarmonyOS cannot be found?"></a>5. The local code dependency for AnimationOptions in HarmonyOS cannot be found?</h4><p><strong>Reference for AnimationOptions</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-drawabledescriptor-V5#animationoptions12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-drawabledescriptor-V5#animationoptions12</a>  </p>
+<p><code>AnimationOptions</code> is used to control the playback of animations when displaying an array of <code>PixelMap</code> objects using the <code>Image</code> component:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-drawabledescriptor-V5#ZH-CN_TOPIC_0000001884757686__animationoptions12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-drawabledescriptor-V5#ZH-CN_TOPIC_0000001884757686__animationoptions12</a>  </p>
+
       
     </div>
 
@@ -744,8 +1196,18 @@ struct Index &#123;
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 06:45:07" itemprop="dateCreated datePublished" datetime="2025-06-25T06:45:07+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 06:45:07 / Modified: 12:25:20" itemprop="dateCreated datePublished" datetime="2025-06-25T06:45:07+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -759,7 +1221,281 @@ struct Index &#123;
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Using-Semi-modal-in-Lists-Custom-Toast-Popup-Following-Image-Base64-Encoding-Routing-Optimization"><a href="#【Daily-HarmonyOS-Next-Knowledge】Using-Semi-modal-in-Lists-Custom-Toast-Popup-Following-Image-Base64-Encoding-Routing-Optimization" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization"></a>【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization</h3><h4 id="1-How-to-use-semi-modal-bindSheet-in-List-or-Grid-in-HarmonyOS"><a href="#1-How-to-use-semi-modal-bindSheet-in-List-or-Grid-in-HarmonyOS" class="headerlink" title="1. How to use semi-modal bindSheet in List or Grid in HarmonyOS?"></a>1. How to use semi-modal bindSheet in List or Grid in HarmonyOS?</h4><p>There is a sharing popup-like page that needs to pop up a semi-modal page when clicking each item.  </p>
+<p>Refer to the following code:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct BindSheetDemo &#123;
+  // Semi-modal transition display/hide control
+  @State isShowSheet: boolean = false;
+  @State isShowDetailSheet: boolean = false;
+  private menuList: string[] = [&#39;Live Room&#39;, &#39;Related Content&#39;, &#39;More&#39;];
+  private detailList: string[] = [&#39;Live Room 111111&#39;, &#39;Related Content 22222222&#39;, &#39;More 334455665&#39;];
+  
+  // Build the semi-modal display interface via @Builder
+  @Builder
+  mySheet() &#123;
+    Column() &#123;
+      Flex(&#123; direction: FlexDirection.Row, wrap: FlexWrap.Wrap &#125;) &#123;
+        ForEach(this.menuList, (item: string) =&gt; &#123;
+          Text(item)
+            .fontSize(16)
+            .fontColor(0x333333)
+            .backgroundColor(0xf1f1f1)
+            .borderRadius(8)
+            .margin(10)
+            .padding(10)
+            .onClick(() =&gt; &#123;
+              this.isShowDetailSheet = !this.isShowDetailSheet;
+            &#125;)
+        &#125;)
+      &#125;
+      .bindSheet(this.isShowDetailSheet, this.myDetailSheet(), &#123;
+        // height: 550,
+        dragBar: true,
+        onDisappear: () =&gt; &#123;
+          this.isShowDetailSheet = !this.isShowDetailSheet;
+        &#125;
+      &#125;)
+      .padding(&#123; top: 18 &#125;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.White)
+  &#125;
+  
+  @Builder
+  myDetailSheet() &#123;
+    Column() &#123;
+      Flex(&#123; direction: FlexDirection.Row, wrap: FlexWrap.Wrap &#125;) &#123;
+        ForEach(this.detailList, (item: string) =&gt; &#123;
+          Text(item)
+            .fontSize(16)
+            .fontColor(0x333333)
+            .backgroundColor(0xf1f1f1)
+            .borderRadius(8)
+            .margin(10)
+            .padding(10)
+        &#125;)
+      &#125;
+      .padding(&#123; top: 18 &#125;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.White)
+  &#125;
+  
+  build() &#123;
+    Column() &#123;
+      Text(&#39;Live Room&#39;)
+        .fontSize(28)
+        .padding(&#123; top: 30, bottom: 30 &#125;)
+      Column() &#123;
+        Row() &#123;
+          Row()
+            .width(10)
+            .height(10)
+            .backgroundColor(&#39;#a8a8a8&#39;)
+            .margin(&#123; right: 12 &#125;)
+            .borderRadius(20)
+
+          Column() &#123;
+            Text(&#39;Click to View&#39;)
+              .fontSize(16)
+              .fontWeight(FontWeight.Medium)
+          &#125;
+          .alignItems(HorizontalAlign.Start)
+
+          Blank()
+
+          Row()
+            .width(12)
+            .height(12)
+            .margin(&#123; right: 15 &#125;)
+            .border(&#123;
+              width: &#123; top: 2, right: 2 &#125;,
+              color: 0xcccccc
+            &#125;)
+            .rotate(&#123; angle: 45 &#125;)
+        &#125;
+        .borderRadius(15)
+        .shadow(&#123; radius: 100, color: &#39;#ededed&#39; &#125;)
+        .width(&#39;90%&#39;)
+        .alignItems(VerticalAlign.Center)
+        .padding(&#123; left: 15, top: 15, bottom: 15 &#125;)
+        .backgroundColor(Color.White)
+        .bindSheet(this.isShowSheet, this.mySheet(), &#123;
+          height: 150,
+          dragBar: false,
+          onDisappear: () =&gt; &#123;
+            this.isShowSheet = !this.isShowSheet;
+          &#125;
+        &#125;)
+        .onClick(() =&gt; &#123;
+          this.isShowSheet = !this.isShowSheet;
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(0xf1f1f1)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-customize-the-toast-style-in-HarmonyOS"><a href="#2-How-to-customize-the-toast-style-in-HarmonyOS" class="headerlink" title="2. How to customize the toast style in HarmonyOS?"></a>2. How to customize the toast style in HarmonyOS?</h4><p>CustomDialog supports customization for popups. Is there a way to customize the UI style for toasts? If the system currently lacks toast customization capabilities, what official recommendations are there to implement toast-like functionality?  </p>
+<p>Toasts do not support customization, but CustomDialog can be used for full customization. <code>PromptAction.openCustomdialog</code> is recommended, which supports decoupling from the page and only requires passing UIContext to implement popups.<br>Reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#opencustomdialog12">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#opencustomdialog12</a>  </p>
+<p><code>openCustomDialog&lt;T extends Object&gt;(dialogContent: ComponentContent&lt;T&gt;, options?: promptAction.BaseDialogOptions): Promise&lt;void&gt;</code>  </p>
+<p>Creates and pops up a custom dialog corresponding to dialogContent with a Promise async callback. The dialog style fully follows the settings in dialogContent, similar to setting <code>customStyle: true</code> for CustomDialog. Currently, <code>isModal = true</code> and <code>showInSubWindow = true</code> cannot be used simultaneously.  </p>
+<h4 id="3-When-pushing-to-the-next-page-from-a-HarmonyOS-popup-the-popup-follows-to-the-next-page-How-to-bind-the-popup-to-the-current-page"><a href="#3-When-pushing-to-the-next-page-from-a-HarmonyOS-popup-the-popup-follows-to-the-next-page-How-to-bind-the-popup-to-the-current-page" class="headerlink" title="3. When pushing to the next page from a HarmonyOS popup, the popup follows to the next page. How to bind the popup to the current page?"></a>3. When pushing to the next page from a HarmonyOS popup, the popup follows to the next page. How to bind the popup to the current page?</h4><p>When pushing to the next page from a popup, the popup follows, but we want the popup to bind to the current page.  </p>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5</a>  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">import router from &#39;@ohos.router&#39;;
+@CustomDialog
+export default struct UserPrivacyDialog &#123;
+  controller: CustomDialogController = new CustomDialogController(&#123; builder: &#39;&#39; &#125;);
+  cancel: Function = () =&gt; &#123;
+  &#125;;
+  confirm: Function = () =&gt; &#123;
+  &#125;;
+  visible: Visibility = Visibility.None
+  
+  build() &#123;
+    Column() &#123;
+      Text(&#39;This is a Popup&#39;)
+      Button(&#39;Jump&#39;)
+        .onClick(() =&gt; &#123;
+          router.pushUrl(&#123;
+            url: &#39;pages/Second&#39;
+          &#125;)
+        &#125;).backgroundColor(0xffffff).fontColor(Color.Red)
+    &#125;
+    .margin(&#123; top: 22 &#125;)
+    .justifyContent(FlexAlign.SpaceEvenly)
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  @State textValue: string = &#39;Hello World&#39;
+  @State visible: Visibility = Visibility.None
+  
+  build() &#123;
+    Stack() &#123;
+      Row() &#123;
+        Column() &#123;
+          Button(&#39;Click&#39;)
+            .onClick(() =&gt; &#123;
+              if (this.visible == Visibility.Visible) &#123;
+                this.visible = Visibility.None
+              &#125; else &#123;
+                this.visible = Visibility.Visible
+              &#125;
+            &#125;)
+            .backgroundColor(0x777474)
+            .fontColor(0x000000)
+        &#125;
+        .width(&#39;100%&#39;)
+      &#125;
+      .height(&#39;100%&#39;)
+      .backgroundColor(0x885555)
+      Text(&#39;&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.visible == Visibility.Visible) &#123;
+            this.visible = Visibility.None
+          &#125; else &#123;
+            this.visible = Visibility.Visible
+          &#125;
+        &#125;)
+        .width(&#39;100%&#39;)
+        .height(&#39;100%&#39;)// Transparency can be adjusted
+        .opacity(0.16)
+        .backgroundColor(0x000000)
+        .visibility(this.visible)
+      Column() &#123;
+        GridRow(&#123;
+          columns: &#123; xs: 1, sm: 4, md: 8, lg: 12 &#125;,
+          breakpoints: &#123;
+            value: [&quot;400vp&quot;, &quot;600vp&quot;, &quot;800vp&quot;],
+            reference: BreakpointsReference.WindowSize
+          &#125;,
+        &#125;) &#123;
+          GridCol(&#123;
+            span: &#123; xs: 1, sm: 2, md: 4, lg: 8 &#125;,
+            offset: &#123; xs: 0, sm: 1, md: 2, lg: 2 &#125;
+          &#125;) &#123;
+            Column() &#123;
+              Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
+                UserPrivacyDialog();
+              &#125;.margin(&#123; bottom: 10 &#125;)
+            &#125;
+            .backgroundColor(0xffffff)
+            .visibility(this.visible)
+            .clip(true)
+            .borderRadius(20)
+          &#125;
+        &#125;
+      &#125;.width(&#39;95%&#39;) // Set popup width
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-How-to-encode-images-as-Base64-in-HarmonyOS"><a href="#4-How-to-encode-images-as-Base64-in-HarmonyOS" class="headerlink" title="4. How to encode images as Base64 in HarmonyOS?"></a>4. How to encode images as Base64 in HarmonyOS?</h4><p>How to encode images obtained via CameraKit pick as Base64.  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">let packOpts: image.PackingOption = &#123; format: &quot;image/jpeg&quot;, quality: 98 &#125;;
+let imagePackerApi = image.createImagePacker();
+const context: Context = getContext(this);
+const resourceMgr = context.resourceManager;
+let imageBuffer = await resourceMgr.getMediaContent($r(&#39;app.media.ic_low&#39;));
+const imageSource: image.ImageSource = image.createImageSource(imageBuffer.buffer);
+let decodingOptions: image.DecodingOptions = &#123;
+  editable: true,
+  desiredPixelFormat: 3,
+  rotate: 90
+&#125;
+
+// Create PixelMap and perform simple rotation and scaling
+imageSource.createPixelMap(decodingOptions).then((pixelMap: PixelMap) =&gt; &#123;
+  this.pixelMap = pixelMap;
+  // Convert PixelMap to Base64 (requires a packing process first)
+  imagePackerApi.packing(pixelMap, packOpts).then((data: ArrayBuffer) =&gt; &#123;
+    let base64Str = buffer.from(data).toString(&#39;base64&#39;);
+    let resultBase64Str = &quot;data:image/png;base64,&quot; + base64Str;
+    this.resultBase64Str = resultBase64Str;
+  &#125;).catch((error: BusinessError) =&gt; &#123;
+    console.error(&#39;Failed to pack the image. Error: &#39; + error);
+  &#125;);
+  pixelMap.release();
+&#125;);
+
+// Key tip: Directly converting PixelMap to Base64 is incorrect (example of wrong approach):
+let pixelMap = await imageSource.createPixelMap(opts);
+console.log(&quot;pixelMap.getPixelBytesNumber():&quot; + pixelMap.getPixelBytesNumber());
+let arrayBuffer = new ArrayBuffer(pixelMap.getPixelBytesNumber());
+pixelMap.readPixelsToBuffer(arrayBuffer);
+console.log(&quot;arrayBuffer&quot; + arrayBuffer);
+let base64Str = buffer.from(arrayBuffer).toString(Constants.BASE_64);
+let resultBase64Str = &quot;data:image/png;base64,&quot; + base64Str;
+</code></pre>
+<p>Obtaining sandbox paths:  </p>
+<pre><code class="language-typescript">import UIAbility from &#39;@ohos.app.ability.UIAbility&#39;;
+export default class EntryAbility extends UIAbility &#123;
+  onWindowStageCreate(windowStage) &#123;
+    let context = this.context;
+    let pathDir = context.filesDir;
+  &#125;
+&#125;
+</code></pre>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/app-sandbox-directory-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/app-sandbox-directory-V5</a><br>The app sandbox is a security isolation mechanism to prevent malicious path traversal. The visible directory range for an app is the “app sandbox directory”, which includes:  </p>
+<ul>
+<li>A dedicated directory mapped in internal storage for each app, consisting of the “app file directory” and essential system files.  </li>
+<li>Restricted visibility to protect app data from other apps.  </li>
+<li>App files can be saved and processed in the “app file directory”; system files are read-only; user files require specific APIs and user authorization.</li>
+</ul>
+<h4 id="5-How-to-optimize-routing-usage-in-HarmonyOS"><a href="#5-How-to-optimize-routing-usage-in-HarmonyOS" class="headerlink" title="5. How to optimize routing usage in HarmonyOS?"></a>5. How to optimize routing usage in HarmonyOS?</h4><p>Can RouterModule be optimized to automatically determine the current NavStack, or will using a unified NavStack cause performance issues?  </p>
+<p>Currently, router does not support returning to a specified index page. It is recommended to replace router with Navigation, whose <code>popToIndex</code> method meets this scenario.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5</a>  </p>
+
       
     </div>
 
@@ -1502,7 +2238,7 @@ struct Index &#123;
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

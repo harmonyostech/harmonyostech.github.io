@@ -660,7 +660,7 @@ export function customDialogBuilder() &#123;
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/06/25/521-Daily-HarmonyOS-Next-Knowledge-Listening-for-Page-Size-Changes-Dialog-Obstruction-Issues-Column-Display-Problems-Image-Component-Loading-Issues-Routing-Jumps/" class="post-title-link" itemprop="url">521[Daily HarmonyOS Next Knowledge] Listening for Page Size Changes, Dialog Obstruction Issues, Column Display Problems, Image Component Loading Issues, Routing Jumps</a>
+            <a href="/2025/06/25/521-Daily-HarmonyOS-Next-Knowledge-Listening-for-Page-Size-Changes-Dialog-Obstruction-Issues-Column-Display-Problems-Image-Component-Loading-Issues-Routing-Jumps/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Listening for Page Size Changes, Dialog Obstruction Issues, Column Display Problems, Image Component Loading Issues, Routing Jumps</a>
         </h2>
 
         <div class="post-meta">
@@ -669,8 +669,18 @@ export function customDialogBuilder() &#123;
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 09:54:37" itemprop="dateCreated datePublished" datetime="2025-06-25T09:54:37+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 09:54:37 / Modified: 12:25:02" itemprop="dateCreated datePublished" datetime="2025-06-25T09:54:37+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -684,7 +694,35 @@ export function customDialogBuilder() &#123;
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Listening-for-Page-Size-Changes-Dialog-Obstruction-Issues-Column-Display-Problems-Image-Component-Loading-Issues-Routing-Jumps"><a href="#Daily-HarmonyOS-Next-Knowledge-Listening-for-Page-Size-Changes-Dialog-Obstruction-Issues-Column-Display-Problems-Image-Component-Loading-Issues-Routing-Jumps" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Listening for Page Size Changes, Dialog Obstruction Issues, Column Display Problems, Image Component Loading Issues, Routing Jumps"></a>[Daily HarmonyOS Next Knowledge] Listening for Page Size Changes, Dialog Obstruction Issues, Column Display Problems, Image Component Loading Issues, Routing Jumps</h3><h4 id="1-How-to-listen-for-real-time-changes-in-NavPathStack-size-in-HarmonyOS"><a href="#1-How-to-listen-for-real-time-changes-in-NavPathStack-size-in-HarmonyOS" class="headerlink" title="1. How to listen for real-time changes in NavPathStack size in HarmonyOS?"></a>1. How to listen for real-time changes in NavPathStack size in HarmonyOS?</h4><p><strong>How to listen for real-time changes in NavPathStack size?</strong>  </p>
+<p>Current solutions in documentation: <code>navDestinationUpdate</code> has three issues:  </p>
+<ol>
+<li>Frequent updates trigger continuous callbacks.  </li>
+<li>Unnecessary in some scenarios (e.g., screen off or app backgrounding).  </li>
+<li>Inaccurate: No notification when pushing a new page changes the stack size.</li>
+</ol>
+<p>Use <code>observe.on</code> instead. Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-observer-V5#ZH-CN_TOPIC_0000001930676413__observeronnavdestinationswitch12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-observer-V5#ZH-CN_TOPIC_0000001930676413__observeronnavdestinationswitch12</a>  </p>
+<h4 id="2-HarmonyOS-Page-blocked-by-pop-up-dialog"><a href="#2-HarmonyOS-Page-blocked-by-pop-up-dialog" class="headerlink" title="2. HarmonyOS: Page blocked by pop-up dialog?"></a>2. HarmonyOS: Page blocked by pop-up dialog?</h4><p><strong>Steps to reproduce</strong>:  </p>
+<ol>
+<li>Click to pop up a dialog.  </li>
+<li>Navigate to a login page within the dialog, resulting in the page being blocked behind the dialog.</li>
+</ol>
+<p><strong>Solution</strong>: <code>CustomDialog</code> is a global pop-up with a high window hierarchy. Use <code>window</code> to lower the hierarchy.<br>API reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5</a>  </p>
+<h4 id="3-HarmonyOS-When-Navigation-uses-NavigationMode-Split-can-bindSheet-adapt-to-split-screen-mode"><a href="#3-HarmonyOS-When-Navigation-uses-NavigationMode-Split-can-bindSheet-adapt-to-split-screen-mode" class="headerlink" title="3. HarmonyOS: When Navigation uses NavigationMode.Split, can bindSheet adapt to split-screen mode?"></a>3. HarmonyOS: When Navigation uses NavigationMode.Split, can bindSheet adapt to split-screen mode?</h4><p><strong>Half-modal behavior</strong>:  </p>
+<ul>
+<li>When screen width &lt; 600vp: Bottom pop-up.  </li>
+<li>When screen width is in <code>[600, 840)</code>: Centered pop-up.  </li>
+<li>When screen width &gt; 840vp: Default hand-following pop-up (appears below the bound sheet node).</li>
+</ul>
+<h4 id="4-HarmonyOS-Does-setting-visibility-to-Visibility-None-on-an-Image-component-prevent-the-onComplete-event-from-firing"><a href="#4-HarmonyOS-Does-setting-visibility-to-Visibility-None-on-an-Image-component-prevent-the-onComplete-event-from-firing" class="headerlink" title="4. HarmonyOS: Does setting visibility to Visibility.None on an Image component prevent the onComplete event from firing?"></a>4. HarmonyOS: Does setting <code>visibility</code> to <code>Visibility.None</code> on an Image component prevent the <code>onComplete</code> event from firing?</h4><p><strong>Issue</strong>: When <code>visibility</code> is set to <code>Visibility.None</code>, the <code>onComplete</code> event does not trigger.  </p>
+<p><strong>Explanation</strong>: The <code>onComplete</code> interface returns the component’s width and height (<code>componentWidth</code> and <code>componentHeight</code>), which require measurement to execute. If <code>visible = false</code>, the component is not measured, blocking the <code>onComplete</code> callback.  </p>
+<p><strong>Solution</strong>: Keep <code>visible = true</code> by default. When an image fails to load, use the <code>onError</code> interface to set <code>visible = false</code>.  </p>
+<h4 id="5-HarmonyOS-What-is-the-difference-between-pushDestinationByName-and-pushPathByName"><a href="#5-HarmonyOS-What-is-the-difference-between-pushDestinationByName-and-pushPathByName" class="headerlink" title="5. HarmonyOS: What is the difference between pushDestinationByName and pushPathByName?"></a>5. HarmonyOS: What is the difference between <code>pushDestinationByName</code> and <code>pushPathByName</code>?</h4><ul>
+<li><code>pushDestinationByName</code> binds a context object and verifies context consistency during calls.  </li>
+<li><code>pushPathByName</code> does not verify context consistency.</li>
+</ul>
+<p><strong>Note</strong>: Different windows have different UIContexts. If used within the same window, they differ only in return values, with no other functional differences.</p>
+
       
     </div>
 
@@ -785,7 +823,7 @@ export function customDialogBuilder() &#123;
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/06/25/519-Daily-HarmonyOS-Next-Knowledge-Click-Event-Not-Responding-Soft-Keyboard-Pop-up-Animation-Effects-Text-Selection-Status-Bar-Font-Settings/" class="post-title-link" itemprop="url">519[Daily HarmonyOS Next Knowledge] Click Event Not Responding, Soft Keyboard Pop-up, Animation Effects, Text Selection, Status Bar Font Settings</a>
+            <a href="/2025/06/25/519-Daily-HarmonyOS-Next-Knowledge-Click-Event-Not-Responding-Soft-Keyboard-Pop-up-Animation-Effects-Text-Selection-Status-Bar-Font-Settings/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Click Event Not Responding, Soft Keyboard Pop-up, Animation Effects, Text Selection, Status Bar Font Settings</a>
         </h2>
 
         <div class="post-meta">
@@ -794,8 +832,18 @@ export function customDialogBuilder() &#123;
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 09:50:55" itemprop="dateCreated datePublished" datetime="2025-06-25T09:50:55+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 09:50:55 / Modified: 12:25:03" itemprop="dateCreated datePublished" datetime="2025-06-25T09:50:55+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -809,7 +857,254 @@ export function customDialogBuilder() &#123;
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Click-Event-Not-Responding-Soft-Keyboard-Pop-up-Animation-Effects-Text-Selection-Status-Bar-Font-Settings"><a href="#Daily-HarmonyOS-Next-Knowledge-Click-Event-Not-Responding-Soft-Keyboard-Pop-up-Animation-Effects-Text-Selection-Status-Bar-Font-Settings" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Click Event Not Responding, Soft Keyboard Pop-up, Animation Effects, Text Selection, Status Bar Font Settings"></a>[Daily HarmonyOS Next Knowledge] Click Event Not Responding, Soft Keyboard Pop-up, Animation Effects, Text Selection, Status Bar Font Settings</h3><h4 id="1-Only-one-of-two-buttons-on-a-HarmonyOS-page-receives-click-events"><a href="#1-Only-one-of-two-buttons-on-a-HarmonyOS-page-receives-click-events" class="headerlink" title="1. Only one of two buttons on a HarmonyOS page receives click events?"></a>1. Only one of two buttons on a HarmonyOS page receives click events?</h4><pre><code class="language-typescript">@Entry
+@Component
+struct SplashScreenPage &#123;
+  @State pageShowTime: number = CommonConstants.TIME_DEFAULT_VALUE;
+  @State intervalID: number = CommonConstants.INTERVAL_ID_DEFAULT;
+
+  build() &#123;
+    Column() &#123;
+      Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;
+        Image($r(&#39;app.media.ic_splash_page_background&#39;))
+          .width(CommonConstants.IMAGE_WIDTH)
+          .height(CommonConstants.IMAGE_HEIGHT)
+
+        HideButton();
+        SkipButton(&#123; secondsCount: (CommonConstants.DELAY_SECONDS - this.pageShowTime) &#125;);
+      &#125;
+      .layoutWeight(CommonConstants.STACK_LAYOUT_WEIGHT)
+      .width(CommonConstants.STACK_WIDTH);
+    &#125;
+    .alignItems(HorizontalAlign.Start)
+    .width(CommonConstants.COLUMN_WIDTH)
+    .height(CommonConstants.COLUMN_HEIGHT)
+  &#125;
+&#125;
+
+// Create two buttons separately
+@Component
+struct SkipButton &#123;
+  @Prop secondsCount: number = 0;
+
+  build() &#123;
+    Flex(&#123;
+      direction: FlexDirection.Row,
+      justifyContent: FlexAlign.End
+    &#125;) &#123;
+      Text($r(&#39;app.string.skip&#39;, this.secondsCount))
+        .onClick(() =&gt; &#123;
+          console.log(&quot;EntryAbility Skip Button is clicked&quot;);
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+
+@Component
+struct HideButton &#123;
+  build() &#123;
+    Flex(&#123;
+      direction: FlexDirection.Row,
+      justifyContent: FlexAlign.Start
+    &#125;) &#123;
+      Text($r(&#39;app.string.hide&#39;))
+        .onClick(() =&gt; &#123;
+          console.log(&quot;EntryAbility Hide Button is clicked&quot;);
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Solution</strong>: Add the <code>.hitTestBehavior(HitTestMode.Transparent)</code> attribute.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-hit-test-behavior-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-hit-test-behavior-V5</a>  </p>
+<p>This attribute sets the touch test mode of a component. The ArkUI framework uses hit testing to collect components that should respond to touch events before distributing them. Different <code>hitTestBehavior</code> values affect which components are included in the hit test results, thus influencing event distribution.  </p>
+<pre><code class="language-typescript">@Component
+struct SkipButton &#123;
+  @Prop secondsCount: number = 0;
+
+  build() &#123;
+    Flex(&#123;
+      direction: FlexDirection.Row,
+      justifyContent: FlexAlign.End
+    &#125;) &#123;
+      Text($r(&#39;app.string.app_name&#39;, this.secondsCount))
+        .onClick(() =&gt; &#123;
+          console.log(&quot;EntryAbility Skip Button is clicked&quot;);
+        &#125;)
+    &#125;
+    .hitTestBehavior(HitTestMode.Transparent)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-handle-soft-keyboard-pop-up-in-HarmonyOS"><a href="#2-How-to-handle-soft-keyboard-pop-up-in-HarmonyOS" class="headerlink" title="2. How to handle soft keyboard pop-up in HarmonyOS?"></a>2. How to handle soft keyboard pop-up in HarmonyOS?</h4><p><strong>Issue</strong>: When a <code>TextArea</code> in a custom <code>@CustomDialog</code> gains focus, the soft keyboard pops up and pushes the entire dialog up. Requirement: The keyboard should only push up the area around the <code>TextArea</code> instead of the entire dialog.  </p>
+<p><strong>Solution</strong>: The soft keyboard may obscure part of the UI by default. To ensure the focused input area is visible above the keyboard, get the keyboard’s avoid area and adjust the margin accordingly.  </p>
+<pre><code class="language-typescript">import window from &#39;@ohos.window&#39;;
+@Entry
+@Component
+struct ScrollExample &#123;
+  scroller: Scroller = new Scroller()
+  private arr: number[] = [0, 1, 2, 3, 4, 5]
+  @State scrollHeight: number = 0;
+  @State isRebuild: boolean = false;
+  @State keyHeight: number =0;
+  @State text: string = &#39;&#39;
+  aboutToAppear() &#123;
+    window.getLastWindow(getContext(this)).then(currentWindow =&gt;&#123;
+      let property = currentWindow.getWindowProperties();
+      // Init window height
+      let avoidArea = currentWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_KEYBOARD);
+      this.scrollHeight = px2vp(property.windowRect.height - avoidArea.bottomRect.height);
+      // Monitor soft keyboard show/hide
+      currentWindow.on(&#39;avoidAreaChange&#39;, async data =&gt; &#123;
+        if (data.type !== window.AvoidAreaType.TYPE_KEYBOARD) &#123;
+          this.keyHeight=avoidArea.bottomRect.height;
+          return;
+        &#125;
+        this.scrollHeight = px2vp(property.windowRect.height - data.area.bottomRect.height);
+      &#125;)
+    &#125;)
+  &#125;
+  build() &#123;
+    Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;
+      Column() &#123;
+        Scroll(this.scroller) &#123;
+          Column() &#123;
+            TextInput(&#123; text: this.text, placeholder: &#39;input your word...&#39; &#125;)
+              .placeholderFont(&#123; size: 14, weight: 400 &#125;)
+              .width(320)
+              .height(40).margin(200)
+              .fontSize(14)
+              .fontColor(Color.Black)
+              .backgroundColor(Color.White)
+            ForEach(this.arr, (item:number) =&gt; &#123;
+              Text(item.toString())
+                .width(&#39;90%&#39;)
+                .height(150)
+                .backgroundColor(0xFFFFFF)
+                .borderRadius(15)
+                .fontSize(16)
+                .textAlign(TextAlign.Center)
+                .margin(&#123; top: 10 &#125;)
+            &#125;)
+          &#125;.width(&#39;100%&#39;)
+        &#125;
+        .width(&#39;100%&#39;).height(this.scrollHeight).layoutWeight(1)
+        Text(&#39;这是一个测试文本&#39;)
+          .width(&#39;100%&#39;)
+          .height(50)
+          .backgroundColor(Color.Red)
+          .margin(&#123;bottom: this.scrollHeight&#125;)
+      &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).justifyContent(FlexAlign.Start)
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-No-animation-effect-when-using-scale-in-HarmonyOS"><a href="#3-No-animation-effect-when-using-scale-in-HarmonyOS" class="headerlink" title="3. No animation effect when using .scale in HarmonyOS?"></a>3. No animation effect when using <code>.scale</code> in HarmonyOS?</h4><p><strong>Issue</strong>: The <code>.scale</code> attribute does not trigger animation.  </p>
+<pre><code class="language-typescript">@Component ImageScale &#123;
+  @State scaleValue: ScaleOptions = &#123; x: 1, y: 1, z: 1 &#125;
+
+  build() &#123;
+    Column() &#123;
+      Image(this.viewModel?.item?.image?.hdUrl)
+        .width(&quot;100%&quot;)
+        .aspectRatio(1.0)
+        .animation(&#123; duration: 200, curve: &quot;ease&quot; &#125;)
+        .scale(this.scaleValue)
+        .gesture(TapGesture(&#123; count: 2 &#125;).onAction((event: GestureEvent) =&gt; &#123;
+          let width = event.target.area.width.valueOf() as number
+          let height = event.target.area.height.valueOf() as number
+          let centerX = event.fingerList[0].localX / width
+          let centerY = event.fingerList[0].localY / height
+
+          if (this.scaleMode) &#123;
+            this.scaleMode = false
+            this.scaleValue = &#123;x : 1, y : 1&#125;
+          &#125; else &#123;
+            this.scaleMode = true
+            this.scaleValue = &#123;x : 2, y : 2, centerX: `$&#123;centerX * 100&#125;%`, centerY:`$&#123;centerY * 100&#125;%`&#125;
+          &#125;
+        &#125;))
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Reference implementation</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct AnimationPage &#123;
+  @State message: string = &#39;Hello World fhlsfslfslfhklafhlaskhfkjsfhjksadfhlkjsafsafhkjsfhkljfhjksafhkjasfksfh&#39;;
+  @State textY:number = 0
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(20)
+          .fontWeight(FontWeight.Bold)
+          .scale(&#123;x:1,y:this.textY&#125;)
+          .animation(&#123;
+            duration:2000,
+            curve: &quot;linear&quot;
+          &#125;).id(&quot;text&quot;)
+
+        Button(&quot;点击动画展开&quot;).onClick((ele)=&gt;&#123;
+          this.textY = 1
+        &#125;).width(200).height(50)
+          .backgroundColor(Color.Pink).borderRadius(10)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-Background-blur-effect-fails-when-selecting-items-in-TextPicker-within-a-custom-HarmonyOS-Dialog"><a href="#4-Background-blur-effect-fails-when-selecting-items-in-TextPicker-within-a-custom-HarmonyOS-Dialog" class="headerlink" title="4. Background blur effect fails when selecting items in TextPicker within a custom HarmonyOS Dialog?"></a>4. Background blur effect fails when selecting items in TextPicker within a custom HarmonyOS Dialog?</h4><p><strong>Issue</strong>: When a custom dialog sets <code>backgroundColor</code> and <code>backgroundBlurStyle</code> with an OPACITY transition animation, selecting an item in TextPicker causes the background blur to失效 (fail).  </p>
+<p><strong>Cause</strong>: Using OPACITY in the transition may override <code>backgroundBlurStyle</code>.  </p>
+<p><strong>Solutions</strong>:  </p>
+<ol>
+<li>Adjust animation order: Apply OPACITY after <code>backgroundBlurStyle</code>.  </li>
+<li>Use separate animations: Apply OPACITY and blur effects to different properties.  </li>
+<li>Adjust property order: Ensure <code>backgroundBlurStyle</code> takes effect after OPACITY.</li>
+</ol>
+<h4 id="5-Setting-status-bar-font-color-in-HarmonyOS-appears-ineffective"><a href="#5-Setting-status-bar-font-color-in-HarmonyOS-appears-ineffective" class="headerlink" title="5. Setting status bar font color in HarmonyOS appears ineffective?"></a>5. Setting status bar font color in HarmonyOS appears ineffective?</h4><p><strong>Issue</strong>: The <code>statusBarContentColor</code> setting in <code>setWindowSystemBarProperties</code> succeeds in the callback but does not change the status bar appearance.  </p>
+<pre><code class="language-typescript">windowclass.setWindowSystemBarProperties(&#123; 
+  statusBarContentColor: &#39;#000000&#39; // Status bar font color (supported from API Version 8)
+&#125;).then((d)=&gt;&#123; 
+  console.debug(&quot;&quot;) 
+&#125;,(e:BusinessError)=&gt;&#123; 
+  console.debug(&quot;&quot;) 
+&#125;)
+</code></pre>
+<p><strong>Solution</strong>: Status bar settings apply to the entire window. To adjust per-page, call <code>setWindowSystemBarProperties</code> in the page’s lifecycle.  </p>
+<p><strong>Notes</strong>:  </p>
+<ul>
+<li>This API does not take effect on 2in1 devices.  </li>
+<li>In split-screen, floating, or free multi-window modes, changes only take effect when the window is in full-screen.</li>
+</ul>
+<pre><code class="language-typescript">onPageShow(): void &#123;
+  window.getLastWindow(getContext(), (err, data) =&gt; &#123;
+    let win: window.Window;
+    if (err.code) &#123;
+      console.error(&quot;error code :&quot; + JSON.stringify(err.code))
+      return;
+    &#125;
+    try &#123;
+      win = data;
+      // Set window to full-screen
+      win.setWindowLayoutFullScreen(true);
+      // Set status bar properties
+      win.setWindowSystemBarProperties(&#123;
+        statusBarColor: &#39;#00ff00&#39;, // Status bar background color
+        statusBarContentColor: &#39;#353535&#39; // Status bar text color
+      &#125;)
+      console.info(&#39;带状态栏沉浸式窗口设置完成&#39;)
+    &#125; catch (expextion) &#123;
+      console.error(&quot;error cause :&quot; + JSON.stringify(expextion))
+    &#125;
+  &#125;)
+&#125;
+</code></pre>
+<p>#HarmonyOSCore #HarmonyOSDevelopmentTools #ArkCompiler #Social</p>
+
       
     </div>
 
@@ -842,7 +1137,7 @@ export function customDialogBuilder() &#123;
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/06/25/518-Daily-HarmonyOS-Next-Knowledge-List-Component-Copy-Issues-Retrieving-Page-Routing-Information-Component-Exposed-Methods-Page-Destruction-Issues-Status-Bar-Color-Modification/" class="post-title-link" itemprop="url">518[Daily HarmonyOS Next Knowledge] List Component Copy Issues, Retrieving Page Routing Information, Component Exposed Methods, Page Destruction Issues, Status Bar Color Modification</a>
+            <a href="/2025/06/25/518-Daily-HarmonyOS-Next-Knowledge-List-Component-Copy-Issues-Retrieving-Page-Routing-Information-Component-Exposed-Methods-Page-Destruction-Issues-Status-Bar-Color-Modification/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] List Component Copy Issues, Retrieving Page Routing Information, Component Exposed Methods, Page Destruction Issues, Status Bar Color Modification</a>
         </h2>
 
         <div class="post-meta">
@@ -851,8 +1146,18 @@ export function customDialogBuilder() &#123;
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 09:49:19" itemprop="dateCreated datePublished" datetime="2025-06-25T09:49:19+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 09:49:19 / Modified: 12:25:05" itemprop="dateCreated datePublished" datetime="2025-06-25T09:49:19+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -866,7 +1171,52 @@ export function customDialogBuilder() &#123;
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-List-Component-Copy-Issues-Retrieving-Page-Routing-Information-Component-Exposed-Methods-Page-Destruction-Issues-Status-Bar-Color-Modification"><a href="#Daily-HarmonyOS-Next-Knowledge-List-Component-Copy-Issues-Retrieving-Page-Routing-Information-Component-Exposed-Methods-Page-Destruction-Issues-Status-Bar-Color-Modification" class="headerlink" title="[Daily HarmonyOS Next Knowledge] List Component Copy Issues, Retrieving Page Routing Information, Component Exposed Methods, Page Destruction Issues, Status Bar Color Modification"></a>[Daily HarmonyOS Next Knowledge] List Component Copy Issues, Retrieving Page Routing Information, Component Exposed Methods, Page Destruction Issues, Status Bar Color Modification</h3><h4 id="1-In-HarmonyOS-are-items-in-ForEach-and-LazyForEach-references-or-completely-new-copies"><a href="#1-In-HarmonyOS-are-items-in-ForEach-and-LazyForEach-references-or-completely-new-copies" class="headerlink" title="1. In HarmonyOS, are items in ForEach and LazyForEach references or completely new copies?"></a>1. In HarmonyOS, are items in ForEach and LazyForEach references or completely new copies?</h4><p><strong>Question</strong>: Are items in ForEach and LazyForEach references or new copies?  </p>
+<p><strong>Scenario</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">LazyForEach</span>(<span class="variable language_">this</span>.<span class="property">treeData</span> <span class="keyword">as</span> <span class="title class_">MyDataSource</span>, <span class="function">(<span class="params"><span class="attr">item</span>: <span class="title class_">TreeNode</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="title class_">TreeItem</span>(&#123; <span class="attr">treeNode</span>: item, <span class="attr">option</span>: <span class="variable language_">this</span>.<span class="property">option</span>, <span class="attr">callback</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;asdfasdfasdf&#x27;</span>);</span><br><span class="line">  &#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Items in ForEach</strong>:<br>In ForEach, each <code>item</code> is a constant and a new copy during each iteration. This means that for every iteration, <code>item</code> is an independent copy, and its stored state and data do not affect other iterations.  </p>
+<p><strong>Items in LazyForEach</strong>:<br>In LazyForEach, <code>item</code> is a unique and fixed key generated by a key-value generator. Each data item generates a key to identify the corresponding component. When the key changes, the ArkUI framework treats the array element as replaced or modified and creates a new component based on the new key. Therefore, <code>item</code> is passed by reference in LazyForEach, and its state and data can be observed during iterations.  </p>
+<p><strong>Performance Considerations</strong>:  </p>
+<ul>
+<li><strong>ForEach</strong> creates new copies for each iteration, leading to higher memory consumption and potential performance issues with large datasets.  </li>
+<li><strong>LazyForEach</strong> uses reference passing, reducing memory overhead and improving efficiency by reusing components.</li>
+</ul>
+<p><strong>Use Cases</strong>:  </p>
+<ul>
+<li>Use <strong>ForEach</strong> when you need independent, isolated copies of data.  </li>
+<li>Use <strong>LazyForEach</strong> for efficient reference passing and component reuse.</li>
+</ul>
+<h4 id="2-How-to-retrieve-the-NavigationInfo-object-of-a-page-in-HarmonyOS"><a href="#2-How-to-retrieve-the-NavigationInfo-object-of-a-page-in-HarmonyOS" class="headerlink" title="2. How to retrieve the NavigationInfo object of a page in HarmonyOS?"></a>2. How to retrieve the NavigationInfo object of a page in HarmonyOS?</h4><p><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-api-V5#ZH-CN_TOPIC_0000001884917850__querynavigationinfo12">Custom Component API</a>  </p>
+<p>Custom component built-in methods are APIs provided by the ArkUI framework. You can call these APIs on a custom component instance to retrieve information such as its UIContext.  </p>
+<p><strong>Method</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">queryNavigationInfo</span>(): <span class="title class_">NavigationInfo</span> | <span class="literal">undefined</span></span><br><span class="line"><span class="comment">// Query the Navigation information to which the custom component belongs.</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-Can-HarmonyOS-components-expose-methods-for-parent-components-to-call"><a href="#3-Can-HarmonyOS-components-expose-methods-for-parent-components-to-call" class="headerlink" title="3. Can HarmonyOS components expose methods for parent components to call?"></a>3. Can HarmonyOS components expose methods for parent components to call?</h4><p><strong>Reference Demo</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Child</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="keyword">private</span> <span class="attr">text</span>: <span class="built_in">string</span> = <span class="string">&#x27;Initial Value&#x27;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="attr">controller</span>: <span class="title class_">ChildController</span> = <span class="keyword">new</span> <span class="title class_">ChildController</span>();</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">aboutToAppear</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">controller</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">controller</span>.<span class="property">changeText</span> = <span class="variable language_">this</span>.<span class="property">changeText</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;aaa&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> changeText = <span class="function">(<span class="params"><span class="attr">value</span>: <span class="built_in">string</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">text</span> = value;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;bbb&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">text</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ChildController</span> &#123;</span><br><span class="line">  changeText = <span class="function">(<span class="params"><span class="attr">value</span>: <span class="built_in">string</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;11111&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> <span class="title class_">ChildRef</span> = <span class="keyword">new</span> <span class="title class_">ChildController</span>();</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Parent</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">noShow</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;Get Child\&#x27;s exposed method!&#x27;</span>).<span class="title function_">fontSize</span>(<span class="string">&#x27;18vp&#x27;</span>).<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Gray</span>);</span><br><span class="line">      <span class="title class_">Divider</span>();</span><br><span class="line">      <span class="title class_">Child</span>(&#123; <span class="attr">controller</span>: <span class="title class_">ChildRef</span> &#125;);</span><br><span class="line">      <span class="title class_">Child</span>();</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Parent calls Child\&#x27;s changeText&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">ChildRef</span>.<span class="title function_">changeText</span>(<span class="string">&#x27;Parent called Child\&#x27;s changeText&#x27;</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="4-Why-do-local-instance-variables-persist-after-popping-a-page-using-HarmonyOS-navigation"><a href="#4-Why-do-local-instance-variables-persist-after-popping-a-page-using-HarmonyOS-navigation" class="headerlink" title="4. Why do local instance variables persist after popping a page using HarmonyOS navigation?"></a>4. Why do local instance variables persist after popping a page using HarmonyOS navigation?</h4><p><strong>Issue</strong>:  </p>
+<ol>
+<li>Navigate to <code>FlutterPageIndex</code>, which declares a <code>flutterEntry</code> instance.  </li>
+<li>Pop to another page using navigation (closing <code>FlutterPageIndex</code>).  </li>
+<li>Later, when <code>callbackTheme</code> is invoked, <code>this.flutterEntry?.refreshTheme()</code> still executes, indicating the instance was not destroyed.</li>
+</ol>
+<p><strong>Solution</strong>:<br><code>pop()</code> only removes the top element from the navigation stack and triggers the <code>onPop</code> callback. It does not destroy intermediate stack entries. Use <strong><code>popToIndex</code></strong> or <strong><code>popToName</code></strong> instead.  </p>
+<h4 id="5-How-to-modify-the-status-bar-color-in-HarmonyOS"><a href="#5-How-to-modify-the-status-bar-color-in-HarmonyOS" class="headerlink" title="5. How to modify the status bar color in HarmonyOS?"></a>5. How to modify the status bar color in HarmonyOS?</h4><p>Use the <strong><code>setWindowSystemBarProperties</code></strong> method to customize the status bar:  </p>
+<p><strong>Steps</strong>:  </p>
+<ol>
+<li>In <code>EntryAbility.ets</code>, use the <code>onWindowStageCreate</code> method.  </li>
+<li>Call <code>setWindowSystemBarProperties</code> to set properties like background color and transparency.</li>
+</ol>
+<p><strong>Example</strong> (set status bar to white):  </p>
+<pre><code class="language-typescript">setWindowSystemBarProperties(&#123;   
+  backgroundColor: &#39;#FFFFFF&#39;   
+&#125;);
+</code></pre>
+<p>This allows you to customize the status bar appearance to match your app’s UI requirements.</p>
+
       
     </div>
 
@@ -1044,7 +1394,7 @@ export function customDialogBuilder() &#123;
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

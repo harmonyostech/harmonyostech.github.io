@@ -20,17 +20,17 @@
     var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next&#96;s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoo">
+  <meta name="description" content="【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization1. How to use semi-modal bindSheet in List or Grid in HarmonyOS?The">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization">
 <meta property="og:url" content="https://harmonyostech.github.io/2025/06/25/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Using-Semi-modal-in-Lists-Custom-Toast-Popup-Following-Image-Base64-Encoding-Routing-Optimization/index.html">
 <meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
-<meta property="og:description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next&#96;s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoo">
+<meta property="og:description" content="【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization1. How to use semi-modal bindSheet in List or Grid in HarmonyOS?The">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-06-24T22:45:07.000Z">
-<meta property="article:modified_time" content="2025-06-24T22:45:07.502Z">
+<meta property="article:modified_time" content="2025-06-25T04:25:20.612Z">
 <meta property="article:author" content="Qingkouwei">
-<meta property="article:tag" content="HarmonyOSNext, HarmonyOS NEXT, HarmonyOS, Cangjie">
+<meta property="article:tag" content="HarmonyOS Next">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://harmonyostech.github.io/2025/06/25/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Using-Semi-modal-in-Lists-Custom-Toast-Popup-Following-Image-Base64-Encoding-Routing-Optimization/">
@@ -174,8 +174,18 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 06:45:07" itemprop="dateCreated datePublished" datetime="2025-06-25T06:45:07+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 06:45:07 / Modified: 12:25:20" itemprop="dateCreated datePublished" datetime="2025-06-25T06:45:07+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
             </span>
 
           
@@ -189,7 +199,281 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h3 id="【Daily-HarmonyOS-Next-Knowledge】Using-Semi-modal-in-Lists-Custom-Toast-Popup-Following-Image-Base64-Encoding-Routing-Optimization"><a href="#【Daily-HarmonyOS-Next-Knowledge】Using-Semi-modal-in-Lists-Custom-Toast-Popup-Following-Image-Base64-Encoding-Routing-Optimization" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization"></a>【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization</h3><h4 id="1-How-to-use-semi-modal-bindSheet-in-List-or-Grid-in-HarmonyOS"><a href="#1-How-to-use-semi-modal-bindSheet-in-List-or-Grid-in-HarmonyOS" class="headerlink" title="1. How to use semi-modal bindSheet in List or Grid in HarmonyOS?"></a>1. How to use semi-modal bindSheet in List or Grid in HarmonyOS?</h4><p>There is a sharing popup-like page that needs to pop up a semi-modal page when clicking each item.  </p>
+<p>Refer to the following code:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct BindSheetDemo &#123;
+  // Semi-modal transition display/hide control
+  @State isShowSheet: boolean = false;
+  @State isShowDetailSheet: boolean = false;
+  private menuList: string[] = [&#39;Live Room&#39;, &#39;Related Content&#39;, &#39;More&#39;];
+  private detailList: string[] = [&#39;Live Room 111111&#39;, &#39;Related Content 22222222&#39;, &#39;More 334455665&#39;];
+  
+  // Build the semi-modal display interface via @Builder
+  @Builder
+  mySheet() &#123;
+    Column() &#123;
+      Flex(&#123; direction: FlexDirection.Row, wrap: FlexWrap.Wrap &#125;) &#123;
+        ForEach(this.menuList, (item: string) =&gt; &#123;
+          Text(item)
+            .fontSize(16)
+            .fontColor(0x333333)
+            .backgroundColor(0xf1f1f1)
+            .borderRadius(8)
+            .margin(10)
+            .padding(10)
+            .onClick(() =&gt; &#123;
+              this.isShowDetailSheet = !this.isShowDetailSheet;
+            &#125;)
+        &#125;)
+      &#125;
+      .bindSheet(this.isShowDetailSheet, this.myDetailSheet(), &#123;
+        // height: 550,
+        dragBar: true,
+        onDisappear: () =&gt; &#123;
+          this.isShowDetailSheet = !this.isShowDetailSheet;
+        &#125;
+      &#125;)
+      .padding(&#123; top: 18 &#125;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.White)
+  &#125;
+  
+  @Builder
+  myDetailSheet() &#123;
+    Column() &#123;
+      Flex(&#123; direction: FlexDirection.Row, wrap: FlexWrap.Wrap &#125;) &#123;
+        ForEach(this.detailList, (item: string) =&gt; &#123;
+          Text(item)
+            .fontSize(16)
+            .fontColor(0x333333)
+            .backgroundColor(0xf1f1f1)
+            .borderRadius(8)
+            .margin(10)
+            .padding(10)
+        &#125;)
+      &#125;
+      .padding(&#123; top: 18 &#125;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.White)
+  &#125;
+  
+  build() &#123;
+    Column() &#123;
+      Text(&#39;Live Room&#39;)
+        .fontSize(28)
+        .padding(&#123; top: 30, bottom: 30 &#125;)
+      Column() &#123;
+        Row() &#123;
+          Row()
+            .width(10)
+            .height(10)
+            .backgroundColor(&#39;#a8a8a8&#39;)
+            .margin(&#123; right: 12 &#125;)
+            .borderRadius(20)
+
+          Column() &#123;
+            Text(&#39;Click to View&#39;)
+              .fontSize(16)
+              .fontWeight(FontWeight.Medium)
+          &#125;
+          .alignItems(HorizontalAlign.Start)
+
+          Blank()
+
+          Row()
+            .width(12)
+            .height(12)
+            .margin(&#123; right: 15 &#125;)
+            .border(&#123;
+              width: &#123; top: 2, right: 2 &#125;,
+              color: 0xcccccc
+            &#125;)
+            .rotate(&#123; angle: 45 &#125;)
+        &#125;
+        .borderRadius(15)
+        .shadow(&#123; radius: 100, color: &#39;#ededed&#39; &#125;)
+        .width(&#39;90%&#39;)
+        .alignItems(VerticalAlign.Center)
+        .padding(&#123; left: 15, top: 15, bottom: 15 &#125;)
+        .backgroundColor(Color.White)
+        .bindSheet(this.isShowSheet, this.mySheet(), &#123;
+          height: 150,
+          dragBar: false,
+          onDisappear: () =&gt; &#123;
+            this.isShowSheet = !this.isShowSheet;
+          &#125;
+        &#125;)
+        .onClick(() =&gt; &#123;
+          this.isShowSheet = !this.isShowSheet;
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(0xf1f1f1)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-customize-the-toast-style-in-HarmonyOS"><a href="#2-How-to-customize-the-toast-style-in-HarmonyOS" class="headerlink" title="2. How to customize the toast style in HarmonyOS?"></a>2. How to customize the toast style in HarmonyOS?</h4><p>CustomDialog supports customization for popups. Is there a way to customize the UI style for toasts? If the system currently lacks toast customization capabilities, what official recommendations are there to implement toast-like functionality?  </p>
+<p>Toasts do not support customization, but CustomDialog can be used for full customization. <code>PromptAction.openCustomdialog</code> is recommended, which supports decoupling from the page and only requires passing UIContext to implement popups.<br>Reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#opencustomdialog12">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#opencustomdialog12</a>  </p>
+<p><code>openCustomDialog&lt;T extends Object&gt;(dialogContent: ComponentContent&lt;T&gt;, options?: promptAction.BaseDialogOptions): Promise&lt;void&gt;</code>  </p>
+<p>Creates and pops up a custom dialog corresponding to dialogContent with a Promise async callback. The dialog style fully follows the settings in dialogContent, similar to setting <code>customStyle: true</code> for CustomDialog. Currently, <code>isModal = true</code> and <code>showInSubWindow = true</code> cannot be used simultaneously.  </p>
+<h4 id="3-When-pushing-to-the-next-page-from-a-HarmonyOS-popup-the-popup-follows-to-the-next-page-How-to-bind-the-popup-to-the-current-page"><a href="#3-When-pushing-to-the-next-page-from-a-HarmonyOS-popup-the-popup-follows-to-the-next-page-How-to-bind-the-popup-to-the-current-page" class="headerlink" title="3. When pushing to the next page from a HarmonyOS popup, the popup follows to the next page. How to bind the popup to the current page?"></a>3. When pushing to the next page from a HarmonyOS popup, the popup follows to the next page. How to bind the popup to the current page?</h4><p>When pushing to the next page from a popup, the popup follows, but we want the popup to bind to the current page.  </p>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5</a>  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">import router from &#39;@ohos.router&#39;;
+@CustomDialog
+export default struct UserPrivacyDialog &#123;
+  controller: CustomDialogController = new CustomDialogController(&#123; builder: &#39;&#39; &#125;);
+  cancel: Function = () =&gt; &#123;
+  &#125;;
+  confirm: Function = () =&gt; &#123;
+  &#125;;
+  visible: Visibility = Visibility.None
+  
+  build() &#123;
+    Column() &#123;
+      Text(&#39;This is a Popup&#39;)
+      Button(&#39;Jump&#39;)
+        .onClick(() =&gt; &#123;
+          router.pushUrl(&#123;
+            url: &#39;pages/Second&#39;
+          &#125;)
+        &#125;).backgroundColor(0xffffff).fontColor(Color.Red)
+    &#125;
+    .margin(&#123; top: 22 &#125;)
+    .justifyContent(FlexAlign.SpaceEvenly)
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  @State textValue: string = &#39;Hello World&#39;
+  @State visible: Visibility = Visibility.None
+  
+  build() &#123;
+    Stack() &#123;
+      Row() &#123;
+        Column() &#123;
+          Button(&#39;Click&#39;)
+            .onClick(() =&gt; &#123;
+              if (this.visible == Visibility.Visible) &#123;
+                this.visible = Visibility.None
+              &#125; else &#123;
+                this.visible = Visibility.Visible
+              &#125;
+            &#125;)
+            .backgroundColor(0x777474)
+            .fontColor(0x000000)
+        &#125;
+        .width(&#39;100%&#39;)
+      &#125;
+      .height(&#39;100%&#39;)
+      .backgroundColor(0x885555)
+      Text(&#39;&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.visible == Visibility.Visible) &#123;
+            this.visible = Visibility.None
+          &#125; else &#123;
+            this.visible = Visibility.Visible
+          &#125;
+        &#125;)
+        .width(&#39;100%&#39;)
+        .height(&#39;100%&#39;)// Transparency can be adjusted
+        .opacity(0.16)
+        .backgroundColor(0x000000)
+        .visibility(this.visible)
+      Column() &#123;
+        GridRow(&#123;
+          columns: &#123; xs: 1, sm: 4, md: 8, lg: 12 &#125;,
+          breakpoints: &#123;
+            value: [&quot;400vp&quot;, &quot;600vp&quot;, &quot;800vp&quot;],
+            reference: BreakpointsReference.WindowSize
+          &#125;,
+        &#125;) &#123;
+          GridCol(&#123;
+            span: &#123; xs: 1, sm: 2, md: 4, lg: 8 &#125;,
+            offset: &#123; xs: 0, sm: 1, md: 2, lg: 2 &#125;
+          &#125;) &#123;
+            Column() &#123;
+              Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
+                UserPrivacyDialog();
+              &#125;.margin(&#123; bottom: 10 &#125;)
+            &#125;
+            .backgroundColor(0xffffff)
+            .visibility(this.visible)
+            .clip(true)
+            .borderRadius(20)
+          &#125;
+        &#125;
+      &#125;.width(&#39;95%&#39;) // Set popup width
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-How-to-encode-images-as-Base64-in-HarmonyOS"><a href="#4-How-to-encode-images-as-Base64-in-HarmonyOS" class="headerlink" title="4. How to encode images as Base64 in HarmonyOS?"></a>4. How to encode images as Base64 in HarmonyOS?</h4><p>How to encode images obtained via CameraKit pick as Base64.  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">let packOpts: image.PackingOption = &#123; format: &quot;image/jpeg&quot;, quality: 98 &#125;;
+let imagePackerApi = image.createImagePacker();
+const context: Context = getContext(this);
+const resourceMgr = context.resourceManager;
+let imageBuffer = await resourceMgr.getMediaContent($r(&#39;app.media.ic_low&#39;));
+const imageSource: image.ImageSource = image.createImageSource(imageBuffer.buffer);
+let decodingOptions: image.DecodingOptions = &#123;
+  editable: true,
+  desiredPixelFormat: 3,
+  rotate: 90
+&#125;
+
+// Create PixelMap and perform simple rotation and scaling
+imageSource.createPixelMap(decodingOptions).then((pixelMap: PixelMap) =&gt; &#123;
+  this.pixelMap = pixelMap;
+  // Convert PixelMap to Base64 (requires a packing process first)
+  imagePackerApi.packing(pixelMap, packOpts).then((data: ArrayBuffer) =&gt; &#123;
+    let base64Str = buffer.from(data).toString(&#39;base64&#39;);
+    let resultBase64Str = &quot;data:image/png;base64,&quot; + base64Str;
+    this.resultBase64Str = resultBase64Str;
+  &#125;).catch((error: BusinessError) =&gt; &#123;
+    console.error(&#39;Failed to pack the image. Error: &#39; + error);
+  &#125;);
+  pixelMap.release();
+&#125;);
+
+// Key tip: Directly converting PixelMap to Base64 is incorrect (example of wrong approach):
+let pixelMap = await imageSource.createPixelMap(opts);
+console.log(&quot;pixelMap.getPixelBytesNumber():&quot; + pixelMap.getPixelBytesNumber());
+let arrayBuffer = new ArrayBuffer(pixelMap.getPixelBytesNumber());
+pixelMap.readPixelsToBuffer(arrayBuffer);
+console.log(&quot;arrayBuffer&quot; + arrayBuffer);
+let base64Str = buffer.from(arrayBuffer).toString(Constants.BASE_64);
+let resultBase64Str = &quot;data:image/png;base64,&quot; + base64Str;
+</code></pre>
+<p>Obtaining sandbox paths:  </p>
+<pre><code class="language-typescript">import UIAbility from &#39;@ohos.app.ability.UIAbility&#39;;
+export default class EntryAbility extends UIAbility &#123;
+  onWindowStageCreate(windowStage) &#123;
+    let context = this.context;
+    let pathDir = context.filesDir;
+  &#125;
+&#125;
+</code></pre>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/app-sandbox-directory-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/app-sandbox-directory-V5</a><br>The app sandbox is a security isolation mechanism to prevent malicious path traversal. The visible directory range for an app is the “app sandbox directory”, which includes:  </p>
+<ul>
+<li>A dedicated directory mapped in internal storage for each app, consisting of the “app file directory” and essential system files.  </li>
+<li>Restricted visibility to protect app data from other apps.  </li>
+<li>App files can be saved and processed in the “app file directory”; system files are read-only; user files require specific APIs and user authorization.</li>
+</ul>
+<h4 id="5-How-to-optimize-routing-usage-in-HarmonyOS"><a href="#5-How-to-optimize-routing-usage-in-HarmonyOS" class="headerlink" title="5. How to optimize routing usage in HarmonyOS?"></a>5. How to optimize routing usage in HarmonyOS?</h4><p>Can RouterModule be optimized to automatically determine the current NavStack, or will using a unified NavStack cause performance issues?  </p>
+<p>Currently, router does not support returning to a specified index page. It is recommended to replace router with Navigation, whose <code>popToIndex</code> method meets this scenario.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5</a>  </p>
+
     </div>
 
     
@@ -197,6 +481,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
 
         
 
@@ -269,6 +556,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Using-Semi-modal-in-Lists-Custom-Toast-Popup-Following-Image-Base64-Encoding-Routing-Optimization"><span class="nav-number">1.</span> <span class="nav-text">【Daily HarmonyOS Next Knowledge】Using Semi-modal in Lists, Custom Toast, Popup Following, Image Base64 Encoding, Routing Optimization</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-use-semi-modal-bindSheet-in-List-or-Grid-in-HarmonyOS"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to use semi-modal bindSheet in List or Grid in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-to-customize-the-toast-style-in-HarmonyOS"><span class="nav-number">1.2.</span> <span class="nav-text">2. How to customize the toast style in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-When-pushing-to-the-next-page-from-a-HarmonyOS-popup-the-popup-follows-to-the-next-page-How-to-bind-the-popup-to-the-current-page"><span class="nav-number">1.3.</span> <span class="nav-text">3. When pushing to the next page from a HarmonyOS popup, the popup follows to the next page. How to bind the popup to the current page?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-How-to-encode-images-as-Base64-in-HarmonyOS"><span class="nav-number">1.4.</span> <span class="nav-text">4. How to encode images as Base64 in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-How-to-optimize-routing-usage-in-HarmonyOS"><span class="nav-number">1.5.</span> <span class="nav-text">5. How to optimize routing usage in HarmonyOS?</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -288,7 +576,7 @@
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
