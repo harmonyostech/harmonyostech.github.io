@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next&#96;s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoo">
+  <meta name="description" content="【Daily Learn HarmonyOS Next Knowledge】Grid Drag Animation, Timer Control, Routing Selection Issues, State Decoration Problems1. HarmonyOS Grid Drag Animation IssueThe following demo implements partial">
 <meta property="og:type" content="article">
 <meta property="og:title" content="515[Daily HarmonyOS Next Knowledge] Grid Drag Animation, Timer Control, Routing Selection Issues, State Modifier Problems">
 <meta property="og:url" content="https://harmonyostech.github.io/2025/06/25/515-Daily-HarmonyOS-Next-Knowledge-Grid-Drag-Animation-Timer-Control-Routing-Selection-Issues-State-Modifier-Problems/index.html">
 <meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
-<meta property="og:description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next&#96;s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoo">
+<meta property="og:description" content="【Daily Learn HarmonyOS Next Knowledge】Grid Drag Animation, Timer Control, Routing Selection Issues, State Decoration Problems1. HarmonyOS Grid Drag Animation IssueThe following demo implements partial">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-06-25T00:27:01.000Z">
-<meta property="article:modified_time" content="2025-06-25T00:27:01.051Z">
+<meta property="article:modified_time" content="2025-06-25T00:37:40.215Z">
 <meta property="article:author" content="Qingkouwei">
 <meta property="article:tag" content="HarmonyOSNext, HarmonyOS NEXT, HarmonyOS, Cangjie">
 <meta name="twitter:card" content="summary">
@@ -174,8 +174,9 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2025-06-25 08:27:01" itemprop="dateCreated datePublished" datetime="2025-06-25T08:27:01+08:00">2025-06-25</time>
+              <time title="Created: 2025-06-25 08:27:01 / Modified: 08:37:40" itemprop="dateCreated datePublished" datetime="2025-06-25T08:27:01+08:00">2025-06-25</time>
             </span>
 
           
@@ -189,7 +190,391 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h3 id="【Daily-Learn-HarmonyOS-Next-Knowledge】Grid-Drag-Animation-Timer-Control-Routing-Selection-Issues-State-Decoration-Problems"><a href="#【Daily-Learn-HarmonyOS-Next-Knowledge】Grid-Drag-Animation-Timer-Control-Routing-Selection-Issues-State-Decoration-Problems" class="headerlink" title="【Daily Learn HarmonyOS Next Knowledge】Grid Drag Animation, Timer Control, Routing Selection Issues, State Decoration Problems"></a>【Daily Learn HarmonyOS Next Knowledge】Grid Drag Animation, Timer Control, Routing Selection Issues, State Decoration Problems</h3><h4 id="1-HarmonyOS-Grid-Drag-Animation-Issue"><a href="#1-HarmonyOS-Grid-Drag-Animation-Issue" class="headerlink" title="1. HarmonyOS Grid Drag Animation Issue"></a>1. HarmonyOS Grid Drag Animation Issue</h4><p>The following demo implements partial items that do not respond to dragging, but the animation has issues where items get squeezed together.  </p>
+<pre><code class="language-typescript">// Refer to the following Demo  
+@Entry  
+@Component  
+struct GridExample &#123;  
+  @State numbers: string[] = []  
+  scroller: Scroller = new Scroller()  
+  layoutOptions1: GridLayoutOptions = &#123;  
+    regularSize: [1, 1], // Only supports [1, 1]  
+    irregularIndexes: [0], // The GridItem at index 0 occupies a full row  
+  &#125;  
+  @State text: string = &#39;drag&#39;  
+  @Builder pixelMapBuilder() &#123; // Dragging style during the process  
+    Column() &#123;  
+      Text(this.text)  
+        .fontSize(16)  
+        .backgroundColor(0xF9CF93)  
+        .width(80)  
+        .height(80)  
+        .textAlign(TextAlign.Center)  
+    &#125;  
+  &#125;  
+  aboutToAppear() &#123;  
+    for (let i = 1; i &lt;= 9; i++) &#123;  
+      this.numbers.push(i + &#39;&#39;)  
+    &#125;  
+  &#125;  
+  changeIndex(index1: number, index2: number) &#123; // Swap positions in the array  
+    const temp = this.numbers[index1];  
+    if (index1 &gt; index2) &#123;  
+      this.numbers.splice(index2, 0, temp);  
+      this.numbers.splice(index1 + 1, 1);  
+    &#125; else &#123;  
+      this.numbers.splice(index2 + 1, 0, temp);  
+      this.numbers.splice(index1, 1);  
+    &#125;  
+  &#125;  
+  build() &#123;  
+    Column(&#123; space: 5 &#125;) &#123;  
+      Grid(this.scroller, this.layoutOptions1) &#123;  
+        ForEach(this.numbers, (day: string) =&gt; &#123;  
+          GridItem() &#123;  
+            if (day == &quot;1&quot;) &#123;  
+              Text(day)  
+                .fontSize(16)  
+                .backgroundColor(0xF9CF93)  
+                .width(&quot;100%&quot;)  
+                .height(80)  
+                .textAlign(TextAlign.Center)  
+            &#125; else &#123;  
+              Text(day)  
+                .fontSize(16)  
+                .backgroundColor(0xF9CF93)  
+                .width(80)  
+                .height(80)  
+                .textAlign(TextAlign.Center)  
+            &#125;  
+          &#125;  
+        &#125;)  
+      &#125;  
+      .columnsTemplate(&#39;1fr 1fr 1fr 1fr&#39;)  
+      .columnsGap(10)  
+      .rowsGap(10)  
+      .onScrollIndex((first: number) =&gt; &#123;  
+        console.info(first.toString())  
+      &#125;)  
+      .width(&#39;100%&#39;)  
+      .backgroundColor(0xFAEEE0)  
+      .height(300)  
+      .supportAnimation(true)  
+      .editMode(true) // Set whether Grid enters edit mode; in edit mode, GridItems inside can be dragged  
+      .onItemDragStart((event: ItemDragInfo, itemIndex: number) =&gt; &#123; // Triggered when dragging the bound component for the first time  
+        if (itemIndex == 0) &#123;  
+          return;  
+        &#125;  
+        this.text = this.numbers[itemIndex]  
+        return this.pixelMapBuilder() // Set the image displayed during dragging  
+      &#125;)  
+      .onItemDrop((event: ItemDragInfo, itemIndex: number, insertIndex: number, isSuccess: boolean) =&gt; &#123; // The bound component can act as a drop target; when dragging stops within its bounds, this callback is triggered  
+        // If isSuccess=false, the drop position is outside the grid; if insertIndex &gt; length, a new element event occurs  
+        if (!isSuccess || insertIndex &gt;= this.numbers.length || insertIndex == 0) &#123;  
+          return  
+        &#125;  
+        console.info(&#39;tag&#39; + itemIndex + &#39;&#39;, insertIndex + &#39;&#39;) // itemIndex: drag start position, insertIndex: drag insert position  
+        this.changeIndex(itemIndex, insertIndex)  
+      &#125;)  
+    &#125;.width(&#39;100%&#39;).margin(&#123; top: 5 &#125;)  
+  &#125;  
+&#125;  
+</code></pre>
+<p><strong>Reference Demo:</strong>  </p>
+<pre><code class="language-typescript">import curves from &#39;@ohos.curves&#39;  
+// xxx.ets  
+@Entry  
+@Component  
+struct GridItemExample &#123;  
+  @State numbers: number[] = []  
+  @State dragItem: number = -1  
+  @State scaleItem: number = -1  
+  @State item: number = -1  
+  private dragRefOffsetx: number = 0  
+  private dragRefOffsety: number = 0  
+  @State offsetX: number = 0  
+  @State offsetY: number = 0  
+  private FIX_VP_X: number = 108  
+  private FIX_VP_Y: number = 120  
+  aboutToAppear() &#123;  
+    for (let i = 1; i &lt;= 11; i++) &#123;  
+      this.numbers.push(i)  
+    &#125;  
+  &#125;  
+  itemMove(index: number, newIndex: number): void &#123;  
+    console.info(&#39;index:&#39; + index + &#39; newIndex:&#39; + newIndex)  
+    if (!this.isDraggable(newIndex)) &#123;  
+      return  
+    &#125;  
+    let tmp = this.numbers.splice(index, 1)  
+    this.numbers.splice(newIndex, 0, tmp[0])  
+  &#125;  
+  // Scroll down  
+  down(index: number): void &#123;  
+    // Specify fixed GridItems that do not respond to events  
+    if (!this.isDraggable(index + 3)) &#123;  
+      return  
+    &#125;  
+    this.offsetY -= this.FIX_VP_Y  
+    this.dragRefOffsety += this.FIX_VP_Y  
+    this.itemMove(index, index + 3)  
+  &#125;  
+  // Scroll down (bottom-right corner empty)  
+  down2(index: number): void &#123;  
+    if (!this.isDraggable(index + 3)) &#123;  
+      return  
+    &#125;  
+    this.offsetY -= this.FIX_VP_Y  
+    this.dragRefOffsety += this.FIX_VP_Y  
+    this.itemMove(index, index + 3)  
+  &#125;  
+  // Scroll up  
+  up(index: number): void &#123;  
+    if (!this.isDraggable(index - 3)) &#123;  
+      return  
+    &#125;  
+    this.offsetY += this.FIX_VP_Y  
+    this.dragRefOffsety -= this.FIX_VP_Y  
+    this.itemMove(index, index - 3)  
+  &#125;  
+  // Scroll left  
+  left(index: number): void &#123;  
+    if (!this.isDraggable(index - 1)) &#123;  
+      return  
+    &#125;  
+    this.offsetX += this.FIX_VP_X  
+    this.dragRefOffsetx -= this.FIX_VP_X  
+    this.itemMove(index, index - 1)  
+  &#125;  
+  // Scroll right  
+  right(index: number): void &#123;  
+    if (!this.isDraggable(index + 1)) &#123;  
+      return  
+    &#125;  
+    this.offsetX -= this.FIX_VP_X  
+    this.dragRefOffsetx += this.FIX_VP_X  
+    this.itemMove(index, index + 1)  
+  &#125;  
+  // Scroll bottom-right  
+  lowerRight(index: number): void &#123;  
+    if (!this.isDraggable(index + 4)) &#123;  
+      return  
+    &#125;  
+    this.offsetX -= this.FIX_VP_X  
+    this.dragRefOffsetx += this.FIX_VP_X  
+    this.offsetY -= this.FIX_VP_Y  
+    this.dragRefOffsety += this.FIX_VP_Y  
+    this.itemMove(index, index + 4)  
+  &#125;  
+  // Scroll top-right  
+  upperRight(index: number): void &#123;  
+    if (!this.isDraggable(index - 2)) &#123;  
+      return  
+    &#125;  
+    this.offsetX -= this.FIX_VP_X  
+    this.dragRefOffsetx += this.FIX_VP_X  
+    this.offsetY += this.FIX_VP_Y  
+    this.dragRefOffsety -= this.FIX_VP_Y  
+    this.itemMove(index, index - 2)  
+  &#125;  
+  // Scroll bottom-left  
+  lowerLeft(index: number): void &#123;  
+    if (!this.isDraggable(index + 2)) &#123;  
+      return  
+    &#125;  
+    this.offsetX += this.FIX_VP_X  
+    this.dragRefOffsetx -= this.FIX_VP_X  
+    this.offsetY -= this.FIX_VP_Y  
+    this.dragRefOffsety += this.FIX_VP_Y  
+    this.itemMove(index, index + 2)  
+  &#125;  
+  // Scroll top-left  
+  upperLeft(index: number): void &#123;  
+    if (!this.isDraggable(index - 4)) &#123;  
+      return  
+    &#125;  
+    this.offsetX += this.FIX_VP_X  
+    this.dragRefOffsetx -= this.FIX_VP_X  
+    this.offsetY += this.FIX_VP_Y  
+    this.dragRefOffsety -= this.FIX_VP_Y  
+    this.itemMove(index, index - 4)  
+  &#125;  
+  isDraggable(index: number): boolean &#123;  
+    console.info(&#39;index:&#39; + index)  
+    return index &gt; 1  
+  &#125;  
+  build() &#123;  
+    Column(&#123;space:10&#125;) &#123;  
+      Column(&#123;space:5&#125;) &#123;  
+        Text(&quot;Grid Drag Sorting Animation&quot;)  
+        Text(&quot;Components 1 and 2 cannot be dragged&quot;)  
+      &#125;  
+      Grid() &#123;  
+        ForEach(this.numbers, (item: number) =&gt; &#123;  
+          GridItem() &#123;  
+            Text(item + &#39;&#39;)  
+              .fontSize(16)  
+              .width(&#39;100%&#39;)  
+              .textAlign(TextAlign.Center)  
+              .height(100)  
+              .borderRadius(10)  
+              .backgroundColor(0xFFFFFF)  
+              .shadow(this.scaleItem == item ? &#123;  
+                radius: 70,  
+                color: &#39;#15000000&#39;,  
+                offsetX: 0,  
+                offsetY: 0  
+              &#125; : &#123;  
+                radius: 0,  
+                color: &#39;#15000000&#39;,  
+                offsetX: 0,  
+                offsetY: 0  
+              &#125;)  
+              .animation(&#123; curve: Curve.Sharp, duration: 300 &#125;)  
+          &#125;  
+          // Specify fixed GridItems that do not respond to events  
+          .hitTestBehavior(this.isDraggable(this.numbers.indexOf(item)) ? HitTestMode.Default : HitTestMode.None)  
+          .scale(&#123; x: this.scaleItem == item ? 1.05 : 1, y: this.scaleItem == item ? 1.05 : 1 &#125;)  
+          .zIndex(this.dragItem == item ? 1 : 0)  
+          .translate(this.dragItem == item ? &#123; x: this.offsetX, y: this.offsetY &#125; : &#123; x: 0, y: 0 &#125;)  
+          .padding(10)  
+          .gesture(  
+            // The following combined gestures are recognized in sequence; if the long-press gesture event is not triggered properly, the drag gesture event will not be triggered  
+            GestureGroup(GestureMode.Sequence,  
+              LongPressGesture(&#123; repeat: true &#125;)  
+                .onAction((event?: GestureEvent) =&gt; &#123;  
+                  animateTo(&#123; curve: Curve.Friction, duration: 300 &#125;, () =&gt; &#123;  
+                    this.scaleItem = item  
+                  &#125;)  
+                &#125;)  
+                .onActionEnd(() =&gt; &#123;  
+                  animateTo(&#123; curve: Curve.Friction, duration: 300 &#125;, () =&gt; &#123;  
+                    this.scaleItem = -1  
+                  &#125;)  
+                &#125;),  
+              PanGesture(&#123; fingers: 1, direction: null, distance: 0 &#125;)  
+                .onActionStart(() =&gt; &#123;  
+                  this.dragItem = item  
+                  this.dragRefOffsetx = 0  
+                  this.dragRefOffsety = 0  
+                &#125;)  
+                .onActionUpdate((event: GestureEvent) =&gt; &#123;  
+                  this.offsetY = event.offsetY - this.dragRefOffsety  
+                  this.offsetX = event.offsetX - this.dragRefOffsetx  
+                  // console.log(&#39;X:&#39; + this.offsetX.toString())  
+                  // console.log(&#39;Y:&#39; + this.offsetY.toString())  
+                  animateTo(&#123; curve: curves.interpolatingSpring(0, 1, 400, 38) &#125;, () =&gt; &#123;  
+                    let index = this.numbers.indexOf(this.dragItem)  
+                    if (this.offsetY &gt;= this.FIX_VP_Y / 2 &amp;&amp; (this.offsetX &lt;= 44 &amp;&amp; this.offsetX &gt;= -44)  
+                      &amp;&amp; ![8, 9, 10].includes(index)) &#123;  
+                      // Scroll down  
+                      this.down(index)  
+                    &#125; else if (this.offsetY &lt;= -this.FIX_VP_Y / 2 &amp;&amp; (this.offsetX &lt;= 44 &amp;&amp; this.offsetX &gt;= -44)  
+                      &amp;&amp; ![0, 1, 2].includes(index)) &#123;  
+                      // Scroll up  
+                      this.up(index)  
+                    &#125; else if (this.offsetX &gt;= this.FIX_VP_X / 2 &amp;&amp; (this.offsetY &lt;= 50 &amp;&amp; this.offsetY &gt;= -50)  
+                      &amp;&amp; ![2, 5, 8, 10].includes(index)) &#123;  
+                      // Scroll right  
+                      this.right(index)  
+                    &#125; else if (this.offsetX &lt;= -this.FIX_VP_X / 2 &amp;&amp; (this.offsetY &lt;= 50 &amp;&amp; this.offsetY &gt;= -50)  
+                      &amp;&amp; ![0, 3, 6, 9].includes(index)) &#123;  
+                      // Scroll left  
+                      this.left(index)  
+                    &#125; else if (this.offsetX &gt;= this.FIX_VP_X / 2 &amp;&amp; this.offsetY &gt;= this.FIX_VP_Y / 2  
+                      &amp;&amp; ![2, 5, 7, 8, 9, 10].includes(index)) &#123;  
+                      // Scroll bottom-right  
+                      this.lowerRight(index)  
+                    &#125; else if (this.offsetX &gt;= this.FIX_VP_X / 2 &amp;&amp; this.offsetY &lt;= -this.FIX_VP_Y / 2  
+                      &amp;&amp; ![0, 1, 2, 5, 8].includes(index)) &#123;  
+                      // Scroll top-right  
+                      this.upperRight(index)  
+                    &#125; else if (this.offsetX &lt;= -this.FIX_VP_X / 2 &amp;&amp; this.offsetY &gt;= this.FIX_VP_Y / 2  
+                      &amp;&amp; ![0, 3, 6, 9, 10].includes(index)) &#123;  
+                      // Scroll bottom-left  
+                      this.lowerLeft(index)  
+                    &#125; else if (this.offsetX &lt;= -this.FIX_VP_X / 2 &amp;&amp; this.offsetY &lt;= -this.FIX_VP_Y / 2  
+                      &amp;&amp; ![0, 1, 2, 3, 6, 9].includes(index)) &#123;  
+                      // Scroll top-left  
+                      this.upperLeft(index)  
+                    &#125; else if (this.offsetX &gt;= this.FIX_VP_X / 2 &amp;&amp; this.offsetY &gt;= this.FIX_VP_Y / 2  
+                      &amp;&amp; [7].includes(index)) &#123;  
+                      // Scroll bottom-right (bottom-right corner empty)  
+                      this.down2(index)  
+                    &#125;  
+</code></pre>
+<h4 id="2-HarmonyOS-TextTimer-Usage-Issue"><a href="#2-HarmonyOS-TextTimer-Usage-Issue" class="headerlink" title="2. HarmonyOS TextTimer Usage Issue"></a>2. HarmonyOS TextTimer Usage Issue</h4><p>When using <code>TextTimer</code> as a countdown timer, how to set the starting time? For example, how to start counting from <code>00:01:20</code> (1 minute and 20 seconds)?  </p>
+<p>The <code>count</code> property represents the initial countdown value (only valid when <code>isCountDown</code> is <code>true</code>), in milliseconds. The maximum value is <code>86400000</code> milliseconds (24 hours). When <code>0 &lt; count &lt; 86400000</code>, an example is as follows:  </p>
+<pre><code class="language-typescript">@Entry  
+@Component  
+struct Index &#123;  
+  textTimerController: TextTimerController = new TextTimerController()  
+  @State format: string = &#39;mm:ss.SS&#39;  
+  build() &#123;  
+    Column() &#123;  
+      TextTimer(&#123; isCountDown: true, count: 1200, controller: this.textTimerController &#125;)  
+        .format(this.format)  
+        .fontColor(Color.Black)  
+        .fontSize(50)  
+        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;  
+          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)  
+        &#125;)  
+      Row() &#123;  
+        Button(&quot;start&quot;).onClick(() =&gt; &#123;  
+          this.textTimerController.start()  
+        &#125;)  
+        Button(&quot;pause&quot;).onClick(() =&gt; &#123;  
+          this.textTimerController.pause()  
+        &#125;)  
+        Button(&quot;reset&quot;).onClick(() =&gt; &#123;  
+          this.textTimerController.reset()  
+        &#125;)  
+      &#125;  
+    &#125;  
+  &#125;  
+&#125;  
+</code></pre>
+<h4 id="3-HarmonyOS-Navigation-If-onPop-is-Passed-When-A-Navigates-to-B-but-B-Calls-pop-Without-Passing-result-onPop-Is-Not-Triggered"><a href="#3-HarmonyOS-Navigation-If-onPop-is-Passed-When-A-Navigates-to-B-but-B-Calls-pop-Without-Passing-result-onPop-Is-Not-Triggered" class="headerlink" title="3. HarmonyOS Navigation: If onPop is Passed When A Navigates to B, but B Calls pop Without Passing result, onPop Is Not Triggered?"></a>3. HarmonyOS Navigation: If <code>onPop</code> is Passed When A Navigates to B, but B Calls <code>pop</code> Without Passing <code>result</code>, <code>onPop</code> Is Not Triggered?</h4><p>You can pass <code>null</code> when calling <code>pop</code> to trigger the <code>onPop</code> callback.  </p>
+<h4 id="4-HarmonyOS-Routing-Management-Should-We-Use-router-or-Navigation"><a href="#4-HarmonyOS-Routing-Management-Should-We-Use-router-or-Navigation" class="headerlink" title="4. HarmonyOS Routing Management: Should We Use router or Navigation?"></a>4. HarmonyOS Routing Management: Should We Use <code>router</code> or <code>Navigation</code>?</h4><p>It is recommended to use <code>Navigation</code>. The <code>RouterModule</code> module includes global routing stack and routing table information. The routing stack is a <code>NavPathStack</code> object, which is bound to the <code>Navigation</code> component in <code>Entry.hap</code>. <code>RouterModule</code> manages the routing information of the <code>Navigation</code> component by holding the <code>NavPathStack</code>. The routing table <code>builderMap</code> is a <code>Map</code> structure, storing page component information in a key-value format, where the key is a custom unique route name, and the value is a <code>WrappedBuilder</code> object wrapping the corresponding page component. The implementation of <code>RouterModule</code> mainly includes the following steps:  </p>
+<pre><code class="language-typescript">1. Define the routing table and routing stack.  
+export class RouterModule &#123;  
+  // WrappedBuilder supports encapsulating components described by @Builder as parameters for storage  
+  static builderMap: Map&lt;string, WrappedBuilder&lt;[object]&gt;&gt; = new Map&lt;string, WrappedBuilder&lt;[object]&gt;&gt;();  
+  // Initialize the routing stack, which needs to be associated with the Navigation component  
+  static navPathStack: NavPathStack = new NavPathStack();  
+&#125;  
+
+2. Add routing registration and retrieval methods to the routing table. Business har modules register page components to be routed to `RouterModule` via the registration method.  
+export class RouterModule &#123;  
+  // ...  
+  // Register a page component to the routing table. `builderName` is the route name, and `builder` is the `WrappedBuilder` object wrapping the page component  
+  public static registerBuilder(builderName: string, builder: WrappedBuilder&lt;[object]&gt;): void &#123;  
+    RouterModule.builderMap.set(builderName, builder);  
+  &#125;  
+
+  // Retrieve the specified page component from the routing table  
+  public static getBuilder(builderName: string): WrappedBuilder&lt;[object]&gt; &#123;  
+    const builder = RouterModule.builderMap.get(builderName);  
+    if (!builder) &#123;  
+      console.info(&#39;not found builder &#39; + builderName);  
+    &#125;  
+    return builder as WrappedBuilder&lt;[object]&gt;;  
+  &#125;  
+&#125;  
+export class RouterModule &#123;  
+  // ...  
+  // Navigate to a specified page by retrieving it from the page stack  
+  public static async push(harName: string, builderName: string): Promise&lt;void&gt; &#123;  
+    // Dynamically import the har module where the page is located to avoid explicit dependencies between business har modules, enabling on-demand loading  
+    await import(harName);  
+    // Navigate via the routing stack method by route name  
+    RouterModule.navPathStack.pushPathByName(builderName, null);  
+  &#125;  
+&#125;  
+</code></pre>
+<h4 id="5-HarmonyOS-Should-State-Decorated-Variables-Be-Mandatory-Initialized"><a href="#5-HarmonyOS-Should-State-Decorated-Variables-Be-Mandatory-Initialized" class="headerlink" title="5. HarmonyOS: Should @State-Decorated Variables Be Mandatory Initialized?"></a>5. HarmonyOS: Should <code>@State</code>-Decorated Variables Be Mandatory Initialized?</h4><p><code>@State</code>-decorated variables should not be mandatory initialized.  </p>
+<p>Variables decorated with <code>@State</code>, like other decorated variables in declarative paradigms, are private and can only be accessed within the component. They must specify their type and local initialization upon declaration. Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-state-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-state-V5</a>  </p>
+
     </div>
 
     
@@ -207,7 +592,10 @@
     <a href="/2025/06/25/514-Daily-HarmonyOS-Next-Knowledge-Cache-Clearing-Popup-Back-Gesture-Handling-Routing-Configuration-File-Reading-Relative-Layout-Height-Adaptation-Transparent-Background-Color/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Cache Clearing, Popup Back Gesture Handling, Routing Configuration File Reading, Relative Layout Height Adaptation, Transparent Background Color">
       <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Cache Clearing, Popup Back Gesture Handling, Routing Configuration File Reading, Relative Layout Height Adaptation, Transparent Background Color
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/25/516-Daily-HarmonyOS-Next-Knowledge-Listening-for-Visibility-Loading-GIFs-User-Page-Access-Data-Bottom-Sliding-Pop-ups-Sending-Emoji-Messages/" rel="next" title="[Daily HarmonyOS Next Knowledge] Listening for Visibility, Loading GIFs, User Page Access Data, Bottom Sliding Pop-ups, Sending Emoji Messages">
+      [Daily HarmonyOS Next Knowledge] Listening for Visibility, Loading GIFs, User Page Access Data, Bottom Sliding Pop-ups, Sending Emoji Messages <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -266,6 +654,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Daily-Learn-HarmonyOS-Next-Knowledge%E3%80%91Grid-Drag-Animation-Timer-Control-Routing-Selection-Issues-State-Decoration-Problems"><span class="nav-number">1.</span> <span class="nav-text">【Daily Learn HarmonyOS Next Knowledge】Grid Drag Animation, Timer Control, Routing Selection Issues, State Decoration Problems</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HarmonyOS-Grid-Drag-Animation-Issue"><span class="nav-number">1.1.</span> <span class="nav-text">1. HarmonyOS Grid Drag Animation Issue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-HarmonyOS-TextTimer-Usage-Issue"><span class="nav-number">1.2.</span> <span class="nav-text">2. HarmonyOS TextTimer Usage Issue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-HarmonyOS-Navigation-If-onPop-is-Passed-When-A-Navigates-to-B-but-B-Calls-pop-Without-Passing-result-onPop-Is-Not-Triggered"><span class="nav-number">1.3.</span> <span class="nav-text">3. HarmonyOS Navigation: If onPop is Passed When A Navigates to B, but B Calls pop Without Passing result, onPop Is Not Triggered?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-HarmonyOS-Routing-Management-Should-We-Use-router-or-Navigation"><span class="nav-number">1.4.</span> <span class="nav-text">4. HarmonyOS Routing Management: Should We Use router or Navigation?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-HarmonyOS-Should-State-Decorated-Variables-Be-Mandatory-Initialized"><span class="nav-number">1.5.</span> <span class="nav-text">5. HarmonyOS: Should @State-Decorated Variables Be Mandatory Initialized?</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -279,7 +668,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
