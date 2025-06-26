@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions1. How to synchronize changes in m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/330-Daily-HarmonyOS-Next-Knowledge-Multi-level-Variables-Concurrent-Method-Errors-Navigation-Scenarios-State-Variable-Issues-Seamless-Transition-Animation-Solutions/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions1. How to synchronize changes in m">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T14:39:10.000Z">
+<meta property="article:modified_time" content="2025-06-26T14:39:39.665Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/330-Daily-HarmonyOS-Next-Knowledge-Multi-level-Variables-Concurrent-Method-Errors-Navigation-Scenarios-State-Variable-Issues-Seamless-Transition-Animation-Solutions/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/330-Daily-HarmonyOS-Next-Knowledge-Multi-level-Variables-Concurrent-Method-Errors-Navigation-Scenarios-State-Variable-Issues-Seamless-Transition-Animation-Solutions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 22:39:10 / Modified: 22:39:39" itemprop="dateCreated datePublished" datetime="2025-06-26T22:39:10+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Multi-level-Variables-Concurrent-Method-Errors-Navigation-Scenarios-State-Variable-Issues-Seamless-Transition-Animation-Solutions"><a href="#Daily-HarmonyOS-Next-Knowledge-Multi-level-Variables-Concurrent-Method-Errors-Navigation-Scenarios-State-Variable-Issues-Seamless-Transition-Animation-Solutions" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions"></a>[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions</h3><h4 id="1-How-to-synchronize-changes-in-multi-level-variables-to-the-UI-in-HarmonyOS"><a href="#1-How-to-synchronize-changes-in-multi-level-variables-to-the-UI-in-HarmonyOS" class="headerlink" title="1. How to synchronize changes in multi-level variables to the UI in HarmonyOS?"></a>1. How to synchronize changes in multi-level variables to the UI in HarmonyOS?</h4><p>How to synchronize changes in attribute values of nested classes (3-4 levels deep) to the UI?  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">@Observed
+class type extends Array&lt;Person&gt; &#123;
+
+&#125;
+
+@Observed
+class Grade &#123;
+  chinese: boolean;
+  math: boolean;
+  constructor(chinese: boolean, math: boolean) &#123;
+    this.chinese = chinese;
+    this.math = math;
+  &#125;
+&#125;
+
+@Observed
+class Person &#123;
+  name: string;
+  age: number;
+  changed: boolean;
+  grage: Grade;
+  constructor(name: string, age: number, changed: boolean, grade: Grade) &#123;
+    this.name = name;
+    this.age = age;
+    this.changed = changed;
+    this.grage = grade;
+  &#125;
+&#125;
+
+@Component
+struct ItemView1 &#123;
+  @ObjectLink person1: type;
+  build() &#123;
+    Column() &#123;
+      Text(JSON.stringify(this.person1));
+    &#125;
+  &#125;
+&#125;
+
+@Component
+struct ItemView &#123;
+  @ObjectLink person: Person;
+  build() &#123;
+    Column() &#123;
+      Row() &#123;
+        Text(this.person.name).itemText(this.person.changed);
+        Blank();
+        Text(this.person.age.toString()).itemText(this.person.changed);
+      &#125;
+      .width(&#39;100%&#39;)
+      .height(50)
+      .padding(5)
+      .backgroundColor(&#39;#F7F8FA&#39;)
+      .onClick(() =&gt; &#123;
+        this.person.age++;
+        this.person.changed = true;
+        this.person.grage.chinese = !this.person.grage.chinese;
+        this.person.grage.math = !this.person.grage.math;
+      &#125;);
+      Text(&quot;chinese:&quot; + this.person.grage.chinese);
+      Text(&quot;math:&quot; + this.person.grage.math);
+    &#125;
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct ObjectArrDemo2Page &#123;
+  @State per1: Person = new Person(&#39;Roes&#39;, 12, false, new Grade(true, false));
+  @State persons: Person[] = [this.per1];
+  private count: number = 0;
+  build() &#123;
+    Column(&#123; space: 10 &#125;) &#123;
+      ItemView1(&#123; person1: [this.per1] &#125;);
+
+      List(&#123; space: 5 &#125;) &#123;
+        ForEach(this.persons, (item: Person, index: number) =&gt; &#123;
+          ListItem() &#123;
+            ItemView(&#123; person: item &#125;);
+          &#125;
+        &#125;);
+      &#125;
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .padding(5);
+  &#125;
+&#125;
+
+@Extend(Text)
+function itemText(changed: boolean) &#123;
+  .fontSize(22)
+  .fontColor(changed ? &#39;#21A3A1&#39; : &#39;#000000&#39;);
+&#125;
+</code></pre>
+<h4 id="2-Error-when-instantiating-an-object-in-a-HarmonyOS-Concurrent-decorated-method"><a href="#2-Error-when-instantiating-an-object-in-a-HarmonyOS-Concurrent-decorated-method" class="headerlink" title="2. Error when instantiating an object in a HarmonyOS @Concurrent decorated method?"></a>2. Error when instantiating an object in a HarmonyOS @Concurrent decorated method?</h4><p>Method A is decorated with @Concurrent:  </p>
+<ol>
+<li>If the OBData object and Method A are defined in the same file, instantiating OBData in Method A throws an error.  </li>
+<li>If OBData is defined in another file, instantiating OBData in Method A works fine.</li>
+</ol>
+<p>@Concurrent allows using local variables, parameters, and variables imported via <code>import</code>. Using closure variables is prohibited.  </p>
+<h4 id="3-Use-cases-for-HarmonyOS-Navigator"><a href="#3-Use-cases-for-HarmonyOS-Navigator" class="headerlink" title="3. Use cases for HarmonyOS Navigator?"></a>3. Use cases for HarmonyOS Navigator?</h4><p>What are the use cases for the Navigator component? How does it differ from Navigation in terms of route navigation?  </p>
+<p><strong>Navigator</strong> is a routing container component that provides route navigation capabilities. It is not recommended for future development; use <strong>Navigation</strong> instead. <strong>Navigation</strong> is typically used as the root container for Page components and displays the page title bar, toolbar, navigation bar, etc. via properties.<br>Navigation reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5</a>  </p>
+<h4 id="4-UI-not-updating-when-modifying-properties-of-an-ObjectLink-decorated-element-in-HarmonyOS"><a href="#4-UI-not-updating-when-modifying-properties-of-an-ObjectLink-decorated-element-in-HarmonyOS" class="headerlink" title="4. UI not updating when modifying properties of an ObjectLink decorated element in HarmonyOS?"></a>4. UI not updating when modifying properties of an ObjectLink decorated element in HarmonyOS?</h4><p>When dragging Module A to swap with Module B, Module A should hide during dragging and reappear after the swap. Currently, it remains visible after the swap.  </p>
+<p>This can be achieved by importing third-party libraries <code>reflect-metadata</code> and <code>class-transformer</code>. Refer to the following demo:  </p>
+<pre><code class="language-typescript">// TestJson.ets
+import &#123; plainToClass, Type &#125; from &#39;class-transformer&#39;;
+import &#39;reflect-metadata&#39;;
+import &#123; Person, ViewA &#125; from &#39;./ViewA&#39;;
+
+class ResponseObj &#123;
+  @Type(() =&gt; Person)
+  data: Person[] = [];
+&#125;
+
+@Entry
+@Component
+struct TestJson &#123;
+  @State list: Person[] = [];
+  @State message: string = &#39;Click me&#39;;
+  
+  aboutToAppear(): void &#123;
+    let str = &#39;&#123;&quot;data&quot; : [&#123;&quot;number&quot; :1,&quot;age&quot;: 20, &quot;testA&quot;: &#123; &quot;str&quot; : &quot;123&quot;&#125;&#125;,&#123;&quot;number&quot; :2,&quot;age&quot;: 21,&quot;testA&quot;: &#123;&quot;str&quot; : &quot;456&quot;&#125;&#125;]&#125;&#39;;
+    let jsonData: ESObject = JSON.parse(str);
+    let responseObj: ResponseObj = plainToClass(ResponseObj, jsonData);
+    console.log(`$&#123;responseObj.data[0] instanceof Person&#125;`);
+    this.list = this.list.concat(responseObj.data);
+  &#125;
+  
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        ForEach(this.list, (item: Person, index: number) =&gt; &#123;
+          ViewA(&#123; index: index, testA: item.testA &#125;);
+        &#125;);
+      &#125;
+      .width(&#39;100%&#39;);
+    &#125;
+    .height(&#39;100%&#39;);
+  &#125;
+&#125;
+
+// ViewA.ets
+import &#123; Type &#125; from &#39;class-transformer&#39;;
+
+@Observed
+export class TestA &#123;
+  public str: string;
+  constructor(str: string) &#123;
+    this.str = str;
+  &#125;
+&#125;
+
+export class Person &#123;
+  name: string = &#39;&#39;;
+  age: number = 1;
+  @Type(() =&gt; TestA)
+  testA: TestA = new TestA(&#39;&#39;);
+&#125;
+
+@Component
+export struct ViewA &#123;
+  @ObjectLink testA: TestA;
+  index: number = -1;
+  
+  build() &#123;
+    Row() &#123;
+      Button(`View A $&#123;this.testA.str&#125;`).onClick(() =&gt; &#123;
+        this.index += 1;
+        this.testA.str = `$&#123;this.index&#125; : Test A String`;
+      &#125;);
+    &#125;.margin(&#123; top: 10 &#125;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-Recommended-seamless-transition-animation-solutions-for-HarmonyOS"><a href="#5-Recommended-seamless-transition-animation-solutions-for-HarmonyOS" class="headerlink" title="5. Recommended seamless transition animation solutions for HarmonyOS?"></a>5. Recommended seamless transition animation solutions for HarmonyOS?</h4><p>Refer to the documentation for transition animations: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-animation-transition-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-animation-transition-V5</a>  </p>
+<p>Slide-out transitions can be achieved by setting the <code>translate</code> property. Example of sliding down:  </p>
+<pre><code class="language-typescript">import curves from &#39;@ohos.curves&#39;;
+
+@Entry
+@Component
+struct TransitionEffectDemo &#123;
+  @State isPresent: boolean = true;
+
+  // Step 1: Create TransitionEffect
+  private effect: TransitionEffect =
+    TransitionEffect.OPACITY.animation(&#123; curve: curves.springMotion(0.6, 0.8) &#125;)
+      .combine(TransitionEffect.translate(&#123; y: 150 &#125;).animation(&#123; curve: curves.springMotion() &#125;));
+
+  build() &#123;
+    Stack() &#123;
+      if (this.isPresent) &#123;
+        Column() &#123;
+          Text(&#39;ArkUI&#39;)
+            .fontWeight(FontWeight.Bold)
+            .fontSize(20)
+            .fontColor(Color.White);
+        &#125;
+        .justifyContent(FlexAlign.Center)
+        .width(150)
+        .height(150)
+        .borderRadius(10)
+        .backgroundColor(0xf56c6c)
+        // Step 2: Apply the transition effect via the transition interface
+        .transition(this.effect);
+      &#125;
+
+      // Border
+      Column()
+        .width(155)
+        .height(155)
+        .border(&#123;
+          width: 5,
+          radius: 10,
+          color: Color.Black
+        &#125;);
+
+      // Step 3: Trigger the transition by adding/removing components
+      Button(&#39;Click&#39;)
+        .margin(&#123; top: 320 &#125;)
+        .onClick(() =&gt; &#123;
+          this.isPresent = !this.isPresent;
+        &#125;);
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;60%&#39;);
+  &#125;
+&#125;
+</code></pre>
+<ul>
+<li>Refer to this codelab for various transition animations: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/codelabsPortal/carddetails/tutorials_NEXT-TransitionAnimation">https://developer.huawei.com/consumer/cn/codelabsPortal/carddetails/tutorials_NEXT-TransitionAnimation</a>  </li>
+<li>ArkTS does not recommend page transition animations. For better effects, use the Navigation component and modal transitions. See: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-transition-animation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-transition-animation-V5</a>  </li>
+<li>Control page entry&#x2F;exit effects with <code>pageTransition</code>. Parameters and examples: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-page-transition-animation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-page-transition-animation-V5</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/329-Daily-HarmonyOS-Next-Knowledge-Extending-to-Status-Bar-Global-Storage-Issues-State-Variable-Collaboration-Refresh-Component-Usage-Scrolling-to-Fixed-Position/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/331-Daily-HarmonyOS-Next-Knowledge-Modify-Status-Bar-Background-Input-Box-Height-Adaptation-Immersive-Effect-Call-Methods-Based-on-Strings-Set-Blur-Effect/" rel="next" title="[Daily HarmonyOS Next Knowledge] Modify Status Bar Background, Input Box Height Adaptation, Immersive Effect, Call Methods Based on Strings, Set Blur Effect">
+      [Daily HarmonyOS Next Knowledge] Modify Status Bar Background, Input Box Height Adaptation, Immersive Effect, Call Methods Based on Strings, Set Blur Effect <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Multi-level-Variables-Concurrent-Method-Errors-Navigation-Scenarios-State-Variable-Issues-Seamless-Transition-Animation-Solutions"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-synchronize-changes-in-multi-level-variables-to-the-UI-in-HarmonyOS"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to synchronize changes in multi-level variables to the UI in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Error-when-instantiating-an-object-in-a-HarmonyOS-Concurrent-decorated-method"><span class="nav-number">1.2.</span> <span class="nav-text">2. Error when instantiating an object in a HarmonyOS @Concurrent decorated method?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Use-cases-for-HarmonyOS-Navigator"><span class="nav-number">1.3.</span> <span class="nav-text">3. Use cases for HarmonyOS Navigator?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-UI-not-updating-when-modifying-properties-of-an-ObjectLink-decorated-element-in-HarmonyOS"><span class="nav-number">1.4.</span> <span class="nav-text">4. UI not updating when modifying properties of an ObjectLink decorated element in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Recommended-seamless-transition-animation-solutions-for-HarmonyOS"><span class="nav-number">1.5.</span> <span class="nav-text">5. Recommended seamless transition animation solutions for HarmonyOS?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up1. Issues with HarmonyOS Flex component causing incorrect UI?The expected effect i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/313-Daily-HarmonyOS-Next-Knowledge-Flex-Component-List-Refresh-Custom-Pop-up-Button-States-Auto-Soft-Keyboard-Pop-up/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up1. Issues with HarmonyOS Flex component causing incorrect UI?The expected effect i">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T14:13:14.000Z">
+<meta property="article:modified_time" content="2025-06-26T14:14:16.141Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/313-Daily-HarmonyOS-Next-Knowledge-Flex-Component-List-Refresh-Custom-Pop-up-Button-States-Auto-Soft-Keyboard-Pop-up/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/313-Daily-HarmonyOS-Next-Knowledge-Flex-Component-List-Refresh-Custom-Pop-up-Button-States-Auto-Soft-Keyboard-Pop-up/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 22:13:14 / Modified: 22:14:16" itemprop="dateCreated datePublished" datetime="2025-06-26T22:13:14+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Flex-Component-List-Refresh-Custom-Pop-up-Button-States-Auto-Soft-Keyboard-Pop-up"><a href="#Daily-HarmonyOS-Next-Knowledge-Flex-Component-List-Refresh-Custom-Pop-up-Button-States-Auto-Soft-Keyboard-Pop-up" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up"></a>[Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up</h3><h4 id="1-Issues-with-HarmonyOS-Flex-component-causing-incorrect-UI"><a href="#1-Issues-with-HarmonyOS-Flex-component-causing-incorrect-UI" class="headerlink" title="1. Issues with HarmonyOS Flex component causing incorrect UI?"></a>1. Issues with HarmonyOS Flex component causing incorrect UI?</h4><p>The expected effect is that the first child1 Flex should not fill the entire main axis.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">Flex(&#123;</span><br><span class="line">  direction: FlexDirection.Column,</span><br><span class="line">  // wrap: FlexWrap.NoWrap,</span><br><span class="line">  // justifyContent:  FlexAlign.Center,</span><br><span class="line">  // alignItems: ItemAlign.Start,</span><br><span class="line">  // alignContent: FlexAlign.Start,</span><br><span class="line">&#125;)&#123;</span><br><span class="line">  Flex(&#123;</span><br><span class="line">    direction: FlexDirection.Column,</span><br><span class="line">    // wrap: FlexWrap.NoWrap,</span><br><span class="line">    // justifyContent: FlexAlign.Start,</span><br><span class="line">    // alignItems: ItemAlign.Start,</span><br><span class="line">    // alignContent: FlexAlign.Start,</span><br><span class="line">  &#125;) &#123;</span><br><span class="line">    Text(&quot;啊是打火机卡的黑科技abc1234567890&quot;)</span><br><span class="line">  &#125;.id(&quot;child1&quot;)</span><br><span class="line">  Text(&quot;啊是打火机卡的黑科技&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Code 2:</span><br><span class="line">  Flex(&#123;</span><br><span class="line">    direction: FlexDirection.Column,</span><br><span class="line">    // wrap: FlexWrap.NoWrap,</span><br><span class="line">    // justifyContent:  FlexAlign.Center,</span><br><span class="line">    // alignItems: ItemAlign.Start,</span><br><span class="line">    // alignContent: FlexAlign.Start,</span><br><span class="line">  &#125;)&#123;</span><br><span class="line">    Flex(&#123;</span><br><span class="line">      direction: FlexDirection.Column,</span><br><span class="line">      // wrap: FlexWrap.NoWrap,</span><br><span class="line">      // justifyContent: FlexAlign.Start,</span><br><span class="line">      // alignItems: ItemAlign.Start,</span><br><span class="line">      // alignContent: FlexAlign.Start,</span><br><span class="line">    &#125;) &#123;</span><br><span class="line">      Text(&quot;啊是打火机卡的黑科技abc1234567890&quot;)</span><br><span class="line">        .flexBasis(0).flexShrink(1).flexGrow(0)</span><br><span class="line">    &#125;.flexBasis(0).flexShrink(1).flexGrow(0).id(&quot;child1&quot;)</span><br><span class="line">    Text(&quot;啊是打火机卡的黑科技&quot;)</span><br><span class="line">  &#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">By default, the Flex component&#x27;s main axis fills the parent container when not explicitly set, while the Column/Row component&#x27;s main axis follows the child nodes&#x27; sizes by default.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 2. How to refresh a List when ListItem data in HarmonyOS ListItemGroup is updated?  </span><br><span class="line">Abstract the group data into a component and pass the required parameters. Code:  </span><br></pre></td></tr></table></figure>
+<p>@Observed<br>class ProjectArray extends Array<string>{<br>}</p>
+<p>@Observed<br>class Subject {<br>  public title: string;<br>  public projects: ProjectArray;<br>  constructor(title, projects) {<br>    this.title &#x3D; title;<br>    this.projects &#x3D; projects;<br>  }<br>}</p>
+<p>@Component<br>struct ViewA {<br>  title: string;<br>  @ObjectLink projects: ProjectArray;<br>  build() {<br>    Column() {<br>      Text(this.title)<br>      List(){<br>        ForEach(this.projects, (project) &#x3D;&gt; {<br>          ListItem() {<br>            Text(project)<br>              .width(“100%”).height(100).fontSize(20)<br>              .textAlign(TextAlign.Center).backgroundColor(0xFFFFFF)<br>          }</p>
+<pre><code>    &#125;)
+  &#125;
+&#125;
+</code></pre>
+<p>  }<br>}</p>
+<p>@Entry<br>@Component<br>struct ListItemGroupExample2 {<br>  @State timetable: Subject[] &#x3D; [<br>    new Subject(‘星期一’, new ProjectArray(‘语文’, ‘数学’, ‘英语’))<br>  ]<br>  build() {<br>    Column() {<br>      Button(‘change’)<br>        .onClick(() &#x3D;&gt; {<br>          console.log(‘testTag: Change’);<br>          this.timetable[0].projects.splice(0, 1, ‘英语’);<br>        })<br>      ForEach(this.timetable, (table) &#x3D;&gt; {<br>        ViewA({title: table.title, projects: table.projects})<br>      })</p>
+<pre><code>&#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC).padding(&#123; top: 20 &#125;)
+</code></pre>
+<p>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#### 3. How to display a @Builder-decorated function in the description of a HarmonyOS custom dialog?  </span><br><span class="line">Refer to the following demo:  </span><br></pre></td></tr></table></figure>
+<p>@Builder<br>function customDialogBuilder(price:string,id_no:string) {<br>  Column({space:15}) {<br>    Row() {<br>      Text(‘运费:’ + price)<br>        .fontSize(10)<br>    }<br>    Row() {<br>      Text(‘货单:’ + id_no)<br>        .fontSize(10)<br>    }<br>  }<br>  .width(‘100%’)<br>  .height(200)<br>  .padding(5)<br>  .backgroundColor(“#FF0000”)<br>}</p>
+<p>@CustomDialog<br>struct CustomDialogExample {<br>  @Link title: string<br>  @Link price: string<br>  @Link id_no: string<br>  controller?: CustomDialogController<br>  cancel: () &#x3D;&gt; void &#x3D; () &#x3D;&gt; {<br>  }<br>  confirm: () &#x3D;&gt; void &#x3D; () &#x3D;&gt; {<br>  }</p>
+<p>  build() {<br>    Column() {<br>      Text(this.title).fontSize(20).margin({ top: 10, bottom: 10 })<br>      customDialogBuilder(this.price,this.id_no)<br>      Flex({ justifyContent: FlexAlign.SpaceAround }) {<br>        Button(‘cancel’)<br>          .onClick(() &#x3D;&gt; {<br>            if (this.controller !&#x3D; undefined) {<br>              this.controller.close()<br>              this.cancel()<br>            }<br>          }).backgroundColor(0xffffff).fontColor(Color.Black)<br>        Button(‘confirm’)<br>          .onClick(() &#x3D;&gt; {<br>            if (this.controller !&#x3D; undefined) {<br>              this.controller.close()<br>              this.confirm()<br>            }<br>          }).backgroundColor(0xffffff).fontColor(Color.Red)<br>      }.margin({ bottom: 10 })<br>    }.borderRadius(10)<br>  }<br>}</p>
+<p>@Entry<br>@Component<br>struct Index {</p>
+<p>  @State title: string &#x3D; ‘’<br>  @State price: string &#x3D; ‘’<br>  @State id_no: string &#x3D; ‘’<br>  dialogController: CustomDialogController | null &#x3D; new CustomDialogController({<br>    builder: CustomDialogExample({<br>      cancel: () &#x3D;&gt; {<br>        this.onCancel()<br>      },<br>      confirm: () &#x3D;&gt; {<br>        this.onAccept()<br>      },<br>      title: $title,<br>      price: $price,<br>      id_no: $id_no,<br>    }),<br>    autoCancel: true,<br>    alignment: DialogAlignment.Bottom,<br>    offset: { dx: 0, dy: -20 },<br>    gridCount: 4,<br>    customStyle: false,<br>    cornerRadius: 10,<br>  })</p>
+<p>  &#x2F;&#x2F; Set dialogControlle to null when the custom component is about to be destroyed<br>  aboutToDisappear() {<br>    this.dialogController &#x3D; null &#x2F;&#x2F; Set dialogController to null<br>  }</p>
+<p>  onCancel() {<br>    console.info(‘Callback when the first button is clicked’)<br>  }</p>
+<p>  onAccept() {<br>    console.info(‘Callback when the second button is clicked’)<br>  }</p>
+<p>  build() {<br>    Row() {<br>      Column() {<br>        Button(‘自定义弹框’)<br>          .width(‘100vp’)<br>          .height(‘100vp’)<br>          .onClick(() &#x3D;&gt; {<br>            if (this.dialogController !&#x3D; null) {<br>              this.title &#x3D; ‘自定义弹框title’<br>              this.price &#x3D; ‘100元’<br>              this.id_no &#x3D; ‘1234567895549’<br>              this.dialogController.open()<br>            }<br>          })<br>      }<br>      .width(‘100%’)<br>    }<br>    .height(‘100%’)<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. How to set images for normal and selected states of a HarmonyOS button?  </span><br><span class="line">Set one image for the normal state and another for the selected state.  </span><br><span class="line">Refer to the demo:  </span><br></pre></td></tr></table></figure>
+<p>@Entry<br>@Component<br>struct Page240605153407040 {<br>  @State message: string &#x3D; ‘app.media.photo’;</p>
+<p>  build() {<br>    Row() {<br>      Column() {<br>        Button() {<br>          Image($r(this.message))<br>        }<br>        .width(40).height(40).margin({ left: 18 })<br>        .onClick(()&#x3D;&gt;{<br>          if (this.message &#x3D;&#x3D; ‘app.media.photo’ ) {<br>            this.message &#x3D; ‘app.media.startIcon’<br>          }else {<br>            this.message &#x3D; ‘app.media.photo’<br>          }</p>
+<pre><code>    &#125;)
+  &#125;
+  .width(&#39;100%&#39;)
+&#125;
+.height(&#39;100%&#39;)
+</code></pre>
+<p>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#### 5. How to automatically pop up the soft keyboard after opening a page in HarmonyOS?  </span><br><span class="line">Use focusControl.requestFocus to control the input box&#x27;s focus. The soft keyboard will automatically pop up when the component gains focus.  </span><br><span class="line">The TextInput triggers the input method when focused and closes it when focus is lost. Use focusControl to manage focus for closing the soft keyboard.  </span><br></pre></td></tr></table></figure>
+<p>build() {<br>  Column() {<br>    TextInput()<br>    Button(<code>hide</code>)<br>      .key(‘button’)<br>      .onClick(()&#x3D;&gt;{<br>        focusControl.requestFocus(‘button’)<br>      })<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Judge by listening to the keyboard height change event:  </span><br></pre></td></tr></table></figure>
+<p>window.getLastWindow(context).then(lastWindow &#x3D;&gt; {<br>  lastWindow.on(‘keyboardHeightChange’, (size: number) &#x3D;&gt; {<br>    console.warn(<code>...keyboardHeightChange: $&#123;size&#125;</code>);<br>  })<br>}).catch((err: BusinessError) &#x3D;&gt; {console.error(<code>...error message: $&#123;err.message&#125;</code>);<br>})<br>&#96;&#96;&#96;</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/312-Daily-Harmony-Learnings-on-HarmonyOS-Next-Anti-Hotlinking-Navigation-Title-Color-Refresh-Component-Callback-Page-Routing-Removal-Pull-to-Load-More/" rel="prev" title="[Daily Harmony Learnings on HarmonyOS Next] Anti-Hotlinking, Navigation Title Color, Refresh Component Callback, Page Routing Removal, Pull-to-Load More">
+      <i class="fa fa-chevron-left"></i> [Daily Harmony Learnings on HarmonyOS Next] Anti-Hotlinking, Navigation Title Color, Refresh Component Callback, Page Routing Removal, Pull-to-Load More
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/314-Daily-HarmonyOS-Next-Knowledge-Introducing-V8-Engine-Tab-Scrolling-Cold-Start-Statistics-Basic-Component-Parameter-Passing-Video-Playlist-Dropdown-Pagination/" rel="next" title="[Daily HarmonyOS Next Knowledge] Introducing V8 Engine, Tab Scrolling, Cold Start Statistics, Basic Component Parameter Passing, Video Playlist Dropdown Pagination">
+      [Daily HarmonyOS Next Knowledge] Introducing V8 Engine, Tab Scrolling, Cold Start Statistics, Basic Component Parameter Passing, Video Playlist Dropdown Pagination <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Flex-Component-List-Refresh-Custom-Pop-up-Button-States-Auto-Soft-Keyboard-Pop-up"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Flex Component, List Refresh, Custom Pop-up, Button States, Auto Soft Keyboard Pop-up</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Issues-with-HarmonyOS-Flex-component-causing-incorrect-UI"><span class="nav-number">1.1.</span> <span class="nav-text">1. Issues with HarmonyOS Flex component causing incorrect UI?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

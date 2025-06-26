@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position1. HarmonyOS: Page top extension to s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/329-Daily-HarmonyOS-Next-Knowledge-Extending-to-Status-Bar-Global-Storage-Issues-State-Variable-Collaboration-Refresh-Component-Usage-Scrolling-to-Fixed-Position/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position1. HarmonyOS: Page top extension to s">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.03.29.png">
+<meta property="article:published_time" content="2025-06-26T14:37:37.000Z">
+<meta property="article:modified_time" content="2025-06-26T14:38:22.058Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.03.29.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/329-Daily-HarmonyOS-Next-Knowledge-Extending-to-Status-Bar-Global-Storage-Issues-State-Variable-Collaboration-Refresh-Component-Usage-Scrolling-to-Fixed-Position/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/329-Daily-HarmonyOS-Next-Knowledge-Extending-to-Status-Bar-Global-Storage-Issues-State-Variable-Collaboration-Refresh-Component-Usage-Scrolling-to-Fixed-Position/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 22:37:37 / Modified: 22:38:22" itemprop="dateCreated datePublished" datetime="2025-06-26T22:37:37+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Extending-to-Status-Bar-Global-Storage-Issues-State-Variable-Collaboration-Refresh-Component-Usage-Scrolling-to-Fixed-Position"><a href="#Daily-HarmonyOS-Next-Knowledge-Extending-to-Status-Bar-Global-Storage-Issues-State-Variable-Collaboration-Refresh-Component-Usage-Scrolling-to-Fixed-Position" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position"></a>[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position</h3><h4 id="1-HarmonyOS-Page-top-extension-to-status-bar-is-ineffective"><a href="#1-HarmonyOS-Page-top-extension-to-status-bar-is-ineffective" class="headerlink" title="1. HarmonyOS: Page top extension to status bar is ineffective?"></a>1. HarmonyOS: Page top extension to status bar is ineffective?</h4><p>Refer to the demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  build() &#123;
+    Swiper() &#123;
+      Column() &#123;
+        Image($r(&#39;app.media.background&#39;))
+          .height(&#39;50%&#39;).width(&#39;100%&#39;)
+          // Set image to extend to status bar
+          .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP])
+        Column() &#123;
+          Text(&#39;HarmonyOS 第一课&#39;)
+            .fontSize(32)
+            .margin(30)
+          Text(&#39;Through a gradual learning path, both inexperienced and experienced developers can master the ArkTS declarative development paradigm and experience a simpler and more friendly HarmonyOS application development journey.&#39;)
+            .fontSize(20).margin(20)
+        &#125;.height(&#39;50%&#39;).width(&#39;100%&#39;)
+        .backgroundColor(Color.White)
+        // Set text content area background to extend to navigation bar
+        .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
+      &#125;
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    // Disable the default clipping effect of the Swiper component to allow child nodes to draw outside the Swiper.
+    .clip(false)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-much-information-can-HarmonyOS-AppStorage-store"><a href="#2-How-much-information-can-HarmonyOS-AppStorage-store" class="headerlink" title="2. How much information can HarmonyOS AppStorage store?"></a>2. How much information can HarmonyOS AppStorage store?</h4><ol>
+<li>The project needs to store user information and uses AppStorage for storage. After logging in, the information can be retrieved via AppStorage.get. However, when the app is reopened, the data cannot be obtained directly. Is it because too much information is stored to retrieve?  </li>
+<li>If this is not feasible, what storage methods can be used?</li>
+</ol>
+<p>This issue occurs because each IDE compilation is equivalent to uninstalling and reinstalling the app, and previously flushed data is cleared with the app during uninstallation. Thus, data flushed before cannot be queried after the second compilation. This does not affect data flushing in normal user scenarios. Simply check <strong>Keep Application Data</strong> in the IDE.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.03.29.png"></p>
+<p>AppStorage is not persistent storage. For persistent storage, use PersistentStorage. PersistentStorage variables should preferably be less than 2KB; avoid persisting large data volumes because disk writes in PersistentStorage are synchronous, and extensive local read&#x2F;write operations execute on the UI thread, affecting UI rendering performance. For large data storage, use database APIs. Related documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-persiststorage-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-persiststorage-V5</a>  </p>
+<p>Both LocalStorage and AppStorage are runtime memories, but they can retain selected results after the app restarts, a common requirement in app development. PersistentStorage, an optional singleton in the app, persists selected AppStorage attributes to ensure their values remain unchanged between app restarts.  </p>
+<p>PersistentStorage saves selected AppStorage attributes to device disk. The app uses APIs to determine which AppStorage attributes to persist via PersistentStorage. UI and business logic do not directly access PersistentStorage attributes; all access occurs through AppStorage, with changes automatically synced to PersistentStorage.  </p>
+<p>PersistentStorage and AppStorage establish bidirectional synchronization for attributes. App development typically accesses PersistentStorage via AppStorage, with additional interfaces for managing persistent attributes, though business logic always retrieves and sets attributes through AppStorage.  </p>
+<h4 id="3-How-does-HarmonyOS-Sendable-work-with-ObservedV2"><a href="#3-How-does-HarmonyOS-Sendable-work-with-ObservedV2" class="headerlink" title="3. How does HarmonyOS @Sendable work with @ObservedV2?"></a>3. How does HarmonyOS @Sendable work with @ObservedV2?</h4><p>Currently, a class cannot support both @Sendable and @ObservedV2. An object cannot be both a multi-thread shared object and an observable object.  </p>
+<p>Based on the issue that @Sendable and @ObservedV2 cannot be mixed, two solutions are provided:  </p>
+<ol>
+<li><strong>Whole tracking of Sendable objects</strong> (sample code):</li>
+</ol>
+<pre><code class="language-typescript">import taskpool from &#39;@ohos.taskpool&#39;;
+import &#123; SendableData &#125; from &#39;./SendableData&#39;;
+
+@Concurrent
+function threadGetData(param: string): SendableData &#123;
+  let ret = new SendableData()
+  ret.name = param + &quot;-o&quot;
+  ret.age = Math.floor(Math.random() * 40)
+  ret.likes = Math.floor(Math.random() * 100)
+  return ret // Return a new SendableData instance
+&#125;
+
+
+@ObservedV2
+class ViewModelWithSendable &#123;
+  @Trace data?: SendableData // Track the entire object with @Trace
+  @Trace sendParam: string = &quot;chen&quot;
+
+  runTask() &#123;
+    taskpool.execute(threadGetData, this.sendParam).then((value: object) =&gt; &#123;
+      this.data = value as SendableData // Replace the entire data object
+      this.sendParam = this.data.name
+    &#125;)
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  mySendData: ViewModelWithSendable = new ViewModelWithSendable()
+
+  build() &#123;
+    Column() &#123;
+      Text(`SendParam=$&#123;this.mySendData.sendParam&#125;`).fontSize(30).fontColor(Color.Red)
+      Button(&quot;runTask&quot;).onClick(this.mySendData.runTask.bind(this.mySendData))
+      if (this.mySendData.data) &#123;
+        Row() &#123;
+          Text(this.mySendData.data.name).fontSize(30).layoutWeight(4)
+          Text(this.mySendData.data.age.toString()).fontSize(30).fontColor(Color.Blue).layoutWeight(1)
+          Text(this.mySendData.data.likes.toString()).fontSize(30).fontColor(Color.Green).layoutWeight(1)
+          Text(this.mySendData.data.follow ? &quot;已关注&quot; : &quot;关注&quot;).fontSize(30).fontColor(Color.Green).layoutWeight(2)
+        &#125;
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<ol start="2">
+<li><strong>Partial update of Sendable objects</strong> (sample code):</li>
+</ol>
+<pre><code class="language-typescript">import taskpool from &#39;@ohos.taskpool&#39;;
+import &#123; SendableData &#125; from &#39;./SendableData&#39;;
+
+@Concurrent
+function threadLike(param: SendableData): boolean &#123;
+  param.likes++
+  return true
+&#125;
+
+@Concurrent
+function threadFollow(param: SendableData): boolean &#123;
+  param.likes++
+  return true
+&#125;
+
+@Concurrent
+function threadReset(param: SendableData): boolean &#123;
+  let likes: number = param.likes
+  // .....
+  return true
+&#125;
+
+
+@ObservedV2
+class ViewModelWithSendable &#123;
+  data: SendableData = new SendableData() // No need to track overall changes
+  @Trace sendParam: string = &quot;chen&quot;
+  @Trace likes: number = 0 // Define responsive data
+  @Trace follow: boolean = false // Define responsive data
+
+  iLike() &#123;
+    taskpool.execute(threadLike, this.data).then((value: object) =&gt; &#123;
+      this.likes = this.data.likes // Assign only changed properties for UI refresh
+    &#125;)
+  &#125;
+
+  iFollow() &#123;
+    taskpool.execute(threadFollow, this.data).then((value: object) =&gt; &#123;
+      this.follow = this.data.follow // Assign only changed properties for UI refresh
+    &#125;)
+  &#125;
+  reset() &#123;
+    // Update data first, then refresh the UI, and then use the thread to work
+    this.likes = 0
+    this.data.likes = this.likes
+    this.follow = false
+    this.data.follow = this.follow
+    taskpool.execute(threadReset, this.data)
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  mySendData: ViewModelWithSendable = new ViewModelWithSendable()
+
+  build() &#123;
+    Column() &#123;
+      Row() &#123;
+        Button(&quot;Like&quot;).onClick(this.mySendData.iLike.bind(this.mySendData))
+        Button(&quot;Follow&quot;).onClick(this.mySendData.iFollow.bind(this.mySendData))
+        Button(&quot;Reset&quot;).onClick(this.mySendData.reset.bind(this.mySendData))
+      &#125;
+
+      Row() &#123;
+        Text(this.mySendData.data.name).fontSize(30).layoutWeight(4)
+        Text(this.mySendData.data.age.toString()).fontSize(30).fontColor(Color.Blue).layoutWeight(1)
+        Text(this.mySendData.data.likes.toString()).fontSize(30).fontColor(Color.Green).layoutWeight(1)
+        Text(this.mySendData.data.follow ? &quot;已关注&quot; : &quot;关注&quot;).fontSize(30).fontColor(Color.Green).layoutWeight(2)
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-HarmonyOS-Refresh-component-usage-issues"><a href="#4-HarmonyOS-Refresh-component-usage-issues" class="headerlink" title="4. HarmonyOS Refresh component usage issues?"></a>4. HarmonyOS Refresh component usage issues?</h4><ol>
+<li>After setting the LoadingProgress height, part of it is exposed without scrolling.  </li>
+<li>Expect that when quickly scrolling from the bottom to the top, the Builder does not actively display.</li>
+</ol>
+<p>Add the <code>.clip(true)</code> attribute. Specific demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State isRefreshing: boolean = false
+  @State arr: String[] = [&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;, &#39;10&#39;]
+
+  @Builder
+  refreshComponent() &#123;
+    Stack() &#123;
+      Row() &#123;
+        LoadingProgress()
+          .height(32)
+          .width(40)
+          .color(Color.Red)
+        Text(&quot;正在刷新...&quot;)
+          .fontSize(16)
+          .margin(&#123; left: 20 &#125;)
+      &#125;
+      .clip(true)
+      .alignItems(VerticalAlign.Center)
+    &#125;.width(&quot;100%&quot;).align(Alignment.Center)
+  &#125;
+
+  build() &#123;
+    Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;
+      Flex(&#123; direction: FlexDirection.Column &#125;) &#123;
+        Refresh(&#123;
+          refreshing: $$this.isRefreshing,
+          builder: this.refreshComponent()
+        &#125;) &#123;
+          Scroll() &#123;
+            Column() &#123;
+              ForEach(this.arr, (item: string) =&gt; &#123;
+                Text(&#39;&#39; + item)
+                  .width(&#39;100%&#39;)
+                  .height(100)
+                  .fontSize(16)
+                  .textAlign(TextAlign.Center)
+                  .borderRadius(10)
+              &#125;, (item: string) =&gt; item)
+            &#125;
+
+          &#125;
+
+        &#125;
+        .onStateChange((refreshStatus: RefreshStatus) =&gt; &#123;
+          console.info(&#39;Refresh onStatueChange state is &#39; + refreshStatus)
+        &#125;)
+        .onRefreshing(() =&gt; &#123;
+          setTimeout(() =&gt; &#123;
+            this.isRefreshing = false
+          &#125;, 2000)
+          console.log(&#39;onRefreshing test&#39;)
+        &#125;)
+
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-HarmonyOS-list-scrollToIndex"><a href="#5-HarmonyOS-list-scrollToIndex" class="headerlink" title="5. HarmonyOS list scrollToIndex?"></a>5. HarmonyOS list scrollToIndex?</h4><p>When scrolling a List to a specified index with multiple ListItemGroups (each containing multiple ListItems), which index should be specified for scrollToIndex?  </p>
+<p>Use <code>scrollToItemInGroup</code> to scroll to a specified ListItem in a ListItemGroup. Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#scrolltoitemingroup11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#scrolltoitemingroup11</a>  </p>
+<p><code>scrollToItemInGroup(index: number, indexInGroup: number, smooth?: boolean, align?: ScrollAlign): void</code>  </p>
+<p>Scrolls to a specified ListItem in a ListItemGroup.<br>Enabling smooth animation triggers loading and layout calculations for all passed items, potentially causing performance issues with large item counts.  </p>
+<p><strong>Parameters</strong>:  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">index</td>
+<td align="left">number</td>
+<td align="left">Yes</td>
+<td align="left">The index of the target ListItemGroup in the current container.<br><br><strong>Note:</strong><br><br>Negative values or values greater than the maximum index of child components are invalid, and the jump does not take effect.</td>
+</tr>
+<tr>
+<td align="left">indexInGroup</td>
+<td align="left">number</td>
+<td align="left">Yes</td>
+<td align="left">The index of the target ListItem within the specified ListItemGroup.<br><br><strong>Note:</strong><br><br>Negative values or values greater than the maximum index of child components in the ListItemGroup are invalid, and the jump does not take effect.</td>
+</tr>
+<tr>
+<td align="left">smooth</td>
+<td align="left">boolean</td>
+<td align="left">No</td>
+<td align="left">Whether to enable animation when scrolling to the list item. <code>true</code> enables animation, <code>false</code> disables it.<br><br>Default: <code>false</code>.</td>
+</tr>
+<tr>
+<td align="left">align</td>
+<td align="left">ScrollAlign</td>
+<td align="left">No</td>
+<td align="left">Specifies the alignment of the scrolled element with the current container.<br><br>Default: <code>ScrollAlign.START</code>.</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/328-Daily-HarmonyOS-Next-Knowledge-Image-Saving-Scrolling-Issues-Dialog-Page-Effect-Child-Components-Throwing-Custom-Events-to-Parent-Components-Interface-Grayscale/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Image Saving, Scrolling Issues, Dialog Page Effect, Child Components Throwing Custom Events to Parent Components, Interface Grayscale">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Image Saving, Scrolling Issues, Dialog Page Effect, Child Components Throwing Custom Events to Parent Components, Interface Grayscale
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/330-Daily-HarmonyOS-Next-Knowledge-Multi-level-Variables-Concurrent-Method-Errors-Navigation-Scenarios-State-Variable-Issues-Seamless-Transition-Animation-Solutions/" rel="next" title="[Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions">
+      [Daily HarmonyOS Next Knowledge] Multi-level Variables, Concurrent Method Errors, Navigation Scenarios, State Variable Issues, Seamless Transition Animation Solutions <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Extending-to-Status-Bar-Global-Storage-Issues-State-Variable-Collaboration-Refresh-Component-Usage-Scrolling-to-Fixed-Position"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Extending to Status Bar, Global Storage Issues, State Variable Collaboration, Refresh Component Usage, Scrolling to Fixed Position</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HarmonyOS-Page-top-extension-to-status-bar-is-ineffective"><span class="nav-number">1.1.</span> <span class="nav-text">1. HarmonyOS: Page top extension to status bar is ineffective?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-much-information-can-HarmonyOS-AppStorage-store"><span class="nav-number">1.2.</span> <span class="nav-text">2. How much information can HarmonyOS AppStorage store?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-How-does-HarmonyOS-Sendable-work-with-ObservedV2"><span class="nav-number">1.3.</span> <span class="nav-text">3. How does HarmonyOS @Sendable work with @ObservedV2?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-HarmonyOS-Refresh-component-usage-issues"><span class="nav-number">1.4.</span> <span class="nav-text">4. HarmonyOS Refresh component usage issues?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-HarmonyOS-list-scrollToIndex"><span class="nav-number">1.5.</span> <span class="nav-text">5. HarmonyOS list scrollToIndex?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

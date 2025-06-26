@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion1. How to create an ImageBitmap with empty content of a specified size in Harm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/301%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Image-Pixels-State-Binding-Slider-Value-Listening-Gesture-Issues-Object-Map-Conversion/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion1. How to create an ImageBitmap with empty content of a specified size in Harm">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T12:08:37.000Z">
+<meta property="article:modified_time" content="2025-06-26T12:09:03.316Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/301%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Image-Pixels-State-Binding-Slider-Value-Listening-Gesture-Issues-Object-Map-Conversion/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/301%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Image-Pixels-State-Binding-Slider-Value-Listening-Gesture-Issues-Object-Map-Conversion/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 20:08:37 / Modified: 20:09:03" itemprop="dateCreated datePublished" datetime="2025-06-26T20:08:37+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="【Daily-HarmonyOS-Next-Knowledge】Image-Pixels-State-Binding-Slider-Value-Listening-Gesture-Issues-Object-Map-Conversion"><a href="#【Daily-HarmonyOS-Next-Knowledge】Image-Pixels-State-Binding-Slider-Value-Listening-Gesture-Issues-Object-Map-Conversion" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion"></a>【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion</h3><h4 id="1-How-to-create-an-ImageBitmap-with-empty-content-of-a-specified-size-in-HarmonyOS"><a href="#1-How-to-create-an-ImageBitmap-with-empty-content-of-a-specified-size-in-HarmonyOS" class="headerlink" title="1. How to create an ImageBitmap with empty content of a specified size in HarmonyOS?"></a>1. How to create an ImageBitmap with empty content of a specified size in HarmonyOS?</h4><p>Refer to the official ImageBitmap documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-components-canvas-imagebitmap-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-components-canvas-imagebitmap-V5</a></p>
+<p>ImageBitmap(data: PixelMap, unit?: LengthMetricsUnit)</p>
+<p>Create an ImageBitmap object from a PixelMap.</p>
+<h4 id="2-Why-is-the-ObservedV2-decorator-ineffective-for-state-monitoring-of-models-returned-by-interfaces"><a href="#2-Why-is-the-ObservedV2-decorator-ineffective-for-state-monitoring-of-models-returned-by-interfaces" class="headerlink" title="2. Why is the ObservedV2 decorator ineffective for state monitoring of models returned by interfaces?"></a>2. Why is the ObservedV2 decorator ineffective for state monitoring of models returned by interfaces?</h4><p>The ObservedV2 decorator does not work for state monitoring of models returned by interfaces.</p>
+<p>Objects obtained via JSON.parse are not instances created by the User constructor, so their data changes cannot be observed, preventing UI updates. You can use third-party libraries <code>reflect-metadata</code> and <code>class-transformer</code>. Refer to the following demo (similarly applicable to observedv2):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">//test.ets</span><br><span class="line">export let jsonString:Record&lt;string, ESObject&gt; = &#123;</span><br><span class="line">  &quot;data&quot; : [</span><br><span class="line">    &#123; &quot;number&quot; :1,</span><br><span class="line">      &quot;age&quot;: 20,</span><br><span class="line">      &quot;testA&quot;: &#123;</span><br><span class="line">        &quot;str&quot;: &quot;123&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;number&quot; :2,</span><br><span class="line">      &quot;age&quot;: 21,</span><br><span class="line">      &quot;testA&quot;: &#123;</span><br><span class="line">        &quot;str&quot;: &quot;456&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">import &#123; Type, plainToClass &#125; from &#x27;class-transformer&#x27;</span><br><span class="line">import &#x27;reflect-metadata&#x27;</span><br><span class="line">import &#123; jsonString &#125; from &#x27;./test&#x27;</span><br><span class="line">import &#123; TestA, Person, ViewA&#125; from &#x27;./ViewA&#x27;;</span><br><span class="line">class ResponseObj &#123;</span><br><span class="line">  @Type (() =&gt; Person) data: Person[] = [];</span><br><span class="line">&#125;</span><br><span class="line">@Entry @Component struct Index &#123;</span><br><span class="line">  @State list: Person[] = [];</span><br><span class="line">  @State message: string = &#x27;Click me&#x27;;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Row() &#123;</span><br><span class="line">      Column() &#123;</span><br><span class="line">        Text(this.message)</span><br><span class="line">          .fontSize(40)</span><br><span class="line">          .onClick(() =&gt; &#123;</span><br><span class="line">            let responseObj : ResponseObj = plainToClass(ResponseObj, jsonString);</span><br><span class="line">            console.log(` $&#123;responseObj.data[0] instanceof Person&#125;`)</span><br><span class="line">            this.list = this.list.concat(responseObj.data); &#125;)</span><br><span class="line">        ForEach(this.list, (item : Person, index: number) =&gt; &#123;</span><br><span class="line">          ViewA(&#123;index:index, testA: item.testA&#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">      .width(&#x27;100%&#x27;)</span><br><span class="line">    &#125; .height(&#x27;100%&#x27;)</span><br><span class="line">  &#125; &#125;</span><br><span class="line">ViewA.ets</span><br><span class="line">import &#123; Type &#125; from &#x27;class-transformer&#x27;</span><br><span class="line">@Observed export class TestA &#123;</span><br><span class="line">  public str : string</span><br><span class="line">  constructor(str: string) &#123; this.str = str; &#125;</span><br><span class="line">&#125;</span><br><span class="line">export class Person &#123;</span><br><span class="line">  name: string = &#x27;&#x27;</span><br><span class="line">  age: number = 1</span><br><span class="line">  @Type(()=&gt;TestA) testA: TestA = new TestA(&#x27;&#x27;)</span><br><span class="line">&#125;</span><br><span class="line">@Component export struct ViewA &#123;</span><br><span class="line">  @ObjectLink testA: TestA</span><br><span class="line">  index: number = -1;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Row()&#123;</span><br><span class="line">      Button(`View A $&#123;this.testA.str&#125;`)</span><br><span class="line">        .onClick(() =&gt;&#123;</span><br><span class="line">          this.index += 1;</span><br><span class="line">          this.testA.str = `$&#123;this.index&#125; : Test A String` &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .margin(&#123;top : 10 &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-Why-does-the-onChange-event-of-the-HarmonyOS-Slider-component-return-inaccurate-values"><a href="#3-Why-does-the-onChange-event-of-the-HarmonyOS-Slider-component-return-inaccurate-values" class="headerlink" title="3. Why does the onChange event of the HarmonyOS Slider component return inaccurate values?"></a>3. Why does the onChange event of the HarmonyOS Slider component return inaccurate values?</h4><p>During sliding, the Slider’s progress value is a repeating decimal. Use <code>.toFixed().toString()</code> to format the value.</p>
+<h4 id="4-Gesture-handling-issues-in-HarmonyOS"><a href="#4-Gesture-handling-issues-in-HarmonyOS" class="headerlink" title="4. Gesture handling issues in HarmonyOS"></a>4. Gesture handling issues in HarmonyOS</h4><p>There are two sibling buttons, A and B, on the page. Button A has a long-press gesture and B has a touch event. Requirement: After a long-press on A, sliding to B should trigger B’s touch event.</p>
+<p>Current implementations may cause long-press events to malfunction or be interrupted. Try using combined gestures or binding events: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-gesture-events-combined-gestures-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-gesture-events-combined-gestures-V5</a></p>
+<p>Combined gestures are composed of multiple single gestures. Declare the type of combined gesture using different GestureModes in GestureGroup, supporting sequential, parallel, and exclusive recognition:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GestureGroup(mode:GestureMode, gesture:GestureType[])</span><br></pre></td></tr></table></figure>
+<ul>
+<li>mode: A GestureMode enum value defining the combination type.</li>
+<li>gesture: An array of gestures composing this combined gesture.</li>
+</ul>
+<p><strong>Sequential Recognition</strong>:<br>Use GestureMode.Sequence. Gestures are recognized in registration order. If any gesture fails, subsequent gestures are skipped. Only the last gesture can respond to onActionEnd.</p>
+<p>Example: A Column with a translate property for position movement, bound to a Sequence gesture combining LongPressGesture and PanGesture:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">// xxx.ets</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State offsetX: number = 0;</span><br><span class="line">  @State offsetY: number = 0;</span><br><span class="line">  @State count: number = 0;</span><br><span class="line">  @State positionX: number = 0;</span><br><span class="line">  @State positionY: number = 0;</span><br><span class="line">  @State borderStyles: BorderStyle = BorderStyle.Solid</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      Text(&#x27;sequence gesture\n&#x27; + &#x27;LongPress onAction:&#x27; + this.count + &#x27;\nPanGesture offset:\nX: &#x27; + this.offsetX + &#x27;\n&#x27; + &#x27;Y: &#x27; + this.offsetY)</span><br><span class="line">        .fontSize(28)</span><br><span class="line">    &#125;.margin(10)</span><br><span class="line">    .borderWidth(1)</span><br><span class="line">    // Bind translate property to enable component movement</span><br><span class="line">    .translate(&#123; x: this.offsetX, y: this.offsetY, z: 0 &#125;)</span><br><span class="line">    .height(250)</span><br><span class="line">    .width(300)</span><br><span class="line">    // Sequential recognition: PanGesture triggers only after LongPressGesture succeeds</span><br><span class="line">    .gesture(</span><br><span class="line">      // Declare sequential gesture group</span><br><span class="line">      GestureGroup(GestureMode.Sequence,</span><br><span class="line">        // First gesture: LongPress with repeat enabled</span><br><span class="line">        LongPressGesture(&#123; repeat: true &#125;)</span><br><span class="line">          // Increment count when long-press is recognized</span><br><span class="line">          .onAction((event: GestureEvent|undefined) =&gt; &#123;</span><br><span class="line">            if(event)&#123;</span><br><span class="line">              if (event.repeat) &#123;</span><br><span class="line">                this.count++;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            console.info(&#x27;LongPress onAction&#x27;);</span><br><span class="line">          &#125;)</span><br><span class="line">          .onActionEnd(() =&gt; &#123;</span><br><span class="line">            console.info(&#x27;LongPress end&#x27;);</span><br><span class="line">          &#125;),</span><br><span class="line">        // Second gesture: PanGesture (triggers after long-press)</span><br><span class="line">        PanGesture()</span><br><span class="line">          .onActionStart(() =&gt; &#123;</span><br><span class="line">            this.borderStyles = BorderStyle.Dashed;</span><br><span class="line">            console.info(&#x27;pan start&#x27;);</span><br><span class="line">          &#125;)</span><br><span class="line">          // Update position based on pan movement</span><br><span class="line">          .onActionUpdate((event: GestureEvent|undefined) =&gt; &#123;</span><br><span class="line">            if(event)&#123;</span><br><span class="line">              this.offsetX = (this.positionX + event.offsetX);</span><br><span class="line">              this.offsetY = this.positionY + event.offsetY;</span><br><span class="line">            &#125;</span><br><span class="line">            console.info(&#x27;pan update&#x27;);</span><br><span class="line">          &#125;)</span><br><span class="line">          .onActionEnd(() =&gt; &#123;</span><br><span class="line">            this.positionX = this.offsetX;</span><br><span class="line">            this.positionY = this.offsetY;</span><br><span class="line">            this.borderStyles = BorderStyle.Solid;</span><br><span class="line">          &#125;)</span><br><span class="line">      )</span><br><span class="line">      .onCancel(() =&gt; &#123;</span><br><span class="line">        console.log(&quot;sequence gesture canceled&quot;)</span><br><span class="line">      &#125;)</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>Parallel Recognition</strong>:<br>Use GestureMode.Parallel. All gestures are recognized simultaneously without interference.</p>
+<p>Example: A Column with both single-tap and double-tap gestures:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// xxx.ets</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State count1: number = 0;</span><br><span class="line">  @State count2: number = 0;</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      Text(&#x27;Parallel gesture\n&#x27; + &#x27;tapGesture count is 1:&#x27; + this.count1 + &#x27;\ntapGesture count is 2:&#x27; + this.count2 + &#x27;\n&#x27;)</span><br><span class="line">        .fontSize(28)</span><br><span class="line">    &#125;</span><br><span class="line">    .height(200)</span><br><span class="line">    .width(&#x27;100%&#x27;)</span><br><span class="line">    // Parallel recognition: Both single-tap and double-tap can trigger</span><br><span class="line">    .gesture(</span><br><span class="line">      GestureGroup(GestureMode.Parallel,</span><br><span class="line">        TapGesture(&#123; count: 1 &#125;)</span><br><span class="line">          .onAction(() =&gt; &#123;</span><br><span class="line">            this.count1++;</span><br><span class="line">          &#125;),</span><br><span class="line">        TapGesture(&#123; count: 2 &#125;)</span><br><span class="line">          .onAction(() =&gt; &#123;</span><br><span class="line">            this.count2++;</span><br><span class="line">          &#125;)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>Exclusive Recognition</strong>:<br>Use GestureMode.Exclusive. Gestures are recognized simultaneously. The first successful gesture stops recognition for others.</p>
+<p>Example: A Column with conflicting single-tap and double-tap gestures:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// xxx.ets</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State count1: number = 0;</span><br><span class="line">  @State count2: number = 0;</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      Text(&#x27;Exclusive gesture\n&#x27; + &#x27;tapGesture count is 1:&#x27; + this.count1 + &#x27;\ntapGesture count is 2:&#x27; + this.count2 + &#x27;\n&#x27;)</span><br><span class="line">        .fontSize(28)</span><br><span class="line">    &#125;</span><br><span class="line">    .height(200)</span><br><span class="line">    .width(&#x27;100%&#x27;)</span><br><span class="line">    // Exclusive recognition: Only one gesture can succeed</span><br><span class="line">    .gesture(</span><br><span class="line">      GestureGroup(GestureMode.Exclusive,</span><br><span class="line">        TapGesture(&#123; count: 1 &#125;)</span><br><span class="line">          .onAction(() =&gt; &#123;</span><br><span class="line">            this.count1++;</span><br><span class="line">          &#125;),</span><br><span class="line">        TapGesture(&#123; count: 2 &#125;)</span><br><span class="line">          .onAction(() =&gt; &#123;</span><br><span class="line">            this.count2++;</span><br><span class="line">          &#125;)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="5-How-to-convert-a-HarmonyOS-Object-to-a-Map"><a href="#5-How-to-convert-a-HarmonyOS-Object-to-a-Map" class="headerlink" title="5. How to convert a HarmonyOS Object to a Map?"></a>5. How to convert a HarmonyOS Object to a Map?</h4><p>After receiving data of type Object from an interface, you want to convert it to a Map to use Map methods. Here’s how:</p>
+<p>Reference demo:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct otj &#123;</span><br><span class="line"></span><br><span class="line">  @State obj: object = new Object();</span><br><span class="line">  @State map: Map&lt;string, string&gt; = new Map();</span><br><span class="line"></span><br><span class="line">  aboutToAppear(): void &#123;</span><br><span class="line">    this.obj[&#x27;first&#x27;] = &#x27;1&#x27;;</span><br><span class="line">    this.obj[&#x27;second&#x27;] = &#x27;2&#x27;;</span><br><span class="line">    // Object.entries(this.obj) converts to [[&quot;first&quot;,&quot;1&quot;],[&quot;second&quot;,&quot;2&quot;]]</span><br><span class="line">    Object.entries(this.obj).forEach((item:string[])=&gt;&#123;</span><br><span class="line">      // Method 1</span><br><span class="line">      //this.map[item[0]] = item[1];</span><br><span class="line">      // Method 2 (preferred)</span><br><span class="line">      this.map.set(item[0],item[1]);</span><br><span class="line">      // Access values: this.map[&#x27;key&#x27;] or this.map.get(&#x27;key&#x27;)</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  build() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/25/625%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Custom-Layout-Content-Exceeding-Bottom-Navigation-Bar-Bottom-O-%E8%B6%85%E5%87%BA-Screen-Not-Displaying-Obtaining-Open-Page-List-Refresh-Component/" rel="prev" title="【Daily HarmonyOS Next Knowledge】Custom Layout, Content Exceeding Bottom Navigation Bar, Bottom O 超出 Screen Not Displaying, Obtaining Open Page List, Refresh Component">
+      <i class="fa fa-chevron-left"></i> 【Daily HarmonyOS Next Knowledge】Custom Layout, Content Exceeding Bottom Navigation Bar, Bottom O 超出 Screen Not Displaying, Obtaining Open Page List, Refresh Component
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/302%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering/" rel="next" title="【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering">
+      【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Image-Pixels-State-Binding-Slider-Value-Listening-Gesture-Issues-Object-Map-Conversion"><span class="nav-number">1.</span> <span class="nav-text">【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-create-an-ImageBitmap-with-empty-content-of-a-specified-size-in-HarmonyOS"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to create an ImageBitmap with empty content of a specified size in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Why-is-the-ObservedV2-decorator-ineffective-for-state-monitoring-of-models-returned-by-interfaces"><span class="nav-number">1.2.</span> <span class="nav-text">2. Why is the ObservedV2 decorator ineffective for state monitoring of models returned by interfaces?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Why-does-the-onChange-event-of-the-HarmonyOS-Slider-component-return-inaccurate-values"><span class="nav-number">1.3.</span> <span class="nav-text">3. Why does the onChange event of the HarmonyOS Slider component return inaccurate values?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Gesture-handling-issues-in-HarmonyOS"><span class="nav-number">1.4.</span> <span class="nav-text">4. Gesture handling issues in HarmonyOS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-How-to-convert-a-HarmonyOS-Object-to-a-Map"><span class="nav-number">1.5.</span> <span class="nav-text">5. How to convert a HarmonyOS Object to a Map?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

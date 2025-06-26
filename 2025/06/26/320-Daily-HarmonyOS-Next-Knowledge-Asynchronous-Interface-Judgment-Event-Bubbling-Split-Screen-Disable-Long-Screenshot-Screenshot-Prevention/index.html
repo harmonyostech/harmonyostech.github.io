@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention1. How do HarmonyOS developers independently determine if">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/320-Daily-HarmonyOS-Next-Knowledge-Asynchronous-Interface-Judgment-Event-Bubbling-Split-Screen-Disable-Long-Screenshot-Screenshot-Prevention/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention1. How do HarmonyOS developers independently determine if">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T14:24:29.000Z">
+<meta property="article:modified_time" content="2025-06-26T14:24:51.318Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/320-Daily-HarmonyOS-Next-Knowledge-Asynchronous-Interface-Judgment-Event-Bubbling-Split-Screen-Disable-Long-Screenshot-Screenshot-Prevention/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/320-Daily-HarmonyOS-Next-Knowledge-Asynchronous-Interface-Judgment-Event-Bubbling-Split-Screen-Disable-Long-Screenshot-Screenshot-Prevention/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 22:24:29 / Modified: 22:24:51" itemprop="dateCreated datePublished" datetime="2025-06-26T22:24:29+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Asynchronous-Interface-Judgment-Event-Bubbling-Split-Screen-Disable-Long-Screenshot-Screenshot-Prevention"><a href="#Daily-HarmonyOS-Next-Knowledge-Asynchronous-Interface-Judgment-Event-Bubbling-Split-Screen-Disable-Long-Screenshot-Screenshot-Prevention" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention"></a>[Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention</h3><h4 id="1-How-do-HarmonyOS-developers-independently-determine-if-an-interface-is-asynchronous"><a href="#1-How-do-HarmonyOS-developers-independently-determine-if-an-interface-is-asynchronous" class="headerlink" title="1. How do HarmonyOS developers independently determine if an interface is asynchronous?"></a>1. How do HarmonyOS developers independently determine if an interface is asynchronous?</h4><p><strong>How to independently determine an asynchronous interface?</strong>  </p>
+<p>Asynchronous concurrency is implemented via Promise and async&#x2F;await. Interfaces using these implementations can be considered asynchronous. For details, refer to the documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/async-concurrency-overview-V5?catalogVersion=V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/async-concurrency-overview-V5?catalogVersion=V5</a>  </p>
+<p>Promise and async&#x2F;await provide asynchronous concurrency capabilities and follow standard JS asynchronous syntax. Asynchronous code is suspended and resumed later, with only one code segment executing at a time. This suits single I&#x2F;O tasks like network requests or file read&#x2F;write operations, eliminating the need for additional threads.  </p>
+<p>Asynchronous syntax is a programming language feature allowing programs to execute other operations without waiting for certain tasks to complete.  </p>
+<p><strong>Promise</strong>: An object for handling asynchronous operations, converting them into a synchronous-like style for easier coding and maintenance. It uses a state mechanism to manage asynchronous phases and provides methods to register callbacks for successful or failed outcomes.  </p>
+<ul>
+<li><strong>Promise states</strong>: pending (in progress), fulfilled (completed), rejected (failed).  </li>
+<li><strong>Basic usage</strong>: Instantiate via a constructor with an executor function taking <code>resolve</code> (success callback) and <code>reject</code> (failure callback). Example:</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">promise</span>: <span class="title class_">Promise</span>&lt;<span class="built_in">number</span>&gt; = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params"><span class="attr">resolve</span>: <span class="title class_">Function</span>, <span class="attr">reject</span>: <span class="title class_">Function</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">randomNumber</span>: <span class="built_in">number</span> = <span class="title class_">Math</span>.<span class="title function_">random</span>();</span><br><span class="line">    <span class="keyword">if</span> (randomNumber &gt; <span class="number">0.5</span>) &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(randomNumber);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="title function_">reject</span>(<span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Random number is too small&#x27;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**async/await**: A Promise syntax sugar for handling asynchronous operations, simplifying and enhancing readability. Declare a function as asynchronous with `</span><span class="keyword">async</span><span class="string">` and use `</span><span class="keyword">await</span><span class="string">` to wait for Promise resolution.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">- An `</span><span class="keyword">async</span><span class="string">` function returns a Promise, representing an asynchronous operation. `</span><span class="keyword">await</span><span class="string">` waits for Promise resolution and returns its value. If an exception is thrown, the returned Promise is rejected.  </span></span><br><span class="line"><span class="string">- Example simulating a synchronous-style asynchronous operation:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">myAsyncFunction</span>(<span class="params"></span>): <span class="title class_">Promise</span>&lt;<span class="built_in">string</span>&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="attr">result</span>: <span class="built_in">string</span> = <span class="keyword">await</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params"><span class="attr">resolve</span>: <span class="title class_">Function</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">resolve</span>(<span class="string">&#x27;Hello, world!&#x27;</span>);</span><br><span class="line">    &#125;, <span class="number">3000</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(result); <span class="comment">// Output: Hello, world!</span></span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello World&#x27;</span>;</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">          .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">          .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">          .<span class="title function_">onClick</span>(<span class="title function_">async</span> () =&gt; &#123;</span><br><span class="line">            <span class="keyword">let</span> res = <span class="keyword">await</span> <span class="title function_">myAsyncFunction</span>();</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&quot;res is: &quot;</span> + res);</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 2. How are event bubbling and event delegation implemented in HarmonyOS NEXT?  </span></span><br><span class="line"><span class="string">For event bubbling, refer to the documentation: https://gitee.com/sunfei2021/ace-test-source/blob/master/specs/event_spec.md#%E8%A7%A6%E6%91%B8%E4%BA%8B%E4%BB%B6%E6%B5%81%E7%A8%8B  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Touch events include three complete phases:  </span></span><br><span class="line"><span class="string">- **Event touch test**: Triggered on touch down (TouchDown). Starting from the root node, a hit test finds the event distribution path via touch coordinates.  </span></span><br><span class="line"><span class="string">- **Event distribution**: Distributes events sequentially along the path generated by the touch test (gesture recognition occurs here).  </span></span><br><span class="line"><span class="string">- **Event response bubbling**: When reaching a leaf node, if the node can respond, the event triggers and bubbles up to parent nodes for response.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>mermaid</span><br><span class="line">graph <span class="variable constant_">TD</span></span><br><span class="line">    S[<span class="title class_">Start</span> <span class="keyword">from</span> root node] --&gt; A</span><br><span class="line">    A[<span class="title class_">Acquire</span> node] --&gt; B[<span class="title class_">Get</span> current touch point coordinates]</span><br><span class="line">    B --&gt; C[<span class="title class_">Process</span> affine transformation <span class="keyword">of</span> current node]</span><br><span class="line">    C --&gt; <span class="variable constant_">ENABLE</span>&#123;<span class="title class_">Is</span> event disabled?&#125;</span><br><span class="line">    <span class="variable constant_">ENABLE</span> --<span class="variable constant_">NO</span>--&gt; I&#123;<span class="title class_">HitTestMode</span> is <span class="title class_">None</span>?&#125;</span><br><span class="line">    <span class="variable constant_">ENABLE</span> -- <span class="variable constant_">YES</span> --&gt; G&#123;<span class="title class_">Is</span> there a next sibling?&#125;</span><br><span class="line">    I --<span class="variable constant_">YES</span>--&gt; H[<span class="title class_">Convert</span> touch point to child node coordinate system]</span><br><span class="line">    I --<span class="variable constant_">NO</span>--&gt; E&#123;<span class="title class_">Is</span> touch point within current node<span class="string">&#x27;s hit area?&#125;</span></span><br><span class="line"><span class="string">    E -- YES --&gt; F[Add current node to event distribution list]</span></span><br><span class="line"><span class="string">    E -- NO --&gt; G</span></span><br><span class="line"><span class="string">    F --&gt; H</span></span><br><span class="line"><span class="string">    H --&gt; D&#123;HitTestMode is Block?&#125;</span></span><br><span class="line"><span class="string">    D --YES--&gt; L</span></span><br><span class="line"><span class="string">    D --NO--&gt; K&#123;Are there child nodes?&#125;</span></span><br><span class="line"><span class="string">    G --YES--&gt; A</span></span><br><span class="line"><span class="string">    G --NO--&gt; L&#123;Is there a parent node?&#125;</span></span><br><span class="line"><span class="string">    K --YES--&gt; A</span></span><br><span class="line"><span class="string">    K --NO--&gt; L</span></span><br><span class="line"><span class="string">    L --YES--&gt; M&#123;Parent node HitTestMode is None or Transparent?&#125;</span></span><br><span class="line"><span class="string">    L --NO--&gt; J[End]</span></span><br><span class="line"><span class="string">    M --YES--&gt; G</span></span><br><span class="line"><span class="string">    M --NO--&gt; L</span></span><br><span class="line"><span class="string">```  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Touch test process specifications**:  </span></span><br><span class="line"><span class="string">- Touch testing is required only for single-point touch down (TouchDown).  </span></span><br><span class="line"><span class="string">- The starting node is the window root, with coordinates relative to the window.  </span></span><br><span class="line"><span class="string">- Subsequent tests use coordinates relative to the parent node.  </span></span><br><span class="line"><span class="string">- Check if the touch point falls within the node&#x27;</span>s hit <span class="title function_">area</span> (set by <span class="string">`responseRegion`</span>, defaulting to the display area).  </span><br><span class="line">- <span class="title class_">The</span> <span class="keyword">default</span> hit area includes the border.  </span><br><span class="line">- <span class="title class_">Consider</span> the node<span class="string">&#x27;s graphic transformations relative to the parent.  </span></span><br><span class="line"><span class="string">- Account for `hitTestBehavior` (general attribute) and `enabled` (blocks self-testing, not siblings).  </span></span><br><span class="line"><span class="string">- Siblings are traversed in descending order of `zIndex` (or reverse order if no `zIndex`).  </span></span><br><span class="line"><span class="string">- Nodes meeting test conditions form a distribution tree for subsequent event distribution.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 3. How to disable app split-screen or floating window display in HarmonyOS?  </span></span><br><span class="line"><span class="string">**Disable split-screen or floating window display by setting `supportWindowMode`**: Identifies the window modes supported by the UIAbility component. Values include:  </span></span><br><span class="line"><span class="string">- `fullscreen`: Full-screen mode.  </span></span><br><span class="line"><span class="string">- `split`: Split-screen mode.  </span></span><br><span class="line"><span class="string">- `floating`: Floating window mode.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/module-configuration-file-V5#abilities%E6%A0%87%E7%AD%BE  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">To disable split-screen/floating window, set `supportWindowMode` to `[&quot;fullscreen&quot;]`.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. When taking a long screenshot in HarmonyOS, why does the underlying page get captured if multiple pages reuse the same ID?  </span></span><br><span class="line"><span class="string">When using the screenshot component, ensure unique component IDs. Reusing IDs will reference the first component.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. How to prevent screenshots in HarmonyOS?  </span></span><br><span class="line"><span class="string">To enable screenshot prevention on a specific page, follow these steps and refer to the demo:  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">1. **Declare permission in module.json5**:  </span></span><br><span class="line"><span class="string">```json</span></span><br><span class="line"><span class="string">&quot;requestPermissions&quot;: [</span></span><br><span class="line"><span class="string">  &#123;</span></span><br><span class="line"><span class="string">    &quot;name&quot;: &quot;ohos.permission.PRIVACY_WINDOW&quot;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">]</span></span><br><span class="line"><span class="string">```  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2. **Sample code**:  </span></span><br><span class="line"><span class="string">```typescript</span></span><br><span class="line"><span class="string">// windowUtils.ets</span></span><br><span class="line"><span class="string">import window from &#x27;</span><span class="meta">@ohos</span>.<span class="property">window</span><span class="string">&#x27;;</span></span><br><span class="line"><span class="string">import common from &#x27;</span><span class="meta">@ohos</span>.<span class="property">app</span>.<span class="property">ability</span>.<span class="property">common</span><span class="string">&#x27;;</span></span><br><span class="line"><span class="string">export class windowUtils &#123;</span></span><br><span class="line"><span class="string">  static setWindowPrivacyModeInPage(context: common.UIAbilityContext, isFlag: boolean) &#123;</span></span><br><span class="line"><span class="string">    window.getLastWindow(context).then((lastWindow)=&gt;&#123;</span></span><br><span class="line"><span class="string">      lastWindow.setWindowPrivacyMode(isFlag);</span></span><br><span class="line"><span class="string">    &#125;)</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// Page</span></span><br><span class="line"><span class="string">import common from &#x27;</span><span class="meta">@ohos</span>.<span class="property">app</span>.<span class="property">ability</span>.<span class="property">common</span><span class="string">&#x27;;</span></span><br><span class="line"><span class="string">import &#123; windowUtils &#125; from &#x27;</span>../common/windowUtils<span class="string">&#x27;;</span></span><br><span class="line"><span class="string">@Entry</span></span><br><span class="line"><span class="string">@Component</span></span><br><span class="line"><span class="string">struct Index3 &#123;</span></span><br><span class="line"><span class="string">  @State message: string = &#x27;</span><span class="title class_">Hello</span> <span class="title class_">World</span><span class="string">&#x27;;</span></span><br><span class="line"><span class="string">  onPageShow(): void &#123;</span></span><br><span class="line"><span class="string">    windowUtils.setWindowPrivacyModeInPage(getContext(this) as common.UIAbilityContext, true);</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  onPageHide() &#123;</span></span><br><span class="line"><span class="string">    windowUtils.setWindowPrivacyModeInPage(getContext(this) as common.UIAbilityContext, false);</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  build() &#123;</span></span><br><span class="line"><span class="string">    Row() &#123;</span></span><br><span class="line"><span class="string">      Column() &#123;</span></span><br><span class="line"><span class="string">        Text(this.message)</span></span><br><span class="line"><span class="string">          .fontSize(50)</span></span><br><span class="line"><span class="string">          .fontWeight(FontWeight.Bold)</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">      .width(&#x27;</span><span class="number">100</span>%<span class="string">&#x27;)</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    .height(&#x27;</span><span class="number">100</span>%<span class="string">&#x27;)</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/319-Daily-HarmonyOS-Next-Knowledge-Text-Height-Calculation-Control-Background-Animation-Dotted-Line-Functionality-Screenshot-Prevention-Entry-Home-Page-Replacement/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Text Height Calculation, Control Background Animation, Dotted Line Functionality, Screenshot Prevention, Entry Home Page Replacement">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Text Height Calculation, Control Background Animation, Dotted Line Functionality, Screenshot Prevention, Entry Home Page Replacement
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/321-Daily-HarmonyOS-Next-Knowledge-Dark-Mode-App-Management-Window-Callback-Manual-Refresh-Trigger-Image-Caching-Sandbox-Access/" rel="next" title="[Daily HarmonyOS Next Knowledge] Dark Mode, App Management Window Callback, Manual Refresh Trigger, Image Caching, Sandbox Access">
+      [Daily HarmonyOS Next Knowledge] Dark Mode, App Management Window Callback, Manual Refresh Trigger, Image Caching, Sandbox Access <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Asynchronous-Interface-Judgment-Event-Bubbling-Split-Screen-Disable-Long-Screenshot-Screenshot-Prevention"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Asynchronous Interface Judgment, Event Bubbling, Split-Screen Disable, Long Screenshot, Screenshot Prevention</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-do-HarmonyOS-developers-independently-determine-if-an-interface-is-asynchronous"><span class="nav-number">1.1.</span> <span class="nav-text">1. How do HarmonyOS developers independently determine if an interface is asynchronous?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

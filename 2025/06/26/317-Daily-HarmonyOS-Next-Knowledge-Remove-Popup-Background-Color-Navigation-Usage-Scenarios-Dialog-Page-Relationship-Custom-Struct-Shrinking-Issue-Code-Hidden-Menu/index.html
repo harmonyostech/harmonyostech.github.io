@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu1. How to remove the background col">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/317-Daily-HarmonyOS-Next-Knowledge-Remove-Popup-Background-Color-Navigation-Usage-Scenarios-Dialog-Page-Relationship-Custom-Struct-Shrinking-Issue-Code-Hidden-Menu/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu1. How to remove the background col">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T14:20:00.000Z">
+<meta property="article:modified_time" content="2025-06-26T14:20:25.401Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/317-Daily-HarmonyOS-Next-Knowledge-Remove-Popup-Background-Color-Navigation-Usage-Scenarios-Dialog-Page-Relationship-Custom-Struct-Shrinking-Issue-Code-Hidden-Menu/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/317-Daily-HarmonyOS-Next-Knowledge-Remove-Popup-Background-Color-Navigation-Usage-Scenarios-Dialog-Page-Relationship-Custom-Struct-Shrinking-Issue-Code-Hidden-Menu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 22:20:00 / Modified: 22:20:25" itemprop="dateCreated datePublished" datetime="2025-06-26T22:20:00+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Remove-Popup-Background-Color-Navigation-Usage-Scenarios-Dialog-Page-Relationship-Custom-Struct-Shrinking-Issue-Code-Hidden-Menu"><a href="#Daily-HarmonyOS-Next-Knowledge-Remove-Popup-Background-Color-Navigation-Usage-Scenarios-Dialog-Page-Relationship-Custom-Struct-Shrinking-Issue-Code-Hidden-Menu" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu"></a>[Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu</h3><h4 id="1-How-to-remove-the-background-color-of-a-HarmonyOS-Popup"><a href="#1-How-to-remove-the-background-color-of-a-HarmonyOS-Popup" class="headerlink" title="1. How to remove the background color of a HarmonyOS Popup?"></a>1. How to remove the background color of a HarmonyOS Popup?</h4><p>Main configuration: <code>shadow:&#123;radius:0&#125;</code>  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">customPopup</span>: <span class="built_in">boolean</span> = <span class="literal">false</span></span><br><span class="line">  <span class="comment">// Popup builder defines the content</span></span><br><span class="line">  <span class="meta">@Builder</span></span><br><span class="line">  <span class="title function_">popupBuilder</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>(&#123; <span class="attr">space</span>: <span class="number">2</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;This is Custom Popup&#x27;</span>).<span class="title function_">fontSize</span>(<span class="number">15</span>)</span><br><span class="line">    &#125;.<span class="title function_">width</span>(<span class="number">200</span>).<span class="title function_">height</span>(<span class="number">50</span>).<span class="title function_">padding</span>(<span class="number">5</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;CustomPopupOptions&#x27;</span>)</span><br><span class="line">        .<span class="title function_">position</span>(&#123; <span class="attr">x</span>: <span class="number">100</span>, <span class="attr">y</span>: <span class="number">200</span> &#125;)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">customPopup</span> = !<span class="variable language_">this</span>.<span class="property">customPopup</span></span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">bindPopup</span>(<span class="variable language_">this</span>.<span class="property">customPopup</span>, &#123;</span><br><span class="line">          <span class="attr">builder</span>: <span class="variable language_">this</span>.<span class="property">popupBuilder</span>, <span class="comment">// Popup content</span></span><br><span class="line">          <span class="attr">placement</span>: <span class="title class_">Placement</span>.<span class="property">Bottom</span>, <span class="comment">// Popup position</span></span><br><span class="line">          <span class="attr">popupColor</span>: <span class="title class_">Color</span>.<span class="property">Transparent</span>, <span class="comment">// Background color</span></span><br><span class="line">          <span class="attr">backgroundBlurStyle</span>: <span class="title class_">BlurStyle</span>.<span class="property">NONE</span>,</span><br><span class="line">          <span class="attr">shadow</span>: &#123; <span class="attr">radius</span>: <span class="number">0</span> &#125;,</span><br><span class="line">          <span class="comment">// shadow:ShadowStyle.OUTER_DEFAULT_XS,</span></span><br><span class="line">          <span class="attr">onStateChange</span>: <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(e.<span class="property">isVisible</span>))</span><br><span class="line">            <span class="keyword">if</span> (!e.<span class="property">isVisible</span>) &#123;</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">customPopup</span> = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Pink</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 2. When should Navigator, Navigation, and Router be used in HarmonyOS?  </span></span><br><span class="line"><span class="string">There are three routing APIs: Navigator, Navigation, and Router. What are their differences and application scenarios?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">- **Navigator**: A routing container component for page navigation, used as part of the page layout.  </span></span><br><span class="line"><span class="string">- **Navigation**: The root view container for routing, recommended as the root container for Page components. It offers:  </span></span><br><span class="line"><span class="string">  - Built-in联动 of title, content, and back button (no need for custom implementation).  </span></span><br><span class="line"><span class="string">  - Unlimited routing stack size (Router is limited to 32).  </span></span><br><span class="line"><span class="string">  - Access to the routing stack (`</span><span class="title class_">NavPathStack</span><span class="string">`) for direct manipulation.  </span></span><br><span class="line"><span class="string">  - Full customization of components, animations, and properties (e.g., background, blur).  </span></span><br><span class="line"><span class="string">- **Router**: Basic routing API with limitations (e.g., fixed page structure, stack size).  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Documentation**:  </span></span><br><span class="line"><span class="string">- [Navigator](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-navigator-V5)  </span></span><br><span class="line"><span class="string">- [Navigation](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5)  </span></span><br><span class="line"><span class="string">- [Router](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-router-V5#routerpushurl9)  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 3. What is the relationship between CustomDialog and Page in HarmonyOS?  </span></span><br><span class="line"><span class="string">If a `</span><span class="title class_">CustomDialog</span><span class="string">` is declared in a Page, can it still be displayed after the Page exits? What is its lifecycle?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Check if the `</span>showInSubWindow<span class="string">` property is set to `</span><span class="literal">true</span><span class="string">` in the dialog. If enabled, the dialog will persist in a separate window even after the Page exits.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Reference**:  </span></span><br><span class="line"><span class="string">[CustomDialog Documentation](https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5)  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. Custom struct shrinking issue in HarmonyOS?  </span></span><br><span class="line"><span class="string">**Reference code**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="title class_">Column</span>() &#123;</span><br><span class="line">  <span class="title class_">Text</span>(<span class="string">&#x27;Custom struct shrinking issue&#x27;</span>)</span><br><span class="line">  <span class="title class_">Flex</span>(&#123; <span class="attr">justifyContent</span>: <span class="title class_">FlexAlign</span>.<span class="property">SpaceBetween</span>, <span class="attr">alignItems</span>: <span class="title class_">ItemAlign</span>.<span class="property">Center</span> &#125;) &#123;</span><br><span class="line">    <span class="title class_">SubView</span>(&#123;</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&#x27;Left&#x27;</span>,</span><br><span class="line">      <span class="attr">desc</span>: <span class="variable language_">this</span>.<span class="property">leftContent</span>,</span><br><span class="line">      <span class="attr">color</span>: <span class="title class_">Color</span>.<span class="property">Green</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="title class_">SubView</span>(&#123;</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&#x27;Right&#x27;</span>,</span><br><span class="line">      <span class="attr">desc</span>: <span class="variable language_">this</span>.<span class="property">rightContent</span>,</span><br><span class="line">      <span class="attr">color</span>: <span class="title class_">Color</span>.<span class="property">Red</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  .<span class="title function_">width</span>(<span class="number">200</span>).<span class="title function_">height</span>(<span class="number">40</span>)</span><br><span class="line">  .<span class="title function_">borderWidth</span>(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Custom struct:</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">export</span> struct <span class="title class_">SubView</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">title</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">desc</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">color</span>: <span class="title class_">Color</span> = <span class="title class_">Color</span>.<span class="property">White</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="comment">// Omitted code</span></span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">flexShrink</span>(<span class="number">1</span>)</span><br><span class="line">    .<span class="title function_">backgroundColor</span>(<span class="variable language_">this</span>.<span class="property">color</span>)</span><br><span class="line">    .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">desc</span>.<span class="property">length</span> &gt;= <span class="number">10</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">desc</span> = <span class="variable language_">this</span>.<span class="property">desc</span>.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">desc</span> = <span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.desc&#125;</span> becomes longer`</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="5-How-to-hide-a-HarmonyOS-menu-programmatically"><a href="#5-How-to-hide-a-HarmonyOS-menu-programmatically" class="headerlink" title="5. How to hide a HarmonyOS menu programmatically?"></a>5. How to hide a HarmonyOS menu programmatically?</h4><p>Hide the entire menu when an item is clicked.  </p>
+<p>Use <code>bindContextMenu</code> to attach a menu to a component and control visibility via <code>isShown</code>:  </p>
+<pre><code class="language-typescript">class classComponent &#123;
+  content: string = &#39;&#39;;
+  labelInfo: string = &#39;&#39;;
+&#125;
+
+@Entry
+@Component
+struct TestMenuPage &#123;
+  @State list1: Array&lt;classComponent&gt; = [&#123; content: &#39;Copy&#39;, labelInfo: &quot;Ctrl+C&quot; &#125;, &#123;
+    content: &quot;Paste&quot;,
+    labelInfo: &quot;Ctrl+V&quot;
+  &#125;];
+  @State menuIsShow: boolean = false;
+  @State menuBackGroundColor: Color = Color.White;
+  @State menuIsDelete: boolean = false;
+
+  @Builder
+  MyMenu() &#123;
+    Menu() &#123;
+      ForEach(this.list1, (item: classComponent) =&gt; &#123;
+        MenuItem(&#123; content: `$&#123;item.content&#125;`, labelInfo: `$&#123;item.labelInfo&#125;` &#125;)
+      &#125;)
+    &#125;.visibility(this.menuIsDelete ? Visibility.None : Visibility.Visible)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Column() &#123;
+        Button(&#39;Click&#39;).onClick(() =&gt; &#123;
+          this.menuIsShow = !this.menuIsShow;
+        &#125;)
+        Button(&#39;Delete Menu&#39;).onClick(() =&gt; &#123;
+          this.list1 = []
+          this.menuIsDelete = true
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+      .padding(20)
+      .bindMenu(this.MyMenu)
+      .bindContextMenu(this.menuIsShow, this.MyMenu(), &#123;
+        backgroundColor: this.menuIsDelete ? Color.Transparent : Color.White,
+        backgroundColor: Color.White,
+        backgroundBlurStyle: BlurStyle.NONE
+      &#125;)
+      .alignItems(HorizontalAlign.Start)
+    &#125;.height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Documentation</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-menu-V5#bindcontextmenu8">bindContextMenu</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/316-Daily-HarmonyOS-Next-Knowledge-Text-Height-Issue-Active-Focus-Acquisition-Screen-off-Lifecycle-Component-Switch-Button-Data-Replacement-Return-to-System-Desktop/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Text Height Issue, Active Focus Acquisition, Screen-off Lifecycle, Component Switch Button Data Replacement, Return to System Desktop">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Text Height Issue, Active Focus Acquisition, Screen-off Lifecycle, Component Switch Button Data Replacement, Return to System Desktop
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/318-Daily-HarmonyOS-Next-Knowledge-Popup-Issues-Transparent-Background-Setting-any-Type-Problem-Combination-Gestures-for-Swipe-and-Drag-Desktop-Icon-Specifications/" rel="next" title="[Daily HarmonyOS Next Knowledge] Popup Issues, Transparent Background Setting, any Type Problem, Combination Gestures for Swipe and Drag, Desktop Icon Specifications">
+      [Daily HarmonyOS Next Knowledge] Popup Issues, Transparent Background Setting, any Type Problem, Combination Gestures for Swipe and Drag, Desktop Icon Specifications <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Remove-Popup-Background-Color-Navigation-Usage-Scenarios-Dialog-Page-Relationship-Custom-Struct-Shrinking-Issue-Code-Hidden-Menu"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Remove Popup Background Color, Navigation Usage Scenarios, Dialog-Page Relationship, Custom Struct Shrinking Issue, Code-Hidden Menu</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-remove-the-background-color-of-a-HarmonyOS-Popup"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to remove the background color of a HarmonyOS Popup?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-How-to-hide-a-HarmonyOS-menu-programmatically"><span class="nav-number">1.2.</span> <span class="nav-text">5. How to hide a HarmonyOS menu programmatically?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

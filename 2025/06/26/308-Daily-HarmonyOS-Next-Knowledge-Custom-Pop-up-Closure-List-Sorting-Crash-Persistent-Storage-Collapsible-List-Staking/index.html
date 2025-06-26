@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking1. HarmonyOS custom dialog cannot call the close function to close in its own s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/308-Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking1. HarmonyOS custom dialog cannot call the close function to close in its own s">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T12:17:55.000Z">
+<meta property="article:modified_time" content="2025-06-26T14:06:45.843Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/308-Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/308-Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 20:17:55 / Modified: 22:06:45" itemprop="dateCreated datePublished" datetime="2025-06-26T20:17:55+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking"><a href="#Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking"></a>[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking</h3><h4 id="1-HarmonyOS-custom-dialog-cannot-call-the-close-function-to-close-in-its-own-struct"><a href="#1-HarmonyOS-custom-dialog-cannot-call-the-close-function-to-close-in-its-own-struct" class="headerlink" title="1. HarmonyOS custom dialog cannot call the close function to close in its own struct?"></a>1. HarmonyOS custom dialog cannot call the close function to close in its own struct?</h4><p>If you new CustomDialogController at the beginning of page construction, the internal close function can be executed. If it is dynamic, such as clicking a button to new CustomDialogController and assign it to a variable, the internal close cannot be called.  </p>
+<p>In ArkUI, CustomDialogController is a page-level component whose lifecycle is bound to the page. The use of CustomDialogController in the page is managed by the page’s lifecycle, such as initialization after the page is loaded and destruction when the page exits. If created in build, it cannot be guaranteed to be initialized and destroyed at the correct lifecycle stage, resulting in unexpected behavior. In addition, some properties and methods of CustomDialogController are related to the page’s lifecycle. For example, the build method is used to build UI components in the page, while the lifecycle-related logic cannot be reused in the function. It is not initialized before build and loses the binding relationship with the page.  </p>
+<h4 id="2-cppCrash-occurs-when-the-HarmonyOS-list-component-drags-and-sorts-subcomponents"><a href="#2-cppCrash-occurs-when-the-HarmonyOS-list-component-drags-and-sorts-subcomponents" class="headerlink" title="2. cppCrash occurs when the HarmonyOS list component drags and sorts subcomponents?"></a>2. cppCrash occurs when the HarmonyOS list component drags and sorts subcomponents?</h4><p>You can refer to the following demo, and the list follows the sliding code when dragged to the bottom:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line">import curves from &#x27;@ohos.curves&#x27;;</span><br><span class="line">import Curves from &#x27;@ohos.curves&#x27;</span><br><span class="line">// xxx.ets</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct ListItemExample &#123;</span><br><span class="line">  @State private arr: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span><br><span class="line">  @State dragItem: number = -1</span><br><span class="line">  @State scaleItem: number = -1</span><br><span class="line">  @State neighborItem: number = -1</span><br><span class="line">  @State neighborScale: number = -1</span><br><span class="line">  private dragRefOffset: number = 0</span><br><span class="line">  @State offsetX: number = 0</span><br><span class="line">  @State offsetY: number = 0</span><br><span class="line">  private ITEM_INTV: number = 120</span><br><span class="line">  @State slide:boolean = false</span><br><span class="line">  private listScroller: ListScroller = new ListScroller()</span><br><span class="line">  // list component specifications</span><br><span class="line">  private listArea: Area = &#123;</span><br><span class="line">    width: 0,</span><br><span class="line">    height: 0,</span><br><span class="line">    position: &#123;&#125;,</span><br><span class="line">    globalPosition: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  scaleSelect(item: number): number &#123;</span><br><span class="line">    if (this.scaleItem == item) &#123;</span><br><span class="line">      return 1.05</span><br><span class="line">    &#125; else if (this.neighborItem == item) &#123;</span><br><span class="line">      return this.neighborScale</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return 1</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  itemMove(index: number, newIndex: number): void &#123;</span><br><span class="line">    let tmp = this.arr.splice(index, 1)</span><br><span class="line">    this.arr.splice(newIndex, 0, tmp[0])</span><br><span class="line">  &#125;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Stack() &#123;</span><br><span class="line">      List(&#123; space: 20, initialIndex: 0, scroller: this.listScroller &#125;) &#123;</span><br><span class="line">        ForEach(this.arr, (item: number) =&gt; &#123;</span><br><span class="line">          ListItem() &#123;</span><br><span class="line">            Text(&#x27;&#x27; + item)</span><br><span class="line">              .width(&#x27;100%&#x27;)</span><br><span class="line">              .height(100)</span><br><span class="line">              .fontSize(16)</span><br><span class="line">              .textAlign(TextAlign.Center)</span><br><span class="line">              .borderRadius(10)</span><br><span class="line">              .backgroundColor(0xFFFFFF)</span><br><span class="line">              .shadow(this.scaleItem == item ? &#123; radius: 70, color: &#x27;#15000000&#x27;, offsetX: 0, offsetY: 0 &#125; :</span><br><span class="line">                &#123; radius: 0, color: &#x27;#15000000&#x27;, offsetX: 0, offsetY: 0 &#125;)</span><br><span class="line">              .animation(&#123; curve: Curve.Sharp, duration: 300 &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">          .margin(&#123; left: 12, right: 12 &#125;)</span><br><span class="line">          .scale(&#123; x: this.scaleSelect(item), y: this.scaleSelect(item) &#125;)</span><br><span class="line">          .zIndex(this.dragItem == item ? 1 : 0)</span><br><span class="line">          .translate(this.dragItem == item ? &#123; y: this.offsetY &#125; : &#123; y: 0 &#125;)</span><br><span class="line">          .gesture(</span><br><span class="line">          // The following combined gestures are sequentially recognized, and the drag gesture will not be triggered if the long-press gesture event is not triggered normally</span><br><span class="line">            GestureGroup(GestureMode.Sequence,</span><br><span class="line">              LongPressGesture(&#123; repeat: true &#125;)</span><br><span class="line">                .onAction((event?: GestureEvent) =&gt; &#123;</span><br><span class="line">                  animateTo(&#123; curve: Curve.Friction, duration: 300 &#125;, () =&gt; &#123;</span><br><span class="line">                    this.scaleItem = item</span><br><span class="line">                  &#125;)</span><br><span class="line">                &#125;)</span><br><span class="line">                .onActionEnd(() =&gt; &#123;</span><br><span class="line">                  animateTo(&#123; curve: Curve.Friction, duration: 300 &#125;, () =&gt; &#123;</span><br><span class="line">                    this.scaleItem = -1</span><br><span class="line">                  &#125;)</span><br><span class="line">                &#125;),</span><br><span class="line">              PanGesture(&#123; fingers: 1, direction: null, distance: 0 &#125;)</span><br><span class="line">                .onActionStart(() =&gt; &#123;</span><br><span class="line">                  this.dragItem = item</span><br><span class="line">                  this.dragRefOffset = 0</span><br><span class="line">                &#125;)</span><br><span class="line">                .onActionUpdate((event: GestureEvent) =&gt; &#123;</span><br><span class="line">                  this.offsetY = event.offsetY - this.dragRefOffset</span><br><span class="line">                  // console.log(&#x27;Y:&#x27; + this.offsetY.toString())</span><br><span class="line">                  this.neighborItem = -1</span><br><span class="line">                  let index = this.arr.indexOf(item)</span><br><span class="line">                  let curveValue = Curves.initCurve(Curve.Sharp)</span><br><span class="line">                  let value: number = 0</span><br><span class="line">                  // Calculate the scaling of adjacent items based on displacement</span><br><span class="line">                  if (this.offsetY &lt; 0) &#123;</span><br><span class="line">                    value = curveValue.interpolate(-this.offsetY / this.ITEM_INTV)</span><br><span class="line">                    this.neighborItem = this.arr[index-1]</span><br><span class="line">                    this.neighborScale = 1 - value / 20;</span><br><span class="line">                    console.log(&#x27;neighborScale:&#x27; + this.neighborScale.toString())</span><br><span class="line">                  &#125; else if (this.offsetY &gt; 0) &#123;</span><br><span class="line">                    value = curveValue.interpolate(this.offsetY / this.ITEM_INTV)</span><br><span class="line">                    this.neighborItem = this.arr[index+1]</span><br><span class="line">                    this.neighborScale = 1 - value / 20;</span><br><span class="line">                  &#125;</span><br><span class="line">                  // Prevent offsetY from triggering out-of-bounds logic</span><br><span class="line">                  if (index === 0) &#123;</span><br><span class="line">                    this.offsetY = Math.max(0, this.offsetY)</span><br><span class="line">                  &#125; else if (index === this.arr.length - 1) &#123;</span><br><span class="line">                    this.offsetY = Math.min(0, this.offsetY)</span><br><span class="line">                  &#125;</span><br><span class="line">                  // Get finger information</span><br><span class="line">                  let fingerInfo = event.fingerList[0]</span><br><span class="line">                  let clickPercentY = (fingerInfo.globalY - Number(this.listArea.globalPosition</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">#### 3. Which is better for HarmonyOS user login information persistent storage, PersistentStorage or preference?  </span><br><span class="line">For storing user login tokens, is it better to use `@ohos.data.preferences` or PersistentStorage?  </span><br><span class="line"></span><br><span class="line">Persistent storage of user login information can be done using PersistentStorage or Preference, and the specific choice depends on the specific needs and usage scenarios.  </span><br><span class="line">- **PersistentStorage** is used to persistently store selected AppStorage attributes to ensure that these attributes remain consistent when the application restarts. Its main features include:  </span><br><span class="line">  - **Persistence**: Save attributes in AppStorage to the device disk to ensure that data is still available after the application restarts.  </span><br><span class="line">  - **Bidirectional synchronization**: PersistentStorage establishes bidirectional synchronization with attributes in AppStorage to ensure data consistency and synchronization.  </span><br><span class="line">  - **Limitations**: Support simple types (such as number, string, boolean, etc.) and objects that can be reconstructed by JSON.stringify() and JSON.parse(), but do not support nested objects.  </span><br><span class="line">- **Preference** is used to store user preference data and is suitable for data that needs to be read and written frequently. Its main features include:  </span><br><span class="line">  - **Reading and writing**: Data can be read and written quickly, suitable for scenarios requiring efficient reading and writing.  </span><br><span class="line">  - **Lightweight**: Occupy less storage space, suitable for storing simple key-value pair data.  </span><br><span class="line">  - **Sharing**: Multiple HAP packages can share Preference data and communicate through ApplicationContext.  </span><br><span class="line"></span><br><span class="line">**Selection suggestions**:  </span><br><span class="line">- **Data type**: If the data to be stored is complex, including nested objects or arrays, PersistentStorage is recommended.  </span><br><span class="line">- **Reading and writing needs**: If data needs to be read and written frequently and the data is simple, Preference is recommended.  </span><br><span class="line">- **Application scenarios**: If you need to maintain the consistency of specific attributes when the application restarts, PersistentStorage is recommended. If you need to store user preference data, Preference is recommended.  </span><br><span class="line"></span><br><span class="line">In summary, the choice between PersistentStorage and Preference to store user login information depends on the specific data type, reading and writing needs, and application scenarios.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. HarmonyOS implements a list component similar to ExpandList that can be collapsed and opened?  </span><br><span class="line">Reference code:  </span><br></pre></td></tr></table></figure>
+<p>interface IRowItem {<br>  id?: number;<br>  title?: string;<br>  name1?: string;<br>  name2?: string;<br>  name3?: string;<br>  flag?: boolean;<br>  type?: string;<br>  onFlagChange?: () &#x3D;&gt; void;<br>}</p>
+<p>@Entry<br>@Component<br>struct CollapseAndExpandDemo {<br>  @Provide(“flag”) flag: boolean &#x3D; false<br>  private onFlagChange &#x3D; () &#x3D;&gt; {<br>    animateTo({<br>      duration: 650,<br>      curve: Curve.Smooth<br>    }, () &#x3D;&gt; {<br>      this.flag &#x3D; !this.flag;<br>    })<br>  }</p>
+<p>  build() {<br>    Column() {<br>      Row() {<br>        Image($r(“app.media.ic_public_back”)).width(20).height(20)<br>        Text(‘Title’).fontSize(18).fontWeight(FontWeight.Bold).margin({ left: 10 })<br>      }.width(‘100%’).margin({ bottom: 30 })</p>
+<pre><code>  Column() &#123;
+    RowItem(&#123; props: &#123; title: &#39;All Types&#39;, name1: &#39;Romance Novels&#39;, name2: &#39;Mystery Suspense&#39;, name3: &#39;Emotional Family&#39; &#125; &#125;)
+    RowItem(&#123;
+      props: &#123; name1: &#39;Fantasy Novels&#39;, name2: &#39;Thriller/Horror&#39;, name3: &#39;Martial Arts Novels&#39;, type: &#39;DOWN&#39;, onFlagChange: this.onFlagChange
+      &#125;
+    &#125;)
+    // Directly call the collapse and expand component
+    CollapseAndExpand(&#123;
+      items: [
+        &#123; id: 0, name1: &#39;Science Fiction Novels&#39;, name2: &#39;Officialdom&#39;, name3: &#39;History/Fictional&#39; &#125;,
+        &#123; id: 1, name1: &#39;Workplace Business War&#39;, name2: &#39;Military Spy War&#39;, name3: &#39;World Masterpieces&#39; &#125;,
+        &#123; id: 2, name1: &#39;Social Novels&#39;, name2: &#39;Local Novels&#39;, name3: &#39;Modern and Contemporary China&#39; &#125;,
+        &#123; id: 3, name1: &#39;Chinese Classics&#39;, name2: &#39;Foreign Novels&#39;, name3: &#39;Novel Works Collection&#39;, type: &#39;UP&#39;, onFlagChange: this.onFlagChange &#125;
+      ],
+    &#125;)
+
+    RowItem(&#123; props: &#123; title: &#39;All Prices&#39;, name1: &#39;Free&#39;, name2: &#39;Special Price&#39;, name3: &#39;VIP&#39; &#125; &#125;)
+    RowItem(&#123; props: &#123; title: &#39;By Popularity&#39;, name1: &#39;By Latest&#39;, name2: &#39;By Favorites&#39;, name3: &#39;By Word Count&#39; &#125; &#125;)
+  &#125;.width(&#39;100%&#39;)
+
+&#125;
+.height(&#39;100%&#39;)
+.padding(&#123; top: 30, right: 30, left: 30 &#125;)
+</code></pre>
+<p>  }<br>}</p>
+<p>@Component<br>struct RowItem {<br>  private props: IRowItem;<br>  @Consume(“flag”) flag: boolean<br>  build() {<br>    Flex() {<br>      Text(this.props.title)<br>        .fontSize(14)<br>        .fontWeight(FontWeight.Bold)<br>        .layoutWeight(1)<br>        .fontColor(Color.Red)<br>        .margin({ right: 10 })<br>      Flex({ alignItems: ItemAlign.Center }) {<br>        Text(this.props.name1).fontSize(14).margin({ right: 10 })<br>        Text(this.props.name2).fontSize(14).margin({ right: 10 })<br>        Text(this.props.name3).fontSize(14).margin({ right: 10 })</p>
+<pre><code>    if (!this.flag &amp;&amp; this.props.type === &#39;DOWN&#39; || this.flag &amp;&amp; this.props.type === &#39;UP&#39;) &#123;
+      Image($r(&quot;app.media.ic_public_arrow_down_0&quot;))
+        .width(16)
+        .height(16)
+        .objectFit(ImageFit.Contain)
+        .rotate(&#123; angle: !this.flag &amp;&amp; this.props.type === &#39;DOWN&#39; ? 0 : 180 &#125;) // Rotate 180° after clicking the expand button to display the collapse button
+        .onClick(() =&gt; this.props.onFlagChange())
+        .transition(&#123; type: TransitionType.All, opacity: 0 &#125;)
+    &#125;
+  &#125;
+  .layoutWeight(3)
+&#125;.width(&#39;100%&#39;).height(16).margin(&#123; top: 15 &#125;)
+</code></pre>
+<p>  }<br>}</p>
+<p>@Component<br>struct CollapseAndExpand {<br>  private items: IRowItem[] &#x3D; [];<br>  @Consume(“flag”) flag: boolean;</p>
+<p>  build() {<br>    Column() {<br>      ForEach(this.items, (item: IRowItem) &#x3D;&gt; {<br>        RowItem({ props: item })<br>      }, (item: IRowItem) &#x3D;&gt; item.id.toString())<br>    }<br>    .width(‘100%’)<br>    .clip(true)<br>    .height(this.flag ? 130 : 0)<br>  }<br>}</p>
+<pre><code>
+
+#### 5. HarmonyOS login logic judgment?  
+Is there an API implementation similar to View-layer aspect-oriented programming (AOP)? Now there is a requirement that all page clicks need to first determine whether the user is logged in. If logged in, the jump function can be performed. If not logged in, jump to the login page.  
+
+Refer to the document: https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-application-aspect-programming-design-V5  
+
+Aspect-oriented programming (AOP) is a technology that realizes the unified maintenance of program functions through pre-compilation and dynamic proxy during runtime. The core idea of AOP is to separate the concerns of the program and insert code into the program to realize cross-cutting concerns, so as to isolate each part of the business logic, reduce the coupling between them, improve the maintainability and reusability of the program, and improve the development efficiency.  
+
+In AOP, developers can encapsulate cross-cutting concerns by defining aspects without directly modifying the business logic code. This method requires adding functions without modifying the source code, and is often used to separate business code from non-business code, such as parameter verification, log recording, performance statistics and other non-business code, so as to achieve better code decoupling.  
+
+HarmonyOS mainly realizes aspect-oriented programming through the staking mechanism and provides the Aspect class, including addBefore, addAfter and replace interfaces. These interfaces can perform pre-staking, post-staking and replacement implementations on class methods at runtime, providing developers with more flexible operation methods. In specific business scenarios, different requirements may require different埋点 functions and log records. By calling the addBefore, addAfter and replace interfaces, various function enhancements and customized requirements for class methods can be realized:  
+- For method verification requirements, parameter verification can be carried out before or after method execution to ensure the legitimacy of parameters, return values, etc.  
+- For the requirements of method execution time and frequency statistics, we can insert statistical logic before and after method execution to record the execution time and frequency of the method. Through the combined use of addBefore and addAfter interfaces, the monitoring and statistics of method execution can be easily realized, providing data support for performance optimization.  
+- For the requirements of replacing classes, we can use the replace interface of AOP to dynamically replace the implementation logic of the original method. This flexible replacement mechanism can realize the replacement or enhancement of method functions without changing the original method call, providing convenience for the function extension of the project.  
+- For the requirement of obtaining the target package name information when拉起 the application, we can obtain the target package name information and record the log when the application starts. By calling the addBefore interface when the application starts, the monitoring and recording of the application startup process can be realized, providing help for application performance optimization and fault troubleshooting.  
+
+Staking principle: The principles of addBefore, addAfter and replace interfaces are based on the ECMAScript semantics of class, that is, the static methods of the class are the attributes of the class, and the instance methods of the class are the attributes of the prototype object of the class.  
+![](../images/【每日学点HarmonyOS%20Next知识】25.03.08.png)
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/307-Daily-HarmonyOS-Next-Knowledge-Screen-Parameters-Semi-Modal-Related-Three-Level-Linkage-Partial-Card-Display-Custom-Drawing/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Screen Parameters, Semi-Modal Related, Three-Level Linkage, Partial Card Display, Custom Drawing">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Screen Parameters, Semi-Modal Related, Three-Level Linkage, Partial Card Display, Custom Drawing
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/309-Daily-HarmonyOS-Next-Knowledge-Text-Component-Navigation-Top-Right-Button-Simulated-Dialog-Left-Aligned-Tabs-Offscreen-Rendering/" rel="next" title="[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering">
+      [Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HarmonyOS-custom-dialog-cannot-call-the-close-function-to-close-in-its-own-struct"><span class="nav-number">1.1.</span> <span class="nav-text">1. HarmonyOS custom dialog cannot call the close function to close in its own struct?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-cppCrash-occurs-when-the-HarmonyOS-list-component-drags-and-sorts-subcomponents"><span class="nav-number">1.2.</span> <span class="nav-text">2. cppCrash occurs when the HarmonyOS list component drags and sorts subcomponents?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

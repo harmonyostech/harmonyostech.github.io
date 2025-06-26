@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering1. HarmonyOS Text Component UI Styling?How to implement a Text con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/309-Daily-HarmonyOS-Next-Knowledge-Text-Component-Navigation-Top-Right-Button-Simulated-Dialog-Left-Aligned-Tabs-Offscreen-Rendering/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering1. HarmonyOS Text Component UI Styling?How to implement a Text con">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T14:01:48.000Z">
+<meta property="article:modified_time" content="2025-06-26T14:06:43.274Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/309-Daily-HarmonyOS-Next-Knowledge-Text-Component-Navigation-Top-Right-Button-Simulated-Dialog-Left-Aligned-Tabs-Offscreen-Rendering/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/309-Daily-HarmonyOS-Next-Knowledge-Text-Component-Navigation-Top-Right-Button-Simulated-Dialog-Left-Aligned-Tabs-Offscreen-Rendering/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 22:01:48 / Modified: 22:06:43" itemprop="dateCreated datePublished" datetime="2025-06-26T22:01:48+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Text-Component-Navigation-Top-Right-Button-Simulated-Dialog-Left-Aligned-Tabs-Offscreen-Rendering"><a href="#Daily-HarmonyOS-Next-Knowledge-Text-Component-Navigation-Top-Right-Button-Simulated-Dialog-Left-Aligned-Tabs-Offscreen-Rendering" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering"></a>[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering</h3><h4 id="1-HarmonyOS-Text-Component-UI-Styling"><a href="#1-HarmonyOS-Text-Component-UI-Styling" class="headerlink" title="1. HarmonyOS Text Component UI Styling?"></a>1. HarmonyOS Text Component UI Styling?</h4><p>How to implement a Text control with a small icon at the header, limited to 2 lines, with ellipsis and a differently colored “View More” when content overflows.  </p>
+<p>Use the RichEditor component. Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-richeditor-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-richeditor-V5</a>  </p>
+<p>Main supported attributes:<br><strong>customKeyboard</strong><br>customKeyboard(value: CustomBuilder, options?: KeyboardOptions)<br>Sets a custom keyboard. When a custom keyboard is set, the system input method does not open after the input box is activated; instead, the specified custom component is loaded. The height of the custom keyboard can be set via the height attribute of the custom component’s root node; the width uses the system default and cannot be set. The custom keyboard cannot obtain focus but intercepts gesture events, and it closes by default when the input control loses focus. If the device supports camera input, setting a custom keyboard disables camera input for the input box.  </p>
+<p><strong>bindSelectionMenu</strong><br>bindSelectionMenu(spanType: RichEditorSpanType, content: CustomBuilder, responseType: ResponseType | RichEditorResponseType, options?: SelectionMenuOptions)<br>Sets a custom selection menu. When the custom menu is too long, nesting a Scroll component is recommended to avoid keyboard obstruction.  </p>
+<p><strong>copyOptions</strong><br>copyOptions(value: CopyOptions)<br>Sets whether the component supports text copy-paste. When copyOptions is not CopyOptions.None, long-pressing the component content pops up a text selection dialog. If a custom selection menu is set via bindSelectionMenu, the custom menu is displayed. Setting copyOptions to CopyOptions.None disables copy and cut functions.  </p>
+<p><strong>enableDataDetector11+</strong><br>enableDataDetector(enable: boolean)<br>Enables&#x2F;disables special entity recognition in text. This interface relies on the device’s underlying text recognition capability; otherwise, the setting is ineffective. When enableDataDetector is true and dataDetectorConfig is not set, all entity types are recognized by default, with their color and decoration changed to:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">color: &#x27;#ff007dff&#x27;</span><br><span class="line">decoration:&#123;</span><br><span class="line">  type: TextDecorationType.Underline,</span><br><span class="line">  color: &#x27;#ff007dff&#x27;,</span><br><span class="line">  style: TextDecorationStyle.SOLID</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Tapping or right-clicking an entity pops up a corresponding operation menu based on the entity type; left-clicking directly triggers the first menu option. This function does not apply to text in addBuilderSpan nodes. When copyOption is CopyOptions.None, the entity menu lacks text selection and copy functions.  </p>
+<p><strong>dataDetectorConfig11+</strong><br>dataDetectorConfig(config: TextDataDetectorConfig)<br>Sets text recognition configuration, which takes effect only when enableDataDetector is true. When two entities A and B overlap:  </p>
+<ol>
+<li>If A ⊂ B, retain B; otherwise, retain A.  </li>
+<li>If neither A ⊂ B nor B ⊂ A, retain the entity with the smaller start index.</li>
+</ol>
+<h4 id="2-How-to-Add-a-Top-Right-Button-to-NavDestination-in-HarmonyOS"><a href="#2-How-to-Add-a-Top-Right-Button-to-NavDestination-in-HarmonyOS" class="headerlink" title="2. How to Add a Top-Right Button to NavDestination in HarmonyOS?"></a>2. How to Add a Top-Right Button to NavDestination in HarmonyOS?</h4><p>NavDestination supports adding top-right buttons via menus. Refer to: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-basic-components-navigation.md#%E7%A4%BA%E4%BE%8B2">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-basic-components-navigation.md#%E7%A4%BA%E4%BE%8B2</a>  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  pathStack: NavPathStack = new NavPathStack()
+
+  private menuItems: Array&lt;NavigationMenuItem&gt; = [
+    &#123;
+      value: &quot;1&quot;,
+      icon: &#39;resources/base/media/startIcon.png&#39;,
+    &#125;,
+    &#123;
+      value: &quot;2&quot;,
+      icon: &#39;resources/base/media/startIcon.png&#39;,
+      isEnabled: false,
+    &#125;,
+    &#123;
+      value: &quot;3&quot;,
+      icon: &#39;resources/base/media/startIcon.png&#39;,
+      isEnabled: true,
+    &#125;
+  ]
+
+  build() &#123;
+    NavDestination() &#123;
+      Column() &#123;
+        Button(&#39;pushPathByName&#39;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
+          .width(&#39;80%&#39;)
+          .height(40)
+          .margin(20)
+          .onClick(() =&gt; &#123;
+            this.pathStack.pushPathByName(&#39;pageOne&#39;, null)
+          &#125;)
+      &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;)
+    &#125;.title(&#39;pageTwo&#39;)
+    .menus(this.menuItems)
+    .onBackPressed(() =&gt; &#123;
+      this.pathStack.pop()
+      return true
+    &#125;)
+    .onReady((context: NavDestinationContext) =&gt; &#123;
+      this.pathStack = context.pathStack;
+      console.log(&quot;current page config info is &quot; + JSON.stringify(context.getConfigInRouteMap()))
+    &#125;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-Simulating-a-Dialog-with-window-createWindow-in-HarmonyOS"><a href="#3-Simulating-a-Dialog-with-window-createWindow-in-HarmonyOS" class="headerlink" title="3. Simulating a Dialog with window.createWindow in HarmonyOS?"></a>3. Simulating a Dialog with window.createWindow in HarmonyOS?</h4><p>Using window.createWindow to simulate a dialog causes physical back buttons to fail in secondary pages. Use createSubWindow to avoid this. Refer to the demo:  </p>
+<pre><code class="language-typescript">// EntryAbility.ets
+onWindowStageCreate(windowStage: window.WindowStage): void &#123;
+  hilog.info(0x0000, &#39;testTag&#39;, &#39;%&#123;public&#125;s&#39;, &#39;Ability onWindowStageCreate&#39;);
+
+  windowStage.loadContent(&#39;pages/Index&#39;, (err, data) =&gt; &#123;
+    if (err.code) &#123;
+      hilog.error(0x0000, &#39;testTag&#39;, &#39;Failed to load the content. Cause: %&#123;public&#125;s&#39;, JSON.stringify(err) ?? &#39;&#39;);
+      return;
+    &#125;
+    AppStorage.setOrCreate(&quot;windowStage&quot;, windowStage);
+    hilog.info(0x0000, &#39;testTag&#39;, &#39;Succeeded in loading the content. Data: %&#123;public&#125;s&#39;, JSON.stringify(data) ?? &#39;&#39;);
+  &#125;);
+&#125;
+
+// Index.ets (main page)
+import &#123; window &#125; from &#39;@kit.ArkUI&#39;;
+
+@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;Create Subwindow&#39;;
+  @State windowStage: window.WindowStage = AppStorage.get(&quot;windowStage&quot;) as window.WindowStage
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+          .onClick(() =&gt; &#123;
+            this.windowStage.createSubWindow(&quot;mySubWindow&quot;, (err, windowClass) =&gt; &#123;
+              if (err.code &gt; 0) &#123;
+                console.error(&quot;failed to create subWindow Cause:&quot; + err.message)
+                return;
+              &#125;
+              try &#123;
+                windowClass.setUIContent(&quot;pages/subPage&quot;, () =&gt; &#123;
+                  windowClass.setWindowBackgroundColor(&quot;#00000000&quot;)
+                &#125;);
+                windowClass.moveWindowTo(0, 200)
+                windowClass.resize(vp2px(300), vp2px(300))
+                windowClass.showWindow();
+                windowClass.setWindowLayoutFullScreen(true);
+              &#125; catch (err) &#123;
+                console.error(&quot;failed to create subWindow Cause:&quot; + err)
+              &#125;
+            &#125;)
+          &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+
+// subPage.ets (subwindow page)
+import &#123; router, window &#125; from &#39;@kit.ArkUI&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+@Entry
+@Component
+struct SubPage &#123;
+  @State message: string = &#39;SUBPAGE&#39;;
+  @State windowStage: window.WindowStage = AppStorage.get(&quot;windowStage&quot;) as window.WindowStage;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(20)
+          .fontWeight(FontWeight.Bold)
+        Button(&quot;Jump&quot;)
+          .onClick(() =&gt; &#123;
+            let subWindowID: number = window.findWindow(&quot;mySubWindow&quot;).getWindowProperties().id
+            let mainWindowID: number = this.windowStage.getMainWindowSync().getWindowProperties().id
+            let promise = window.shiftAppWindowFocus(subWindowID, mainWindowID);
+            promise.then(() =&gt; &#123;
+              console.info(&#39;Succeeded in shifting app window focus&#39;);
+            &#125;).catch((err: BusinessError) =&gt; &#123;
+              console.error(&#39;Failed to shift app window focus. Cause: &#39; + JSON.stringify(err));
+            &#125;)
+            this.windowStage.getMainWindowSync().getUIContext().getRouter().pushUrl(&#123; url: &quot;pages/routerPage&quot; &#125;, router.RouterMode.Single);
+          &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.Red)
+  &#125;
+&#125;
+
+// routerPage.ets (jumped page)
+@Entry
+@Component
+struct RouterPage &#123;
+  @State message: string = &#39;RouterPage&#39;;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.Pink)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-How-to-Left-Align-Tabs-in-HarmonyOS-When-tabs-width-‘100-’-barWidth-‘90-’-Centers-the-Tab-Bar-by-Default"><a href="#4-How-to-Left-Align-Tabs-in-HarmonyOS-When-tabs-width-‘100-’-barWidth-‘90-’-Centers-the-Tab-Bar-by-Default" class="headerlink" title="4. How to Left-Align Tabs in HarmonyOS When tabs.width(‘100%’).barWidth(‘90%’) Centers the Tab Bar by Default?"></a>4. How to Left-Align Tabs in HarmonyOS When tabs.width(‘100%’).barWidth(‘90%’) Centers the Tab Bar by Default?</h4><p>Refer to the demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct TabsExample1 &#123;
+  @State tabArray: Array&lt;number&gt; = [0, 1, 2]
+  @State focusIndex: number = 0
+  @State pre: number = 0
+  @State index: number = 0
+  private controller: TabsController = new TabsController()
+  @State test: boolean = false
+
+  @Builder
+  Tab(tabName: string, tabItem: number, tabIndex: number) &#123;
+    Row(&#123; space: 20 &#125;) &#123;
+      Text(tabName).fontSize(18)
+    &#125;
+    .justifyContent(FlexAlign.Center)
+    .constraintSize(&#123; minWidth: 35 &#125;)
+    .width(100)
+    .height(60)
+    .borderRadius(&#123; topLeft: 10, topRight: 10 &#125;)
+    .onClick(() =&gt; &#123;
+      this.controller.changeIndex(tabIndex)
+      this.focusIndex = tabIndex
+    &#125;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Column() &#123;
+        Row(&#123; space: 7 &#125;) &#123;
+          Scroll() &#123;
+            Row() &#123;
+              ForEach(this.tabArray, (item: number, index: number) =&gt; &#123;
+                this.Tab(&quot;Tab &quot; + item, item, index)
+              &#125;)
+            &#125;
+            .justifyContent(FlexAlign.Start)
+          &#125;
+          .align(Alignment.Start)
+          .scrollable(ScrollDirection.Horizontal)
+          .scrollBar(BarState.Off)
+          .width(&#39;90%&#39;)
+        &#125;
+        .alignItems(VerticalAlign.Bottom)
+        .width(&#39;100%&#39;)
+      &#125;
+      .alignItems(HorizontalAlign.Start)
+      .width(&#39;100%&#39;)
+
+      Tabs(&#123; barPosition: BarPosition.Start, controller: this.controller &#125;) &#123;
+        ForEach(this.tabArray, (item: number, index: number) =&gt; &#123;
+          TabContent() &#123;
+            Text(&#39;Content of Page &#39; + item)
+              .height(300)
+              .width(&#39;100%&#39;)
+              .fontSize(30)
+          &#125;
+          .backgroundColor(Color.Pink)
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+      .barHeight(0)
+      .animationDuration(100)
+      .onChange((index: number) =&gt; &#123;
+        console.log(&#39;foo change&#39;)
+        this.focusIndex = index
+      &#125;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-Does-OffscreenCanvasRenderingContext2D-in-HarmonyOS-Support-Automatic-Line-Breaks-for-Text-Drawing"><a href="#5-Does-OffscreenCanvasRenderingContext2D-in-HarmonyOS-Support-Automatic-Line-Breaks-for-Text-Drawing" class="headerlink" title="5. Does OffscreenCanvasRenderingContext2D in HarmonyOS Support Automatic Line Breaks for Text Drawing?"></a>5. Does OffscreenCanvasRenderingContext2D in HarmonyOS Support Automatic Line Breaks for Text Drawing?</h4><p>Yes. Consider the following methods:  </p>
+<ol>
+<li><strong>Multi-line text drawing</strong>: The OffscreenCanvasRenderingContext2D object provides fillText and strokeText methods. Set lineHeight and maxWidth to achieve automatic line breaks.  </li>
+<li><strong>Path drawing</strong>: Define a path and use fillText&#x2F;strokeText to draw text along the path for line breaks.  </li>
+<li><strong>Layout management</strong>: Use layout managers (e.g., Flexbox or Grid) in the offscreen canvas component, setting appropriate width and height to ensure multi-line text displays correctly.</li>
+</ol>
+<p>These methods enable automatic line breaks when drawing text with OffscreenCanvasRenderingContext2D.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/308-Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/310-Daily-HarmonyOS-Next-Knowledge-Two-Font-Sizes-in-Text-Component-Left-Right-Row-Layout-JS-Engine-Multi-Level-Linkage-Centered-Navigation-Title/" rel="next" title="[Daily HarmonyOS Next Knowledge] Two Font Sizes in Text Component, Left-Right Row Layout, JS Engine, Multi-Level Linkage, Centered Navigation Title">
+      [Daily HarmonyOS Next Knowledge] Two Font Sizes in Text Component, Left-Right Row Layout, JS Engine, Multi-Level Linkage, Centered Navigation Title <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Text-Component-Navigation-Top-Right-Button-Simulated-Dialog-Left-Aligned-Tabs-Offscreen-Rendering"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Text Component, Navigation Top-Right Button, Simulated Dialog, Left-Aligned Tabs, Offscreen Rendering</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HarmonyOS-Text-Component-UI-Styling"><span class="nav-number">1.1.</span> <span class="nav-text">1. HarmonyOS Text Component UI Styling?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-to-Add-a-Top-Right-Button-to-NavDestination-in-HarmonyOS"><span class="nav-number">1.2.</span> <span class="nav-text">2. How to Add a Top-Right Button to NavDestination in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Simulating-a-Dialog-with-window-createWindow-in-HarmonyOS"><span class="nav-number">1.3.</span> <span class="nav-text">3. Simulating a Dialog with window.createWindow in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-How-to-Left-Align-Tabs-in-HarmonyOS-When-tabs-width-%E2%80%98100-%E2%80%99-barWidth-%E2%80%9890-%E2%80%99-Centers-the-Tab-Bar-by-Default"><span class="nav-number">1.4.</span> <span class="nav-text">4. How to Left-Align Tabs in HarmonyOS When tabs.width(‘100%’).barWidth(‘90%’) Centers the Tab Bar by Default?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Does-OffscreenCanvasRenderingContext2D-in-HarmonyOS-Support-Automatic-Line-Breaks-for-Text-Drawing"><span class="nav-number">1.5.</span> <span class="nav-text">5. Does OffscreenCanvasRenderingContext2D in HarmonyOS Support Automatic Line Breaks for Text Drawing?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering1. How to control the status bar font color in a single HarmonyOS page?The status bar fo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/26/302%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering1. How to control the status bar font color in a single HarmonyOS page?The status bar fo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-26T12:09:37.000Z">
+<meta property="article:modified_time" content="2025-06-26T12:12:20.871Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/26/302%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/302%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 20:09:37 / Modified: 20:12:20" itemprop="dateCreated datePublished" datetime="2025-06-26T20:09:37+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="【Daily-HarmonyOS-Next-Knowledge】Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering"><a href="#【Daily-HarmonyOS-Next-Knowledge】Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering"></a>【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering</h3><h4 id="1-How-to-control-the-status-bar-font-color-in-a-single-HarmonyOS-page"><a href="#1-How-to-control-the-status-bar-font-color-in-a-single-HarmonyOS-page" class="headerlink" title="1. How to control the status bar font color in a single HarmonyOS page?"></a>1. How to control the status bar font color in a single HarmonyOS page?</h4><p>The status bar font color can be modified by setting <code>statusBarContentColor</code>. Refer to the documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5</a>  </p>
+<p>Reference code:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">import window from &#x27;@ohos.window&#x27;;</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State message: string = &#x27;Hello World&#x27;;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Row() &#123;</span><br><span class="line">      Column() &#123;</span><br><span class="line">        Text(this.message)</span><br><span class="line">          .align(Alignment.Center)</span><br><span class="line">          .fontSize(50)</span><br><span class="line">          .fontWeight(FontWeight.Bold)</span><br><span class="line">          .fontColor(Color.White)</span><br><span class="line">        ColumnSplit().height(20)</span><br><span class="line">        Button() &#123;</span><br><span class="line">          Text(&quot;点我看效果&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        .width(100)</span><br><span class="line">        .height(50)</span><br><span class="line">        .onClick(() =&gt; &#123;</span><br><span class="line">          this.message = &quot;我变了&quot;</span><br><span class="line">          window.getLastWindow(getContext(), (err, data) =&gt; &#123;</span><br><span class="line">            let win: window.Window;</span><br><span class="line">            if (err.code) &#123;</span><br><span class="line">              console.error(&quot;error code :&quot; + JSON.stringify(err.code))</span><br><span class="line">              return;</span><br><span class="line">            &#125;</span><br><span class="line">            try &#123;</span><br><span class="line">              win = data;</span><br><span class="line">              // Set the window to full-screen mode</span><br><span class="line">              win.setWindowLayoutFullScreen(true);</span><br><span class="line">              // Set status bar properties</span><br><span class="line">              win.setWindowSystemBarProperties(&#123;</span><br><span class="line">                // Set status bar background color</span><br><span class="line">                statusBarColor: &#x27;#ffe30520&#x27;,</span><br><span class="line">                // Set status bar text color to white</span><br><span class="line">                statusBarContentColor: &#x27;#ffffffff&#x27;</span><br><span class="line">              &#125;)</span><br><span class="line">              console.info(&#x27;Status bar immersive window setup completed&#x27;)</span><br><span class="line">            &#125;</span><br><span class="line">            catch (expextion) &#123;</span><br><span class="line">              console.error(&quot;error cause :&quot; + JSON.stringify(expextion))</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">        ColumnSplit().height(20)</span><br><span class="line">      &#125;</span><br><span class="line">      .width(&#x27;100%&#x27;)</span><br><span class="line">    &#125;</span><br><span class="line">    .height(&#x27;100%&#x27;)</span><br><span class="line">    .backgroundColor(Color.Green)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">#### 2. When do HarmonyOS lifecycle callbacks trigger?  </span><br><span class="line">When the app is swiped up to exit, which callback triggers first: `onPageHide` or `aboutToDisappear`?  </span><br><span class="line"></span><br><span class="line">In this scenario, only the `aboutToDisappear` callback triggers. For lifecycle characteristics, refer to:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/js-framework-lifecycle-V5  </span><br><span class="line"></span><br><span class="line">Application lifecycle functions can be defined in `app.js` as follows:  </span><br><span class="line"></span><br><span class="line">| Attribute     | Type         | Description       | Trigger Time                |  </span><br><span class="line">| :---------- | :--------- | :------------- | :---------------------- |  </span><br><span class="line">| onCreate    | () =&gt; void | App creation      | Called when the app is created.       |  </span><br><span class="line">| onShow6+    | () =&gt; void | App in foreground   | Triggered when the app is in the foreground. |  </span><br><span class="line">| onHide6+    | () =&gt; void | App in background   | Triggered when the app is in the background. |  </span><br><span class="line">| onDestroy   | () =&gt; void | App destruction     | Triggered when the app exits.      |  </span><br><span class="line"></span><br><span class="line">#### 3. How to display a custom HarmonyOS dialog in the center of the screen?  </span><br><span class="line">How to center a custom time picker dialog or user privacy agreement dialog.  </span><br><span class="line"></span><br><span class="line">Reference demo:  </span><br></pre></td></tr></table></figure>
+<p>@CustomDialog<br>struct CustomDialogExample {<br>  controller?: CustomDialogController<br>  private selectDate: Date &#x3D; new Date()</p>
+<p>  build() {<br>    Column() {<br>      DatePicker({<br>        start: new Date(‘2009-1-1’),<br>        end: new Date(‘2100-12-31’),<br>        selected: this.selectDate<br>      })<br>    }<br>  }<br>}</p>
+<p>@Entry<br>@Component<br>struct Index {<br>  @State textValue: string &#x3D; ‘’<br>  @State inputValue: string &#x3D; ‘click me’<br>  dialogController: CustomDialogController | null &#x3D; new CustomDialogController({<br>    builder: CustomDialogExample(),<br>    openAnimation: {<br>      duration: 1200,<br>      curve: Curve.Friction,<br>      delay: 500,<br>      playMode: PlayMode.Alternate,<br>      onFinish: () &#x3D;&gt; {<br>        console.info(‘play end’)<br>      }<br>    },<br>    autoCancel: true,<br>    alignment: DialogAlignment.Center,<br>    gridCount: 4,<br>    customStyle: true,<br>    backgroundColor: 0xd9ffffff,<br>    cornerRadius: 10,<br>  })</p>
+<p>  &#x2F;&#x2F; Set dialogController to null when the custom component is about to be destroyed<br>  aboutToDisappear() {<br>    this.dialogController &#x3D; null &#x2F;&#x2F; Set dialogController to null<br>  }</p>
+<p>  build() {<br>    Column() {<br>      Button(this.inputValue)<br>        .onClick(() &#x3D;&gt; {<br>          if (this.dialogController !&#x3D; null) {<br>            this.dialogController.open()<br>          }<br>        }).backgroundColor(0x317aff)<br>    }.width(‘100%’).margin({ top: 5 })<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 4. Does the HarmonyOS UI component provide an `setAlpha` attribute?  </span><br><span class="line">Transparency can be set using `opacity`. Refer to:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-opacity-V5  </span><br><span class="line"></span><br><span class="line">`opacity(value: number | Resource)`  </span><br><span class="line">Sets the opacity of the component.  </span><br><span class="line"></span><br><span class="line">**Parameters:**  </span><br><span class="line"></span><br><span class="line">| Parameter Name | Type                 | Required | Description                                                                                                                                                                                                 |  </span><br><span class="line">| :--------- | :----------------- | :--- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |  </span><br><span class="line">| value      | number \| Resource | Yes  | The opacity of the element, ranging from 0 to 1. 1 means opaque, 0 means fully transparent (hiding the component, but it still occupies layout space).&lt;br&gt;&lt;br&gt;Default value: 1&lt;br&gt;&lt;br&gt;**Note:**&lt;br&gt;&lt;br&gt;Child components inherit the parent&#x27;s opacity, which is multiplied by their own. For example, if the parent has opacity 0.1 and the child sets 0.8, the child&#x27;s actual opacity is 0.1 * 0.8 = 0.08. |  </span><br><span class="line"></span><br><span class="line">Example:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; xxx.ets<br>@Entry<br>@Component<br>struct OpacityExample {<br>  build() {<br>    Column({ space: 5 }) {<br>      Text(‘opacity(1)’).fontSize(9).width(‘90%’).fontColor(0xCCCCCC)<br>      Text().width(‘90%’).height(50).opacity(1).backgroundColor(0xAFEEEE)<br>      Text(‘opacity(0.7)’).fontSize(9).width(‘90%’).fontColor(0xCCCCCC)<br>      Text().width(‘90%’).height(50).opacity(0.7).backgroundColor(0xAFEEEE)<br>      Text(‘opacity(0.4)’).fontSize(9).width(‘90%’).fontColor(0xCCCCCC)<br>      Text().width(‘90%’).height(50).opacity(0.4).backgroundColor(0xAFEEEE)<br>      Text(‘opacity(0.1)’).fontSize(9).width(‘90%’).fontColor(0xCCCCCC)<br>      Text().width(‘90%’).height(50).opacity(0.1).backgroundColor(0xAFEEEE)<br>      Text(‘opacity(0)’).fontSize(9).width(‘90%’).fontColor(0xCCCCCC)<br>      Text().width(‘90%’).height(50).opacity(0).backgroundColor(0xAFEEEE)<br>    }<br>    .width(‘100%’)<br>    .padding({ top: 5 })<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">![[【每日学点HarmonyOS Next知识】25.03.02.png]]  </span><br><span class="line"></span><br><span class="line">#### 5. Can HarmonyOS Tabs be aligned left/right instead of only centered?  </span><br><span class="line">Does the Tabs component support left/right alignment?  </span><br><span class="line"></span><br><span class="line">The Tabs component does not provide a left-aligned style. You can customize a left-aligned tabBar using Flex,联动索引值 with the Tabs component via `onClick` to achieve switching:  </span><br></pre></td></tr></table></figure>
+<p>@Entry<br>@Component<br>struct Index {<br>  private tabsController: TabsController &#x3D; new TabsController()<br>  @State currentIndex: number &#x3D; 0;</p>
+<p>  @Builder<br>  TabBarBuilder(title: string, targetIndex: number) {<br>    Text(title)<br>      .fontWeight(targetIndex &#x3D;&#x3D;&#x3D; this.currentIndex ? FontWeight.Bold : FontWeight.Normal)<br>      .margin({ left: 10, right: 10 })<br>      .onClick(() &#x3D;&gt; {<br>        this.tabsController.changeIndex(targetIndex)<br>      })<br>  }</p>
+<p>  build() {<br>    Row() {<br>      Column() {</p>
+<p>Flex({ direction: FlexDirection.Row }) {<br>        Flex({ direction: FlexDirection.RowReverse }) {<br>          this.TabBarBuilder(‘页签1’, 0)<br>          this.TabBarBuilder(‘页签2’, 1)<br>          this.TabBarBuilder(‘页签3’, 2)<br>        }</p>
+<pre><code>    Tabs(&#123; barPosition: BarPosition.End, controller: this.tabsController &#125;) &#123;
+      TabContent() &#123;
+        Text(&quot;页签1页面&quot;)
+      &#125;
+
+      TabContent() &#123;
+        Text(&quot;页签2页面&quot;)
+      &#125;
+
+      TabContent() &#123;
+        Text(&quot;页签3页面&quot;)
+      &#125;
+    &#125;.onChange((index: number) =&gt; &#123;
+      this.currentIndex = index;
+    &#125;)
+  &#125;
+&#125;
+</code></pre>
+<p>  }<br>}<br>&#96;&#96;&#96;</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/26/301%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Image-Pixels-State-Binding-Slider-Value-Listening-Gesture-Issues-Object-Map-Conversion/" rel="prev" title="【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion">
+      <i class="fa fa-chevron-left"></i> 【Daily HarmonyOS Next Knowledge】Image Pixels, State Binding, Slider Value Listening, Gesture Issues, Object-Map Conversion
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/26/303-Daily-HarmonyOS-Next-Knowledge-Tab-Alignment-Relative-Layout-Full-Screen-Custom-Popups-Animation-Collections-Returning-to-Home-Screen/" rel="next" title="[Daily HarmonyOS Next Knowledge] Tab Alignment, Relative Layout, Full-Screen Custom Popups, Animation Collections, Returning to Home Screen">
+      [Daily HarmonyOS Next Knowledge] Tab Alignment, Relative Layout, Full-Screen Custom Popups, Animation Collections, Returning to Home Screen <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering"><span class="nav-number">1.</span> <span class="nav-text">【Daily HarmonyOS Next Knowledge】Status Bar Font, Lifecycle, Custom Dialog Centering, Transparency, Tab Centering</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-control-the-status-bar-font-color-in-a-single-HarmonyOS-page"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to control the status bar font color in a single HarmonyOS page?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
