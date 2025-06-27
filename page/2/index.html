@@ -149,6 +149,810 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-and-Practice-of-HarmonyOS-Next-User-Notification-Service-Notification-Kit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-Introduction-and-Practice-of-HarmonyOS-Next-User-Notification-Service-Notification-Kit/" class="post-title-link" itemprop="url">Introduction and Practice of HarmonyOS Next User Notification Service Notification Kit</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 11:20:54 / Modified: 11:32:22" itemprop="dateCreated datePublished" datetime="2025-06-27T11:20:54+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Introduction-and-Practical-Guide-to-HarmonyOS-Next-User-Notification-Service-Notification-Kit"><a href="#Introduction-and-Practical-Guide-to-HarmonyOS-Next-User-Notification-Service-Notification-Kit" class="headerlink" title="Introduction and Practical Guide to HarmonyOS Next User Notification Service (Notification Kit)"></a><strong>Introduction and Practical Guide to HarmonyOS Next User Notification Service (Notification Kit)</strong></h3><h4 id="1-Overview-of-Notification-Kit"><a href="#1-Overview-of-Notification-Kit" class="headerlink" title="1. Overview of Notification Kit"></a><strong>1. Overview of Notification Kit</strong></h4><p>Notification Kit provides developers with a local notification delivery channel, enabling apps to push notifications directly to users on the client side. These notifications—triggered by app events—can include ringtones, vibrations, banners, lock screen alerts, status bar notifications, and more, similar to Android’s notification system.  </p>
+<p><strong>Example: Status Bar Icon Display</strong>  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-2.png"></p>
+<p>Users can swipe down the status bar to access the notification drawer for details and actions.  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98.png"></p>
+<p><strong>Reminder-Style Notifications</strong>:<br><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-1.png"></p>
+<p>HarmonyOS offers equivalent capabilities through Notification Kit.  </p>
+<h4 id="2-Differences-Between-Notification-Kit-Call-Kit-and-Push-Kit"><a href="#2-Differences-Between-Notification-Kit-Call-Kit-and-Push-Kit" class="headerlink" title="2. Differences Between Notification Kit, Call Kit, and Push Kit"></a><strong>2. Differences Between Notification Kit, Call Kit, and Push Kit</strong></h4><ul>
+<li><strong>Notification Kit</strong>: Developers manually invoke APIs to create and define notifications.  </li>
+<li><strong>Push Kit</strong>: Huawei’s cloud-to-device messaging platform. Integrating Push Kit enables real-time app notifications, enhancing user engagement. Push Kit runs as a system daemon, launching the app process when notifications are tapped. Display scenarios include the notification center, lock screen, banners, and badge icons.  </li>
+<li><strong>Call Kit</strong>: Manages in-app call features (e.g., one-tap answer, banners, mute). When the app is in the background, Push Kit must first wake the app process before Call Kit can handle calls.</li>
+</ul>
+<p><strong>Relationship Diagram</strong>:<br><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-3.png"></p>
+<p><strong>Key Workflow</strong>:  </p>
+<ol>
+<li>Push Kit receives a notification and wakes the app.  </li>
+<li>The app uses Notification Kit to display the alert.  </li>
+<li>Tapping the notification triggers Call Kit for call handling.</li>
+</ol>
+<h4 id="3-Notification-Kit-Features-and-APIs"><a href="#3-Notification-Kit-Features-and-APIs" class="headerlink" title="3. Notification Kit Features and APIs"></a><strong>3. Notification Kit Features and APIs</strong></h4><p><strong>Core Workflow</strong>:  </p>
+<ol>
+<li>Request notification permissions.  </li>
+<li>Publish notifications via the service.  </li>
+<li>Display notifications in the system tray.<br><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-5.png"></li>
+</ol>
+<h5 id="Requesting-Permissions"><a href="#Requesting-Permissions" class="headerlink" title="Requesting Permissions"></a><strong>Requesting Permissions</strong></h5><p>Apps must obtain user consent before sending notifications. Use <code>requestEnableNotification()</code> to prompt the user; subsequent calls skip the prompt if already granted.  </p>
+<p><strong>API Reference</strong>:  </p>
+<table>
+<thead>
+<tr>
+<th><strong>API</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>isNotificationEnabled(): Promise&lt;boolean&gt;</code></td>
+<td>Checks if notifications are enabled.</td>
+</tr>
+<tr>
+<td><code>requestEnableNotification(context: UIAbilityContext): Promise&lt;void&gt;</code></td>
+<td>Requests permission (prompts user on first call).</td>
+</tr>
+</tbody></table>
+<p><strong>Code Example</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; notificationManager &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.NotificationKit&#x27;</span>;</span><br><span class="line"><span class="comment">// ... (other imports)</span></span><br><span class="line"><span class="keyword">const</span> <span class="attr">TAG</span>: <span class="built_in">string</span> = <span class="string">&#x27;[PublishOperation]&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> context = <span class="variable language_">this</span>.<span class="title function_">getUIContext</span>().<span class="title function_">getHostContext</span>() <span class="keyword">as</span> common.<span class="property">UIAbilityContext</span>;</span><br><span class="line">notificationManager.<span class="title function_">isNotificationEnabled</span>().<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="attr">data</span>: <span class="built_in">boolean</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!data) &#123;</span><br><span class="line">    notificationManager.<span class="title function_">requestEnableNotification</span>(context).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      hilog.<span class="title function_">info</span>(<span class="variable constant_">DOMAIN_NUMBER</span>, <span class="variable constant_">TAG</span>, <span class="string">`[ANS] requestEnableNotification success`</span>);</span><br><span class="line">    &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (err.<span class="property">code</span> === <span class="number">1600004</span>) &#123; <span class="comment">// Permission denied</span></span><br><span class="line">        hilog.<span class="title function_">error</span>(<span class="variable constant_">DOMAIN_NUMBER</span>, <span class="variable constant_">TAG</span>, <span class="string">`[ANS] requestEnableNotification refused, code: <span class="subst">$&#123;err.code&#125;</span>`</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">  hilog.<span class="title function_">error</span>(<span class="variable constant_">DOMAIN_NUMBER</span>, <span class="variable constant_">TAG</span>, <span class="string">`isNotificationEnabled failed: <span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h5 id="Publishing-Notifications"><a href="#Publishing-Notifications" class="headerlink" title="Publishing Notifications"></a><strong>Publishing Notifications</strong></h5><p>Common notification types:  </p>
+<table>
+<thead>
+<tr>
+<th><strong>Type</strong></th>
+<th><strong>Style</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Text</td>
+<td><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-7.png"></td>
+<td>Max 3 lines (truncated with “…”).</td>
+</tr>
+<tr>
+<td>Multi-line Text</td>
+<td><img src="/../images/89950048fe1bbb966e818accda864be5_MD5.png"></td>
+<td>Truncates long lines.</td>
+</tr>
+<tr>
+<td>Badge</td>
+<td><img src="/../images/6db70bf2c578ac2b02881edbc5b1f8f4_MD5.png" alt="Badge"></td>
+<td>Numeric counter in top-right.</td>
+</tr>
+<tr>
+<td>Progress Bar</td>
+<td><img src="/../images/812d8b9a6d1d0a23a2f671ef6a760c90_MD5.png" alt="Progress"></td>
+<td>Shows download&#x2F;progress status.</td>
+</tr>
+</tbody></table>
+<p><strong>Example: Text Notification</strong>  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">request</span>: notificationManager.<span class="property">NotificationRequest</span> = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">content</span>: &#123;</span><br><span class="line">    <span class="attr">notificationContentType</span>: notificationManager.<span class="property">ContentType</span>.<span class="property">NOTIFICATION_CONTENT_BASIC_TEXT</span>,</span><br><span class="line">    <span class="attr">normal</span>: &#123; <span class="attr">title</span>: <span class="string">&#x27;test_title&#x27;</span>, <span class="attr">text</span>: <span class="string">&#x27;test_text&#x27;</span> &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">notificationManager.<span class="title function_">publish</span>(request, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* Handle errors */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Progress Bar Template</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Check template support</span></span><br><span class="line">notificationManager.<span class="title function_">isSupportTemplate</span>(<span class="string">&#x27;downloadTemplate&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">supported</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (supported) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">request</span>: notificationManager.<span class="property">NotificationRequest</span> = &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="attr">content</span>: &#123; <span class="comment">/* ... */</span> &#125;,</span><br><span class="line">      <span class="attr">template</span>: &#123; <span class="attr">name</span>: <span class="string">&#x27;downloadTemplate&#x27;</span>, <span class="attr">data</span>: &#123; <span class="attr">progressValue</span>: <span class="number">45</span> &#125; &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    notificationManager.<span class="title function_">publish</span>(request, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Canceling Notifications</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">notificationManager.<span class="title function_">cancel</span>(<span class="number">1</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;); <span class="comment">// Cancels notification with ID=1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-Use-Cases"><a href="#4-Use-Cases" class="headerlink" title="4. Use Cases"></a><strong>4. Use Cases</strong></h4><ul>
+<li><strong>Foreground&#x2F;Background</strong>:  <ul>
+<li>Foreground: Directly publish notifications.  </li>
+<li>Background: Requires Push Kit for cloud-delivered alerts.</li>
+</ul>
+</li>
+<li><strong>Scenarios</strong>: Syncing upload progress, payment alerts, fitness tracking.</li>
+</ul>
+<p><strong>System Limitations</strong>:  </p>
+<ul>
+<li>Max 24 notifications retained in the system tray.  </li>
+<li>200KB size limit per notification.  </li>
+<li>Rate limits: 10 new&#x2F;20 updates per second (per app); 15&#x2F;30 for all third-party apps combined.</li>
+</ul>
+<h4 id="5-IM-Scenario-Practical-Guide"><a href="#5-IM-Scenario-Practical-Guide" class="headerlink" title="5. IM Scenario Practical Guide"></a><strong>5. IM Scenario Practical Guide</strong></h4><p><strong>Basic Setup</strong>:  </p>
+<ul>
+<li><strong>Push Kit</strong>: Handles background notifications. Unlike Android, HarmonyOS cannot “keep apps alive,” so Push Kit is essential.  </li>
+<li><strong>Foreground Handling</strong>: Use <code>foregroundShow: false</code> in REST API to suppress notifications when the app is active.</li>
+</ul>
+<p><strong>Example Payload</strong>:  </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;payload&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;notification&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;foregroundShow&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;IQAAAA**********4Tw&quot;</span><span class="punctuation">]</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Custom Notifications</strong>:<br>Parse Push Kit messages and create text notifications dynamically:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">request</span>: notificationManager.<span class="property">NotificationRequest</span> = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">content</span>: &#123; <span class="attr">normal</span>: &#123; <span class="attr">title</span>: notification.<span class="property">title</span>, <span class="attr">text</span>: notification.<span class="property">text</span> &#125; &#125;</span><br><span class="line">&#125;;</span><br><span class="line">notificationManager.<span class="title function_">publish</span>(request, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Badge Management</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Increment badge count</span></span><br><span class="line">notificationManager.<span class="title function_">setBadgeNumber</span>(<span class="number">9</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Decrement after viewing a notification</span></span><br><span class="line">notificationManager.<span class="title function_">setBadgeNumber</span>(<span class="number">8</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Notification Channels</strong>:<br>Define channels for different message types (e.g., chats vs. marketing):  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">notificationManager.<span class="title function_">addSlot</span>(notificationManager.<span class="property">SlotType</span>.<span class="property">SOCIAL_COMMUNICATION</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Custom Ringtones</strong>:<br>Place audio files in <code>resources/rawfile/</code> and reference them via the <code>sound</code> field (requires app eligibility).  </p>
+<p><strong>Click Actions</strong>:<br>Use <code>WantAgent</code> to deep-link to specific app pages:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">wantAgentInfo</span>: wantAgent.<span class="property">WantAgentInfo</span> = &#123;</span><br><span class="line">  <span class="attr">wants</span>: [&#123; <span class="attr">bundleName</span>: <span class="string">&#x27;com.samples.notification&#x27;</span>, <span class="attr">abilityName</span>: <span class="string">&#x27;SecondAbility&#x27;</span> &#125;],</span><br><span class="line">  <span class="attr">actionType</span>: wantAgent.<span class="property">OperationType</span>.<span class="property">START_ABILITY</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-Summary"><a href="#6-Summary" class="headerlink" title="6. Summary"></a><strong>6. Summary</strong></h4><p>Notification Kit empowers developers to create local notifications with rich features (text, progress bars, badges, etc.), complementing Push Kit (cloud messaging) and Call Kit (call management). Key steps include:  </p>
+<ol>
+<li>Requesting permissions.  </li>
+<li>Building notification templates.  </li>
+<li>Publishing&#x2F;canceling notifications.</li>
+</ol>
+<p><strong>Best Practices</strong>:  </p>
+<ul>
+<li>Respect system limits (24 notifications, 200KB size).  </li>
+<li>Use Push Kit for background delivery.  </li>
+<li>Customize channels&#x2F;ringtones for specific scenarios.</li>
+</ul>
+<p>Ideal for IM, fitness apps, and other time-sensitive notifications.  </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-HarmonyOS-Next-Application-UI-Generation-Tool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-Introduction-to-HarmonyOS-Next-Application-UI-Generation-Tool/" class="post-title-link" itemprop="url">Introduction to HarmonyOS Next Application UI Generation Tool</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 11:13:43 / Modified: 11:19:21" itemprop="dateCreated datePublished" datetime="2025-06-27T11:13:43+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Introduction-to-HarmonyOS-Next-Application-UI-Generation-Tool"><a href="#Introduction-to-HarmonyOS-Next-Application-UI-Generation-Tool" class="headerlink" title="Introduction to HarmonyOS Next Application UI Generation Tool"></a>Introduction to HarmonyOS Next Application UI Generation Tool</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>During the adaptation and development of HarmonyOS Next, it is difficult to refer to previous logic, and the documentation may be incomplete or take a long time to access. Therefore, developers often have to refer to Android or iOS code. For some scenarios with complex logic, AI tools can be used to convert Android Java code logic into TypeScript (TS) for partial reuse. For UI scenarios, manual coding is required. Although ArkUI improves page development efficiency, the workload remains substantial for numerous pages. The official has provided a tool to convert Android APK to ArkTS pages, and this article guides you through the experience.  </p>
+<h3 id="Tool-Introduction"><a href="#Tool-Introduction" class="headerlink" title="Tool Introduction"></a>Tool Introduction</h3><p>The UI Generator is designed to quickly generate compilable and runnable HarmonyOS UI projects. It supports converting existing UI layout files (XML) into corresponding HarmonyOS UI code, including basic HarmonyOS projects, page layouts, components and properties, as well as resource files.  </p>
+<p><strong>Requirement</strong>: Use DevEco Studio 5.0.3.700 or a higher version.  </p>
+<h3 id="Tool-Configuration"><a href="#Tool-Configuration" class="headerlink" title="Tool Configuration"></a>Tool Configuration</h3><ol>
+<li><p>In DevEco Studio, open the settings page, click on “Plugins”, find the installed UI Generator plugin, and enable it:<br><img src="/../images/HarmonyOS%20Next%20%E5%BA%94%E7%94%A8UI%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D.png"></p>
+</li>
+<li><p>After enabling and confirming, click “Generate Project from …” in the toolbar:<br><img src="/../images/HarmonyOS%20Next%20%E5%BA%94%E7%94%A8UI%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D-1.png"></p>
+</li>
+<li><p>Agree to the user agreement for the first-time entry:<br>   <img src="/../images/HarmonyOS%20Next%20%E5%BA%94%E7%94%A8UI%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D-2.png"></p>
+</li>
+<li><p>Select the path of the Android APK package and the Android SDK path:<br>   <img src="/../images/HarmonyOS%20Next%20%E5%BA%94%E7%94%A8UI%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D-3.png"></p>
+</li>
+<li><p>Select the XML layout to convert:<br>   <img src="/../images/HarmonyOS%20Next%20%E5%BA%94%E7%94%A8UI%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D-4.png"></p>
+</li>
+<li><p>Click “Next”:<br>   <img src="/../images/HarmonyOS%20Next%20%E5%BA%94%E7%94%A8UI%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D-5.png"></p>
+</li>
+<li><p>Set the “Destination Path” as the path and name for the generated HarmonyOS Next public beta project. Click “Confirm” to start the conversion. The conversion log is as follows:</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">2025-01-22 12:08:02,885   In /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug</span><br><span class="line">2025-01-22 12:08:02,960   sdkdir: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk</span><br><span class="line">2025-01-22 12:08:02,960   apkpath: /Users/shen/Downloads/app-debug.apk</span><br><span class="line">2025-01-22 12:08:02,960   androidsdk: /Users/shen/Library/Android/sdk</span><br><span class="line">2025-01-22 12:08:02,960   aapt: /Users/shen/Library/Android/sdk/build-tools/34.0.0/aapt2</span><br><span class="line">2025-01-22 12:08:02,962   bash dumpres.sh /Users/shen/Downloads/app-debug.apk /Users/shen/Library/Android/sdk/build-tools/34.0.0/aapt2</span><br><span class="line">2025-01-22 12:08:05,916   run dump apk resources finished.</span><br><span class="line">2025-01-22 12:08:05,917   =================================================</span><br><span class="line">2025-01-22 12:08:05,917   /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/maple-decompile.sh exec success</span><br><span class="line">2025-01-22 12:08:05,917   =================================================</span><br><span class="line">2025-01-22 12:08:05,920   In /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/runs</span><br><span class="line">2025-01-22 12:08:05,939   dexdir: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/unzip</span><br><span class="line">2025-01-22 12:08:05,939   androiddir: /Users/shen/Library/Android/sdk</span><br><span class="line">2025-01-22 12:08:05,939   componentspath: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/runs/components.txt</span><br><span class="line">2025-01-22 12:08:05,950   bash /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/bin/component_analyze.sh --dexdump-dir=/Users/shen/Library/Android/sdk/build-tools/34.0.0/dexdump --dex-dir=/Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/unzip --mplsdk-dir=/Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk --component-include=false /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/runs/components.txt</span><br><span class="line">2025-01-22 12:08:05,965   dexdump-dir: /Users/shen/Library/Android/sdk/build-tools/34.0.0/dexdump</span><br><span class="line">2025-01-22 12:08:05,965   dex-dir: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/unzip</span><br><span class="line">2025-01-22 12:08:05,966   analysis start!</span><br><span class="line">2025-01-22 12:08:05,967   Darwin</span><br><span class="line">2025-01-22 12:08:05,967   xml analysis start</span><br><span class="line">2025-01-22 12:08:05,975   =================================================</span><br><span class="line">2025-01-22 12:08:05,975   /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/runs/maple-files-dex.sh exec success</span><br><span class="line">2025-01-22 12:08:05,975   =================================================</span><br><span class="line">2025-01-22 12:08:44,098   In /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk</span><br><span class="line">2025-01-22 12:08:44,105   Darwin</span><br><span class="line">2025-01-22 12:08:44,129   target is xml file, no need to analyze dex dependency, exit dex-crop.sh</span><br><span class="line">2025-01-22 12:08:44,130   =================================================</span><br><span class="line">2025-01-22 12:08:44,130   /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/bin/dex_crop.sh exec success</span><br><span class="line">2025-01-22 12:08:44,130   =================================================</span><br><span class="line">2025-01-22 12:08:44,143   In /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/components</span><br><span class="line">2025-01-22 12:08:44,173   cp: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/maple_deps/host_maple/bin_darwin/dex2mpl is a directory (not copied).</span><br><span class="line">2025-01-22 12:08:44,180   cp: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/autodeps/bin_darwin/dex2deps is a directory (not copied).</span><br><span class="line">2025-01-22 12:08:44,181   cp: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/autodeps/bin_darwin/gendeps is a directory (not copied).</span><br><span class="line">2025-01-22 12:08:44,183   chmod: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/autodeps/bin/*: No such file or directory</span><br><span class="line">2025-01-22 12:08:44,185   maplebinary: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/maple_deps/host_maple/bin/maple</span><br><span class="line">2025-01-22 12:08:44,185   xmldir: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/decompile</span><br><span class="line">2025-01-22 12:08:44,185   component: layout/activity_preview.xml</span><br><span class="line">2025-01-22 12:08:44,185   sdkdir: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk</span><br><span class="line">2025-01-22 12:08:44,185   apkname: app-debug</span><br><span class="line">2025-01-22 12:08:44,185   sourcedir:</span><br><span class="line">2025-01-22 12:08:44,185   mplfile: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/components/test.mpl</span><br><span class="line">2025-01-22 12:08:44,185   dexdump:</span><br><span class="line">2025-01-22 12:08:44,187   /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/maple_deps/host_maple/bin/maple --infile /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/components/test.mpl --me-opt=&quot;--O2 --quiet --no-nativeopt --meverify --threads=4 --no-ignoreipa --enable-ea&quot; --mpl2mpl-opt=&quot;--O2 --quiet --regnativefunc --deferred-visit --no-nativeopt --maplelinker --emitVtableImpl --maplelinker-nolocal --sva --android-xml=/Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/decompile --xml-to-analyze=layout/activity_preview.xml --class-to-analyze=activity_preview --config-path=/Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/config_files&quot; --save-temps</span><br><span class="line">2025-01-22 12:08:46,235   Sighandler : signal handler isn&#x27;t implemented for non-unix os</span><br><span class="line">2025-01-22 12:08:46,235   Sighandler : signal handler isn&#x27;t implemented for non-unix os</span><br><span class="line">2025-01-22 12:08:46,235   Sighandler : signal handler isn&#x27;t implemented for non-unix os</span><br><span class="line">2025-01-22 12:08:46,235   Sighandler : signal handler isn&#x27;t implemented for non-unix os</span><br><span class="line">2025-01-22 12:08:46,235   Sighandler : signal handler isn&#x27;t implemented for non-unix os</span><br><span class="line">2025-01-22 12:08:46,235   Sighandler : signal handler isn&#x27;t implemented for non-unix os</span><br><span class="line">2025-01-22 12:08:46,235   Sighandler : signal handler isn&#x27;t implemented for non-unix os</span><br><span class="line">2025-01-22 12:08:46,763   android activities cnt : 10</span><br><span class="line">2025-01-22 12:08:46,763   =&gt; Log File: android-ui-ir-activity_preview.log</span><br><span class="line">2025-01-22 12:08:46,763   ==========&gt; Save UI Generate Report to activity_preview_generation_report.json &lt;==========</span><br><span class="line">2025-01-22 12:08:46,769   =================================================</span><br><span class="line">2025-01-22 12:08:46,769   /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/components/maple.sh exec success</span><br><span class="line">2025-01-22 12:08:46,769   =================================================</span><br><span class="line">2025-01-22 12:08:46,784   In /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/components</span><br><span class="line">2025-01-22 12:08:46,787   Darwin</span><br><span class="line">2025-01-22 12:08:46,793   dexdump-dir: /Users/shen/Library/Android/sdk</span><br><span class="line">2025-01-22 12:08:46,793   dex-dir: /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/build/app-debug/unzip</span><br><span class="line">2025-01-22 12:08:46,793   cropping analysis start!</span><br><span class="line">2025-01-22 12:08:46,793   searching for all dexdump</span><br><span class="line">2025-01-22 12:08:48,812   searching for all dexdump</span><br><span class="line">2025-01-22 12:08:48,812   /Users/shen/Library/Android/sdk/build-tools/30.0.2/dexdump</span><br><span class="line">2025-01-22 12:08:48,812   searching for all dex file</span><br><span class="line">2025-01-22 12:08:48,815    1 dexdump location founded.</span><br><span class="line">2025-01-22 12:08:49,409   =================================================</span><br><span class="line">2025-01-22 12:08:49,409   /Users/shen/Library/Caches/Huawei/DevEcoStudio5.0/ui-generation/maple-sdk/bin/get_base_class.sh exec success</span><br><span class="line">2025-01-22 12:08:49,409   =================================================</span><br><span class="line">2025-01-22 12:08:49,458   Generation IR Time Elapsed: 5.368000 s</span><br><span class="line">2025-01-22 12:09:06,886   Generation Success, Generated Project Location: 2025-01-22 12:09:06,886   /Users/shen/UIGenerationProjects/UIGeneration_app-debug_activity_preview</span><br><span class="line">2025-01-22 12:09:06,886   Generation Project Time Elapsed: 0.129000 s</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">8. After opening the new project, the generated pages are located in the `entry &gt; src &gt; main &gt; ets &gt; pages` directory. You can preview the pages in the Previewer. The `entry &gt; src &gt; main &gt; resources` directory of the new project contains text, image, and color resources.  </span><br><span class="line"></span><br><span class="line">**Example**:  </span><br><span class="line">Android XML:  </span><br><span class="line">```xml</span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;  </span><br><span class="line">&lt;ScrollView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;  </span><br><span class="line">            android:layout_width=&quot;match_parent&quot;  </span><br><span class="line">            android:layout_height=&quot;match_parent&quot;  </span><br><span class="line">            android:orientation=&quot;vertical&quot;&gt;  </span><br><span class="line">  </span><br><span class="line">    &lt;LinearLayout        android:id=&quot;@+id/container&quot;  </span><br><span class="line">        android:layout_width=&quot;213dp&quot;  </span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;  </span><br><span class="line">        android:orientation=&quot;vertical&quot;&gt;  </span><br><span class="line">  </span><br><span class="line">    &lt;/LinearLayout&gt;</span><br><span class="line">&lt;/ScrollView&gt;</span><br></pre></td></tr></table></figure>
+<p>Generated ArkTS Code:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span>  </span><br><span class="line"><span class="meta">@Component</span>  </span><br><span class="line"><span class="keyword">export</span> struct activity_preview &#123;  </span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;  </span><br><span class="line">    <span class="comment">/*  </span></span><br><span class="line"><span class="comment">     * <span class="doctag">FIXME:</span> Unhandled property &#x27;android:orientation&#x27;  </span></span><br><span class="line"><span class="comment">     */</span>    <span class="title class_">Scroll</span>() &#123;  </span><br><span class="line">      <span class="title class_">Column</span>()  </span><br><span class="line">        .<span class="title function_">id</span>(<span class="string">&#x27;container&#x27;</span>)  </span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;213vp&#x27;</span>)  </span><br><span class="line">        .<span class="title function_">alignItems</span>(<span class="title class_">HorizontalAlign</span>.<span class="property">Start</span>)  </span><br><span class="line">    &#125;  </span><br><span class="line">    .<span class="title function_">align</span>(<span class="title class_">Alignment</span>.<span class="property">TopStart</span>)  </span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)  </span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Components and properties that cannot be generated will be provided in the form of comments to facilitate subsequent location and modification.</p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>Although some custom components or properties cannot be directly converted, for complex pages, this tool can help us generate the overall framework and most of the code, which can greatly improve our development efficiency. We recommend everyone to give it a try.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-HarmonyOS-Next-Logging-Tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-Introduction-to-HarmonyOS-Next-Logging-Tools/" class="post-title-link" itemprop="url">Introduction to HarmonyOS Next Logging Tools</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:41:58 / Modified: 11:10:47" itemprop="dateCreated datePublished" datetime="2025-06-27T10:41:58+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Introduction-to-HarmonyOS-Next-Logging-Tools"><a href="#Introduction-to-HarmonyOS-Next-Logging-Tools" class="headerlink" title="Introduction to HarmonyOS Next Logging Tools"></a>Introduction to HarmonyOS Next Logging Tools</h1><p>In HarmonyOS Next development, logs are the primary means for debugging and problem-solving. Whether using hilog or console, logs can ultimately be output to the log module of DevEco Studio:<br><img src="/../images/HarmonyOS%20Next%20%E6%97%A5%E5%BF%97%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D-9.png"></p>
+<p>Here, you can filter by app process, log level, and content, and perform convenient searches. However, in scenarios with frequent log updates, we may want to output logs to files. While Android provides the logcat command to export logs to the console or files, HarmonyOS Next offers a similar tool: hilog.  </p>
+<h3 id="Introduction-to-hilog-Tool"><a href="#Introduction-to-hilog-Tool" class="headerlink" title="Introduction to hilog Tool"></a>Introduction to hilog Tool</h3><p>The HiLog logging system is provided for system frameworks, services, and applications to print logs, record user operations, system status, etc. Developers can query log information via the hilog command line.  </p>
+<p>After installing DevEco Studio IDE or the HarmonyOS SDK and configuring the hdc command tool in the environment variables, you can use hdc to enter the device shell:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">hdc shell</span><br><span class="line">```  </span><br><span class="line">![](../images/HarmonyOS%20Next%20日志工具介绍-1.png)</span><br><span class="line"></span><br><span class="line">Once in the shell, execute hilog commands:  </span><br><span class="line">![](../images/HarmonyOS%20Next%20日志工具介绍-2.png) </span><br><span class="line"></span><br><span class="line">If logs refresh too quickly (less efficient than DevEco Studio&#x27;s log tool), use hilog with parameters.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### hilog Command Parameters  </span><br><span class="line"></span><br><span class="line">| Short Option | Long Option | Parameter | Description |</span><br><span class="line">| :-- | :-- | :-- | :-- |</span><br><span class="line">| -h | --help |  | Help command. |</span><br><span class="line">| Default | Default |  | Blocking log reading (does not exit). |</span><br><span class="line">| -x | --exit |  | Non-blocking log reading (exits after reading). |</span><br><span class="line">| -g |  |  | Query buffer size (use with -t to specify a type; defaults to app and core). |</span><br><span class="line">| -G | --buffer-size | &lt;size&gt; | Set the buffer size for the specified &lt;type&gt; (use with -t; defaults to app and core; units: B/K/M; range: 64K-16M). |</span><br><span class="line">| -r |  |  | Clear buffer logs (use with -t; defaults to app and core). |</span><br><span class="line">| -k |  | &lt;on/off&gt; | Kernel log reading control. |</span><br><span class="line">|  |  | on | Enable kernel log reading. |</span><br><span class="line">|  |  | off | Disable kernel log reading. |</span><br><span class="line">| -s | --statistics |  | Query statistics (requires -t or -D). |</span><br><span class="line">| -S |  |  | Clear statistics (requires -t or -D). |</span><br><span class="line">| -Q |  | &lt;control-type&gt; | Flow control quota switch. |</span><br><span class="line">|  |  | pidon | Enable process flow control. |</span><br><span class="line">|  |  | pidoff | Disable process flow control. |</span><br><span class="line">|  |  | domainon | Enable domain flow control. |</span><br><span class="line">|  |  | domainoff | Disable domain flow control. |</span><br><span class="line">| -L | --level | &lt;level&gt; | Specify log levels (e.g., -L D/I/W/E/F). |</span><br><span class="line">| -t | --type | &lt;type&gt; | Specify log types (e.g., -t app/core/init/only_prerelease; app: app logs, core: system logs, init: boot logs, only_prerelease: logs for pre-release systems, irrelevant to app developers). |</span><br><span class="line">| -D | --domain | &lt;domain&gt; | Specify a domain. |</span><br><span class="line">| -T | --tag | &lt;tag&gt; | Specify a tag. |</span><br><span class="line">| -a | --head | &lt;n&gt; | Display only the first &lt;n&gt; lines of logs. |</span><br><span class="line">| -z | --tail | &lt;n&gt; | Display only the last &lt;n&gt; lines of logs. |</span><br><span class="line">| -P | --pid | &lt;pid&gt; | Identify different PIDs. |</span><br><span class="line">| -e | --regex | &lt;expr&gt; | Print only lines matching the regular expression &lt;expr&gt;. |</span><br><span class="line">| -f | --filename | &lt;filename&gt; | Set the disk file name. |</span><br><span class="line">| -l | --length | &lt;length&gt; | Set the disk file size (must be ≥64K). |</span><br><span class="line">| -n | --number | &lt;number&gt; | Set the number of disk files. |</span><br><span class="line">| -j | --jobid | &lt;jobid&gt; | Set the disk task ID. |</span><br><span class="line">| -w | --write | &lt;control&gt; | Disk task control. |</span><br><span class="line">|  |  | query | Query disk tasks. |</span><br><span class="line">|  |  | start | Start a disk task (command line parameters: filename, single file size, disk algorithm, number of rotate files). |</span><br><span class="line">|  |  | stop | Stop the disk task. |</span><br><span class="line">|  |  | refresh | Refresh buffer logs to disk files. |</span><br><span class="line">|  |  | clear | Delete existing disk log files. |</span><br><span class="line">| -m | --stream | &lt;algorithm&gt; | Disk storage algorithm control. |</span><br><span class="line">|  |  | none | Disk storage without compression. |</span><br><span class="line">|  |  | zlib | Disk storage with zlib compression (file extension: .gz). |</span><br><span class="line">|  |  | zstd | Disk storage with zstd compression (file extension: .zst). |</span><br><span class="line">| -v | --format | &lt;format&gt; |  |</span><br><span class="line">|  |  | time | Display local time. |</span><br><span class="line">|  |  | color | Display different levels in different colors (default: black and white). |</span><br><span class="line">|  |  | epoch | Display time relative to 1970. |</span><br><span class="line">|  |  | monotonic | Display time relative to boot. |</span><br><span class="line">|  |  | usec | Display time with microsecond precision. |</span><br><span class="line">|  |  | nsec | Display time with nanosecond precision. |</span><br><span class="line">|  |  | year | Add the year to the displayed time. |</span><br><span class="line">|  |  | zone | Add the local time zone to the displayed time. |</span><br><span class="line">|  |  | wrap | When logs wrap, new lines do not add prefixes like timestamps. |</span><br><span class="line">| -b | --baselevel | &lt;loglevel&gt; | Set the minimum log level (D(DEBUG)/I(INFO)/W(WARN)/E(ERROR)/F(FATAL)). |  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### Parameter Configuration Practices  </span><br><span class="line">#### Clear Buffer Logs  </span><br><span class="line">Logs are typically cached. To avoid interference from previous logs when starting an app, clear the cache:  </span><br></pre></td></tr></table></figure>
+<p>$ hilog -r<br>Log type core,app,only_prerelease buffer clear successfully</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### Kernel Log Reading Control  </span><br><span class="line">Kernel logs are usually unnecessary during app debugging. Use `hilog -k on/off` to enable/disable them:  </span><br></pre></td></tr></table></figure>
+<p>$ hilog -k on<br>Set hilogd storing kmsg log on successfully<br>$<br>$ hilog -k off<br>Set hilogd storing kmsg log off successfully</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### View Specified Level Logs  </span><br></pre></td></tr></table></figure>
+<p>hilog -L D&#x2F;I&#x2F;W&#x2F;E&#x2F;F</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### View Specified Type Logs  </span><br></pre></td></tr></table></figure>
+<p>hilog -t app</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">![](../images/HarmonyOS%20Next%20日志工具介绍-3.png)</span><br><span class="line"></span><br><span class="line">#### View Specified Domain Logs  </span><br></pre></td></tr></table></figure>
+<p>hilog -D 01B06</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### View Specified TAG Logs  </span><br></pre></td></tr></table></figure>
+<p>hilog -T tag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### View Specified Process Logs  </span><br></pre></td></tr></table></figure>
+<p>hilog -P pid</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">![](../images/HarmonyOS%20Next%20日志工具介绍-4.png)</span><br><span class="line"></span><br><span class="line">#### View Logs Matching Regex Keywords  </span><br></pre></td></tr></table></figure>
+<p>hilog -e start</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### View and Set Disk Tasks  </span><br></pre></td></tr></table></figure>
+<p>hilog -w control</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- Query current tasks: `hilog -w query`  </span><br><span class="line">- Start hilog disk task with 1000 files: `hilog -w start -n 1000`  </span><br><span class="line">- Start kmsglog disk task with 100 files: `hilog -w start -n 100 -t kmsg`  </span><br><span class="line">- Stop current disk task: `hilog -w stop`  </span><br><span class="line">- Start kmsglog disk task with settings (compression: zlib/zstd/none):  </span><br><span class="line">  `hilog -w start -t kmsg -f kmsglog -l 2M -n 100 -m zlib`  </span><br><span class="line"></span><br><span class="line">**Examples**:  </span><br></pre></td></tr></table></figure>
+<p>$ hilog -w query<br>Persist task query failed<br>No running persistent task [CODE: -63]<br>$<br>$ hilog -w start -n 1000<br>Persist task [jobid:1][fileNum:1000][fileSize:4194304] start successfully<br>$<br>$ hilog -w start -n 100 -t kmsg<br>Persist task [jobid:2][fileNum:100][fileSize:4194304] start successfully<br>$<br>$ hilog -w stop<br>Persist task [jobid:1] stop successfully<br>Persist task [jobid:2] stop successfully<br>$<br>$ hilog -w start -t kmsg -f kmsglog -l 2M -n 100 -m zlib<br>Persist task [jobid:2][fileNum:100][fileSize:2097152] start successfully</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### Set Log Display Format  </span><br></pre></td></tr></table></figure>
+<p>hilog -v time&#x2F;color&#x2F;epoch&#x2F;monotonic&#x2F;usec&#x2F;nsec&#x2F;year&#x2F;zone&#x2F;wrap</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">![](../images/HarmonyOS%20Next%20日志工具介绍-5.png)</span><br><span class="line">![](../images/HarmonyOS%20Next%20日志工具介绍-6.png)</span><br><span class="line">This format setting facilitates console log viewing.  </span><br><span class="line"></span><br><span class="line">#### Set Minimum Printable Log Level  </span><br></pre></td></tr></table></figure>
+<p>hilog -b D&#x2F;I&#x2F;W&#x2F;E&#x2F;F</p>
+<pre><code>If logs are not displayed, this setting may be the cause.  
+
+
+### Introduction to hilogtool  
+Hilog logs are stored as encoded binary gz files. After exporting from the device&#39;s `/data/log/hilog` path, they cannot be directly unzipped and require parsing with the hilogtool to convert to plaintext:  
+![](../images/HarmonyOS%20Next%20日志工具介绍-7.png)
+
+The hilogtool is located in the SDK&#39;s `hms/toolchains` directory and used as follows:  
+- `hilogtool parse -i xxx -o xxx -d xxx`  
+- `hilogtool parse –-input xxx –-output xxx --dict xxx`  
+
+
+#### hilogtool Parsing Command Parameters  
+
+| Option | Description | Example |
+| :-- | :-- | :-- |
+| -i/–-input _inputDir_ | Specify the input path (scans all hilog files in the directory for parsing); defaults to the current directory. | Parse all hilog files in D:\temp\hilog:&lt;br&gt;`hilogtool parse -i D:\temp\hilog`&lt;br&gt;Parse current directory:&lt;br&gt;`hilogtool parse -i .` |
+| -i/–-input _inputFile_ | Parse a single hilog file. | Parse a specific file:&lt;br&gt;`hilogtool parse -i D:\temp\data\log\hilog.706.20230711-071816.gz`&lt;br&gt;`hilogtool parse -i .\hilog.706.20230711-071816.gz` |
+| -o/–-output _outputDir_ | Specify the output path for parsed logs; defaults to the input file&#39;s directory. | Parse current directory logs to D:\temp:&lt;br&gt;`hilogtool parse -i .\ -o D:\temp` |
+| -d/--dict dictFile | Specify the path to the data dictionary; defaults to matching the latest dictionary (format: hilog_dict.20230908-142200.zip) in the current directory. | Parse hilog files in D:\temp\hilog with the dictionary in the same directory:&lt;br&gt;`hilogtool parse -i D:\temp\hilog -d D:\temp\hilog\hilog_dict.20230908-142200.zip` |
+
+The data dictionary (format: hilog_dict.2024xxxx-xxxxxx.zip) is automatically generated at device boot in `/data/log/hilog`. Missing the dictionary may cause parsing failures; restarting the device regenerates it.  
+![](../images/HarmonyOS%20Next%20日志工具介绍-8.png)
+
+
+### Reference Links  
+- [hilog](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/hilog-V5)  
+- [hilogtool](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/hilog-tool-V5)  
+
+
+### Summary  
+Hilog and hilogtool help developers understand and debug applications by providing a way to view past events and errors. However, these tools are specific to Huawei&#39;s HarmonyOS platform and may not apply to other operating systems.  
+
+If developing for HarmonyOS and needing to record and analyze logs, understanding hilog and hilogtool is essential. For other platforms, seek analogous tools and methods for log management.
+</code></pre>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/" class="post-title-link" itemprop="url">Detailed Explanation of HarmonyOS Next Timer Component</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:35:56 / Modified: 10:37:22" itemprop="dateCreated datePublished" datetime="2025-06-27T10:35:56+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Detailed-Explanation-of-HarmonyOS-Next-Timer-Component"><a href="#Detailed-Explanation-of-HarmonyOS-Next-Timer-Component" class="headerlink" title="Detailed Explanation of HarmonyOS Next Timer Component"></a>Detailed Explanation of HarmonyOS Next Timer Component</h2><h3 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h3><p>In daily UI development, timer controls are frequently used. For example, time progress display during video playback and call duration display in audio&#x2F;video calls require forward-counting timer controls. In some scenarios, countdown timer controls are needed, where a maximum time is set to start the countdown. In Android, we typically use <code>TextView</code> combined with <code>Handler</code> to update the <code>TextView</code> for timing effects. HarmonyOS Next provides the <code>TextTimer</code> component to achieve timing effects. Below is an introduction to the capabilities of <code>TextTimer</code>.  </p>
+<h3 id="Introduction-to-TextTimer"><a href="#Introduction-to-TextTimer" class="headerlink" title="Introduction to TextTimer"></a>Introduction to TextTimer</h3><p><code>TextTimer</code> is a component that displays timing information through text and controls its timer state. When the component is invisible, time changes will stop. The visibility state of the component is handled based on <code>onVisibleAreaChange</code>, and a visibility threshold ratio greater than 0 is considered visible.  </p>
+<h4 id="Attribute-Introduction"><a href="#Attribute-Introduction" class="headerlink" title="Attribute Introduction"></a>Attribute Introduction</h4><ul>
+<li><code>format(value: string)</code>: Sets a custom format, which must include at least one keyword from HH, mm, ss, or SS. If date formats like yy, MM, or dd are used, default values will apply.  </li>
+<li><code>fontColor(value: ResourceColor)</code>: Sets the font color.  </li>
+<li><code>fontWeight(value: number | FontWeight | string)</code>: Sets the font weight of the text. Excessively large values may cause truncation in different fonts. For the number type, values range from <code>[100, 900]</code> with an interval of 100 (default is 400); larger values make the font bolder. The string type supports numeric string forms (e.g., “400”) and keywords like “bold”, “bolder”, “lighter”, “regular”, and “medium”, corresponding to the respective enumeration values in <code>FontWeight</code>.  </li>
+<li><code>fontFamily(value: ResourceStr)</code>: Sets the font list, with the default font being ‘HarmonyOS Sans’. Applications currently support ‘HarmonyOS Sans’ and registered custom fonts, while cards only support ‘HarmonyOS Sans’.  </li>
+<li><code>textShadow(value: ShadowOptions | Array&lt;ShadowOptions&gt;)</code>: Sets text shadow effects. This interface supports array parameters for multiple shadows, but does not support the <code>fill</code> field or intelligent color pickup mode.  </li>
+<li><code>contentModifier(modifier: ContentModifier&lt;TextTimerConfiguration&gt;)</code>: A method to customize the content area of <code>TextTimer</code>, where <code>modifier</code> is a content modifier that developers need to implement by defining a class that adheres to the <code>ContentModifier</code> interface.</li>
+</ul>
+<p>The <code>TextTimer</code> constructor requires a <code>TextTimerOptions</code> object, which includes the following attributes:  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">isCountDown</td>
+<td align="left">boolean</td>
+<td align="left">No</td>
+<td align="left">Indicates whether to use countdown. When <code>true</code>, the timer starts counting down; when <code>false</code>, it starts counting up.<br><br>Default: <code>false</code></td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">number</td>
+<td align="left">No</td>
+<td align="left">Timer duration (effective when <code>isCountDown</code> is <code>true</code>), in milliseconds. The maximum duration is 86,400,000 milliseconds (24 hours). When <code>0 &lt; count &lt; 86,400,000</code>, <code>count</code> is the initial timer value; otherwise, the default value is used.<br><br>Default: <code>60000</code></td>
+</tr>
+<tr>
+<td align="left">controller</td>
+<td align="left">TextTimerController</td>
+<td align="left">No</td>
+<td align="left">The <code>TextTimer</code> controller, used to start, pause, etc.</td>
+</tr>
+</tbody></table>
+<p>The <code>TextTimerController</code> mainly controls the timer:  </p>
+<ul>
+<li><code>start()</code>: Starts the timer.  </li>
+<li><code>pause()</code>: Pauses the timer.  </li>
+<li><code>reset()</code>: Resets the timer.</li>
+</ul>
+<h4 id="Event-Introduction"><a href="#Event-Introduction" class="headerlink" title="Event Introduction"></a>Event Introduction</h4><p>The main event is <code>onTimer</code>:  </p>
+<ul>
+<li><code>onTimer(event: (utc: number, elapsedTime: number) =&gt; void)</code>: Triggered when the time text changes. This event is not triggered when the screen is locked or the app is in the background. When setting high-precision formats (SSS, SS), the callback interval may fluctuate. The parameter <code>utc</code> is a Linux timestamp (time elapsed since January 1, 1970) in the minimum unit of the set format; <code>elapsedTime</code> is the elapsed time of the timer, also in the minimum unit of the set format.</li>
+</ul>
+<h3 id="Usage-Examples"><a href="#Usage-Examples" class="headerlink" title="Usage Examples"></a>Usage Examples</h3><h4 id="Example-1-Button-Controlled-Timer"><a href="#Example-1-Button-Controlled-Timer" class="headerlink" title="Example 1: Button-Controlled Timer"></a>Example 1: Button-Controlled Timer</h4><pre><code class="language-typescript">@Entry
+@Component
+struct TextTimerExample &#123;
+  textTimerController: TextTimerController = new TextTimerController()
+  @State format: string = &#39;mm:ss.SS&#39;
+
+  build() &#123;
+    Column() &#123;
+      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
+        .format(this.format)
+        .fontColor(Color.Black)
+        .fontSize(50)
+        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
+          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
+        &#125;)
+      Row() &#123;
+        Button(&quot;start&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.start()
+        &#125;)
+        Button(&quot;pause&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.pause()
+        &#125;)
+        Button(&quot;reset&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.reset()
+        &#125;)
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>Effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3.gif"></p>
+<h4 id="Example-2-Automatic-Timing"><a href="#Example-2-Automatic-Timing" class="headerlink" title="Example 2: Automatic Timing"></a>Example 2: Automatic Timing</h4><pre><code class="language-typescript">@Entry
+@Component
+struct TextTimerStart &#123;
+  textTimerController: TextTimerController = new TextTimerController()
+  @State format: string = &#39;mm:ss.SS&#39;
+
+  build() &#123;
+    Column() &#123;
+      Scroll()
+        .height(&#39;20%&#39;)
+      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
+        .format(this.format)
+        .fontColor(Color.Black)
+        .fontSize(50)
+        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
+          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
+        &#125;)
+        .onAppear(() =&gt; &#123;
+          this.textTimerController.start()
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-1.gif"></p>
+<h3 id="Usage-Limitations"><a href="#Usage-Limitations" class="headerlink" title="Usage Limitations"></a>Usage Limitations</h3><p>For forward-counting scenarios, the timer always starts from 0, but some scenarios require starting from a specific time. For example, in page switching during a video call, the full-screen and floating-window pages should have continuous timing instead of restarting from 0. How to achieve this?  </p>
+<p><code>TextTimer</code> provides a content area customization method <code>contentModifier</code>, which requires implementing <code>ContentModifier&lt;TextTimerConfiguration&gt;</code>:  </p>
+<ol>
+<li>First, implement <code>MyTextTimerModifier</code> and encapsulate the <code>Builder</code> method in the <code>applyContent</code> method.  </li>
+<li>Customize the UI in the custom <code>Builder</code> method.  </li>
+<li>Configure the custom <code>MyTextTimerModifier</code> to <code>TextTimer</code> using <code>contentModifier</code>.  </li>
+<li>Remove color and font configurations from <code>TextTimer</code> and configure them in the custom UI.  </li>
+<li>The <code>format</code> setting affects the unit of <code>elapsedTime</code>.  </li>
+<li>Adding an initial value to <code>config.elapsedTime</code> starts timing from a specific time.  </li>
+<li>Convert seconds to the <code>mm:ss</code> format.</li>
+</ol>
+<p><strong>Code example</strong>:  </p>
+<pre><code class="language-typescript">let startTime: number = 100;  
+
+function formatData(diffTimeBySecond: number): string &#123;  
+  const hours = Math.floor(diffTimeBySecond / 3600);  
+  const minutes = Math.floor((diffTimeBySecond % 3600) / 60);  
+  const remainingSeconds = Math.floor(diffTimeBySecond % 60);  
+  
+  // Zero-padding function  
+  const pad = (num: number) =&gt; num.toString().padStart(2, &#39;0&#39;);  
+  
+  return hours &gt; 0  
+    ? `$&#123;pad(hours)&#125;:$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`  
+    : `$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`;  
+&#125;  
+class MyTextTimerModifier implements ContentModifier&lt;TextTimerConfiguration&gt; &#123;  
+  constructor() &#123;  
+  &#125;  
+  applyContent(): WrappedBuilder&lt;[TextTimerConfiguration]&gt; &#123;  
+    return wrapBuilder(buildTextTimer)  
+  &#125;  
+&#125;  
+  
+@Builder  
+function buildTextTimer(config: TextTimerConfiguration) &#123;  
+  Column() &#123;  
+      Column() &#123;  
+        Text(formatData(config.elapsedTime + startTime)).fontColor(Color.Red)  
+    &#125;  
+  &#125;&#125;  
+  
+@Entry  
+@Component  
+struct Index &#123;  
+  @State count: number = 10000  
+  @State myTimerModifier: MyTextTimerModifier = new MyTextTimerModifier()  
+  countUpTextTimerController: TextTimerController = new TextTimerController()  
+  
+  build() &#123;  
+    Row() &#123;  
+      Column() &#123;  
+        TextTimer(&#123; isCountDown: false, controller: this.countUpTextTimerController &#125;)  
+          .contentModifier(this.myTimerModifier)  
+          .onTimer((utc: number, elapsedTime: number) =&gt; &#123;  
+            console.info(&#39;textTimer onTimer utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)  
+          &#125;)  
+        Row() &#123;  
+          Button(&quot;start&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.start()  
+          &#125;).margin(10)  
+          Button(&quot;pause&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.pause()  
+          &#125;).margin(10)  
+          Button(&quot;reset&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.reset()  
+          &#125;).margin(10)  
+        &#125;.margin(20)  
+      &#125;.width(&#39;100%&#39;)  
+    &#125;.height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p>Final effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-2.gif"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/" class="post-title-link" itemprop="url">In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:33:47 / Modified: 10:34:06" itemprop="dateCreated datePublished" datetime="2025-06-27T10:33:47+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications"><a href="#In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications" class="headerlink" title="In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications"></a>In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications</h1><h2 id="I-Introduction"><a href="#I-Introduction" class="headerlink" title="I. Introduction"></a>I. Introduction</h2><p>In the context of the rapid development of the software industry, the performance, development efficiency, and cross-platform compatibility of applications have become core concerns for developers. As a key tool in the software development process, the performance and features of a compiler directly affect software quality and development cycles. Huawei’s Ark Compiler is an innovative solution designed to meet these needs. Ark Bytecode, as the core product of the Ark Compiler, plays a crucial role in the entire compilation and runtime process. It serves not only as an intermediate bridge for code transformation from high-level languages to machine-executable forms but also embodies numerous optimized and innovative design concepts. Based on Huawei Developer Documentation (<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5</a>), this article provides a comprehensive and in-depth exploration of Ark Bytecode principles, analyzing its architecture, features, and practical application scenarios through rich examples to help developers better understand and leverage this advanced technology.  </p>
+<h2 id="II-Fundamental-Architecture-of-Ark-Bytecode"><a href="#II-Fundamental-Architecture-of-Ark-Bytecode" class="headerlink" title="II. Fundamental Architecture of Ark Bytecode"></a>II. Fundamental Architecture of Ark Bytecode</h2><h3 id="2-1-Nature-and-Role-of-Bytecode"><a href="#2-1-Nature-and-Role-of-Bytecode" class="headerlink" title="2.1 Nature and Role of Bytecode"></a>2.1 Nature and Role of Bytecode</h3><p>Ark Bytecode is a binary file generated by the Ark Compiler after compiling ArkTS&#x2F;TS&#x2F;JS code. Macroscopically, it serves as an intermediate representation (IR) between high-level programming languages and low-level machine code. High-level language code features rich syntax structures and human-readable expressions but cannot be directly executed by computers. Machine code, conversely, is binary instructions directly recognizable by computers, yet writing and maintaining it is extremely challenging for developers. Ark Bytecode resolves this contradiction by transforming high-level language logic into a unified, processable intermediate form that preserves code semantics while facilitating subsequent optimization and execution. The Ark runtime can interpret and execute bytecode, enabling programs to run on different hardware platforms and operating systems, thus achieving cross-platform compatibility.  </p>
+<h3 id="2-2-Detailed-Explanation-of-Instruction-Composition"><a href="#2-2-Detailed-Explanation-of-Instruction-Composition" class="headerlink" title="2.2 Detailed Explanation of Instruction Composition"></a>2.2 Detailed Explanation of Instruction Composition</h3><p>An Ark Bytecode instruction consists of an opcode (instruction name) and an argument list. The opcode is the core identifier of an instruction, determining the specific operation it performs. Opcodes are categorized into prefix-free and prefixed types:  </p>
+<ul>
+<li><strong>Prefix-free opcodes</strong> are typically encoded as 8-bit values. This design prioritizes frequently used instructions, reducing instruction encoding length to save storage and improve execution efficiency.  </li>
+<li><strong>Prefixed opcodes</strong> (16-bit) address the limitation of 256 8-bit opcodes as compiler functionality expands. Stored in little-endian format, they combine an 8-bit prefix with an 8-bit opcode (encoded as <code>opcode &lt;&lt; 8 | prefix</code>). Specific prefixes serve distinct purposes:  <ul>
+<li><strong>0xfe (throw)</strong>: Conditional&#x2F;unconditional throw instructions for exception handling.  </li>
+<li><strong>0xfd (wide)</strong>: Instructions with wider immediate values, IDs, or register indices.  </li>
+<li><strong>0xfc (deprecated)</strong>: Instructions no longer generated by the compiler but maintained for runtime compatibility.  </li>
+<li><strong>0xfb (callruntime)</strong>: Instructions for invoking runtime methods.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Example of a complex ArkTS function</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">calculate</span>(<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">operation</span>: <span class="built_in">string</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (operation === <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operation === <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> a - b;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string">**Corresponding Ark Bytecode instructions**:  </span></span><br></pre></td></tr></table></figure>
+<p>.function any .calculate(any a0, any a1, any a2) {<br>    lda a2<br>    ldstr 0x0  ; Load string ‘+’<br>    cmp_eq<br>    bz 0x8    ; Jump if not equal<br>    lda a0<br>    sta v0<br>    lda a1<br>    add2 0x1, v0<br>    return<br>.label 0x8<br>    lda a2<br>    ldstr 0x1  ; Load string ‘-‘<br>    cmp_eq<br>    bz 0x14   ; Jump if not equal<br>    lda a0<br>    sta v0<br>    lda a1<br>    sub2 0x1, v0<br>    return<br>.label 0x14<br>    ldai 0x0<br>    return<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">In this example, `lda` loads parameters/constants into registers; `ldstr` loads strings; `cmp_eq` compares values; `bz` enables conditional jumps; `add2` and `sub2` perform arithmetic operations. These opcodes and arguments implement the function&#x27;s logic and calculations.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 2.3 In-depth Understanding of Registers and Accumulators  </span><br><span class="line">The Ark Virtual Machine (VM) model is register-based, with all registers being virtual. Registers temporarily store data during program execution:  </span><br><span class="line">- For primitive types (e.g., integers, floats), registers are 64-bit wide.  </span><br><span class="line">- For object types, registers are wide enough to hold object references.  </span><br><span class="line"></span><br><span class="line">The **accumulator (acc)** is a special invisible register serving as the default target and parameter for many instructions. Its use simplifies instruction encoding (e.g., `lda` loads values into `acc` for subsequent operations), reduces encoding width, and improves execution efficiency by minimizing register data transfers and memory accesses.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## III. Value Storage Methods of Ark Bytecode  </span><br><span class="line"></span><br><span class="line">### 3.1 Global Variables  </span><br><span class="line">In Script compilation mode, global variables are stored in a global unique map (key-value pairs, where keys are variable names and values are variable values). Global variables exist throughout the program lifecycle and can be accessed by any function, with access/operations enabled via global-related instructions.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS code**:  </span><br><span class="line">```typescript</span><br><span class="line">let globalCounter = 0;</span><br><span class="line">function incrementGlobal() &#123;</span><br><span class="line">    globalCounter++;</span><br><span class="line">&#125;</span><br><span class="line">function getGlobalCounter() &#123;</span><br><span class="line">    return globalCounter;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Corresponding bytecode instructions** (simplified):  </span><br></pre></td></tr></table></figure>
+<p>tryldglobalbyname 0x0, globalCounter<br>sta v0<br>ldai 0x1<br>add2 0x1, v0<br>trystglobalbyname 0x2, globalCounter</p>
+<p>.function any .getGlobalCounter(any a0, any a1, any a2) {<br>    tryldglobalbyname 0x0, globalCounter<br>    return<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- `tryldglobalbyname` attempts to load `globalCounter` into `acc` (throws an exception if not found).  </span><br><span class="line">- `trystglobalbyname` stores `acc` value into `globalCounter`.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.2 Module Namespaces and Module Variables  </span><br><span class="line">In modern software development, modularization improves code maintainability and reusability. Module namespaces and variables used in source files are compiled into arrays, with instructions referencing them via indices. Module variables include local and external types, loaded by different instructions.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS code**:  </span><br><span class="line">```typescript</span><br><span class="line">// module.ts</span><br><span class="line">export let moduleVar = 100;</span><br><span class="line"></span><br><span class="line">// main.ts</span><br><span class="line">import &#123; moduleVar &#125; from &#x27;./module&#x27;;</span><br><span class="line">function useModuleVar() &#123;</span><br><span class="line">    return moduleVar * 2;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Corresponding bytecode instructions**:  </span><br></pre></td></tr></table></figure>
+<p>ldexternalmodulevar 0x0<br>sta v0<br>ldai 0x2<br>mul2 0x1, v0<br>return</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">`ldexternalmodulevar` loads `moduleVar` from the external module into register `v0`, followed by multiplication and return via `mul2`.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.3 Lexical Environments and Lexical Variables  </span><br><span class="line">Lexical environments and variables are crucial for functional programming and closure implementation. A lexical environment is an array of slots, each corresponding to a lexical variable. A method may associate with multiple lexical environments, with instructions specifying variables via relative hierarchy numbers and slot indices.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS closure code**:  </span><br><span class="line">```typescript</span><br><span class="line">function outerFunction() &#123;</span><br><span class="line">    let outerVariable = 10;</span><br><span class="line">    function innerFunction() &#123;</span><br><span class="line">        let innerVariable = 5;</span><br><span class="line">        return outerVariable + innerVariable;</span><br><span class="line">    &#125;</span><br><span class="line">    return innerFunction;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let closure = outerFunction();</span><br><span class="line">let result = closure();</span><br><span class="line">```  </span><br><span class="line">**Bytecode instruction analysis**:  </span><br></pre></td></tr></table></figure>
+<p>.function any .outerFunction(any a0, any a1, any a2) {<br>    newlexenv 0x1<br>    ldai 0xa<br>    stlexvar 0x0, 0x0<br>    definefunc 0x0, .innerFunction, 0x0<br>    sta v0<br>    return<br>}</p>
+<p>.function any .innerFunction(any a0, any a1, any a2) {<br>    ldai 0x5<br>    sta v1<br>    ldlexvar 0x0, 0x0<br>    sta v0<br>    lda v1<br>    add2 0x1, v0<br>    return<br>}</p>
+<pre><code>- `newlexenv 0x1`: Creates a lexical environment with 1 slot, enters it, and stores it in `acc`.  
+- `stlexvar 0x0, 0x0`: Stores `outerVariable` (10) into slot 0 of the lexical environment 0 levels away.  
+- `ldlexvar 0x0, 0x0`: Loads `outerVariable` from slot 0 of the lexical environment 0 levels away into `acc` within `innerFunction`.  
+
+This mechanism ensures closures can correctly access outer scope variables even after the outer function has executed.  
+
+
+### 3.4 Shared Lexical Environments  
+A shared lexical environment is a special type where each lexical variable has a `sendable` attribute, enabling safe cross-execution-context sharing. This is critical for multithreading or distributed computing.  
+
+**Example in a multithreaded scenario**:  
+```typescript
+function createSharedEnv() &#123;
+    let sharedVariable = 0;
+    function increment() &#123;
+        sharedVariable++;
+    &#125;
+    function getValue() &#123;
+        return sharedVariable;
+    &#125;
+    return &#123; increment, getValue &#125;;
+&#125;
+
+let shared = createSharedEnv();
+// Multiple threads/contexts can call shared.increment() and shared.getValue()
+</code></pre>
+<p>Bytecode for shared lexical environments uses special instructions (e.g., synchronization) to ensure thread-safe access to shared variables, preventing data races.  </p>
+<h2 id="IV-Advantages-and-Application-Scenarios-of-Ark-Bytecode"><a href="#IV-Advantages-and-Application-Scenarios-of-Ark-Bytecode" class="headerlink" title="IV. Advantages and Application Scenarios of Ark Bytecode"></a>IV. Advantages and Application Scenarios of Ark Bytecode</h2><h3 id="4-1-Advantages"><a href="#4-1-Advantages" class="headerlink" title="4.1 Advantages"></a>4.1 Advantages</h3><h4 id="4-1-1-Performance-Optimization"><a href="#4-1-1-Performance-Optimization" class="headerlink" title="4.1.1 Performance Optimization"></a>4.1.1 Performance Optimization</h4><p>Ark Bytecode excels in performance optimization through its well-designed instruction set and value storage:  </p>
+<ul>
+<li>The accumulator reduces memory accesses and instruction length.  </li>
+<li>Compile-time optimizations include constant folding, dead code elimination, and inlining of frequently executed code blocks.</li>
+</ul>
+<p><strong>Example of inlining optimization</strong>:  </p>
+<pre><code class="language-typescript">function square(x: number) &#123;
+    return x * x;
+&#125;
+
+let result = square(5);
+</code></pre>
+<p>The compiler may inline <code>square(5)</code> as <code>5 * 5</code>, calculating the constant 25 at compile time for direct return, enhancing efficiency.  </p>
+<h4 id="4-1-2-Cross-Platform-Compatibility"><a href="#4-1-2-Cross-Platform-Compatibility" class="headerlink" title="4.1.2 Cross-Platform Compatibility"></a>4.1.2 Cross-Platform Compatibility</h4><p>As an intermediate representation, Ark Bytecode ensures cross-platform compatibility. It can be interpreted by the Ark runtime across hardware platforms and OSes, allowing “write once, run anywhere” development. For example, an ArkTS app compiled into bytecode runs on HarmonyOS-powered phones, tablets, and smartwatches, reducing development and maintenance costs.  </p>
+<h4 id="4-1-3-Improved-Development-Efficiency"><a href="#4-1-3-Improved-Development-Efficiency" class="headerlink" title="4.1.3 Improved Development Efficiency"></a>4.1.3 Improved Development Efficiency</h4><p>The Ark Compiler quickly compiles high-level code into bytecode, reducing development and debugging time. The intermediate representation also facilitates debugging and optimization through specialized tools. The concise, unified instruction set helps developers understand execution logic, further boosting efficiency.  </p>
+<h2 id="V-Conclusion"><a href="#V-Conclusion" class="headerlink" title="V. Conclusion"></a>V. Conclusion</h2><p>Ark Bytecode, as the core product of the Ark Compiler, holds a pivotal position in modern software development. By deeply understanding its fundamental architecture, value storage methods, advantages, and application scenarios, developers can fully leverage its capabilities to significantly enhance program performance and development efficiency. Its unique instruction design, diverse value storage mechanisms, and outstanding performance in optimization and cross-platform compatibility enable broad applications across multiple domains.  </p>
+<p>The architecture—with opcodes and prefixes balancing efficiency and extensibility, and registers&#x2F;accumulators optimizing execution—forms a robust foundation. Value storage designs (global variables, module systems, lexical environments, and shared environments) provide flexible support for variable management, especially in closures and multithreading.  </p>
+<p>Huawei Developer Documentation (<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5</a>) serves as a comprehensive resource for in-depth learning. By exploring Ark Bytecode’s potential through this documentation, developers can contribute innovative solutions to the software industry. As technology advances, Ark Bytecode is poised to showcase its unique strengths in broader fields, driving progress in the software industry.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1099,869 +1903,6 @@ struct Child &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/128-Daily-HarmonyOS-Next-Knowledge-Component-Size-Acquisition-No-Track-Solution-Poster-Component-Routing-Table-Text-Gradient-Effect/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/128-Daily-HarmonyOS-Next-Knowledge-Component-Size-Acquisition-No-Track-Solution-Poster-Component-Routing-Table-Text-Gradient-Effect/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Component Size Acquisition, No-Track Solution, Poster Component, Routing Table, Text Gradient Effect</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:11:00 / Modified: 10:11:19" itemprop="dateCreated datePublished" datetime="2025-06-27T10:11:00+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Component-Size-Acquisition-No-Track-Solution-Poster-Component-Routing-Table-Text-Gradient-Effect"><a href="#Daily-HarmonyOS-Next-Knowledge-Component-Size-Acquisition-No-Track-Solution-Poster-Component-Routing-Table-Text-Gradient-Effect" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Component Size Acquisition, No-Track Solution, Poster Component, Routing Table, Text Gradient Effect"></a>[Daily HarmonyOS Next Knowledge] Component Size Acquisition, No-Track Solution, Poster Component, Routing Table, Text Gradient Effect</h3><h4 id="1-How-to-Obtain-the-Size-of-a-Component-in-HarmonyOS"><a href="#1-How-to-Obtain-the-Size-of-a-Component-in-HarmonyOS" class="headerlink" title="1. How to Obtain the Size of a Component in HarmonyOS?"></a>1. How to Obtain the Size of a Component in HarmonyOS?</h4><p>In addition to <code>onAreaChange</code>, you can use <code>componentUtils.getRectangleById(&quot;componentID&quot;)</code> to get the component’s size information. Note that the units differ: <code>getRectangleById</code> returns pixels (px), while <code>onAreaChange</code> uses viewport units (vp).  </p>
-<p>Reference document:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-uicontext-V5#getrectanglebyid">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-uicontext-V5#getrectanglebyid</a>  </p>
-<h4 id="2-HarmonyOS-No-Track-Solution"><a href="#2-HarmonyOS-No-Track-Solution" class="headerlink" title="2. HarmonyOS No-Track Solution"></a>2. HarmonyOS No-Track Solution</h4><p>Refer to the tracking solutions in the following links:  </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0203905239627610146?fid=0101271690375130218">https://developer.huawei.com/consumer/cn/forum/topic/0203905239627610146?fid=0101271690375130218</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0201755572813140726?fid=0101587866109860105">https://developer.huawei.com/consumer/cn/forum/topic/0201755572813140726?fid=0101587866109860105</a></li>
-</ul>
-<h4 id="3-How-to-Achieve-Text-Gradient-Effects-in-HarmonyOS"><a href="#3-How-to-Achieve-Text-Gradient-Effects-in-HarmonyOS" class="headerlink" title="3. How to Achieve Text Gradient Effects in HarmonyOS?"></a>3. How to Achieve Text Gradient Effects in HarmonyOS?</h4><p>Use a combination of <code>linearGradient</code> and <code>blendMode</code> to achieve this effect.  </p>
-<p><strong>Reference demo</strong>:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">GradientTest</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello World&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Row</span>() &#123;</span><br><span class="line">          <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">            .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">            .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">            .<span class="title function_">blendMode</span>(<span class="title class_">BlendMode</span>.<span class="property">DST_IN</span>, <span class="title class_">BlendApplyType</span>.<span class="property">OFFSCREEN</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">linearGradient</span>(&#123;</span><br><span class="line">          <span class="attr">direction</span>: <span class="title class_">GradientDirection</span>.<span class="property">Right</span>,</span><br><span class="line">          <span class="attr">colors</span>: [[<span class="number">0xff0000</span>, <span class="number">0.0</span>], [<span class="number">0x0000ff</span>, <span class="number">0.3</span>], [<span class="number">0xffff00</span>, <span class="number">1.0</span>]]</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">blendMode</span>(<span class="title class_">BlendMode</span>.<span class="property">SRC_OVER</span>, <span class="title class_">BlendApplyType</span>.<span class="property">OFFSCREEN</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. HarmonyOS Component for Generating Posters  </span></span><br><span class="line"><span class="string">A third-party library and online design tool with poster design and image editing functions, based on the open-source Canvas version of [Gaoding Design]. Suitable for various scenarios, such as poster generation, e-commerce product image creation, long-form article image design, video/WeChat official account cover editing, etc.  </span></span><br><span class="line"><span class="string">https://gitee.com/dromara/yft-design  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. HarmonyOS Navigation: System Routing Table Fails to Pass Parameters to Pages  </span></span><br><span class="line"><span class="string">Refer to the following demo:  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**index.ets**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Builder</span></span><br><span class="line"><span class="title function_">routerMap</span>(<span class="params"><span class="attr">builderName</span>: <span class="built_in">string</span>, <span class="attr">param</span>: <span class="built_in">object</span></span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (builderName === <span class="string">&#x27;featureA&#x27;</span>) &#123;</span><br><span class="line">    <span class="title class_">FeatureIndex</span>(param);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">aboutToAppear</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">entryHapRouter</span>.<span class="title function_">pushPathByName</span>(<span class="string">&quot;featureA&quot;</span>, <span class="string">&quot;测试&quot;</span>, <span class="literal">true</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**FeatureIndex.ets**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Builder</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">FeatureIndex</span>(<span class="params"><span class="attr">value</span>: <span class="built_in">object</span></span>) &#123;</span><br><span class="line">  <span class="title class_">NavDestination</span>() &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;Hello FeatureA Page&#x27;</span>)</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">`传入的参数：<span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(value)&#125;</span>`</span>)</span><br><span class="line">        .<span class="title function_">margin</span>(<span class="number">20</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  .<span class="title function_">hideTitleBar</span>(<span class="literal">true</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Parameter passing via routing table**:  </span></span><br><span class="line"><span class="string">**index.ets**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">NavigationExample</span> &#123;</span><br><span class="line">  <span class="comment">// Bind NavPathStack</span></span><br><span class="line">  <span class="meta">@Provide</span>(<span class="string">&#x27;NavPathStack&#x27;</span>) <span class="attr">pageInfo</span>: <span class="title class_">NavPathStack</span> = <span class="keyword">new</span> <span class="title class_">NavPathStack</span>()</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Navigation</span>(<span class="variable language_">this</span>.<span class="property">pageInfo</span>) &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Button</span>(<span class="string">&#x27;StartTest&#x27;</span>, &#123; <span class="attr">stateEffect</span>: <span class="literal">true</span>, <span class="attr">type</span>: <span class="title class_">ButtonType</span>.<span class="property">Capsule</span> &#125;)</span><br><span class="line">          .<span class="title function_">width</span>(<span class="string">&#x27;80%&#x27;</span>)</span><br><span class="line">          .<span class="title function_">height</span>(<span class="number">40</span>)</span><br><span class="line">          .<span class="title function_">margin</span>(<span class="number">20</span>)</span><br><span class="line">          .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">pageInfo</span>.<span class="title function_">pushPath</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;pageOne&#x27;</span>, <span class="attr">param</span>: <span class="string">&quot;测试参数&quot;</span> &#125;);</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;.<span class="title function_">title</span>(<span class="string">&#x27;NavIndex&#x27;</span>)</span><br><span class="line">    .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Orange</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**PageOne.ets (child page bound to NavPathStack)**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Consume</span>(<span class="string">&#x27;NavPathStack&#x27;</span>) <span class="attr">pageInfo</span>: <span class="title class_">NavPathStack</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">aboutToAppear</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">message</span> = <span class="variable language_">this</span>.<span class="property">pageInfo</span>.<span class="title function_">getParamByIndex</span>(<span class="number">0</span>) <span class="keyword">as</span> <span class="built_in">string</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="variable language_">this</span>.<span class="property">pageInfo</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/127-Daily-HarmonyOS-Next-Knowledge-Uniform-List-Scrolling-Page-Routing-Stack-Check-Navigation-Bar-Line-Scroll-Conflict-Progress-Bar-Radius-Customization/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/127-Daily-HarmonyOS-Next-Knowledge-Uniform-List-Scrolling-Page-Routing-Stack-Check-Navigation-Bar-Line-Scroll-Conflict-Progress-Bar-Radius-Customization/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Uniform List Scrolling, Page Routing Stack Check, Navigation Bar Line, Scroll Conflict, Progress Bar Radius Customization</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:08:54 / Modified: 10:10:08" itemprop="dateCreated datePublished" datetime="2025-06-27T10:08:54+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Uniform-List-Scrolling-Page-Routing-Stack-Check-Navigation-Bar-Line-Scroll-Conflict-Progress-Bar-Radius-Customization"><a href="#Daily-HarmonyOS-Next-Knowledge-Uniform-List-Scrolling-Page-Routing-Stack-Check-Navigation-Bar-Line-Scroll-Conflict-Progress-Bar-Radius-Customization" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Uniform List Scrolling, Page Routing Stack Check, Navigation Bar Line, Scroll Conflict, Progress Bar Radius Customization"></a>[Daily HarmonyOS Next Knowledge] Uniform List Scrolling, Page Routing Stack Check, Navigation Bar Line, Scroll Conflict, Progress Bar Radius Customization</h3><h4 id="1-How-to-Set-Uniform-Scrolling-for-HarmonyOS-List-Component"><a href="#1-How-to-Set-Uniform-Scrolling-for-HarmonyOS-List-Component" class="headerlink" title="1. How to Set Uniform Scrolling for HarmonyOS List Component?"></a>1. How to Set Uniform Scrolling for HarmonyOS List Component?</h4><ul>
-<li><code>edgeEffect.None</code>: Sets the edge scrolling effect, supporting spring and shadow effects.  </li>
-<li><code>friction</code>: Sets the friction coefficient, effective when manually sliding the scroll area. It only affects the inertial scrolling process and indirectly influences the chain effect during inertial scrolling.</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#listscroller11%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#listscroller11%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E</a>  </p>
-<h4 id="2-How-to-Determine-if-a-Page-Exists-in-the-Routing-Stack-Using-HarmonyOS-Router"><a href="#2-How-to-Determine-if-a-Page-Exists-in-the-Routing-Stack-Using-HarmonyOS-Router" class="headerlink" title="2. How to Determine if a Page Exists in the Routing Stack Using HarmonyOS Router?"></a>2. How to Determine if a Page Exists in the Routing Stack Using HarmonyOS Router?</h4><p>To check if a Page is active and exists in the routing stack (i.e., whether an Entry component is still alive):  </p>
-<ul>
-<li>The <code>router</code> does not support methods to check if a page is in the routing stack. It is recommended to use <code>navigation</code> instead, as <code>router</code> will stop evolving and no new capabilities will be added. In <code>navigation</code>, you can use <code>getAllPathName</code> to obtain the names of all NavDestination pages in the stack.</li>
-</ul>
-<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10</a>  </p>
-<h4 id="3-How-to-Add-a-Horizontal-Line-to-the-Top-of-the-Tabs-Navigation-Bar-in-HarmonyOS"><a href="#3-How-to-Add-a-Horizontal-Line-to-the-Top-of-the-Tabs-Navigation-Bar-in-HarmonyOS" class="headerlink" title="3. How to Add a Horizontal Line to the Top of the Tabs Navigation Bar in HarmonyOS?"></a>3. How to Add a Horizontal Line to the Top of the Tabs Navigation Bar in HarmonyOS?</h4><p>To add a horizontal line to the top of the Tabs navigation bar:  </p>
-<ul>
-<li>Add a border style. Refer to the documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-border-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-border-V5</a></li>
-</ul>
-<p><strong>Reference Demo</strong>:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">.<span class="title function_">border</span>(&#123;</span><br><span class="line">  <span class="attr">width</span>: &#123; <span class="attr">left</span>: <span class="number">0</span>, <span class="attr">right</span>: <span class="number">0</span>, <span class="attr">top</span>: <span class="number">3</span>, <span class="attr">bottom</span>: <span class="number">0</span> &#125;,</span><br><span class="line">  <span class="attr">color</span>: &#123;<span class="attr">left</span>:<span class="title class_">Color</span>.<span class="property">White</span>, <span class="attr">right</span>:<span class="title class_">Color</span>.<span class="property">White</span>, <span class="attr">top</span>: <span class="title class_">Color</span>.<span class="property">Red</span>, <span class="attr">bottom</span>:<span class="title class_">Color</span>.<span class="property">White</span>&#125;,</span><br><span class="line">  <span class="attr">style</span>: &#123;</span><br><span class="line">    <span class="attr">top</span>: <span class="title class_">BorderStyle</span>.<span class="property">Solid</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. Touch Scrolling Conflict with Scroll Components in HarmonyOS  </span></span><br><span class="line"><span class="string">When parent component A moves via `</span>onTouch<span class="string">` events (pull-down/up sliding), and child component B (Scroll, Web, etc.) scrolls simultaneously, how to avoid gesture conflicts:  </span></span><br><span class="line"><span class="string">- Refer to the documentation: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-gesture-events-multi-level-gesture-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. How to Customize the Radius of a HarmonyOS Progress Bar?  </span></span><br><span class="line"><span class="string">To customize the radius for `</span><span class="title class_">ProgressType</span>.<span class="property">Linear</span><span class="string">` and achieve a 16x8 size with a radius of 2:  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Reference Demo**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="comment">// xxx.ets</span></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">ProgressExample</span> &#123;</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">15</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;Linear Progress&#x27;</span>).<span class="title function_">fontSize</span>(<span class="number">9</span>).<span class="title function_">fontColor</span>(<span class="number">0xCCCCCC</span>).<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">      <span class="title class_">Progress</span>(&#123; <span class="attr">value</span>: <span class="number">20</span>, <span class="attr">total</span>: <span class="number">100</span>, <span class="attr">type</span>: <span class="title class_">ProgressType</span>.<span class="property">Linear</span> &#125;)</span><br><span class="line">        .<span class="title function_">width</span>(<span class="number">200</span>)</span><br><span class="line">        .<span class="title function_">backgroundColor</span>(<span class="string">&#x27;#B3E54C&#x27;</span>)</span><br><span class="line">        .<span class="title function_">style</span>(&#123; <span class="attr">strokeRadius</span>: <span class="number">0</span>, <span class="attr">strokeWidth</span>: <span class="number">100</span> ,&#125;)</span><br><span class="line">        .<span class="title function_">color</span>(<span class="string">&#x27;#917AF9&#x27;</span>)</span><br><span class="line">        .<span class="title function_">borderColor</span>(<span class="string">&#x27;#00000000&#x27;</span>)</span><br><span class="line">        .<span class="title function_">borderRadius</span>(<span class="number">20</span>)</span><br><span class="line">        .<span class="title function_">clip</span>(<span class="literal">true</span>)</span><br><span class="line">    &#125;.<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>).<span class="title function_">margin</span>(&#123; <span class="attr">top</span>: <span class="number">30</span> &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/126-Daily-HarmonyOS-Next-Knowledge-Web-Interaction-List-Dragging-Landscape-Layout-Event-Sequence-Issues-Scroll-and-Web-Combination/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/126-Daily-HarmonyOS-Next-Knowledge-Web-Interaction-List-Dragging-Landscape-Layout-Event-Sequence-Issues-Scroll-and-Web-Combination/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Web Interaction, List Dragging, Landscape Layout, Event Sequence Issues, Scroll and Web Combination</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:06:46 / Modified: 10:07:45" itemprop="dateCreated datePublished" datetime="2025-06-27T10:06:46+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Web-Interaction-List-Dragging-Landscape-Layout-Event-Sequence-Issues-Scroll-and-Web-Combination"><a href="#Daily-HarmonyOS-Next-Knowledge-Web-Interaction-List-Dragging-Landscape-Layout-Event-Sequence-Issues-Scroll-and-Web-Combination" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Web Interaction, List Dragging, Landscape Layout, Event Sequence Issues, Scroll and Web Combination"></a>[Daily HarmonyOS Next Knowledge] Web Interaction, List Dragging, Landscape Layout, Event Sequence Issues, Scroll and Web Combination</h3><h4 id="1-How-to-Interact-with-Web-Pages-in-HarmonyOS-Using-JS"><a href="#1-How-to-Interact-with-Web-Pages-in-HarmonyOS-Using-JS" class="headerlink" title="1. How to Interact with Web Pages in HarmonyOS (Using JS)?"></a>1. How to Interact with Web Pages in HarmonyOS (Using JS)?</h4><p>Refer to the documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-arkweb-1-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-arkweb-1-V5</a>  </p>
-<p>Implement a JSBridge communication solution by encapsulating <code>javaScriptProxy</code> and <code>runJavaScript</code>. Use the Web component’s <code>javaScriptProxy</code> to inject native-side interfaces into the H5’s <code>window</code> object. Execute JS scripts in H5 via the <code>runJavaScript</code> interface and obtain execution results in the callback. The specific call process is shown in the figure below:<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.26.png"></p>
-<h4 id="2-How-to-Implement-Drag-and-Drop-Sorting-for-ListItems-in-HarmonyOS"><a href="#2-How-to-Implement-Drag-and-Drop-Sorting-for-ListItems-in-HarmonyOS" class="headerlink" title="2. How to Implement Drag-and-Drop Sorting for ListItems in HarmonyOS?"></a>2. How to Implement Drag-and-Drop Sorting for ListItems in HarmonyOS?</h4><p>Lists can achieve this through drag events <code>onItemDragMove</code> and <code>onItemDrop</code>.  </p>
-<p><strong>Demo</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct ListExample &#123;
-  @State arr: number[] = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-  @State dragItem: number = -1
-
-  // Dragging element (note: not the index)
-  @Builder
-  dragFloatView(item: number) &#123;
-    Column() &#123;
-      Text(&#39;&#39; + item)
-        .textAlign(TextAlign.Center)
-        .borderRadius(10)
-        .backgroundColor(Color.White)
-        .fontSize(16)
-        .width(&#39;100%&#39;)
-        .height(100)
-    &#125;
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      List(&#123; space: 10 &#125;) &#123;
-        ForEach(this.arr, (item: number) =&gt; &#123;
-          ListItem() &#123;
-            Text(&#39;&#39; + item)
-              .width(&#39;100%&#39;)
-              .height(100)
-              .fontSize(16)
-              .textAlign(TextAlign.Center)
-              .borderRadius(10)
-              .backgroundColor(0xFFFFFF)
-          &#125;
-          .visibility(item == this.dragItem ? Visibility.Hidden : Visibility.Visible)
-          .id(item.toString())
-        &#125;, (item: string) =&gt; item)
-      &#125;
-      .listDirection(Axis.Vertical)
-      .width(&#39;100%&#39;)
-      .onItemMove((from: number, to: number) =&gt; &#123;
-        return true
-      &#125;)
-      .onItemDragStart((event: ItemDragInfo, itemIndex: number) =&gt; &#123;
-        // Triggered when starting to drag a list element
-        this.dragItem = this.arr[itemIndex]
-        return this.dragFloatView(this.arr[itemIndex])
-      &#125;)
-      .onItemDragMove((event: ItemDragInfo, itemIndex: number, insertIndex: number) =&gt; &#123;
-        // Triggered when dragging within the list element range
-        animateTo(&#123; duration: 200, curve: Curve.Linear &#125;, () =&gt; &#123;
-          let deleteIndex = this.arr.indexOf(Number(this.dragItem))
-          this.arr.splice(deleteIndex, 1)
-          this.arr.splice(insertIndex, 0, Number(this.dragItem))
-        &#125;)
-      &#125;)
-      .onItemDrop((event: ItemDragInfo, itemIndex: number, insertIndex: number, isSuccess: boolean) =&gt; &#123;
-        // The list element bound to this event can be a drag release target, triggered when dragging stops within the list element
-        this.dragItem = -1
-      &#125;)
-    &#125;
-    .width(&#39;100%&#39;)
-    .height(&#39;100%&#39;)
-    .backgroundColor(0xDCDCDC)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="3-Layout-Issues-After-Switching-to-Landscape-Mode-in-HarmonyOS"><a href="#3-Layout-Issues-After-Switching-to-Landscape-Mode-in-HarmonyOS" class="headerlink" title="3. Layout Issues After Switching to Landscape Mode in HarmonyOS"></a>3. Layout Issues After Switching to Landscape Mode in HarmonyOS</h4><p>After using <code>window.setPreferredOrientation</code> to force landscape mode, the Navigation width is normal, but the width of its content components is incorrect.  </p>
-<p>You can use <code>onPageShow</code> and <code>onPageHide</code> to set landscape mode at the page level:  </p>
-<pre><code class="language-typescript">onPageShow(): void &#123;
-  // window.getLastWindow(getContext(this), (err, win) =&gt; &#123;
-  // win.setPreferredOrientation(window.Orientation.LANDSCAPE_INVERTED)
-  // &#125;)
-&#125;
-
-onPageHide(): void &#123;
-  window.getLastWindow(getContext(this), (err, win) =&gt; &#123;
-    win.setPreferredOrientation(window.Orientation.PORTRAIT)
-  &#125;)
-&#125;
-</code></pre>
-<p>Alternatively, call landscape mode when navigating from the previous interface to the second interface. Example:  </p>
-<pre><code class="language-typescript">Button(&#39;Interface Navigation&#39;)
-  .onClick(() =&gt; &#123;
-    window.getLastWindow(getContext(this), (err, win) =&gt; &#123;
-      win.setPreferredOrientation(window.Orientation.LANDSCAPE_INVERTED)
-    &#125;)
-
-    router.pushUrl(&#123;
-      url: &quot;pages/Index2&quot;
-    &#125;)
-  &#125;)
-</code></pre>
-<p>For detailed usage of <code>setPreferredOrientation</code>, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9</a>  </p>
-<h4 id="4-The-eventId-Can-Only-Be-a-Number-Prone-to-Duplication-in-HarmonyOS"><a href="#4-The-eventId-Can-Only-Be-a-Number-Prone-to-Duplication-in-HarmonyOS" class="headerlink" title="4. The eventId Can Only Be a Number, Prone to Duplication in HarmonyOS?"></a>4. The eventId Can Only Be a Number, Prone to Duplication in HarmonyOS?</h4><p><strong>Custom Enumeration Type Constants</strong>:  </p>
-<pre><code class="language-typescript">export const enum EventID &#123;
-  CHAT = 1,
-  CLICK = 2,
-  TOUCH = 3
-&#125;
-export const showCaptchaEvent: emitter.InnerEvent = &#123;
-  eventId: EventID.CHAT
-&#125;
-</code></pre>
-<p><strong>Combine with Timestamps</strong>:<br>Record the timestamp for each event and use the event ID together with the timestamp to distinguish events occurring in different time periods, avoiding duplication.  </p>
-<p><strong>Use Incremental IDs</strong>:<br>Assign a unique incremental ID to each event to ensure uniqueness. Use the incremental ID instead of the original event ID when storing event information.  </p>
-<p><strong>Use Database Indexes</strong>:<br>Create indexes for event IDs when storing event information to facilitate fast querying and filtering, ensuring index correctness and efficiency.  </p>
-<h4 id="5-HarmonyOS-Scroll-Nested-with-Web-Web-Content-Height-Auto-Adapts-and-the-Overall-Page-Scrolls-Together"><a href="#5-HarmonyOS-Scroll-Nested-with-Web-Web-Content-Height-Auto-Adapts-and-the-Overall-Page-Scrolls-Together" class="headerlink" title="5. HarmonyOS: Scroll Nested with Web, Web Content Height Auto-Adapts, and the Overall Page Scrolls Together"></a>5. HarmonyOS: Scroll Nested with Web, Web Content Height Auto-Adapts, and the Overall Page Scrolls Together</h4><p>Use <code>.layoutMode(WebLayoutMode.FIT_CONTENT)</code> to adapt to the web layout. If the web content width or length exceeds 8000px, specify <code>RenderMode.SYNC_RENDER</code> when creating the Web component.  </p>
-<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#ZH-CN_TOPIC_0000001930757269__nestedscroll11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#ZH-CN_TOPIC_0000001930757269__nestedscroll11</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:04:39 / Modified: 10:05:14" itemprop="dateCreated datePublished" datetime="2025-06-27T10:04:39+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance"><a href="#Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance"></a>[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</h3><h4 id="1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS"><a href="#1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS" class="headerlink" title="1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?"></a>1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?</h4><p>The <code>onPageShow</code> lifecycle method does not execute when switching tabs because <code>onPageShow</code> is a page-level lifecycle callback. Tab switching triggers the component-level lifecycle method <code>aboutToAppear()</code> for child components. You can call <code>showPage()</code> within this lifecycle. If you need the <code>showPage</code> method in <code>TabContent</code> to execute every time a tab is switched, use <code>onTabBarClick(event: (index: number) =&gt; void)</code> to get the currently clicked tab index in the parent component.  </p>
-<p>Define a <code>currentTabIndex</code> variable in the parent component using <code>@State</code>, assign the clicked index to <code>currentTabIndex</code> in the <code>onTabBarClick</code> callback, and pass this value to child components wrapped by <code>TabContent</code>. In child components, use <code>@Props</code> and <code>@Watch</code> to listen for changes to the value passed from the parent component and execute the <code>showPage</code> method in each <code>TabContent</code>.  </p>
-<p><strong>Demo Reference</strong>:  </p>
-<pre><code class="language-typescript">// xxx.ets
-import &#123; FirstPage &#125; from &#39;./FirstPage&#39;
-
-@Entry
-@Component
-struct TabsExample &#123;
-  @State fontColor: string = &#39;#182431&#39;
-  @State selectedFontColor: string = &#39;#007DFF&#39;
-  @State currentIndex: number = 0
-  private controller: TabsController = new TabsController()
-  @State mainPageState: boolean = false
-  
-  @Builder tabBuilder(index: number, name: string) &#123;
-    Column() &#123;
-      Text(name)
-        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
-        .fontSize(16)
-        .fontWeight(this.currentIndex === index ? 500 : 400)
-        .lineHeight(22)
-        .margin(&#123; top: 17, bottom: 7 &#125;)
-      Divider()
-        .strokeWidth(2)
-        .color(&#39;#007DFF&#39;)
-        .opacity(this.currentIndex === index ? 1 : 0)
-    &#125;.width(&#39;100%&#39;)
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      Tabs(&#123; barPosition: BarPosition.Start, index: this.currentIndex, controller: this.controller &#125;) &#123;
-        TabContent() &#123;
-          FirstPage(&#123; mainPageState: this.mainPageState &#125;).width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#00CB87&#39;)
-        &#125;.tabBar(this.tabBuilder(0, &#39;green&#39;))
-
-        TabContent() &#123;
-          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#007DFF&#39;)
-        &#125;.tabBar(this.tabBuilder(1, &#39;blue&#39;))
-
-        TabContent() &#123;
-          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#FFBF00&#39;)
-        &#125;.tabBar(this.tabBuilder(2, &#39;yellow&#39;))
-
-        TabContent() &#123;
-          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#E67C92&#39;)
-        &#125;.tabBar(this.tabBuilder(3, &#39;pink&#39;))
-      &#125;
-      .vertical(false)
-      .barMode(BarMode.Fixed)
-      .barWidth(360)
-      .barHeight(56)
-      .animationDuration(400)
-      .onChange((index: number) =&gt; &#123;
-        this.currentIndex = index
-      &#125;)
-      .width(&#39;100%&#39;)
-      .height(&#39;100%&#39;)
-      .margin(&#123; top: 52 &#125;)
-      .backgroundColor(&#39;#F1F3F5&#39;)
-    &#125;.width(&#39;100%&#39;)
-  &#125;
-
-  onPageShow(): void &#123;
-    console.log(&#39;index--- onPageShow&#39;)
-    this.mainPageState = true
-  &#125;
-  
-  onPageHide(): void &#123;
-    console.log(&#39;index--- onPageHide&#39;)
-    this.mainPageState = false
-  &#125;
-&#125;
-</code></pre>
-<pre><code class="language-typescript">import &#123; router &#125; from &#39;@kit.ArkUI&#39;;
-import &#123; FaultLogger &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
-
-@Entry
-@Component
-export struct FirstPage &#123;
-  @State message: string = &#39;Hello World&#39;;
-  @Link @Watch(&#39;mainIsShow&#39;) mainPageState: boolean
-  
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-          .onClick(() =&gt; &#123;
-            router.pushUrl(&#123;
-              url: &#39;pages/DetailPage&#39;,
-            &#125;)
-          &#125;)
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-  
-  mainIsShow() &#123;
-    console.log(&#39;mainIsShow--&#39;, this.mainPageState)
-  &#125;
-  
-  aboutToAppear(): void &#123;
-    console.log(&#39;firstPAGE--- aboutToAppear&#39;)
-  &#125;
-
-  onPageShow(): void &#123;
-    console.log(&#39;firstPAGE--- onPageShow&#39;)
-  &#125;
-  
-  onPageHide(): void &#123;
-    console.log(&#39;firstPAGE--- onPageHide&#39;)
-  &#125;
-  
-  aboutToRecycle(): void &#123;
-    console.log(&#39;firstPAGE--- aboutToRecycle&#39;)
-  &#125;
-&#125;
-</code></pre>
-<pre><code class="language-typescript">import &#123; Notification &#125; from &#39;@kit.NotificationKit&#39;;
-
-@Entry
-@Component
-struct DetailPage &#123;
-  @State message: string = &#39;Detail&#39;;
-
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-  
-  onPageShow(): void &#123;
-  &#125;
-  
-  onPageHide(): void &#123;
-    console.log(&#39;firstPAGE--- onPageHide&#39;)
-  &#125;
-  
-  onBackPress(): boolean | void &#123;
-    console.log(&#39;firstPAGE--- onBackPress&#39;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="2-How-to-Assemble-Complex-JSON-Data"><a href="#2-How-to-Assemble-Complex-JSON-Data" class="headerlink" title="2. How to Assemble Complex JSON Data?"></a>2. How to Assemble Complex JSON Data?</h4><p><strong>Reference Demo</strong>:  </p>
-<pre><code class="language-typescript">jsonObject: Record&lt;string, Object&gt; = &#123;&#125;
-
-aboutToAppear(): void &#123;
-  this.jsonObject[&quot;k1&quot;] = &quot;v1&quot;
-  this.jsonObject[&quot;k2&quot;] = 20
-  let json: string = JSON.stringify(this.jsonObject)
-  console.log(json)
-&#125;
-</code></pre>
-<h4 id="3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS"><a href="#3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS" class="headerlink" title="3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?"></a>3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?</h4><p>When displaying text in the middle of a layout with other UI elements above and below, wrap the <code>Text</code> component with a <code>Scroll</code> component. To prevent other UI elements from being pushed off-screen when the text is too long, set a maximum height for the <code>Scroll</code> component.  </p>
-<p><strong>Reference Demo</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct NestedScroll &#123;
-  @State listPosition: number = 0; // 0: scroll to top, 1: middle, 2: scroll to bottom
-  private arr: number[] = [1]
-  private scrollerForList: Scroller = new Scroller()
-
-  build() &#123;
-    Flex() &#123;
-      Column() &#123;
-        Text(&quot;Header&quot;)
-          .width(&quot;100%&quot;)
-          .height(&quot;20%&quot;)
-          .backgroundColor(0X330000FF)
-          .fontSize(16)
-          .textAlign(TextAlign.Center)
-
-        List(&#123; space: 20, scroller: this.scrollerForList &#125;) &#123;
-          ForEach(this.arr, (item: number) =&gt; &#123;
-            ListItem() &#123;
-              Text(&quot;This is a very long text...&quot;) // Omitted for brevity
-                .borderRadius(15)
-                .fontSize(16)
-                .backgroundColor(Color.White)
-            &#125;.width(&quot;100%&quot;)
-          &#125;, (item: string) =&gt; item)
-        &#125;
-        .borderColor(Color.Green)
-        .borderWidth(2)
-        .width(&quot;100%&quot;)
-        .edgeEffect(EdgeEffect.None)
-        .friction(0.6)
-        .onReachStart(() =&gt; &#123;
-          this.listPosition = 0
-        &#125;)
-        .onReachEnd(() =&gt; &#123;
-          this.listPosition = 2
-        &#125;)
-        .onScrollFrameBegin((offset: number) =&gt; &#123;
-          if ((this.listPosition == 0 &amp;&amp; offset &lt;= 0) || (this.listPosition == 2 &amp;&amp; offset &gt;= 0)) &#123;
-            return &#123; offsetRemain: 0 &#125;
-          &#125;
-          this.listPosition = 1
-          return &#123; offsetRemain: offset &#125;;
-        &#125;)
-        .constraintSize(&#123; maxHeight: 400 &#125;)
-
-        Text(&quot;Footer&quot;)
-          .width(&quot;100%&quot;)
-          .height(&quot;20%&quot;)
-          .backgroundColor(0X330000FF)
-          .fontSize(16)
-          .textAlign(TextAlign.Center)
-      &#125;
-    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS"><a href="#4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS" class="headerlink" title="4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?"></a>4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?</h4><p><strong>Compilation Error</strong>:<br><code>Object literals cannot be used as type declarations (ArkTS-no-obj-literals-as-types) &lt;ArkTSCheck&gt;</code>  </p>
-<p><strong>Code</strong>:  </p>
-<pre><code class="language-typescript">@Builder overBuilder($$: &#123; paramA1: string &#125;) &#123;
-  Row() &#123;
-    Text(`UseStateVarByReference: $&#123;$$.paramA1&#125; `)
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Solution</strong>:  </p>
-<pre><code class="language-typescript">class Tmp &#123;
-  paramA1: string = &#39;&#39;
-&#125;
-
-@Builder function overBuilder($$: Tmp) &#123;
-  Text($$.paramA1)
-    .width(400)
-    .height(50)
-    .backgroundColor(Color.Blue)
-&#125;
-</code></pre>
-<h4 id="5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize"><a href="#5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize" class="headerlink" title="5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?"></a>5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?</h4><p><strong>Best Practices Reference</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5">https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5</a>  </p>
-<p>ArkWeb is a Web component platform designed to display Web content in applications and provide developers with capabilities such as page loading, interaction, and debugging. In the digital age, page loading speed directly impacts app fluency, user perception, and experience. Fast-loading pages reduce wait times and improve satisfaction.  </p>
-<p>The Web page display process involves multiple stages: DNS resolution, connection establishment, request sending, response receiving, HTML parsing, and resource downloading. Factors affecting page speed include network latency, server response time, page size, and resource compression. To enhance performance, optimize page loading, resource downloading, and rendering.  </p>
-<p><strong>Common Optimization Methods</strong>:  </p>
-<ul>
-<li><strong>Web Page Loading Optimization</strong>: Critical for user experience; faster loading improves app fluency.  </li>
-<li><strong>JSBridge</strong>: Reduces redundant ArkTS environment switches and avoids UI blockages.  </li>
-<li><strong>Same-Layer Rendering</strong>: Renders page elements in layers to minimize repaints and reflows, improving rendering efficiency.</li>
-</ul>
-<p>ArkWeb provides methods to optimize page display speed. These optimizations enhance app performance and user experience, enabling faster, smoother Web browsing and increasing user satisfaction and retention.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:00:29 / Modified: 10:03:47" itemprop="dateCreated datePublished" datetime="2025-06-27T10:00:29+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain"></a>[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</h3><h4 id="1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS"><a href="#1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS" class="headerlink" title="1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?"></a>1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?</h4><p>Use <code>focusControl.requestFocus</code> to set focus on components that need it. Refer to the documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5</a>  </p>
-<p><strong>Example Code</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct TextInputExample &#123;
-  controller: TextInputController = new TextInputController()
-  @State inputValue: string = &quot;&quot;
-  ep: number = 0;
-  del: boolean = false;
-
-  // Custom keyboard component
-  @Builder
-  CustomKeyboardBuilder() &#123;
-    Column() &#123;
-      Button(&#39;Close Keyboard&#39;).onClick(() =&gt; &#123;
-        // Close the custom keyboard
-        this.controller.stopEditing()
-      &#125;)
-      Button(&#39;Delete Character&#39;).onClick(() =&gt; &#123;
-        this.inputValue = this.inputValue.substring(0, this.ep-1) + this.inputValue.substring(this.ep)
-        this.del = true
-      &#125;)
-      Grid() &#123;
-        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, &#39;*&#39;, 0, &#39;#&#39;], (item: number | string) =&gt; &#123;
-          GridItem() &#123;
-            Button(item + &quot;&quot;)
-              .width(110).onClick(() =&gt; &#123;
-              this.inputValue = this.inputValue.substring(0, this.ep) + item + this.inputValue.substring(this.ep)
-              this.del = false
-            &#125;)
-          &#125;
-        &#125;)
-      &#125;.maxCount(3).columnsGap(10).rowsGap(10).padding(5)
-    &#125;.backgroundColor(Color.Gray)
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      TextInput(&#123; controller: this.controller, text: this.inputValue &#125;)
-        // Bind the custom keyboard
-        .customKeyboard(this.CustomKeyboardBuilder())
-        .margin(10)
-        .id(&#39;input1&#39;) // Set an ID for the component
-        .border(&#123; width: 1 &#125;)
-        // Detect cursor changes and adjust cursor position
-        .onChange(() =&gt; &#123;
-          if(this.del)&#123;
-            this.controller.caretPosition(--this.ep)
-          &#125;else&#123;
-            this.controller.caretPosition(++this.ep)
-          &#125;
-        &#125;)
-        .onTextSelectionChange((ss) =&gt; &#123;
-          this.ep = ss;
-        &#125;)
-      Button(&quot;Trigger Focus&quot;)
-        .width(200).height(70).fontColor(Color.White)
-        .onClick(() =&gt; &#123;
-          focusControl.requestFocus(&#39;input1&#39;) // Focus the TextInput
-        &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p>The default input method keyboard type is text input (<code>textinputtype</code> 0). Refer to possible <code>textinputtype</code> values:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5</a>  </p>
-<h4 id="2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS"><a href="#2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS" class="headerlink" title="2. What Are the JSBridge Implementation Methods in HarmonyOS?"></a>2. What Are the JSBridge Implementation Methods in HarmonyOS?</h4><p>For app-frontend interactions, refer to:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5</a>  </p>
-<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-2.png"></p>
-<p>The figure above shows the general architecture of a universally applicable mini-program. In this architecture, the logic layer relies on the JavaScript runtime自带 by the application, which runs within an existing C++ environment. Through Native interfaces, the logic layer can directly communicate with the view layer (where ArkWeb acts as the renderer) in the C++ environment without falling back to the ArkTS environment to use the ArkTS JSBridge interface.  </p>
-<p>The left diagram shows a mini-program solution using the ArkTS JSBridge interface. As indicated by the red box, the application must first call into the ArkTS environment and then into the C++ environment. The right diagram shows a solution using the Native JSBridge interface, which eliminates the need to switch between ArkTS and C++ environments, resulting in higher execution efficiency.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-3.png"><br>The Native JSBridge solution avoids redundant ArkTS environment switches and allows callbacks to run on non-UI threads, preventing UI blockages.  </p>
-<h4 id="3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS"><a href="#3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS" class="headerlink" title="3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?"></a>3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?</h4><p>Refer to the following demo:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct PopupExample &#123;
-  @State handlePopup: boolean = false
-  @State customPopup: boolean = false
-  
-  // Popup content builder
-  @Builder popupBuilder() &#123;
-    Row(&#123; space: 2 &#125;) &#123;
-      Image($r(&quot;app.media.startIcon&quot;)).width(24).height(24).margin(&#123; left: -5 &#125;)
-      Text(&#39;Custom Popup&#39;).fontSize(10)
-    &#125;.width(100).height(50).padding(5)
-  &#125;
-
-  build() &#123;
-    Flex(&#123; direction: FlexDirection.Column &#125;) &#123;
-      // PopupOptions configuration
-      Button(&#39;PopupOptions&#39;)
-        .onClick(() =&gt; &#123;
-          this.handlePopup = !this.handlePopup
-        &#125;)
-        .bindPopup(this.handlePopup, &#123;
-          builder: this.popupBuilder,
-          placement: Placement.Top,
-          mask: &#123;color: Color.Gray&#125;,
-          popupColor: Color.Yellow,
-          enableArrow: true,
-          message: &#39;This is a popup with PopupOptions&#39;,
-          placementOnTop: true,
-          showInSubWindow: false,
-          primaryButton: &#123;
-            value: &#39;confirm&#39;,
-            action: () =&gt; &#123;
-              this.handlePopup = !this.handlePopup
-              console.info(&#39;confirm Button click&#39;)
-            &#125;
-          &#125;,
-          // Secondary button
-          secondaryButton: &#123;
-            value: &#39;cancel&#39;,
-            action: () =&gt; &#123;
-              this.handlePopup = !this.handlePopup
-              console.info(&#39;cancel Button click&#39;)
-            &#125;
-          &#125;,
-          onStateChange: (e) =&gt; &#123;
-            console.info(JSON.stringify(e.isVisible))
-            if (!e.isVisible) &#123;
-              this.handlePopup = false
-            &#125;
-          &#125;
-        &#125;)
-        .position(&#123; x: 100, y: 150 &#125;)
-    &#125;.width(&#39;100%&#39;).padding(&#123; top: 5 &#125;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible"><a href="#4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible" class="headerlink" title="4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?"></a>4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?</h4><p>Refer to the Interaction Event Normalization interface to ensure consistent interaction experiences across different devices and minimize adaptation efforts:  </p>
-<ul>
-<li>Interaction Events Guide:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018">https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018</a>  </li>
-<li>Interaction Event Normalization Development Documentation:<br><a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md</a></li>
-</ul>
-<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-4.png"></p>
-<h4 id="5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This"><a href="#5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This" class="headerlink" title="5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?"></a>5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?</h4><p>Configure <code>customizeSchemes</code> as described in the documentation:  </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F</a></li>
-</ul>
-<p>You need to configure <code>schemeMap</code> and <code>mimeTypeMap</code> manually.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2031,7 +1972,7 @@ struct PopupExample &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">195</span>
+          <span class="site-state-item-count">200</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

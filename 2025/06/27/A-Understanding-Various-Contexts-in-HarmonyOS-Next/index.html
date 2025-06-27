@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Understanding Various Contexts in HarmonyOS NextBackgroundBoth Android and HarmonyOS Next incorporate the concept of Context, which is essential in many scenarios such as accessing file resources. The">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Understanding Various Contexts in HarmonyOS Next">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/27/A-Understanding-Various-Contexts-in-HarmonyOS-Next/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="Understanding Various Contexts in HarmonyOS NextBackgroundBoth Android and HarmonyOS Next incorporate the concept of Context, which is essential in many scenarios such as accessing file resources. The">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext-1.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext-4.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext-3.png">
+<meta property="article:published_time" content="2025-06-27T04:26:57.000Z">
+<meta property="article:modified_time" content="2025-06-27T04:29:08.327Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/27/A-Understanding-Various-Contexts-in-HarmonyOS-Next/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Understanding Various Contexts in HarmonyOS Next | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/A-Understanding-Various-Contexts-in-HarmonyOS-Next/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Understanding Various Contexts in HarmonyOS Next
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 12:26:57 / Modified: 12:29:08" itemprop="dateCreated datePublished" datetime="2025-06-27T12:26:57+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Understanding-Various-Contexts-in-HarmonyOS-Next"><a href="#Understanding-Various-Contexts-in-HarmonyOS-Next" class="headerlink" title="Understanding Various Contexts in HarmonyOS Next"></a>Understanding Various Contexts in HarmonyOS Next</h1><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Both Android and HarmonyOS Next incorporate the concept of Context, which is essential in many scenarios such as accessing file resources. There are various types of Contexts, each with different acquisition methods and purposes. To develop effectively for HarmonyOS, it’s crucial to understand these various Contexts.</p>
+<h3 id="Concept-of-Context"><a href="#Concept-of-Context" class="headerlink" title="Concept of Context"></a>Concept of Context</h3><p>Context in an application provides contextual information about objects, including basic information such as <code>resourceManager</code> (resource management), <code>applicationInfo</code> (current application information), <code>dir</code> (application file paths), <code>area</code> (file partitions), and basic methods like <code>createBundleContext()</code> and <code>getApplicationContext()</code>.</p>
+<p>Different components in HarmonyOS Next, such as UIAbility and various ExtensionAbility-derived components, have their own specific Context classes. These include the base class <code>Context</code>, <code>ApplicationContext</code>, <code>AbilityStageContext</code>, <code>UIAbilityContext</code>, <code>ExtensionContext</code>, <code>ServiceExtensionContext</code>, and other specialized Contexts.</p>
+<p>The inheritance relationships among these various Contexts are illustrated in the following diagram:<br><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext.png" alt="Understanding Various Contexts in HarmonyOS Next"></p>
+<p>The ownership relationships among these Contexts are shown below:<br><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext-1.png" alt="Understanding Various Contexts in HarmonyOS Next - Ownership"></p>
+<p>There are nine types of Contexts mentioned:</p>
+<ol>
+<li>BaseContext</li>
+<li>Context</li>
+<li>ApplicationContext</li>
+<li>AbilityStageContext</li>
+<li>UIAbilityContext</li>
+<li>ExtensionContext</li>
+<li>Other ExtensionContext</li>
+<li>FormExtensionContext</li>
+<li>ServiceExtensionContext</li>
+</ol>
+<h3 id="Capabilities-Provided-by-Various-Contexts"><a href="#Capabilities-Provided-by-Various-Contexts" class="headerlink" title="Capabilities Provided by Various Contexts"></a>Capabilities Provided by Various Contexts</h3><p>Let’s explore the capabilities provided by each type of Context.</p>
+<h4 id="BaseContext"><a href="#BaseContext" class="headerlink" title="BaseContext"></a>BaseContext</h4><p>The <code>BaseContext</code> abstract class is used to indicate whether the inheriting Context subclass is based on the Stage model or the FA (Feature Ability) model. It serves as the parent class for all Context types. The primary attribute it provides is:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Readable</th>
+<th align="left">Writable</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">stageMode</td>
+<td align="left">boolean</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">Indicates whether it is the Stage model.<br><br>true: Stage model<br><br>false: FA model</td>
+</tr>
+</tbody></table>
+<h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p>The <code>Context</code> class inherits from <code>BaseContext</code> and provides the ability to access the context of an ability or application, including accessing specific application resources. It offers the following attributes:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Read-only</th>
+<th align="left">Optional</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">resourceManager</td>
+<td align="left">resmgr.ResourceManager</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Resource management object</td>
+</tr>
+<tr>
+<td align="left">applicationInfo</td>
+<td align="left">ApplicationInfo</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Information about the current application</td>
+</tr>
+<tr>
+<td align="left">cacheDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Cache directory</td>
+</tr>
+<tr>
+<td align="left">tempDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Temporary directory</td>
+</tr>
+<tr>
+<td align="left">resourceDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Resource directory</td>
+</tr>
+<tr>
+<td align="left">filesDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Files directory</td>
+</tr>
+<tr>
+<td align="left">databaseDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Database directory</td>
+</tr>
+<tr>
+<td align="left">preferencesDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Preferences directory</td>
+</tr>
+<tr>
+<td align="left">bundleCodeDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Installation package directory. Note: Path concatenation for accessing resource files is not allowed; use resource management interfaces instead</td>
+</tr>
+<tr>
+<td align="left">distributedFilesDir</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Distributed files directory</td>
+</tr>
+<tr>
+<td align="left">cloudFileDir12+</td>
+<td align="left">string</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Cloud files directory</td>
+</tr>
+<tr>
+<td align="left">eventHub</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-eventhub-V5">EventHub</a></td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Event center, providing methods to subscribe, unsubscribe, and trigger events</td>
+</tr>
+<tr>
+<td align="left">area</td>
+<td align="left">contextConstant.AreaMode</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">File partition information</td>
+</tr>
+</tbody></table>
+<p>As seen, the <code>Context</code> class already provides attributes for accessing resources and resource paths.</p>
+<p><strong>Methods Provided:</strong></p>
+<ul>
+<li><code>getApplicationContext(): ApplicationContext</code> - Retrieves the application context for the current application.</li>
+<li><code>getGroupDir(dataGroupID: string): Promise&lt;string&gt;</code> - Retrieves the shared directory corresponding to the specified Group ID within the application, using a Promise for asynchronous callback.</li>
+<li><code>getGroupDir(dataGroupID: string, callback: AsyncCallback&lt;string&gt;): void</code> - Retrieves the shared directory corresponding to the specified Group ID within the application, using a callback for asynchronous callback.</li>
+</ul>
+<h4 id="ApplicationContext"><a href="#ApplicationContext" class="headerlink" title="ApplicationContext"></a>ApplicationContext</h4><p>The <code>ApplicationContext</code> class inherits from <code>Context</code> and provides application-level context capabilities for developers. This includes interfaces for registering and unregistering listeners for component lifecycles within the application. The following methods are provided:</p>
+<ul>
+<li><code>on(type: &#39;abilityLifecycle&#39;, callback: AbilityLifecycleCallback): number</code> - Registers a listener for application lifecycle events. Uses a callback for asynchronous notification. Only supported on the main thread.</li>
+<li><code>off(type: &#39;abilityLifecycle&#39;, callbackId: number, callback: AsyncCallback&lt;void&gt;): void</code> - Unregisters a listener for application lifecycle events. Uses a callback for asynchronous notification. Only supported on the main thread.</li>
+<li><code>on(type: &#39;environment&#39;, callback: EnvironmentCallback): number</code> - Registers a listener for system environment changes. Uses a callback for asynchronous notification. Only supported on the main thread.</li>
+<li><code>off(type: &#39;environment&#39;, callbackId: number, callback: AsyncCallback&lt;void&gt;): void</code> - Unregisters a listener for system environment changes. Uses a callback for asynchronous notification. Only supported on the main thread.</li>
+<li><code>on(type: &#39;applicationStateChange&#39;, callback: ApplicationStateChangeCallback): void</code> - Registers a listener for foreground&#x2F;background state changes of the current application. Uses a callback for asynchronous notification. Only supported on the main thread.</li>
+<li><code>off(type: &#39;applicationStateChange&#39;, callback?: ApplicationStateChangeCallback): void</code> - Unregisters all listeners for foreground&#x2F;background state changes of the current application. Uses a callback for asynchronous notification. Only supported on the main thread.</li>
+<li><code>getRunningProcessInformation(): Promise&lt;Array&lt;ProcessInformation&gt;&gt;</code> - Retrieves information about running processes. Uses a Promise for asynchronous notification.</li>
+<li><code>getRunningProcessInformation(callback: AsyncCallback&lt;Array&lt;ProcessInformation&gt;&gt;): void</code> - Retrieves information about running processes. Uses a callback for asynchronous notification.</li>
+<li><code>killAllProcesses(): Promise&lt;void&gt;</code> - Terminates all processes of the application. Process termination does not follow the normal application lifecycle. Uses a Promise for asynchronous notification. Only supported on the main thread.</li>
+<li><code>setColorMode(colorMode: ConfigurationConstant.ColorMode): void</code> - Sets the color mode of the application. Only supported on the main thread.</li>
+<li><code>setLanguage(language: string): void</code> - Sets the language of the application. Only supported on the main thread.</li>
+<li><code>clearUpApplicationData(): Promise&lt;void&gt;</code> - Clears the application’s own data and revokes permissions granted to the user. Uses a Promise for asynchronous notification. Only supported on the main thread.</li>
+<li><code>clearUpApplicationData(callback: AsyncCallback&lt;void&gt;): void</code> - Clears the application’s own data and revokes permissions granted to the user. Uses a callback for asynchronous notification. Only supported on the main thread.</li>
+<li><code>restartApp(want: Want): void</code> - Restarts the application and launches a specified UIAbility. The <code>onDestroy</code> callback is not invoked during restart. Only supported on the main thread, and the application to be restarted must be in the focused state.</li>
+<li><code>getCurrentAppCloneIndex(): number</code> - Retrieves the current application’s clone index.</li>
+<li><code>setFont(font: string): void</code> - Sets the font type of the application. Only supported on the main thread.</li>
+<li><code>setSupportedProcessCache(isSupported : boolean): void</code> - Configures whether the application supports cached fast startup. Only supported on the main thread.</li>
+</ul>
+<h4 id="AbilityStageContext"><a href="#AbilityStageContext" class="headerlink" title="AbilityStageContext"></a>AbilityStageContext</h4><p><code>AbilityStageContext</code> is the context environment for <code>AbilityStage</code>, inheriting from <code>Context</code>.</p>
+<p><code>AbilityStageContext</code> provides the ability to access resources specific to <code>AbilityStage</code>, including obtaining the <code>ModuleInfo</code> object corresponding to <code>AbilityStage</code> and environment change objects. The following attributes are provided:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Readable</th>
+<th align="left">Writable</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">currentHapModuleInfo</td>
+<td align="left">HapModuleInfo</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">The <code>ModuleInfo</code> object corresponding to <code>AbilityStage</code></td>
+</tr>
+<tr>
+<td align="left">config</td>
+<td align="left">Configuration</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Environment change object</td>
+</tr>
+</tbody></table>
+<h4 id="UIAbilityContext"><a href="#UIAbilityContext" class="headerlink" title="UIAbilityContext"></a>UIAbilityContext</h4><p><code>UIAbilityContext</code> is the context corresponding to a UIAbility that needs to preserve state. It inherits from <code>Context</code> and provides configuration information related to UIAbility, as well as methods to operate UIAbility and <code>ServiceExtensionAbility</code>, such as starting UIAbility, stopping the current UIAbilityContext’s UIAbility, starting&#x2F;stopping&#x2F;connecting&#x2F;disconnecting <code>ServiceExtensionAbility</code>, etc. The following attributes are provided:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Readable</th>
+<th align="left">Writable</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">abilityInfo</td>
+<td align="left">AbilityInfo</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Information related to UIAbility.<br><br><strong>Meta-Service API:</strong> Starting from API version 11, this interface is supported in meta-services.</td>
+</tr>
+<tr>
+<td align="left">currentHapModuleInfo</td>
+<td align="left">HapModuleInfo</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Information about the current HAP.<br><br><strong>Meta-Service API:</strong> Starting from API version 11, this interface is supported in meta-services.</td>
+</tr>
+<tr>
+<td align="left">config</td>
+<td align="left">Configuration</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Configuration information related to UIAbility, such as language and color mode.<br><br><strong>Meta-Service API:</strong> Starting from API version 11, this interface is supported in meta-services.</td>
+</tr>
+<tr>
+<td align="left">windowStage12+</td>
+<td align="left">window.WindowStage</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">The current <code>WindowStage</code> object. Only supported on the main thread.<br><br><strong>Meta-Service API:</strong> Starting from API version 12, this interface is supported in meta-services.</td>
+</tr>
+</tbody></table>
+<p><strong>Capabilities Provided:</strong></p>
+<ul>
+<li><strong>Start Ability:</strong> <code>startAbility</code>, <code>startAbilityForResult</code></li>
+<li><strong>Stop Ability Itself:</strong> <code>terminateSelf</code>, <code>terminateSelfWithResult</code></li>
+<li><strong>Connect Current Ability to a ServiceExtensionAbility:</strong> <code>connectServiceExtensionAbility</code></li>
+<li><strong>Disconnect from a ServiceExtensionAbility:</strong> <code>disconnectServiceExtensionAbility</code> (After disconnection, the <code>remote</code> object returned upon successful connection should be set to null)</li>
+<li><strong>Start a Specified Ability to Foreground or Background in Cross-Device Scenarios, and Obtain Its Caller Communication Interface:</strong> <code>startAbilityByCall</code> (The caller can use <code>Caller</code> to communicate with the started Ability)</li>
+<li><strong>Set the Name Displayed by UIAbility in Tasks:</strong> <code>setMissionLabel</code></li>
+<li><strong>Set the Flow State of UIAbility in Tasks:</strong> <code>setMissionContinueState</code></li>
+<li><strong>Restore WindowStage Data in UIAbility:</strong> <code>restoreWindowStage</code></li>
+<li><strong>Query Whether UIAbility Is in Terminating State:</strong> <code>isTerminating</code></li>
+<li><strong>Start a ServiceExtensionAbility That Supports Modal Pop-ups:</strong> <code>requestDialogService</code> (After the <code>ServiceExtensionAbility</code> is started, the application displays a modal pop-up, and the caller can return results to the caller via <code>setRequestResult</code>)</li>
+<li><strong>Provide a Callback Function for Developers When Page Loading Is Complete (<code>loadContent</code> Success):</strong> <code>reportDrawnCompleted</code></li>
+<li><strong>Implicitly Start UIExtensionAbility via Type:</strong> <code>startAbilityByType</code> (Uses a callback for asynchronous notification)</li>
+<li><strong>Show Current Ability:</strong> <code>showAbility</code></li>
+<li><strong>Hide Current Ability:</strong> <code>hideAbility</code></li>
+<li><strong>Move the Foreground Ability to the Background:</strong> <code>moveAbilityToBackground</code></li>
+<li><strong>Jump-Start an EmbeddableUIAbility and Return Results:</strong> <code>openAtomicService</code></li>
+<li><strong>Start UIAbility via AppLinking:</strong> <code>openLink</code></li>
+<li><strong>Return Results to the Caller When Target Ability Is Launched via <code>startAbilityForResult</code> or <code>openLink</code> and Needs to Return Results:</strong> <code>backToCallerAbilityWithResult</code> (Unlike <code>terminateSelfWithResult</code>, this interface does not destroy the current Ability when returning results)</li>
+</ul>
+<h4 id="ExtensionContext"><a href="#ExtensionContext" class="headerlink" title="ExtensionContext"></a>ExtensionContext</h4><p><code>ExtensionContext</code> is the context environment for <code>Extension</code>, inheriting from <code>Context</code>.</p>
+<p>The <code>ExtensionContext</code> module provides the ability to access resources specific to an Extension. For extended Extensions, you can directly use <code>ExtensionContext</code> as the context environment or define a type that inherits from <code>ExtensionContext</code> as the context environment.</p>
+<p>The following attributes are provided:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Readable</th>
+<th align="left">Writable</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">currentHapModuleInfo</td>
+<td align="left">HapModuleInfo</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Information about the owning HAP package.<br><br>(For details, refer to <code>api\bundle\hapModuleInfo.d.ts</code> in the SDK directory)</td>
+</tr>
+<tr>
+<td align="left">config</td>
+<td align="left">Configuration</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Configuration information of the owning Module.<br><br>(For details, refer to <code>api\@ohos.app.ability.Configuration.d.ts</code> in the SDK directory)</td>
+</tr>
+<tr>
+<td align="left">extensionAbilityInfo</td>
+<td align="left">ExtensionAbilityInfo</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Information about the owning Extension.<br><br>(For details, refer to <code>api\bundle\extensionAbilityInfo.d.ts</code> in the SDK directory)</td>
+</tr>
+</tbody></table>
+<h3 id="Common-Usage-Scenarios-for-Context"><a href="#Common-Usage-Scenarios-for-Context" class="headerlink" title="Common Usage Scenarios for Context"></a>Common Usage Scenarios for Context</h3><p>From the analysis above, Context is primarily used in the following scenarios:</p>
+<ul>
+<li><strong>Accessing Application File Paths</strong></li>
+<li><strong>Accessing and Modifying Encrypted Partitions</strong></li>
+<li><strong>Obtaining Contexts of Other Modules within the Same Application</strong></li>
+<li><strong>Subscribing to Lifecycle Changes of UIAbilities Within the Process</strong></li>
+</ul>
+<p><strong>Typical Example: Retrieving String Resources via <code>resourceManager</code></strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="title function_">getStringSync</span>(<span class="attr">context</span>: common.<span class="property">Context</span> | <span class="literal">undefined</span>, <span class="attr">resource</span>: <span class="title class_">Resource</span>): <span class="built_in">string</span> &#123;  </span><br><span class="line">  <span class="keyword">let</span> rscManager = (context ?? <span class="title function_">getContext</span>() <span class="keyword">as</span> common.<span class="property">UIAbilityContext</span>).<span class="property">resourceManager</span>;  </span><br><span class="line">    <span class="keyword">return</span> rscManager.<span class="title function_">getStringSync</span>(resource.<span class="property">id</span>)  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In this example, <code>Context</code> is required. What kind of <code>Context</code> do we get when calling <code>getContext()</code> in a general class?</p>
+<p>When inspecting the <code>Context</code> type obtained via <code>getContext()</code> in a page and <code>getUIContext()</code>, we find they are <code>AbilityContext</code> and <code>UIContext</code>, respectively:<br><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext-4.png" alt="Understanding Various Contexts in HarmonyOS Next - Context Types in Pages"></p>
+<p>Similarly, in a ViewModel, <code>getContext()</code> also retrieves the same <code>AbilityContext</code>:<br><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E5%90%84%E7%A7%8DContext-3.png" alt="Understanding Various Contexts in HarmonyOS Next - Context Types in ViewModels"></p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>This article has provided a detailed explanation of the relationships between various Contexts in HarmonyOS Next, along with the attributes and methods they offer.</p>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-basecontext-V5">BaseContext</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-context-V5#contextgetapplicationcontext">Context</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-uiabilitycontext-V5">UIAbilityContext</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-extensioncontext-V5">ExtensionContext</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-abilitystagecontext-V5">AbilityStageContext</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/27/A-Understanding-Abilities-in-HarmonyOS-Next/" rel="prev" title="Understanding Abilities in HarmonyOS Next">
+      <i class="fa fa-chevron-left"></i> Understanding Abilities in HarmonyOS Next
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/27/A-Understanding-What-HarmonyOS-Adds-to-OpenHarmony/" rel="next" title="Understanding What HarmonyOS Adds to OpenHarmony">
+      Understanding What HarmonyOS Adds to OpenHarmony <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Understanding-Various-Contexts-in-HarmonyOS-Next"><span class="nav-number">1.</span> <span class="nav-text">Understanding Various Contexts in HarmonyOS Next</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.0.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Concept-of-Context"><span class="nav-number">1.0.2.</span> <span class="nav-text">Concept of Context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Capabilities-Provided-by-Various-Contexts"><span class="nav-number">1.0.3.</span> <span class="nav-text">Capabilities Provided by Various Contexts</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BaseContext"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">BaseContext</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Context"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">Context</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ApplicationContext"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">ApplicationContext</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AbilityStageContext"><span class="nav-number">1.0.3.4.</span> <span class="nav-text">AbilityStageContext</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UIAbilityContext"><span class="nav-number">1.0.3.5.</span> <span class="nav-text">UIAbilityContext</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ExtensionContext"><span class="nav-number">1.0.3.6.</span> <span class="nav-text">ExtensionContext</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Common-Usage-Scenarios-for-Context"><span class="nav-number">1.0.4.</span> <span class="nav-text">Common Usage Scenarios for Context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Summary"><span class="nav-number">1.0.5.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#References"><span class="nav-number">1.0.6.</span> <span class="nav-text">References</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
