@@ -149,6 +149,186 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/504%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Getting-Keyboard-Height-Animation-Methods-Text-Component-Overflow-Anchor-Points-in-Relative-Layout-Attribute-Declaration/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/504%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Getting-Keyboard-Height-Animation-Methods-Text-Component-Overflow-Anchor-Points-in-Relative-Layout-Attribute-Declaration/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Getting Keyboard Height, Animation Methods, Text Component Overflow, Anchor Points in Relative Layout, Attribute Declaration</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 08:03:54 / Modified: 08:04:35" itemprop="dateCreated datePublished" datetime="2025-06-25T08:03:54+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Getting-Keyboard-Height-Animation-Methods-Text-Component-Overflow-Anchor-Points-in-Relative-Layout-Attribute-Declaration"><a href="#【Daily-HarmonyOS-Next-Knowledge】Getting-Keyboard-Height-Animation-Methods-Text-Component-Overflow-Anchor-Points-in-Relative-Layout-Attribute-Declaration" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Getting Keyboard Height, Animation Methods, Text Component Overflow, Anchor Points in Relative Layout, Attribute Declaration"></a>【Daily HarmonyOS Next Knowledge】Getting Keyboard Height, Animation Methods, Text Component Overflow, Anchor Points in Relative Layout, Attribute Declaration</h3><h4 id="1-Why-does-the-keyboard-height-obtained-in-HarmonyOS-appear-taller-than-before"><a href="#1-Why-does-the-keyboard-height-obtained-in-HarmonyOS-appear-taller-than-before" class="headerlink" title="1. Why does the keyboard height obtained in HarmonyOS appear taller than before?"></a>1. Why does the keyboard height obtained in HarmonyOS appear taller than before?</h4><p>The soft keyboard height in the latest DEV ECO simulator is higher than previously obtained values.  </p>
+<p>Use window-related APIs to get the soft keyboard height. The code is as follows:  </p>
+<pre><code class="language-typescript">aboutToAppear() &#123;
+  window.getLastWindow(getContext(this))
+    .then(currentWindow =&gt; &#123;
+      // Get the windowClass object
+      let property = currentWindow.getWindowProperties(); // Method 1: Get the avoid area
+      let avoidArea = currentWindow.getWindowAvoidArea(window.AvoidAreaType.TYPE_KEYBOARD);
+      // Initialize the display area height
+      this.screenHeight = px2vp(property.windowRect.height - avoidArea.bottomRect.height);
+      // Monitor the pop-up and retraction of the soft keyboard
+      currentWindow.on(&#39;avoidAreaChange&#39;,
+      async (data) =&gt; &#123;
+        if (data.type !== window.AvoidAreaType.TYPE_KEYBOARD) &#123;
+          return;
+        &#125;
+        this.screenHeight = px2vp(data.area.bottomRect.height);
+        console.log(this.screenHeight + &#39;&#39; + &#39;foo xxx&#39;
+        ); // The console output shows the keyboard height
+      &#125;
+      );
+      // Method 2: Directly get the soft keyboard height
+      currentWindow.on(&#39;keyboardHeightChange&#39;, (data) =&gt; &#123;
+        console.log(&quot;foo data&quot; + px2vp(data));
+        // The console output shows the keyboard height
+      &#125;
+      );
+    &#125;);
+&#125;
+</code></pre>
+<p>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5</a>  </p>
+<h4 id="2-Can-HarmonyOS-animation-methods-only-be-used-in-click-events-not-directly"><a href="#2-Can-HarmonyOS-animation-methods-only-be-used-in-click-events-not-directly" class="headerlink" title="2. Can HarmonyOS animation methods only be used in click events, not directly?"></a>2. Can HarmonyOS animation methods only be used in click events, not directly?</h4><p>Animation methods add smooth transition effects to UI changes when property interfaces are modified. Click events are used to trigger property changes, but animations can be added whenever animatable properties change. Property interfaces (hereinafter referred to as “properties”) include various types such as size, layout, and position properties, controlling component behavior. For components on the current interface, changes in some properties (e.g., position) trigger UI changes. Adding animations allows property values to transition gradually from start to end, creating continuous animation effects. Properties are categorized as animatable or non-animatable based on whether animations can be added during changes, determined by two criteria:  </p>
+<ol>
+<li>The property change must trigger UI changes. For example, the <code>enabled</code> property controls whether a component responds to clicks or touches but does not change the UI, so it is unsuitable as an animatable property.  </li>
+<li>The property change should naturally support animation as a transition. For example, the <code>focusable</code> property determines if a component can gain focus and should switch immediately to the target value to respond to user actions, making animation unsuitable.</li>
+</ol>
+<ul>
+<li>Attribute animation overview: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-attribute-animation-overview-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-attribute-animation-overview-V5</a>  </li>
+<li>Attribute animation API description: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-attribute-animation-apis-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-attribute-animation-apis-V5</a></li>
+</ul>
+<h4 id="3-Does-the-HarmonyOS-Text-component-support-configuring-the-position-of-ellipses-for-overflowing-text"><a href="#3-Does-the-HarmonyOS-Text-component-support-configuring-the-position-of-ellipses-for-overflowing-text" class="headerlink" title="3. Does the HarmonyOS Text component support configuring the position of ellipses for overflowing text?"></a>3. Does the HarmonyOS Text component support configuring the position of ellipses for overflowing text?</h4><p>How to configure the ellipsis position property for the component.  </p>
+<p>Key code:  </p>
+<pre><code class="language-typescript">Text(&#39;我是超长文本，超出的部分显示省略号。I am an extra long text, with ellipses displayed for any excess。&#39;)
+       .width(250)
+       .textOverflow(&#123; overflow: TextOverflow.Ellipsis &#125;)
+       .maxLines(1)
+       .ellipsisMode(EllipsisMode.CENTER)// Must be used with textOverflow and maxLines
+       .fontSize(12)
+       .border(&#123; width: 1 &#125;)
+       .padding(10)
+</code></pre>
+<p>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-text-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-text-V5</a>  </p>
+<h4 id="4-Does-setting-anchor-points-in-a-HarmonyOS-relative-layout-still-support-adaptive-width-and-height"><a href="#4-Does-setting-anchor-points-in-a-HarmonyOS-relative-layout-still-support-adaptive-width-and-height" class="headerlink" title="4. Does setting anchor points in a HarmonyOS relative layout still support adaptive width and height?"></a>4. Does setting anchor points in a HarmonyOS relative layout still support adaptive width and height?</h4><p>When using a relative layout (RelativeContainer) and setting anchor points (alignRules), the adaptive width and height effect disappears. Can adaptive width and height still be supported after setting anchor points in a relative layout?  </p>
+<p>If the anchor point is a component within the container, setting <code>auto</code> takes effect. If it is the parent container, it does not take effect.  </p>
+<h4 id="5-Why-can’t-the-second-data-type-be-used-in-HarmonyOS-attribute-declaration"><a href="#5-Why-can’t-the-second-data-type-be-used-in-HarmonyOS-attribute-declaration" class="headerlink" title="5. Why can’t the second data type be used in HarmonyOS attribute declaration?"></a>5. Why can’t the second data type be used in HarmonyOS attribute declaration?</h4><p>The second data type in attribute declaration cannot be used.  </p>
+<pre><code class="language-typescript">export class MyDataSource&lt;T&gt; implements IDataSource &#123;
+  private listeners: DataChangeListener[] = [];
+  private originDataArray: T[] = [];
+  public totalCount(): number &#123;
+    return this.originDataArray.length;
+  &#125;
+  public getData(index: number) &#123;
+    return this.originDataArray[index];
+  &#125;
+  public arrAndArr(data: Array&lt;T&gt;): void &#123;
+    this.originDataArray = data;
+    this.notifyDataReload();
+  &#125;
+  public pushData(data: T): void &#123;
+    this.originDataArray.push(data);
+    this.notifyDataAdd(this.originDataArray.length - 1);
+  &#125;
+  registerDataChangeListener(listener: DataChangeListener): void &#123;
+    if (this.listeners.indexOf(listener) &lt; 0) &#123;
+      console.info(&#39;add listener&#39;);
+      this.listeners.push(listener);
+    &#125;
+  &#125;
+  unregisterDataChangeListener(listener: DataChangeListener): void &#123;
+    const pos = this.listeners.indexOf(listener);
+    if (pos &gt;= 0) &#123;
+      console.info(&#39;remove listener&#39;);
+      this.listeners.splice(pos, 1);
+    &#125;
+  &#125;
+  notifyDataReload(): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataReloaded();
+    &#125;);
+  &#125;
+  notifyDataAdd(index: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataAdd(index);
+    &#125;);
+  &#125;
+  notifyDataChange(index: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataChange(index);
+    &#125;);
+  &#125;
+  notifyDataDelete(index: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataDelete(index);
+    &#125;);
+  &#125;
+  notifyDataMove(from: number, to: number): void &#123;
+    this.listeners.forEach(listener =&gt; &#123;
+      listener.onDataMove(from, to);
+    &#125;);
+  &#125;
+&#125;
+</code></pre>
+<p>For two declared types, use type assertion: <code>as titletopmodel.menus as IDataSource</code>.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/503%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Grid-Layout-Adaptive-Height-Persistent-Storage-Rounded-Dialogs-Value-Passing-Between-Pages-Emoji-Truncation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1927,82 +2107,10 @@ struct Index &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/424%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Hiding-Navigation-Back-Button-Canvas-Component-Swipe-Events-Expandable-Text-Component-Gradients-Full-screen-Custom-Component-Reference-Issues/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/424%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Hiding-Navigation-Back-Button-Canvas-Component-Swipe-Events-Expandable-Text-Component-Gradients-Full-screen-Custom-Component-Reference-Issues/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】 Hiding Navigation Back Button, Canvas Component Swipe Events, Expandable Text, Component Gradients, Full-screen Custom Component Reference Issues</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 07:21:40 / Modified: 12:25:15" itemprop="dateCreated datePublished" datetime="2025-06-25T07:21:40+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Hiding-Navigation-Back-Button-Canvas-Component-Swipe-Events-Expandable-Text-Component-Gradients-Full-screen-Custom-Component-Reference-Issues"><a href="#【Daily-HarmonyOS-Next-Knowledge】Hiding-Navigation-Back-Button-Canvas-Component-Swipe-Events-Expandable-Text-Component-Gradients-Full-screen-Custom-Component-Reference-Issues" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Hiding Navigation Back Button, Canvas Component Swipe Events, Expandable Text, Component Gradients, Full-screen Custom Component Reference Issues"></a>【Daily HarmonyOS Next Knowledge】Hiding Navigation Back Button, Canvas Component Swipe Events, Expandable Text, Component Gradients, Full-screen Custom Component Reference Issues</h3><h4 id="1-In-HarmonyOS-Navigation-the-back-button-of-NavDestination-cannot-be-hidden-causing-the-title-to-not-center"><a href="#1-In-HarmonyOS-Navigation-the-back-button-of-NavDestination-cannot-be-hidden-causing-the-title-to-not-center" class="headerlink" title="1. In HarmonyOS Navigation, the back button of NavDestination cannot be hidden, causing the title to not center."></a>1. In HarmonyOS Navigation, the back button of NavDestination cannot be hidden, causing the title to not center.</h4><ol>
-<li><strong>Back Button Hiding Feature</strong>: The <code>hideBackButton</code> property of the <code>NavDestination</code> component defaults to <code>false</code> (showing the back button). To hide the back button, set this property to <code>true</code>.  </li>
-<li><strong>Title Bar Display Mode</strong>: Set the <code>titleMode</code> property of the <code>NavDestination</code> component to <code>NavigationTitleMode.Mini</code> to hide the back button in the title bar.</li>
-</ol>
-<h4 id="2-When-a-Swiper-nested-page-contains-a-Canvas-in-HarmonyOS-how-to-make-the-Canvas-respond-to-horizontal-swipes-but-not-vertical-swipes"><a href="#2-When-a-Swiper-nested-page-contains-a-Canvas-in-HarmonyOS-how-to-make-the-Canvas-respond-to-horizontal-swipes-but-not-vertical-swipes" class="headerlink" title="2. When a Swiper-nested page contains a Canvas in HarmonyOS, how to make the Canvas respond to horizontal swipes but not vertical swipes?"></a>2. When a Swiper-nested page contains a Canvas in HarmonyOS, how to make the Canvas respond to horizontal swipes but not vertical swipes?</h4><p>When a Swiper-nested page includes a Canvas, the following method was used to add swipe event listening to the Canvas, but the event was not triggered:  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line">.priorityGesture(GestureGroup(GestureMode.Exclusive,</span><br><span class="line">  SwipeGesture()</span><br><span class="line">    .onAction((event: GestureEvent) =&gt; &#123;</span><br><span class="line">      if (event &amp;&amp; this.klineQuotaModel) &#123;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">))</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">**Working demo**: This triggers the `onAction` event, and swiping within the Canvas area does not scroll the Swiper.  </span><br><span class="line">```typescript</span><br><span class="line">@Component</span><br><span class="line">struct CanvasExample1 &#123;</span><br><span class="line">  // Configures parameters for the CanvasRenderingContext2D object, including whether to enable anti-aliasing (true enables it).</span><br><span class="line">  private settings: RenderingContextSettings = new RenderingContextSettings(true);</span><br><span class="line">  // Creates a CanvasRenderingContext2D object for drawing within the Canvas.</span><br><span class="line">  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      // Invokes the CanvasRenderingContext2D object within the Canvas.</span><br><span class="line">      Canvas(this.context)</span><br><span class="line">        .width(&#x27;100%&#x27;)</span><br><span class="line">        .height(&#x27;100%&#x27;)</span><br><span class="line">        .backgroundColor(&#x27;#F5DC62&#x27;)</span><br><span class="line">        .onReady(() =&gt; &#123;</span><br><span class="line">          // Draw content here.</span><br><span class="line">          this.context.strokeRect(50, 50, 200, 150);</span><br><span class="line">        &#125;)</span><br><span class="line">        .priorityGesture(GestureGroup(GestureMode.Exclusive,</span><br><span class="line">          SwipeGesture()</span><br><span class="line">            .onAction((event: GestureEvent) =&gt; &#123;</span><br><span class="line">              console.log(&#x27;Canvas responds, Swiper does not&#x27;);</span><br><span class="line">            &#125;)</span><br><span class="line">        ))</span><br><span class="line">        .hitTestBehavior(HitTestMode.Block)</span><br><span class="line">        .width(&#x27;80%&#x27;)</span><br><span class="line">        .height(&#x27;50%&#x27;);</span><br><span class="line"></span><br><span class="line">      Text(&#x27;Canvas&#x27;)</span><br><span class="line">        .width(&#x27;80%&#x27;)</span><br><span class="line">        .height(&#x27;50%&#x27;);</span><br><span class="line">    &#125;</span><br><span class="line">    .width(&#x27;100%&#x27;)</span><br><span class="line">    .height(&#x27;100%&#x27;)</span><br><span class="line">    .backgroundColor(Color.Red);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index47 &#123;</span><br><span class="line">  private swiperController: SwiperController = new SwiperController();</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Swiper(this.swiperController) &#123;</span><br><span class="line">      Text(&#x27;0&#x27;)</span><br><span class="line">        .width(&#x27;100%&#x27;)</span><br><span class="line">        .height(&#x27;100%&#x27;)</span><br><span class="line">        .backgroundColor(Color.Gray)</span><br><span class="line">        .textAlign(TextAlign.Center)</span><br><span class="line">        .fontSize(30);</span><br><span class="line"></span><br><span class="line">      Text(&#x27;1&#x27;)</span><br><span class="line">        .width(&#x27;100%&#x27;)</span><br><span class="line">        .height(&#x27;100%&#x27;)</span><br><span class="line">        .backgroundColor(Color.Green)</span><br><span class="line">        .textAlign(TextAlign.Center)</span><br><span class="line">        .fontSize(30);</span><br><span class="line"></span><br><span class="line">      Text(&#x27;2&#x27;)</span><br><span class="line">        .width(&#x27;100%&#x27;)</span><br><span class="line">        .height(&#x27;100%&#x27;)</span><br><span class="line">        .backgroundColor(Color.Pink)</span><br><span class="line">        .textAlign(TextAlign.Center)</span><br><span class="line">        .fontSize(30);</span><br><span class="line"></span><br><span class="line">      CanvasExample1();</span><br><span class="line">    &#125;</span><br><span class="line">    .loop(false);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 3. Expandable text in HarmonyOS  </span><br><span class="line">A scenario requires displaying multi-line text with a maximum of 4 lines. When exceeding 4 lines, an &quot;Expand&quot; button should appear at the end. Clicking &quot;Expand&quot; shows the full text with a &quot;Collapse&quot; button, which reverts to the 4-line limit when clicked. Are there similar components or plugins for this?  </span><br><span class="line"></span><br><span class="line">Refer to the API document: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-measure-V5  </span><br><span class="line">This module provides text width and height calculations.  </span><br><span class="line"></span><br><span class="line">**Sample code**:  </span><br><span class="line">```typescript</span><br><span class="line">// Scenario: Change styles (e.g., add expand/collapse) when exceeding 4 lines. Calculate total text height.</span><br><span class="line">let textSize: SizeOptions = measure.measureTextSize(&#123; textContent: this.message, fontSize: 24, constraintWidth: 300 &#125;);</span><br><span class="line">// Calculate height with limited width and max lines (4 lines).</span><br><span class="line">let textSize2: SizeOptions = measure.measureTextSize(&#123; textContent: this.message, fontSize: 24, maxLines: 4, constraintWidth: 300 &#125;);</span><br><span class="line">// If textSize.height &gt; textSize2.height, the text exceeds 4 lines; handle the business logic accordingly.</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. How to add transparency to component gradients in HarmonyOS?  </span><br><span class="line">Recommend setting color values as:  </span><br><span class="line">```typescript</span><br><span class="line">.linearGradient(&#123;</span><br><span class="line">  // angle: 180,</span><br><span class="line">  direction: GradientDirection.Right,</span><br><span class="line">  colors: [[&quot;#00E6E6E6&quot;, 0.0], [&quot;#ffE6E6E6&quot;, 1]]</span><br><span class="line">&#125;)</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 5. When a full-screen custom component is referenced by another page in HarmonyOS, it disables button functions on the referencing page.  </span><br><span class="line">When a full-screen custom component is referenced by another page, button functions on the referencing page become inactive.  </span><br><span class="line"></span><br><span class="line">Solution: Dynamically change the `zIndex` of the full-screen custom component. Refer to the code below:  </span><br><span class="line">```typescript</span><br><span class="line">build() &#123;</span><br><span class="line">    // Use Stack to overlay a &quot;pseudo-dialog&quot; over the original page.</span><br><span class="line">    Stack() &#123;</span><br><span class="line">      Column() &#123;</span><br><span class="line">        Button(&#x27;Bottom Page Button&#x27;)</span><br><span class="line">          .onClick(() =&gt; &#123;</span><br><span class="line">            // showToast(&#x27;Bottom button clicked&#x27;)</span><br><span class="line">            console.log(&#x27;Bottom button clicked&#x27;, this.visible);</span><br><span class="line">          &#125;)</span><br><span class="line">          .backgroundColor(Color.Red)</span><br><span class="line">          .margin(&#123; top: 200 &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">      .width(&#x27;100%&#x27;)</span><br><span class="line">      .height(&#x27;100%&#x27;)</span><br><span class="line">      .zIndex(10)</span><br><span class="line">      .hitTestBehavior(HitTestMode.Transparent);</span><br><span class="line">      </span><br><span class="line">      Component1(&#123; visible: $visible &#125;)</span><br><span class="line">        .zIndex(this.Component1ZIndex);</span><br><span class="line">    &#125;</span><br><span class="line">    .width(&#x27;100%&#x27;)</span><br><span class="line">    .height(&#x27;100%&#x27;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -2068,7 +2176,7 @@ struct Index &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

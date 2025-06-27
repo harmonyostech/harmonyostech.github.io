@@ -149,6 +149,501 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/318-Daily-HarmonyOS-Next-Knowledge-Popup-Issues-Transparent-Background-Setting-any-Type-Problem-Combination-Gestures-for-Swipe-and-Drag-Desktop-Icon-Specifications/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/26/318-Daily-HarmonyOS-Next-Knowledge-Popup-Issues-Transparent-Background-Setting-any-Type-Problem-Combination-Gestures-for-Swipe-and-Drag-Desktop-Icon-Specifications/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Popup Issues, Transparent Background Setting, any Type Problem, Combination Gestures for Swipe and Drag, Desktop Icon Specifications</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 22:21:31 / Modified: 22:22:20" itemprop="dateCreated datePublished" datetime="2025-06-26T22:21:31+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Popup-Issues-Transparent-Background-Setting-any-Type-Problem-Combination-Gestures-for-Swipe-and-Drag-Desktop-Icon-Specifications"><a href="#Daily-HarmonyOS-Next-Knowledge-Popup-Issues-Transparent-Background-Setting-any-Type-Problem-Combination-Gestures-for-Swipe-and-Drag-Desktop-Icon-Specifications" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Popup Issues, Transparent Background Setting, any Type Problem, Combination Gestures for Swipe and Drag, Desktop Icon Specifications"></a>[Daily HarmonyOS Next Knowledge] Popup Issues, Transparent Background Setting, any Type Problem, Combination Gestures for Swipe and Drag, Desktop Icon Specifications</h3><h4 id="1-Problems-with-HarmonyOS-bindPopup"><a href="#1-Problems-with-HarmonyOS-bindPopup" class="headerlink" title="1. Problems with HarmonyOS bindPopup?"></a>1. Problems with HarmonyOS bindPopup?</h4><p>Added a Popup for long-pressing each ListItem.  </p>
+<p><strong>Problem 1</strong>: When using a @state variable at the outer level, long-pressing triggers multiple Popups. How to listen and display the Popup for the specific item pressed?  </p>
+<p><strong>Problem 2</strong>: After clicking a Popup to delete the current item, how to listen for Popup clicks and make the Popup disappear after deletion?  </p>
+<p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">import &#123; router &#125; from &#39;@kit.ArkUI&#39;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;
+
+@Entry
+@Component
+export struct Index &#123;
+  @State list: stockListData = new stockListData([])
+
+  aboutToAppear(): void &#123;
+    const list: ItemInfo[] = []
+    for (let i = 0; i &lt; 50; ++i) &#123;
+      let stockName = &quot;item&quot; + i
+      let bgState = 0
+      list.push(new ItemInfo(stockName, bgState))
+    &#125;
+    this.list.modifyAllData(list)
+
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Text(&quot;Start&quot;).height(&#39;50&#39;)
+        .width(&#39;100%&#39;).onClick(() =&gt; &#123;
+      &#125;)
+      List(&#123; space: 10 &#125;) &#123;
+        LazyForEach(this.list, (info: ItemInfo, index: number) =&gt; &#123;
+          ListItem() &#123;
+            ItemView(&#123;
+              info: info, itemFun: (name) =&gt; &#123;
+                let itemIndex = 0
+                for (let im of this.list.getAllData()) &#123;
+                  if (im.stockName === name) &#123;
+                    break
+                  &#125;
+                  itemIndex++
+                &#125;
+                console.info(&quot;animate--ItemView--aboutToReuse---delete Name=&quot; + name)
+                this.list.getAllData().splice(itemIndex, 1)
+                this.list.notifyDataDelete(itemIndex)
+              &#125;
+            &#125;)
+              .onClick(() =&gt; &#123;
+              &#125;)
+          &#125;.height(&#39;80&#39;)
+        &#125;, (info: ItemInfo, index: number) =&gt; info.stockName + &quot;type&quot; + index)
+      &#125;
+      .height(&#39;100%&#39;)
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+    .width(&#39;100%&#39;)
+  &#125;
+&#125;
+
+@Reusable
+@Component
+struct ItemView &#123;
+  @Prop info: ItemInfo
+  private lastName: string = &quot;&quot;
+
+  aboutToAppear(): void &#123;
+    this.lastName = this.info.stockName
+  &#125;
+
+  aboutToReuse(params: Record&lt;string, Object&gt;): void &#123;
+    console.info(&quot;animate--ItemView--aboutToReuse---name=&quot; + this.info.stockName + &quot;,lastName=&quot; + this.lastName)
+
+    this.lastName = this.info.stockName
+  &#125;
+
+  @State customPopup: boolean = false
+  itemFun: (name: string) =&gt; void = (name) =&gt; &#123;
+  &#125;
+
+  @Builder
+  popItemsView() &#123;
+    Text(&quot;qipao pop&quot;).onClick(() =&gt; &#123;
+      this.customPopup = !this.customPopup
+      this.itemFun(this.info.stockName)
+    &#125;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Flex(&#123; justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center &#125;) &#123;
+        Column() &#123;
+          Text(this.info.stockName)
+            .maxFontSize(&#39;16&#39;)
+            .minFontSize(&#39;8&#39;)
+            .maxLines(1)
+            .margin(&#123; bottom: 2 &#125;)
+        &#125;
+        .width(&#39;36.27%&#39;)
+        .alignItems(HorizontalAlign.Start)
+        .padding(&#123; left: &#39;16&#39;, right: 8 &#125;)
+      &#125;
+      .backgroundColor(&quot;#00ffea&quot;)
+      .height(&#39;100%&#39;)
+    &#125;
+    .bindPopup(this.customPopup, &#123;
+      builder: this.popItemsView, // Popup content
+      placement: Placement.Top, // Popup position
+      offset: &#123; x: 0, y: 30 &#125;,
+      radius: 12,
+      popupColor: Color.Pink, // Popup background color
+      onStateChange: (e) =&gt; &#123;
+        console.info(&#39;tag&#39;, JSON.stringify(e.isVisible))
+        if (!e.isVisible) &#123;
+          this.customPopup = false
+          // this.bgColor = this.info.topStatus == 1 ? $r(&#39;app.color.dialog_background&#39;) : $r(&#39;app.color.start_window_background&#39;)
+        &#125; else &#123;
+          this.customPopup = true
+          // this.bgColor = $r(&#39;app.color.dialog_button&#39;)
+        &#125;
+      &#125;
+    &#125;)
+    .gesture(
+      LongPressGesture(&#123; repeat: false &#125;)// Setting repeat to true triggers continuous long-press events at intervals of duration (default 500ms)
+        .onAction((event?: GestureEvent) =&gt; &#123;
+          console.log(&quot;tag&quot;, &quot;LongPressGesture start event--customPopup=&quot; + this.customPopup)
+          if (event) &#123;
+            this.customPopup = !this.customPopup
+          &#125;
+          // if (event &amp;&amp; event.repeat) &#123;
+          // &#125;
+        &#125;)// Triggers when the long-press action ends
+        .onActionEnd((event?: GestureEvent) =&gt; &#123;
+          if (event) &#123;
+          &#125;
+        &#125;)
+    )
+  &#125;
+&#125;
+
+@Observed
+class ItemInfo &#123;
+  @Track
+  stockName: string = &quot;--&quot;
+  @Track
+  bgState: number = 0
+
+  constructor(name: string, bg: number) &#123;
+    this.stockName = name
+    this.bgState = bg
+  &#125;
+&#125;
+
+
+class BasicDataSource implements IDataSource &#123;
+  private listeners: DataChangeListener[] = [];
+
+  public totalCount(): number &#123;
+    return 0;
+  &#125;
+
+  public getData(index: number): ItemInfo | undefined &#123;
+    return undefined;
+  &#125;
+
+  registerDataChangeListener(listener: DataChangeListener): void &#123;
+    if (this.listeners.indexOf(listener) &lt; 0) &#123;
+      this.listeners.push(listener);
+    &#125;
+  &#125;
+
+  unregisterDataChangeListener(listener: DataChangeListener): void &#123;
+    const position = this.listeners.indexOf(listener);
+    if (position &gt;= 0) &#123;
+      this.listeners.splice(position, 1);
+    &#125;
+  &#125;
+
+  notifyDataReload(): void &#123;
+    this.listeners.forEach((listener: DataChangeListener) =&gt; &#123;
+      listener.onDataReloaded();
+    &#125;)
+  &#125;
+
+  notifyDataAdd(index: number): void &#123;
+    this.listeners.forEach((listener: DataChangeListener) =&gt; &#123;
+      listener.onDataAdd(index);
+    &#125;)
+  &#125;
+
+  notifyDataChange(index: number): void &#123;
+    this.listeners.forEach((listener: DataChangeListener) =&gt; &#123;
+      listener.onDataChange(index);
+    &#125;)
+  &#125;
+
+  notifyDataDelete(index: number): void &#123;
+    this.listeners.forEach((listener: DataChangeListener) =&gt; &#123;
+      listener.onDataDelete(index);
+    &#125;)
+  &#125;
+
+  notifyDataMove(from: number, to: number): void &#123;
+    this.listeners.forEach((listener: DataChangeListener) =&gt; &#123;
+      listener.onDataMove(from, to);
+    &#125;)
+  &#125;
+&#125;
+
+export class stockListData extends BasicDataSource &#123;
+  private listData: ItemInfo[] = [];
+
+  constructor(dataArray: ItemInfo[]) &#123;
+    super()
+    this.listData = dataArray;
+  &#125;
+
+  public totalCount(): number &#123;
+    return this.listData.length;
+  &#125;
+
+  public getAllData(): ItemInfo[] &#123;
+    return this.listData;
+  &#125;
+
+  public getData(index: number): ItemInfo &#123;
+    return this.listData[index];
+  &#125;
+
+  public modifyAllData(data: ItemInfo[]): void &#123;
+    this.listData = data
+    this.notifyDataReload()
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-set-a-transparent-background-for-a-HarmonyOS-Entry-page"><a href="#2-How-to-set-a-transparent-background-for-a-HarmonyOS-Entry-page" class="headerlink" title="2. How to set a transparent background for a HarmonyOS @Entry page?"></a>2. How to set a transparent background for a HarmonyOS @Entry page?</h4><p>For the router routing mode, refer to the following demo:  </p>
+<pre><code class="language-typescript">// Page1.ets
+import window from &#39;@ohos.window&#39;;
+
+@Entry
+@Component
+struct Page2 &#123;
+  @State message: string = &#39;page Page2&#39;;
+
+  onPageHide() &#123;
+    console.log(&quot;pageHide&quot;)
+  &#125;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+        Button(&quot;pageB&quot;).onClick(() =&gt; &#123;
+          let windowStege: window.WindowStage = AppStorage.get(&quot;windowStage&quot;) as window.WindowStage;
+          windowStege.createSubWindow(&quot;hello&quot;, (err, win) =&gt; &#123;
+            win.setUIContent(&#39;pages/Page2&#39;);
+            win.showWindow();
+          &#125;)
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.Pink)
+  &#125;
+&#125;
+
+// Page2.ets
+import window from &#39;@ohos.window&#39;;
+
+@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;page Index&#39;;
+
+  aboutToAppear() &#123;
+    window.findWindow(&quot;hello&quot;).setWindowBackgroundColor(&quot;#00000000&quot;)
+  &#125;
+
+  onBackPress() &#123;
+    window.findWindow(&quot;hello&quot;).destroyWindow().then((res) =&gt; &#123;
+      console.log(&quot;destroyWindow success&quot;)
+    &#125;).catch(() =&gt; &#123;
+      console.log(&quot;destroyWindow fail&quot;)
+    &#125;)
+    return true
+  &#125;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+      &#125;
+      .width(&#39;100%&#39;)
+      .backgroundColor(Color.Red)
+    &#125;
+    .alignItems(VerticalAlign.Top)
+    .height(&#39;100%&#39;)
+    .backgroundColor(&quot;#80ffffff&quot;)
+  &#125;
+&#125;
+
+// Note: Add the key code in EntryAbility
+onWindowStageCreate(windowStage: window.WindowStage): void &#123;
+  // Main window is created, set main page for this ability
+  hilog.info(0x0000, &#39;testTag&#39;, &#39;%&#123;public&#125;s&#39;, &#39;Ability onWindowStageCreate&#39;);
+
+  windowStage.loadContent(&#39;pages/Page231206095213071&#39;, (err, data) =&gt; &#123;
+  if (err.code) &#123;
+  hilog.error(0x0000, &#39;testTag&#39;, &#39;Failed to load the content. Cause: %&#123;public&#125;s&#39;, JSON.stringify(err) ?? &#39;&#39;);
+  return;
+&#125;
+AppStorage.setAndLink(&quot;windowStage&quot;, windowStage);// Key code
+hilog.info(0x0000, &#39;testTag&#39;, &#39;Succeeded in loading the content. Data: %&#123;public&#125;s&#39;, JSON.stringify(data) ?? &#39;&#39;);
+&#125;);
+&#125;
+</code></pre>
+<p>AppStorage.setAndLink(“windowStage”, windowStage);&#x2F;&#x2F; This key code configures windowStage.loadContent(‘pages&#x2F;page1’). The demo shows Page1 jumping to Page2, where Page2 has a transparent effect.  </p>
+<h4 id="3-In-HarmonyOS-ArkTS-ArkUI-how-to-define-generics-when-any-null-etc-cannot-be-used-and-parameters-may-be-arrays-objects-or-multi-level-structures"><a href="#3-In-HarmonyOS-ArkTS-ArkUI-how-to-define-generics-when-any-null-etc-cannot-be-used-and-parameters-may-be-arrays-objects-or-multi-level-structures" class="headerlink" title="3. In HarmonyOS ArkTS ArkUI, how to define generics when any, null, etc., cannot be used, and parameters may be arrays, objects, or multi-level structures?"></a>3. In HarmonyOS ArkTS ArkUI, how to define generics when any, null, etc., cannot be used, and parameters may be arrays, objects, or multi-level structures?</h4><p>ArkTS does not support <code>any</code>, <code>undefined</code>, or <code>unknown</code> types. Explicitly specify specific types.  </p>
+<p><strong>Modification solutions</strong>:  </p>
+<ol>
+<li>All variables should explicitly specify their specific types.  </li>
+<li>For literals, use <code>Record&lt;&gt;</code> with <code>as</code> to specify types.</li>
+</ol>
+<p><strong>How to define generics for component parameters</strong>:<br>Refer to the demo:  </p>
+<pre><code class="language-typescript">let strArr: string[] = [&quot;java&quot;, &quot;python&quot;, &quot;C++&quot;] 
+let intArr: number[] = [1, 2, 3]
+@Entry
+@Component struct Index &#123;
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        this.printArray(strArr) 
+        Text(&#39;Divider&#39;)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+          .fontColor(Color.Green) 
+        this.printArray(intArr)
+      &#125;
+      .width(&#39;100%&#39;) 
+    &#125;
+    .height(&#39;100%&#39;) 
+  &#125;
+  @Builder printArray&lt;T&gt;(arr: T[]) &#123;
+    Column() &#123; 
+      ForEach(arr, (item: T) =&gt; &#123;
+        Text(String(item)) 
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold) 
+      &#125;, (item: string) =&gt; item) 
+    &#125; 
+  &#125; 
+&#125;
+</code></pre>
+<h4 id="4-How-to-write-combination-gestures-for-a-control-to-recognize-swipe-and-drag-in-HarmonyOS-and-how-to-determine-the-swipe-direction"><a href="#4-How-to-write-combination-gestures-for-a-control-to-recognize-swipe-and-drag-in-HarmonyOS-and-how-to-determine-the-swipe-direction" class="headerlink" title="4. How to write combination gestures for a control to recognize swipe and drag in HarmonyOS, and how to determine the swipe direction?"></a>4. How to write combination gestures for a control to recognize swipe and drag in HarmonyOS, and how to determine the swipe direction?</h4><p>A control listens for gestures, directly operating on swipe and moving according to the drag distance on drag.  </p>
+<p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">// xxx.ets
+@Entry
+@Component
+struct Index &#123;
+  @State offsetX: number = 0;
+  @State offsetY: number = 0;
+  @State count: number = 0;
+  @State positionX: number = 0;
+  @State positionY: number = 0;
+  @State borderStyles: BorderStyle = BorderStyle.Solid
+  build() &#123;
+    Column() &#123;
+      Text(&#39;sequence gesture\n&#39; + &#39;LongPress onAction:&#39; + this.count + &#39;\nPanGesture offset:\nX: &#39; + this.offsetX + &#39;\n&#39; + &#39;Y: &#39; + this.offsetY)
+        .fontSize(28)
+    &#125;
+    // Binding the translate property enables component position movement
+    .translate(&#123; x: this.offsetX, y: this.offsetY, z: 0 &#125;)
+    .height(250)
+    .width(300)
+    // The following combination gestures are recognized in sequence; drag gestures will not trigger if long-press events do not fire normally
+    .gesture(
+      // Declare the combination gesture type as Sequence
+      GestureGroup(GestureMode.Sequence,
+        // The first trigger in the combination gesture is a long-press gesture, which can respond multiple times
+        LongPressGesture(&#123; repeat: true &#125;)
+          // When the long-press gesture is recognized, increment the count displayed on the Text component
+          .onAction((event: GestureEvent|undefined) =&gt; &#123;
+            if(event)&#123;
+              if (event.repeat) &#123;
+                this.count++;
+              &#125;
+            &#125;
+            console.info(&#39;LongPress onAction&#39;);
+          &#125;)
+          .onActionEnd(() =&gt; &#123;
+            console.info(&#39;LongPress end&#39;);
+          &#125;),
+        // When dragging after a long-press, the PanGesture is triggered
+        PanGesture()
+          .onActionStart(() =&gt; &#123;
+            this.borderStyles = BorderStyle.Dashed;
+            console.info(&#39;pan start&#39;);
+          &#125;)
+            // When the gesture is triggered, modify the component&#39;s displacement based on the drag distance from the callback
+          .onActionUpdate((event: GestureEvent|undefined) =&gt; &#123;
+            if(event)&#123;
+              this.offsetX = this.positionX + event.offsetX;
+              this.offsetY = this.positionY + event.offsetY;
+            &#125;
+            console.info(&#39;pan update&#39;);
+          &#125;)
+          .onActionEnd(() =&gt; &#123;
+            this.positionX = this.offsetX;
+            this.positionY = this.offsetY;
+            this.borderStyles = BorderStyle.Solid;
+          &#125;)
+      )
+    )
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-Are-there-specifications-or-documentation-for-HarmonyOS-desktop-icons"><a href="#5-Are-there-specifications-or-documentation-for-HarmonyOS-desktop-icons" class="headerlink" title="5. Are there specifications or documentation for HarmonyOS desktop icons?"></a>5. Are there specifications or documentation for HarmonyOS desktop icons?</h4><p>For desktop icon and launch page icon resolution specifications, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/design-guides-V1/app-icon-0000001188065088-V1">https://developer.huawei.com/consumer/cn/doc/design-guides-V1/app-icon-0000001188065088-V1</a>  </p>
+<p>HarmonyOS app icon design aims to return to basics, accurately conveying functions, services, and branding through modern semantic expression. Visually, it balances aesthetics and recognizability; formally, it is inclusive and harmonious yet distinct.  </p>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.03.18.png"></p>
+<p>HarmonyOS app icons follow these design principles:  </p>
+<ol>
+<li><strong>Conciseness and Elegance</strong>: Simple element icons with elegant line expressions convey design aesthetics.  </li>
+<li><strong>Rapid Meaning Conveyance</strong>: Icon graphics accurately communicate functions, services, and branding, with readability and recognizability.  </li>
+<li><strong>Emotional Expression</strong>: Summarize emotional expression through graphics and colors to convey brand visual identity.</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/317-Daily-HarmonyOS-Next-Knowledge-Remove-Popup-Background-Color-Navigation-Usage-Scenarios-Dialog-Page-Relationship-Custom-Struct-Shrinking-Issue-Code-Hidden-Menu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1445,146 +1940,10 @@ struct TabsExample1 &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/308-Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/26/308-Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-26 20:17:55 / Modified: 22:06:45" itemprop="dateCreated datePublished" datetime="2025-06-26T20:17:55+08:00">2025-06-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking"><a href="#Daily-HarmonyOS-Next-Knowledge-Custom-Pop-up-Closure-List-Sorting-Crash-Persistent-Storage-Collapsible-List-Staking" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking"></a>[Daily HarmonyOS Next Knowledge] Custom Pop-up Closure, List Sorting Crash, Persistent Storage, Collapsible List, Staking</h3><h4 id="1-HarmonyOS-custom-dialog-cannot-call-the-close-function-to-close-in-its-own-struct"><a href="#1-HarmonyOS-custom-dialog-cannot-call-the-close-function-to-close-in-its-own-struct" class="headerlink" title="1. HarmonyOS custom dialog cannot call the close function to close in its own struct?"></a>1. HarmonyOS custom dialog cannot call the close function to close in its own struct?</h4><p>If you new CustomDialogController at the beginning of page construction, the internal close function can be executed. If it is dynamic, such as clicking a button to new CustomDialogController and assign it to a variable, the internal close cannot be called.  </p>
-<p>In ArkUI, CustomDialogController is a page-level component whose lifecycle is bound to the page. The use of CustomDialogController in the page is managed by the page’s lifecycle, such as initialization after the page is loaded and destruction when the page exits. If created in build, it cannot be guaranteed to be initialized and destroyed at the correct lifecycle stage, resulting in unexpected behavior. In addition, some properties and methods of CustomDialogController are related to the page’s lifecycle. For example, the build method is used to build UI components in the page, while the lifecycle-related logic cannot be reused in the function. It is not initialized before build and loses the binding relationship with the page.  </p>
-<h4 id="2-cppCrash-occurs-when-the-HarmonyOS-list-component-drags-and-sorts-subcomponents"><a href="#2-cppCrash-occurs-when-the-HarmonyOS-list-component-drags-and-sorts-subcomponents" class="headerlink" title="2. cppCrash occurs when the HarmonyOS list component drags and sorts subcomponents?"></a>2. cppCrash occurs when the HarmonyOS list component drags and sorts subcomponents?</h4><p>You can refer to the following demo, and the list follows the sliding code when dragged to the bottom:  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line">import curves from &#x27;@ohos.curves&#x27;;</span><br><span class="line">import Curves from &#x27;@ohos.curves&#x27;</span><br><span class="line">// xxx.ets</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct ListItemExample &#123;</span><br><span class="line">  @State private arr: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span><br><span class="line">  @State dragItem: number = -1</span><br><span class="line">  @State scaleItem: number = -1</span><br><span class="line">  @State neighborItem: number = -1</span><br><span class="line">  @State neighborScale: number = -1</span><br><span class="line">  private dragRefOffset: number = 0</span><br><span class="line">  @State offsetX: number = 0</span><br><span class="line">  @State offsetY: number = 0</span><br><span class="line">  private ITEM_INTV: number = 120</span><br><span class="line">  @State slide:boolean = false</span><br><span class="line">  private listScroller: ListScroller = new ListScroller()</span><br><span class="line">  // list component specifications</span><br><span class="line">  private listArea: Area = &#123;</span><br><span class="line">    width: 0,</span><br><span class="line">    height: 0,</span><br><span class="line">    position: &#123;&#125;,</span><br><span class="line">    globalPosition: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  scaleSelect(item: number): number &#123;</span><br><span class="line">    if (this.scaleItem == item) &#123;</span><br><span class="line">      return 1.05</span><br><span class="line">    &#125; else if (this.neighborItem == item) &#123;</span><br><span class="line">      return this.neighborScale</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      return 1</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  itemMove(index: number, newIndex: number): void &#123;</span><br><span class="line">    let tmp = this.arr.splice(index, 1)</span><br><span class="line">    this.arr.splice(newIndex, 0, tmp[0])</span><br><span class="line">  &#125;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Stack() &#123;</span><br><span class="line">      List(&#123; space: 20, initialIndex: 0, scroller: this.listScroller &#125;) &#123;</span><br><span class="line">        ForEach(this.arr, (item: number) =&gt; &#123;</span><br><span class="line">          ListItem() &#123;</span><br><span class="line">            Text(&#x27;&#x27; + item)</span><br><span class="line">              .width(&#x27;100%&#x27;)</span><br><span class="line">              .height(100)</span><br><span class="line">              .fontSize(16)</span><br><span class="line">              .textAlign(TextAlign.Center)</span><br><span class="line">              .borderRadius(10)</span><br><span class="line">              .backgroundColor(0xFFFFFF)</span><br><span class="line">              .shadow(this.scaleItem == item ? &#123; radius: 70, color: &#x27;#15000000&#x27;, offsetX: 0, offsetY: 0 &#125; :</span><br><span class="line">                &#123; radius: 0, color: &#x27;#15000000&#x27;, offsetX: 0, offsetY: 0 &#125;)</span><br><span class="line">              .animation(&#123; curve: Curve.Sharp, duration: 300 &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">          .margin(&#123; left: 12, right: 12 &#125;)</span><br><span class="line">          .scale(&#123; x: this.scaleSelect(item), y: this.scaleSelect(item) &#125;)</span><br><span class="line">          .zIndex(this.dragItem == item ? 1 : 0)</span><br><span class="line">          .translate(this.dragItem == item ? &#123; y: this.offsetY &#125; : &#123; y: 0 &#125;)</span><br><span class="line">          .gesture(</span><br><span class="line">          // The following combined gestures are sequentially recognized, and the drag gesture will not be triggered if the long-press gesture event is not triggered normally</span><br><span class="line">            GestureGroup(GestureMode.Sequence,</span><br><span class="line">              LongPressGesture(&#123; repeat: true &#125;)</span><br><span class="line">                .onAction((event?: GestureEvent) =&gt; &#123;</span><br><span class="line">                  animateTo(&#123; curve: Curve.Friction, duration: 300 &#125;, () =&gt; &#123;</span><br><span class="line">                    this.scaleItem = item</span><br><span class="line">                  &#125;)</span><br><span class="line">                &#125;)</span><br><span class="line">                .onActionEnd(() =&gt; &#123;</span><br><span class="line">                  animateTo(&#123; curve: Curve.Friction, duration: 300 &#125;, () =&gt; &#123;</span><br><span class="line">                    this.scaleItem = -1</span><br><span class="line">                  &#125;)</span><br><span class="line">                &#125;),</span><br><span class="line">              PanGesture(&#123; fingers: 1, direction: null, distance: 0 &#125;)</span><br><span class="line">                .onActionStart(() =&gt; &#123;</span><br><span class="line">                  this.dragItem = item</span><br><span class="line">                  this.dragRefOffset = 0</span><br><span class="line">                &#125;)</span><br><span class="line">                .onActionUpdate((event: GestureEvent) =&gt; &#123;</span><br><span class="line">                  this.offsetY = event.offsetY - this.dragRefOffset</span><br><span class="line">                  // console.log(&#x27;Y:&#x27; + this.offsetY.toString())</span><br><span class="line">                  this.neighborItem = -1</span><br><span class="line">                  let index = this.arr.indexOf(item)</span><br><span class="line">                  let curveValue = Curves.initCurve(Curve.Sharp)</span><br><span class="line">                  let value: number = 0</span><br><span class="line">                  // Calculate the scaling of adjacent items based on displacement</span><br><span class="line">                  if (this.offsetY &lt; 0) &#123;</span><br><span class="line">                    value = curveValue.interpolate(-this.offsetY / this.ITEM_INTV)</span><br><span class="line">                    this.neighborItem = this.arr[index-1]</span><br><span class="line">                    this.neighborScale = 1 - value / 20;</span><br><span class="line">                    console.log(&#x27;neighborScale:&#x27; + this.neighborScale.toString())</span><br><span class="line">                  &#125; else if (this.offsetY &gt; 0) &#123;</span><br><span class="line">                    value = curveValue.interpolate(this.offsetY / this.ITEM_INTV)</span><br><span class="line">                    this.neighborItem = this.arr[index+1]</span><br><span class="line">                    this.neighborScale = 1 - value / 20;</span><br><span class="line">                  &#125;</span><br><span class="line">                  // Prevent offsetY from triggering out-of-bounds logic</span><br><span class="line">                  if (index === 0) &#123;</span><br><span class="line">                    this.offsetY = Math.max(0, this.offsetY)</span><br><span class="line">                  &#125; else if (index === this.arr.length - 1) &#123;</span><br><span class="line">                    this.offsetY = Math.min(0, this.offsetY)</span><br><span class="line">                  &#125;</span><br><span class="line">                  // Get finger information</span><br><span class="line">                  let fingerInfo = event.fingerList[0]</span><br><span class="line">                  let clickPercentY = (fingerInfo.globalY - Number(this.listArea.globalPosition</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">#### 3. Which is better for HarmonyOS user login information persistent storage, PersistentStorage or preference?  </span><br><span class="line">For storing user login tokens, is it better to use `@ohos.data.preferences` or PersistentStorage?  </span><br><span class="line"></span><br><span class="line">Persistent storage of user login information can be done using PersistentStorage or Preference, and the specific choice depends on the specific needs and usage scenarios.  </span><br><span class="line">- **PersistentStorage** is used to persistently store selected AppStorage attributes to ensure that these attributes remain consistent when the application restarts. Its main features include:  </span><br><span class="line">  - **Persistence**: Save attributes in AppStorage to the device disk to ensure that data is still available after the application restarts.  </span><br><span class="line">  - **Bidirectional synchronization**: PersistentStorage establishes bidirectional synchronization with attributes in AppStorage to ensure data consistency and synchronization.  </span><br><span class="line">  - **Limitations**: Support simple types (such as number, string, boolean, etc.) and objects that can be reconstructed by JSON.stringify() and JSON.parse(), but do not support nested objects.  </span><br><span class="line">- **Preference** is used to store user preference data and is suitable for data that needs to be read and written frequently. Its main features include:  </span><br><span class="line">  - **Reading and writing**: Data can be read and written quickly, suitable for scenarios requiring efficient reading and writing.  </span><br><span class="line">  - **Lightweight**: Occupy less storage space, suitable for storing simple key-value pair data.  </span><br><span class="line">  - **Sharing**: Multiple HAP packages can share Preference data and communicate through ApplicationContext.  </span><br><span class="line"></span><br><span class="line">**Selection suggestions**:  </span><br><span class="line">- **Data type**: If the data to be stored is complex, including nested objects or arrays, PersistentStorage is recommended.  </span><br><span class="line">- **Reading and writing needs**: If data needs to be read and written frequently and the data is simple, Preference is recommended.  </span><br><span class="line">- **Application scenarios**: If you need to maintain the consistency of specific attributes when the application restarts, PersistentStorage is recommended. If you need to store user preference data, Preference is recommended.  </span><br><span class="line"></span><br><span class="line">In summary, the choice between PersistentStorage and Preference to store user login information depends on the specific data type, reading and writing needs, and application scenarios.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. HarmonyOS implements a list component similar to ExpandList that can be collapsed and opened?  </span><br><span class="line">Reference code:  </span><br></pre></td></tr></table></figure>
-<p>interface IRowItem {<br>  id?: number;<br>  title?: string;<br>  name1?: string;<br>  name2?: string;<br>  name3?: string;<br>  flag?: boolean;<br>  type?: string;<br>  onFlagChange?: () &#x3D;&gt; void;<br>}</p>
-<p>@Entry<br>@Component<br>struct CollapseAndExpandDemo {<br>  @Provide(“flag”) flag: boolean &#x3D; false<br>  private onFlagChange &#x3D; () &#x3D;&gt; {<br>    animateTo({<br>      duration: 650,<br>      curve: Curve.Smooth<br>    }, () &#x3D;&gt; {<br>      this.flag &#x3D; !this.flag;<br>    })<br>  }</p>
-<p>  build() {<br>    Column() {<br>      Row() {<br>        Image($r(“app.media.ic_public_back”)).width(20).height(20)<br>        Text(‘Title’).fontSize(18).fontWeight(FontWeight.Bold).margin({ left: 10 })<br>      }.width(‘100%’).margin({ bottom: 30 })</p>
-<pre><code>  Column() &#123;
-    RowItem(&#123; props: &#123; title: &#39;All Types&#39;, name1: &#39;Romance Novels&#39;, name2: &#39;Mystery Suspense&#39;, name3: &#39;Emotional Family&#39; &#125; &#125;)
-    RowItem(&#123;
-      props: &#123; name1: &#39;Fantasy Novels&#39;, name2: &#39;Thriller/Horror&#39;, name3: &#39;Martial Arts Novels&#39;, type: &#39;DOWN&#39;, onFlagChange: this.onFlagChange
-      &#125;
-    &#125;)
-    // Directly call the collapse and expand component
-    CollapseAndExpand(&#123;
-      items: [
-        &#123; id: 0, name1: &#39;Science Fiction Novels&#39;, name2: &#39;Officialdom&#39;, name3: &#39;History/Fictional&#39; &#125;,
-        &#123; id: 1, name1: &#39;Workplace Business War&#39;, name2: &#39;Military Spy War&#39;, name3: &#39;World Masterpieces&#39; &#125;,
-        &#123; id: 2, name1: &#39;Social Novels&#39;, name2: &#39;Local Novels&#39;, name3: &#39;Modern and Contemporary China&#39; &#125;,
-        &#123; id: 3, name1: &#39;Chinese Classics&#39;, name2: &#39;Foreign Novels&#39;, name3: &#39;Novel Works Collection&#39;, type: &#39;UP&#39;, onFlagChange: this.onFlagChange &#125;
-      ],
-    &#125;)
-
-    RowItem(&#123; props: &#123; title: &#39;All Prices&#39;, name1: &#39;Free&#39;, name2: &#39;Special Price&#39;, name3: &#39;VIP&#39; &#125; &#125;)
-    RowItem(&#123; props: &#123; title: &#39;By Popularity&#39;, name1: &#39;By Latest&#39;, name2: &#39;By Favorites&#39;, name3: &#39;By Word Count&#39; &#125; &#125;)
-  &#125;.width(&#39;100%&#39;)
-
-&#125;
-.height(&#39;100%&#39;)
-.padding(&#123; top: 30, right: 30, left: 30 &#125;)
-</code></pre>
-<p>  }<br>}</p>
-<p>@Component<br>struct RowItem {<br>  private props: IRowItem;<br>  @Consume(“flag”) flag: boolean<br>  build() {<br>    Flex() {<br>      Text(this.props.title)<br>        .fontSize(14)<br>        .fontWeight(FontWeight.Bold)<br>        .layoutWeight(1)<br>        .fontColor(Color.Red)<br>        .margin({ right: 10 })<br>      Flex({ alignItems: ItemAlign.Center }) {<br>        Text(this.props.name1).fontSize(14).margin({ right: 10 })<br>        Text(this.props.name2).fontSize(14).margin({ right: 10 })<br>        Text(this.props.name3).fontSize(14).margin({ right: 10 })</p>
-<pre><code>    if (!this.flag &amp;&amp; this.props.type === &#39;DOWN&#39; || this.flag &amp;&amp; this.props.type === &#39;UP&#39;) &#123;
-      Image($r(&quot;app.media.ic_public_arrow_down_0&quot;))
-        .width(16)
-        .height(16)
-        .objectFit(ImageFit.Contain)
-        .rotate(&#123; angle: !this.flag &amp;&amp; this.props.type === &#39;DOWN&#39; ? 0 : 180 &#125;) // Rotate 180° after clicking the expand button to display the collapse button
-        .onClick(() =&gt; this.props.onFlagChange())
-        .transition(&#123; type: TransitionType.All, opacity: 0 &#125;)
-    &#125;
-  &#125;
-  .layoutWeight(3)
-&#125;.width(&#39;100%&#39;).height(16).margin(&#123; top: 15 &#125;)
-</code></pre>
-<p>  }<br>}</p>
-<p>@Component<br>struct CollapseAndExpand {<br>  private items: IRowItem[] &#x3D; [];<br>  @Consume(“flag”) flag: boolean;</p>
-<p>  build() {<br>    Column() {<br>      ForEach(this.items, (item: IRowItem) &#x3D;&gt; {<br>        RowItem({ props: item })<br>      }, (item: IRowItem) &#x3D;&gt; item.id.toString())<br>    }<br>    .width(‘100%’)<br>    .clip(true)<br>    .height(this.flag ? 130 : 0)<br>  }<br>}</p>
-<pre><code>
-
-#### 5. HarmonyOS login logic judgment?  
-Is there an API implementation similar to View-layer aspect-oriented programming (AOP)? Now there is a requirement that all page clicks need to first determine whether the user is logged in. If logged in, the jump function can be performed. If not logged in, jump to the login page.  
-
-Refer to the document: https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-application-aspect-programming-design-V5  
-
-Aspect-oriented programming (AOP) is a technology that realizes the unified maintenance of program functions through pre-compilation and dynamic proxy during runtime. The core idea of AOP is to separate the concerns of the program and insert code into the program to realize cross-cutting concerns, so as to isolate each part of the business logic, reduce the coupling between them, improve the maintainability and reusability of the program, and improve the development efficiency.  
-
-In AOP, developers can encapsulate cross-cutting concerns by defining aspects without directly modifying the business logic code. This method requires adding functions without modifying the source code, and is often used to separate business code from non-business code, such as parameter verification, log recording, performance statistics and other non-business code, so as to achieve better code decoupling.  
-
-HarmonyOS mainly realizes aspect-oriented programming through the staking mechanism and provides the Aspect class, including addBefore, addAfter and replace interfaces. These interfaces can perform pre-staking, post-staking and replacement implementations on class methods at runtime, providing developers with more flexible operation methods. In specific business scenarios, different requirements may require different埋点 functions and log records. By calling the addBefore, addAfter and replace interfaces, various function enhancements and customized requirements for class methods can be realized:  
-- For method verification requirements, parameter verification can be carried out before or after method execution to ensure the legitimacy of parameters, return values, etc.  
-- For the requirements of method execution time and frequency statistics, we can insert statistical logic before and after method execution to record the execution time and frequency of the method. Through the combined use of addBefore and addAfter interfaces, the monitoring and statistics of method execution can be easily realized, providing data support for performance optimization.  
-- For the requirements of replacing classes, we can use the replace interface of AOP to dynamically replace the implementation logic of the original method. This flexible replacement mechanism can realize the replacement or enhancement of method functions without changing the original method call, providing convenience for the function extension of the project.  
-- For the requirement of obtaining the target package name information when拉起 the application, we can obtain the target package name information and record the log when the application starts. By calling the addBefore interface when the application starts, the monitoring and recording of the application startup process can be realized, providing help for application performance optimization and fault troubleshooting.  
-
-Staking principle: The principles of addBefore, addAfter and replace interfaces are based on the ECMAScript semantics of class, that is, the static methods of the class are the attributes of the class, and the instance methods of the class are the attributes of the prototype object of the class.  
-![](../images/【每日学点HarmonyOS%20Next知识】25.03.08.png)
-</code></pre>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1650,7 +2009,7 @@ Staking principle: The principles of addBefore, addAfter and replace interfaces 
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

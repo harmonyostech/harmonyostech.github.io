@@ -149,6 +149,238 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/414%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/414%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Intercepting Touch Events, Disabling Side Swipe Back, Data-Driven UI, Text Ellipsis Trigger, Obtaining Component Screen Coordinates</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 06:57:30 / Modified: 12:25:17" itemprop="dateCreated datePublished" datetime="2025-06-25T06:57:30+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates"><a href="#Daily-HarmonyOS-Next-Knowledge-Intercepting-Touch-Events-Disabling-Side-Swipe-Back-Data-Driven-UI-Text-Ellipsis-Trigger-Obtaining-Component-Screen-Coordinates" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Intercepting Touch Events, Disabling Side Swipe Back, Data-Driven UI, Text Ellipsis Trigger, Obtaining Component Screen Coordinates"></a>[Daily HarmonyOS Next Knowledge] Intercepting Touch Events, Disabling Side Swipe Back, Data-Driven UI, Text Ellipsis Trigger, Obtaining Component Screen Coordinates</h3><h4 id="1-How-does-a-HarmonyOS-child-component-intercept-touch-events"><a href="#1-How-does-a-HarmonyOS-child-component-intercept-touch-events" class="headerlink" title="1. How does a HarmonyOS child component intercept touch events?"></a>1. How does a HarmonyOS child component intercept touch events?</h4><p>When nesting a Scroll component within a page, attempting to intercept touch events via <code>event.stopPropagation()</code> in <code>onTouch</code> to prevent the Scroll from scrolling when the child component is swiped, but this approach is ineffective. How to handle this?  </p>
+<pre><code class="language-typescript">Stack() &#123;
+  Canvas(this.pickCanvas)
+&#125;.width(&#39;100%&#39;).height(200).onTouch((event: TouchEvent) =&gt; &#123;
+  event.stopPropagation()
+&#125;)
+</code></pre>
+<p>Try adding <code>.hitTestBehavior(HitTestMode.Block)</code> to the Canvas component.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-hit-test-behavior-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-hit-test-behavior-V5</a>  </p>
+<p>This property sets the touch test mode. The ArkUI framework performs touch tests before event distribution to collect components that should respond to touch events. <code>hitTestBehavior</code> affects touch test results and subsequent event distribution (see <code>HitTestMode</code> enum for details).  </p>
+<p>Long-press the Canvas area to enter Canvas interaction; click outside Canvas to exit and enable Scroll scrolling.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-gestures-tapgesture-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-gestures-tapgesture-V5</a>  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+export struct PageE &#123;
+  @State isCheck: boolean = false;
+  private scrollerView: Scroller = new Scroller()
+  private settings: RenderingContextSettings = new RenderingContextSettings(true)
+  private chartCanvas: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings)
+
+  build() &#123;
+    Flex() &#123;
+      Scroll(this.scrollerView) &#123;
+        Column() &#123;
+          Text(&quot;Scroll Area&quot;).width(&quot;100%&quot;).height(&quot;40%&quot;).backgroundColor(0X330000FF)
+
+          Stack() &#123;
+            Canvas(this.chartCanvas)
+              .width(&#39;100%&#39;)
+              .height(&#39;100%&#39;)
+              .onReady(() =&gt; &#123;
+                let c = this.chartCanvas
+                c.fillStyle = &quot;#f00&quot;
+                c.fillRect(20, 20, c.width - 40, c.height - 40)
+              &#125;)
+              .onTouch((event: TouchEvent) =&gt; &#123;
+                console.log(&quot;111&quot;)
+                // Use touch events for canvas drawing (e.g., chart dragging)
+                // Expect no outer Scroll scrolling during canvas interaction
+              &#125;)
+              .hitTestBehavior(this.isCheck ? HitTestMode.Block : HitTestMode.Default)
+              .gesture(
+                LongPressGesture()
+                  .onAction((event: GestureEvent) =&gt; &#123;
+                    console.log(&quot;111222&quot;)
+                    if (!this.isCheck) &#123;
+                      this.isCheck = !this.isCheck
+                    &#125;
+                  &#125;), GestureMask.IgnoreInternal
+              )
+          &#125;
+          .backgroundColor(&quot;#ffff00&quot;).width(&#39;100%&#39;).height(200)
+
+          Text(&quot;Scroll Area&quot;)
+            .width(&quot;100%&quot;).height(&quot;40%&quot;).backgroundColor(0X330000FF)
+        &#125;
+      &#125;
+      .priorityGesture(
+        TapGesture()
+          .onAction((event: GestureEvent) =&gt; &#123;
+            console.log(&quot;333333&quot;)
+            if (this.isCheck) &#123;
+              this.isCheck = !this.isCheck
+            &#125;
+          &#125;), GestureMask.Normal
+      )
+      .width(&quot;100%&quot;).height(&quot;100%&quot;)
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC).padding(20)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-disable-side-swipe-back-for-popups-on-a-HarmonyOS-page"><a href="#2-How-to-disable-side-swipe-back-for-popups-on-a-HarmonyOS-page" class="headerlink" title="2. How to disable side swipe back for popups on a HarmonyOS page?"></a>2. How to disable side swipe back for popups on a HarmonyOS page?</h4><p>Disabling side swipe back via <code>.onBackPressed(() =&gt; true)</code> on the page, but popups still respond to side swipes.  </p>
+<p>Use <code>onWillDismiss</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-methods-custom-dialog-box.md#customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-methods-custom-dialog-box.md#customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E</a>  </p>
+<h4 id="3-How-does-data-from-a-HarmonyOS-ViewModel-drive-UI-updates"><a href="#3-How-does-data-from-a-HarmonyOS-ViewModel-drive-UI-updates" class="headerlink" title="3. How does data from a HarmonyOS ViewModel drive UI updates?"></a>3. How does data from a HarmonyOS ViewModel drive UI updates?</h4><p>How to use data from a ViewModel to drive UI updates (components can use <code>@State</code> and related decorators for UI updates).  </p>
+<p>Apply <code>@ObjectLink</code> and <code>@Observed</code> class decorators.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%9C%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%BB%99objectlink%E8%A3%85%E9%A5%B0%E7%9A%84%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%9C%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%BB%99objectlink%E8%A3%85%E9%A5%B0%E7%9A%84%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC</a>  </p>
+<h4 id="4-How-to-detect-if-TextOverflow-Ellipsis-is-triggered-for-a-HarmonyOS-Text-component"><a href="#4-How-to-detect-if-TextOverflow-Ellipsis-is-triggered-for-a-HarmonyOS-Text-component" class="headerlink" title="4. How to detect if TextOverflow.Ellipsis is triggered for a HarmonyOS Text component?"></a>4. How to detect if TextOverflow.Ellipsis is triggered for a HarmonyOS Text component?</h4><p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">import measure from &#39;@ohos.measure&#39;
+@Entry
+@Component
+struct MeasurePage &#123;
+  @State rawTitle: string = &quot;1月16日，国务院新闻办公室举行新闻发布会，介绍2024年春运形势及工作安排。从2月9日（除夕）00：00到2月17日（正月初八）24：00，免费9天。1月16日，国务院新闻办公室举行新闻发布会，介绍2024年春运形势及工作安排&quot;
+  @State title: string = this.rawTitle 
+  @State suffixStr: string = &quot;&quot;
+  expanded: Boolean = true
+  titleWidth: number = 350
+  needProcess: boolean = true
+  ellipsis: string = &quot;...&quot;
+  EXPAND_STR: string = &quot;展开&quot;
+  COLLAPSE_STR: string = &quot;收起&quot;
+  MAX_LINES: number = 2;
+  fontSize: number = 16
+
+  aboutToAppear(): void &#123;
+    this.process();
+  &#125;
+  process(): void &#123;
+    if (this.expanded) &#123;
+      this.collapseText();
+    &#125; else &#123;
+      this.expandText();
+    &#125;
+  &#125;
+  expandText(): void &#123;
+    if (this.needProcess) &#123;
+      this.suffixStr = this.COLLAPSE_STR; 
+      this.expanded = true;
+      this.title = this.rawTitle;
+    &#125;
+  &#125;
+  collapseText(): void &#123;
+    if (!this.needProcess) &#123;
+      return;
+    &#125;
+    let titleSize: SizeOptions = measure.measureTextSize(&#123;
+      textContent: this.rawTitle,
+      constraintWidth: this.titleWidth,
+      fontSize: this.fontSize
+    &#125;)
+    let twoLineSize: SizeOptions = measure.measureTextSize(&#123;
+      textContent: this.rawTitle,
+      constraintWidth: this.titleWidth,
+      fontSize: this.fontSize,
+      maxLines: this.MAX_LINES
+    &#125;)
+    if ((titleSize.height as number) == (twoLineSize.height as number)) &#123;
+      this.needProcess = false;
+      return;
+    &#125;
+    let clipTitle: string = this.rawTitle
+    this.suffixStr = this.EXPAND_STR;
+    while ((titleSize.height as number) &gt; (twoLineSize.height as number)) &#123;
+      this.expanded = true;
+      clipTitle = clipTitle.substring(0, clipTitle.length - 1);
+      titleSize = measure.measureTextSize(&#123;
+        textContent: clipTitle + this.ellipsis,
+        constraintWidth: this.titleWidth,
+        fontSize: this.fontSize
+      &#125;)
+    &#125;
+    this.title = clipTitle + this.ellipsis
+    this.expanded = false;
+  &#125;
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text()&#123;
+          Span(this.title)
+        &#125;
+        .fontSize(this.fontSize)
+        .id(&quot;title&quot;)
+        .width(this.titleWidth)
+        if (this.needProcess) &#123;
+          Text(this.suffixStr)
+            .fontColor(Color.Orange)
+            .onClick((event) =&gt; &#123;
+            this.process();
+          &#125;)
+        &#125;
+      &#125;
+      .width(&#39;100%&#39;)
+      .alignItems(HorizontalAlign.Start)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-How-to-obtain-the-screen-coordinates-of-a-view-in-HarmonyOS"><a href="#5-How-to-obtain-the-screen-coordinates-of-a-view-in-HarmonyOS" class="headerlink" title="5. How to obtain the screen coordinates of a view in HarmonyOS?"></a>5. How to obtain the screen coordinates of a view in HarmonyOS?</h4><p>Detailed reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-component-id-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-component-id-V5</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-App-Configuration-Information-Map-Type-Global-Popup-Dynamic-Import-Reflection-Default-Keyboard-Popup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1749,81 +1981,10 @@ struct Index &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Page Parameter Passing, Popup Disable Blank Click to Close, Two-way Binding Data Error, Destroy Custom Components, Image Blur Setting</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-24 23:40:44 / Modified: 23:41:09" itemprop="dateCreated datePublished" datetime="2025-06-24T23:40:44+08:00">2025-06-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting"><a href="#【Daily-HarmonyOS-Next-Knowledge】Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Page Parameter Passing, Popup Disable Blank Click to Close, Two-way Binding Data Error, Destroy Custom Components, Image Blur Setting"></a>【Daily HarmonyOS Next Knowledge】Page Parameter Passing, Popup Disable Blank Click to Close, Two-way Binding Data Error, Destroy Custom Components, Image Blur Setting</h3><h4 id="1-How-to-pass-parameters-to-the-corresponding-Page-when-using-window-setUIContent-in-HarmonyOS"><a href="#1-How-to-pass-parameters-to-the-corresponding-Page-when-using-window-setUIContent-in-HarmonyOS" class="headerlink" title="1. How to pass parameters to the corresponding Page when using window.setUIContent in HarmonyOS?"></a>1. How to pass parameters to the corresponding Page when using window.setUIContent in HarmonyOS?</h4><p>How to pass parameters to WindowContent through window.setUIContent?  </p>
-<p>Try the following interface: <code>loadContent(path: string, storage: LocalStorage): Promise&lt;void&gt;</code>. This loads specific page content for the window based on the path of a page in the current project and passes state attributes to the loaded page via LocalStorage using a Promise asynchronous callback.<br>Specific documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#loadcontent9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#loadcontent9</a>  </p>
-<h4 id="2-How-to-disable-the-function-of-closing-a-custom-popup-by-clicking-the-blank-area-in-HarmonyOS"><a href="#2-How-to-disable-the-function-of-closing-a-custom-popup-by-clicking-the-blank-area-in-HarmonyOS" class="headerlink" title="2. How to disable the function of closing a custom popup by clicking the blank area in HarmonyOS?"></a>2. How to disable the function of closing a custom popup by clicking the blank area in HarmonyOS?</h4><p>Reference documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5#ZH-CN_TOPIC_0000001884757698__basedialogoptions11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5#ZH-CN_TOPIC_0000001884757698__basedialogoptions11</a>  </p>
-<h4 id="3-Compilation-error-occurs-when-using-two-way-binding-with-the-Slider-component-in-an-HSP-package-in-HarmonyOS"><a href="#3-Compilation-error-occurs-when-using-two-way-binding-with-the-Slider-component-in-an-HSP-package-in-HarmonyOS" class="headerlink" title="3. Compilation error occurs when using $$ two-way binding with the Slider component in an HSP package in HarmonyOS?"></a>3. Compilation error occurs when using <code>$$</code> two-way binding with the Slider component in an HSP package in HarmonyOS?</h4><p>In an HSP package page, using two-way data binding with the Slider component throws a compilation error <code>Cannot find name &#39;this&#39;</code>. This works normally in a HAP package. The page code is as follows:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">SliderPage</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">value</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">RelativeContainer</span>() &#123;</span><br><span class="line">      <span class="comment">// Using $$ two-way binding here causes a compilation error</span></span><br><span class="line">      <span class="title class_">Slider</span>(&#123; <span class="attr">value</span>: $$this.<span class="property">value</span>, <span class="attr">step</span>: <span class="number">0.01</span> &#125;)</span><br><span class="line">        .<span class="title function_">id</span>(<span class="string">&#x27;slider&#x27;</span>)</span><br><span class="line">        .<span class="title function_">alignRules</span>(&#123;</span><br><span class="line">          <span class="attr">center</span>: &#123; <span class="attr">anchor</span>: <span class="string">&#x27;__container__&#x27;</span>, <span class="attr">align</span>: <span class="title class_">VerticalAlign</span>.<span class="property">Center</span> &#125;,</span><br><span class="line">          <span class="attr">middle</span>: &#123; <span class="attr">anchor</span>: <span class="string">&#x27;__container__&#x27;</span>, <span class="attr">align</span>: <span class="title class_">HorizontalAlign</span>.<span class="property">Center</span> &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">blockSize</span>(&#123; <span class="attr">width</span>: <span class="string">&#x27;20&#x27;</span>, <span class="attr">height</span>: <span class="string">&#x27;20&#x27;</span> &#125;)</span><br><span class="line">        .<span class="title function_">onChange</span>(<span class="function">(<span class="params">value, mode</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (mode === <span class="title class_">SliderChangeMode</span>.<span class="property">End</span>) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;end&#x27;</span>)</span><br><span class="line">            <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;settimeout&#x27;</span>)</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">value</span> = <span class="number">90</span></span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`this.value <span class="subst">$&#123;<span class="variable language_">this</span>.value&#125;</span>`</span>)</span><br><span class="line">            &#125;, <span class="number">1000</span>)</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Variables decorated with @State do not require `</span>$$<span class="string">` operation—use `</span><span class="variable language_">this</span>.<span class="property">value</span><span class="string">` directly. Remove the `</span>$$<span class="string">` attempt or use @Link.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. How to actively destroy a custom component in HarmonyOS?  </span></span><br><span class="line"><span class="string">How to actively destroy a custom component? Add a destruction method `</span>destroy<span class="string">` to the component. How to implement this method to destroy the component itself?  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Demo</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">switch</span>: <span class="built_in">boolean</span> = <span class="literal">true</span></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Hello World&#x27;</span>)</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">        .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">switch</span> = !<span class="variable language_">this</span>.<span class="property">switch</span></span><br><span class="line">        &#125;)</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">switch</span>) &#123;</span><br><span class="line">        <span class="title class_">Child</span>(&#123; <span class="attr">message</span>: <span class="keyword">new</span> <span class="title class_">Message</span>(<span class="string">&#x27;Child&#x27;</span>) &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Refer to the lifecycle and deletion of custom components: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84%E5%88%A0%E9%99%A4  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">A component will be deleted if:  </span></span><br><span class="line"><span class="string">- The branch of an if statement changes.  </span></span><br><span class="line"><span class="string">- The number of elements in a ForEach loop changes.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Before deletion, the `</span>aboutToDisappear<span class="string">` lifecycle function is called, marking that the node will be destroyed. ArkUI&#x27;s node deletion mechanism:  </span></span><br><span class="line"><span class="string">- Backend nodes are directly removed from the component tree and destroyed.  </span></span><br><span class="line"><span class="string">- Frontend nodes are dereferenced and garbage-collected by the JS virtual machine when no references remain.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Custom components and their variables are deleted. If they have synchronized variables (e.g., @Link, @Prop, @StorageLink), they are unregistered from the synchronization source.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Note**: Avoid using `</span><span class="keyword">async</span>/<span class="keyword">await</span><span class="string">` in `</span>aboutToDisappear<span class="string">`. Asynchronous operations (Promises or callback methods) in `</span>aboutToDisappear<span class="string">` keep the component in the Promise closure until the callback completes, preventing garbage collection.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. How to set Gaussian blur for an Image in HarmonyOS?  </span></span><br><span class="line"><span class="string">Reference demo:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="title class_">Text</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">  .<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">  .<span class="title function_">height</span>(<span class="string">&#x27;30%&#x27;</span>)</span><br><span class="line">  .<span class="title function_">fontSize</span>(<span class="number">20</span>)</span><br><span class="line">  .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">  .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">  .<span class="title function_">backdropBlur</span>(<span class="number">50</span>) <span class="comment">// Apply blur to the background</span></span><br><span class="line">  .<span class="title function_">backgroundImage</span>($r(<span class="string">&#x27;app.media.image1&#x27;</span>))</span><br><span class="line">  .<span class="title function_">backgroundImageSize</span>(&#123; <span class="attr">width</span>: <span class="number">400</span>, <span class="attr">height</span>: <span class="number">300</span> &#125;)</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1889,7 +2050,7 @@ struct Index &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

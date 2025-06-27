@@ -149,6 +149,158 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/A-Mastering-DevEco-Studio-Efficiently-Implementing-Glue-Code-Between-ArkTS-and-C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/A-Mastering-DevEco-Studio-Efficiently-Implementing-Glue-Code-Between-ArkTS-and-C/" class="post-title-link" itemprop="url">Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 14:13:57 / Modified: 14:16:36" itemprop="dateCreated datePublished" datetime="2025-06-27T14:13:57+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Mastering-DevEco-Studio-Efficiently-Implementing-Glue-Code-Between-ArkTS-and-C"><a href="#Mastering-DevEco-Studio-Efficiently-Implementing-Glue-Code-Between-ArkTS-and-C" class="headerlink" title="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++"></a>Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++</h1><h3 id="1-Background-Introduction"><a href="#1-Background-Introduction" class="headerlink" title="1. Background Introduction"></a>1. Background Introduction</h3><p>HarmonyOS primarily offers two development languages: ArkTS and C++.</p>
+<ul>
+<li><p><strong>ArkTS</strong> is the preferred main application development language for HarmonyOS. It extends the TypeScript (TS) ecosystem with additional features tailored for application development, maintaining the basic style of TS while enhancing static checks and analysis during development through standardized definitions. This improves program stability and performance. ArkTS is well-suited for efficient UI interface development scenarios.</p>
+</li>
+<li><p><strong>C++</strong> is supported through the NDK (Native Development Kit) toolset. The NDK is a collection of native APIs, corresponding compilation scripts, and toolchains provided by the HarmonyOS SDK, enabling developers to implement critical application functionalities using C or C++. The NDK only covers some of HarmonyOS’s basic underlying capabilities, such as the C runtime base library (libc), graphics libraries, window systems, multimedia, compression libraries, and Node-API for cross-language interoperability between ArkTS&#x2F;JS and C. It does not provide the complete capabilities of ArkTS&#x2F;JS APIs. C++ is suitable for the following scenarios:</p>
+<ul>
+<li>Performance-sensitive scenarios, such as gaming and physics simulations, which are compute-intensive.</li>
+<li>Scenarios requiring the reuse of existing C or C++ libraries.</li>
+<li>Scenarios needing specialized libraries tailored to CPU features, such as Neon acceleration.</li>
+</ul>
+</li>
+</ul>
+<p>Some capabilities in HarmonyOS are only available through C++ interfaces, such as audio and video encoding&#x2F;decoding. Notably, the latest HarmonyOS 5.0.1 version primarily introduces new capabilities through C APIs. To fully leverage HarmonyOS’s capabilities and become a proficient HarmonyOS developer, mastering mixed development with ArkTS and C++ is essential.</p>
+<p>Calling C++ from ArkTS involves a series of complex processes. This article focuses on introducing a one-click tool provided by DevEco Studio to generate cross-language “glue” code, helping developers improve efficiency.</p>
+<h3 id="2-ArkTS-Calling-C-Methods-Process"><a href="#2-ArkTS-Calling-C-Methods-Process" class="headerlink" title="2. ArkTS Calling C++ Methods Process"></a>2. ArkTS Calling C++ Methods Process</h3><p>Similar to Android’s JNI, HarmonyOS enables ArkTS to call C++ methods primarily through NAPI. This section uses a Native C++ project demo created in DevEco Studio to illustrate the process of ArkTS calling C++ methods. The following diagram shows the code structure after creating a Native C++ project:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++"></p>
+<p>The project mainly consists of three parts:</p>
+<ul>
+<li><p><strong>types</strong>:</p>
+<ul>
+<li><code>Index.d.ts</code>: Contains the C++ interfaces exposed to ArkTS.</li>
+<li><code>oh-package.json5</code>: Specifies the dynamic library name and the path to the <code>Index.d.ts</code> file.</li>
+</ul>
+</li>
+<li><p><strong>CMakeLists.txt</strong>: The C++ code build script.</p>
+</li>
+<li><p><strong>napi_init.cpp</strong>: The C++ implementation code.</p>
+</li>
+</ul>
+<p>Developing a Native module generally involves implementing the corresponding modules mentioned above.</p>
+<h4 id="2-1-Declaring-C-Interfaces-in-Index-d-ts"><a href="#2-1-Declaring-C-Interfaces-in-Index-d-ts" class="headerlink" title="2.1 Declaring C++ Interfaces in Index.d.ts"></a>2.1 Declaring C++ Interfaces in Index.d.ts</h4><p>The declared functions are used for both C++ implementation and ArkTS calls.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="attr">add</span>: <span class="function">(<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span></span>) =&gt;</span> <span class="built_in">number</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-Registering-and-Implementing-Declared-Methods-in-C"><a href="#2-2-Registering-and-Implementing-Declared-Methods-in-C" class="headerlink" title="2.2 Registering and Implementing Declared Methods in C++"></a>2.2 Registering and Implementing Declared Methods in C++</h4><p>First, register the methods declared in <code>Index.d.ts</code> in the NAPI’s <code>Init</code> method:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">EXTERN_C_START  </span></span><br><span class="line"><span class="function"><span class="type">static</span> napi_value <span class="title">Init</span><span class="params">(napi_env env, napi_value exports)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    napi_property_descriptor desc[] = &#123;  </span><br><span class="line">        &#123; <span class="string">&quot;add&quot;</span>, <span class="literal">nullptr</span>, Add, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, napi_default, <span class="literal">nullptr</span> &#125;  </span><br><span class="line">    &#125;;  </span><br><span class="line">    <span class="built_in">napi_define_properties</span>(env, exports, <span class="built_in">sizeof</span>(desc) / <span class="built_in">sizeof</span>(desc[<span class="number">0</span>]), desc);  </span><br><span class="line">    <span class="keyword">return</span> exports;  </span><br><span class="line">&#125;  </span><br><span class="line">EXTERN_C_END</span><br></pre></td></tr></table></figure>
+
+<p><code>napi_property_descriptor</code> is an array that can implement multiple methods. In the example, the string <code>&quot;add&quot;</code> represents the <code>add</code> method declared in <code>Index.d.ts</code>, and the third parameter <code>Add</code> is the name of the method implemented in C++. Next, implement the <code>Add</code> method:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> napi_value <span class="title">Add</span><span class="params">(napi_env env, napi_callback_info info)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    <span class="type">size_t</span> argc = <span class="number">2</span>;  </span><br><span class="line">    napi_value args[<span class="number">2</span>] = &#123;<span class="literal">nullptr</span>&#125;;  </span><br><span class="line">  </span><br><span class="line">    <span class="built_in">napi_get_cb_info</span>(env, info, &amp;argc, args , <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);  </span><br><span class="line">  </span><br><span class="line">    napi_valuetype valuetype0;  </span><br><span class="line">    <span class="built_in">napi_typeof</span>(env, args[<span class="number">0</span>], &amp;valuetype0);  </span><br><span class="line">  </span><br><span class="line">    napi_valuetype valuetype1;  </span><br><span class="line">    <span class="built_in">napi_typeof</span>(env, args[<span class="number">1</span>], &amp;valuetype1);  </span><br><span class="line">  </span><br><span class="line">    <span class="type">double</span> value0;  </span><br><span class="line">    <span class="built_in">napi_get_value_double</span>(env, args[<span class="number">0</span>], &amp;value0);  </span><br><span class="line">  </span><br><span class="line">    <span class="type">double</span> value1;  </span><br><span class="line">    <span class="built_in">napi_get_value_double</span>(env, args[<span class="number">1</span>], &amp;value1);  </span><br><span class="line">  </span><br><span class="line">    napi_value sum;  </span><br><span class="line">    <span class="built_in">napi_create_double</span>(env, value0 + value1, &amp;sum);  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> sum;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The structure of the NAPI implementation method is fixed. The return value must be <code>napi_value</code>, and the parameters must be <code>napi_env</code> and <code>napi_callback_info</code>. The method parses specific parameter information from <code>napi_callback_info</code> to implement the desired functionality.</p>
+<h4 id="2-3-Configuring-the-Dynamic-Library-Name-and-C-Source-List-in-CMakeLists-txt"><a href="#2-3-Configuring-the-Dynamic-Library-Name-and-C-Source-List-in-CMakeLists-txt" class="headerlink" title="2.3 Configuring the Dynamic Library Name and C++ Source List in CMakeLists.txt"></a>2.3 Configuring the Dynamic Library Name and C++ Source List in CMakeLists.txt</h4><p><code>add_library</code> specifies the name of the compiled library and the list of C++ code files to be compiled:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(entry SHARED napi_init.cpp)</span><br></pre></td></tr></table></figure>
+
+<p>For more information on this, refer to the CMake build tool documentation: <a target="_blank" rel="noopener" href="https://cmake.org/">https://cmake.org/</a></p>
+<h4 id="2-4-Calling-the-Declared-Methods-in-ArkTS"><a href="#2-4-Calling-the-Declared-Methods-in-ArkTS" class="headerlink" title="2.4 Calling the Declared Methods in ArkTS"></a>2.4 Calling the Declared Methods in ArkTS</h4><p>Once implemented, you can call the corresponding methods in ArkTS:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// First, import the dynamic library:</span></span><br><span class="line"><span class="keyword">import</span> testNapi <span class="keyword">from</span> <span class="string">&#x27;libentry.so&#x27;</span>;</span><br><span class="line"><span class="comment">// Call the corresponding add method</span></span><br><span class="line">hilog.<span class="title function_">info</span>(<span class="number">0x0000</span>, <span class="string">&#x27;testTag&#x27;</span>, <span class="string">&#x27;Test NAPI 2 + 3 = %&#123;public&#125;d&#x27;</span>, testNapi.<span class="title function_">add</span>(<span class="number">2</span>, <span class="number">3</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-DevEco-Studio’s-One-Click-Generation-of-Glue-Code"><a href="#3-DevEco-Studio’s-One-Click-Generation-of-Glue-Code" class="headerlink" title="3. DevEco Studio’s One-Click Generation of Glue Code"></a>3. DevEco Studio’s One-Click Generation of Glue Code</h3><p>From the ArkTS calling C++ methods process outlined above, it’s evident that the process is somewhat cumbersome, requiring handling in three places across two files. Is there a more convenient method? Don’t worry; the highlight of this article is the <strong>cross-language code editing</strong> feature provided by DevEco Studio IDE.</p>
+<p>DevEco Studio IDE offers two creation methods:</p>
+<ol>
+<li>Write function declarations in <code>Index.d.ts</code> and generate C++ functions with one click.</li>
+<li>Write C++ function declarations in a C++ header file and generate registration code with one click.</li>
+</ol>
+<p>The following sections provide detailed explanations of each method.</p>
+<h4 id="3-1-Writing-Function-Declarations-in-Index-d-ts-and-Generating-C-Functions-with-One-Click"><a href="#3-1-Writing-Function-Declarations-in-Index-d-ts-and-Generating-C-Functions-with-One-Click" class="headerlink" title="3.1 Writing Function Declarations in Index.d.ts and Generating C++ Functions with One Click"></a>3.1 Writing Function Declarations in Index.d.ts and Generating C++ Functions with One Click</h4><p>After declaring methods in <code>Index.d.ts</code>, the IDE will prompt an error. Hovering over it will display the following prompt:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-1.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 1"></p>
+<p>Clicking “Generate native implementation” will quickly generate the registration code and implementation code in C++:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-2.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 2"></p>
+<p>This reduces three manual implementations to one, significantly improving efficiency by more than two-thirds.</p>
+<h4 id="3-2-Writing-C-Function-Declarations-in-a-C-Header-File-and-Generating-Registration-Code-with-One-Click"><a href="#3-2-Writing-C-Function-Declarations-in-a-C-Header-File-and-Generating-Registration-Code-with-One-Click" class="headerlink" title="3.2 Writing C++ Function Declarations in a C++ Header File and Generating Registration Code with One Click"></a>3.2 Writing C++ Function Declarations in a C++ Header File and Generating Registration Code with One Click</h4><p>To create registration code with one click via C++ function declarations, you first need to create a header file and declare methods within it:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-3.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 3"></p>
+<p>Right-click the method and select “Generate”:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-4.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 4"></p>
+<p>Then, click on “NAPI”:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-5.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 5"></p>
+<p>The registration function and the corresponding NAPI function implementation are automatically generated:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-6.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 6"></p>
+<p>The method declaration in <code>Index.d.ts</code> is also automatically generated:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-7.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 7"></p>
+<p>With the IDE’s assistance, writing cross-language “glue” code significantly improves efficiency. It’s fair to say that this feature provided by DevEco Studio is quite impressive and considerate for developers.</p>
+<p>There are three points to note:</p>
+<ol>
+<li>The header files supported for one-click code generation include <code>.hpp</code>, <code>.hxx</code>, <code>.hh</code>, and <code>.h</code>.</li>
+<li>The NAPI function declarations that can be quickly generated currently support parameter types such as <code>bool</code>, <code>int</code>, <code>string</code>, <code>void</code>, <code>float</code>, <code>double</code>, <code>std::array</code>, and <code>std::vector</code>.</li>
+<li>If the project already has a <code>napi_init.cpp</code> file, the <code>Init</code> function within it will be appended. If not, the IDE will automatically create it for you.</li>
+</ol>
+<h3 id="4-Enhancing-NAPI-Type-Conversion-Code-Writing-in-C-with-AI"><a href="#4-Enhancing-NAPI-Type-Conversion-Code-Writing-in-C-with-AI" class="headerlink" title="4. Enhancing NAPI Type Conversion Code Writing in C++ with AI"></a>4. Enhancing NAPI Type Conversion Code Writing in C++ with AI</h3><p>While the IDE’s automatic generation of cross-language glue code greatly aids Native code development, some developers may still find the TODO code generated to be cumbersome, with many ArkTS and C++ cross-language conversion codes being template-heavy and tedious. Is there a way to improve efficiency?</p>
+<p>Taking the automatically generated <code>add</code> code as an example:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> napi_value <span class="title">Add</span><span class="params">(napi_env env, napi_callback_info info)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    <span class="type">size_t</span> argc = <span class="number">2</span>;  </span><br><span class="line">    napi_value args[<span class="number">2</span>] = &#123;<span class="literal">nullptr</span>&#125;;  </span><br><span class="line">  </span><br><span class="line">    <span class="built_in">napi_get_cb_info</span>(env, info, &amp;argc, args , <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);  </span><br><span class="line">  </span><br><span class="line">    napi_valuetype valuetype0;  </span><br><span class="line">    <span class="built_in">napi_typeof</span>(env, args[<span class="number">0</span>], &amp;valuetype0);  </span><br><span class="line">  </span><br><span class="line">    napi_valuetype valuetype1;  </span><br><span class="line">    <span class="built_in">napi_typeof</span>(env, args[<span class="number">1</span>], &amp;valuetype1);  </span><br><span class="line">  </span><br><span class="line">    <span class="type">double</span> value0;  </span><br><span class="line">    <span class="built_in">napi_get_value_double</span>(env, args[<span class="number">0</span>], &amp;value0);  </span><br><span class="line">  </span><br><span class="line">    <span class="type">double</span> value1;  </span><br><span class="line">    <span class="built_in">napi_get_value_double</span>(env, args[<span class="number">1</span>], &amp;value1);  </span><br><span class="line">  </span><br><span class="line">    napi_value sum;  </span><br><span class="line">    <span class="built_in">napi_create_double</span>(env, value0 + value1, &amp;sum);  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> sum;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This code requires parsing two <code>int</code> type parameters from <code>napi_callback_info</code>, performing the operation, and then generating an <code>napi_value</code> to return.</p>
+<p>Since this cross-language data type conversion is part of the NAPI protocol, the DevEco CodeGenie plugin also provides excellent support. You can install the Genie plugin in DevEco Studio to help quickly generate C++ implementation code:</p>
+<p><img src="/../images/%E6%8E%8C%E6%8F%A1DevEco%20Studio%E8%BF%99%E4%B8%80%E5%8A%9F%E8%83%BD%EF%BC%8C%E9%AB%98%E6%95%88%E5%AE%9E%E7%8E%B0ArkTS%E4%B8%8EC++%E8%83%B6%E6%B0%B4%E4%BB%A3%E7%A0%81-8.png" alt="Mastering DevEco Studio: Efficiently Implementing Glue Code Between ArkTS and C++ - 8"></p>
+<p>With just a few “TAB” key presses, the code is almost complete, and you can then implement your business logic as needed.</p>
+<h3 id="5-Conclusion"><a href="#5-Conclusion" class="headerlink" title="5. Conclusion"></a>5. Conclusion</h3><p>This article primarily introduced the implementation steps for Native C++ code and the cross-language code editing tools provided by DevEco Studio IDE. These tools enable developers to write only function declarations and generate corresponding initialization registration methods and C++ implementation methods with one click. We hope you will explore and experience these tools to enhance your development efficiency.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/A-Embracing-HarmonyOS-Next-Efficient-Use-of-DevEco/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1659,300 +1811,10 @@ let p = new People(20, &quot;Tom&quot;);
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/B-Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next/" class="post-title-link" itemprop="url">Practical Guide to Custom Graphics with Canvas in HarmonyOS Next</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 11:33:21 / Modified: 11:35:45" itemprop="dateCreated datePublished" datetime="2025-06-27T11:33:21+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next"><a href="#Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next" class="headerlink" title="Practical Guide to Custom Graphics with Canvas in HarmonyOS Next"></a><strong>Practical Guide to Custom Graphics with Canvas in HarmonyOS Next</strong></h3><p>HarmonyOS Next provides a <strong>Canvas</strong> component for custom graphics rendering, allowing developers to draw shapes, text, and images using <strong>CanvasRenderingContext2D</strong> and <strong>OffscreenCanvasRenderingContext2D</strong> objects.  </p>
-<p>HarmonyOS Next supports three approaches for custom graphics rendering on Canvas:  </p>
-<ol>
-<li><strong>Direct Drawing</strong> on Canvas using <code>CanvasRenderingContext2D</code>.  </li>
-<li><strong>Offscreen Rendering</strong> (pre-rendering content in a buffer and converting it into an image for faster drawing).  </li>
-<li><strong>Loading Lottie Animations</strong> on Canvas.</li>
-</ol>
-<hr>
-<h2 id="1-Canvas-Drawing-Steps"><a href="#1-Canvas-Drawing-Steps" class="headerlink" title="1. Canvas Drawing Steps"></a><strong>1. Canvas Drawing Steps</strong></h2><p>To begin drawing, we must first create a <code>RenderingContextSettings</code> object, which configures parameters such as anti-aliasing, and then initialize <code>CanvasRenderingContext2D</code>.  </p>
-<h3 id="Basic-Example"><a href="#Basic-Example" class="headerlink" title="Basic Example"></a><strong>Basic Example</strong></h3><pre><code class="language-typescript">private settings: RenderingContextSettings = new RenderingContextSettings(true);  
-private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
-
-build() &#123;  
-  RelativeContainer() &#123;  
-    Canvas(this.context)  
-      .width(&#39;100%&#39;)  
-      .height(&#39;100%&#39;)  
-      .backgroundColor(&#39;#660099&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5.png" alt="HarmonyOS Next Canvas Example">  </p>
-<p>This example sets a background color. The <code>settings</code> object configures <code>CanvasRenderingContext2D</code>, including anti-aliasing (<code>true</code> enables it).  </p>
-<p><strong>Key Notes:</strong>  </p>
-<ul>
-<li>Drawing operations must wait for the <code>onReady</code> callback, which ensures the Canvas is fully initialized and provides its dimensions.  </li>
-<li><code>onReady(event: () =&gt; void)</code> is triggered when the Canvas is ready, allowing access to its width and height for precise drawing.</li>
-</ul>
-<hr>
-<h2 id="2-Offscreen-Rendering"><a href="#2-Offscreen-Rendering" class="headerlink" title="2. Offscreen Rendering"></a><strong>2. Offscreen Rendering</strong></h2><p>Offscreen rendering improves performance by first drawing content in a buffer (<code>OffscreenCanvas</code>) and then transferring it to the main Canvas as an image.  </p>
-<h3 id="Process"><a href="#Process" class="headerlink" title="Process:"></a><strong>Process:</strong></h3><ol>
-<li>Use <code>transferToImageBitmap()</code> to convert the offscreen Canvas into an <code>ImageBitmap</code>.  </li>
-<li>Use <code>transferFromImageBitmap()</code> to display the <code>ImageBitmap</code> on the main Canvas.</li>
-</ol>
-<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a><strong>Example:</strong></h3><pre><code class="language-typescript">@Entry  
-@Component  
-struct Index &#123;  
-  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
-  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
-  private offCanvas: OffscreenCanvas = new OffscreenCanvas(600, 600);  
-
-  build() &#123;  
-    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
-      Canvas(this.context)  
-        .width(&#39;100%&#39;)  
-        .height(&#39;100%&#39;)  
-        .backgroundColor(&#39;#5F3CE2&#39;)  
-        .onReady(() =&gt; &#123;  
-          let offContext = this.offCanvas.getContext(&quot;2d&quot;, this.settings);  
-          offContext.strokeRect(20, 20, 100, 100); // Draw a rectangle offscreen  
-          let image = this.offCanvas.transferToImageBitmap(); // Convert to ImageBitmap  
-          this.context.transferFromImageBitmap(image); // Display on main Canvas  
-        &#125;)  
-    &#125;  
-    .width(&#39;100%&#39;)  
-    .height(&#39;100%&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p><strong>Steps:</strong>  </p>
-<ol>
-<li>Create <code>RenderingContextSettings</code> (enabling anti-aliasing).  </li>
-<li>Initialize <code>OffscreenCanvas</code> with a specified width and height.  </li>
-<li>In <code>onReady</code>, get the offscreen context (<code>getContext(&quot;2d&quot;, settings)</code>).  </li>
-<li>Draw shapes (e.g., <code>strokeRect</code>) on the offscreen Canvas.  </li>
-<li>Convert the offscreen rendering to an <code>ImageBitmap</code> and transfer it to the main Canvas.</li>
-</ol>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-1.png" alt="HarmonyOS Next Offscreen Rendering">  </p>
-<hr>
-<h2 id="3-Drawing-Basic-Shapes"><a href="#3-Drawing-Basic-Shapes" class="headerlink" title="3. Drawing Basic Shapes"></a><strong>3. Drawing Basic Shapes</strong></h2><h3 id="1-Drawing-Lines"><a href="#1-Drawing-Lines" class="headerlink" title="(1) Drawing Lines"></a><strong>(1) Drawing Lines</strong></h3><p>Use <code>beginPath()</code>, <code>moveTo()</code>, and <code>lineTo()</code> to draw lines.  </p>
-<pre><code class="language-typescript">@Entry  
-@Component  
-struct Index &#123;  
-  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
-  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
-
-  build() &#123;  
-    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
-      Canvas(this.context)  
-        .width(&#39;100%&#39;)  
-        .height(&#39;100%&#39;)  
-        .backgroundColor(&#39;#cbbbf2&#39;)  
-        .onReady(() =&gt; &#123;  
-          this.context.beginPath();  
-          this.context.moveTo(150, 50);  
-          this.context.lineTo(200, 150);  
-          this.context.stroke();  
-        &#125;)  
-    &#125;  
-    .width(&#39;100%&#39;)  
-    .height(&#39;100%&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-2.png" alt="HarmonyOS Next Line Drawing">  </p>
-<h3 id="2-Drawing-Rectangles"><a href="#2-Drawing-Rectangles" class="headerlink" title="(2) Drawing Rectangles"></a><strong>(2) Drawing Rectangles</strong></h3><ul>
-<li><code>fillRect()</code> for solid rectangles.  </li>
-<li><code>strokeRect()</code> for outlined rectangles.</li>
-</ul>
-<p><strong>Example (Solid Rectangle):</strong>  </p>
-<pre><code class="language-typescript">@Entry  
-@Component  
-struct Index &#123;  
-  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
-  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
-
-  build() &#123;  
-    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
-      Canvas(this.context)  
-        .width(&#39;100%&#39;)  
-        .height(&#39;100%&#39;)  
-        .backgroundColor(&#39;#cbbbf2&#39;)  
-        .onReady(() =&gt; &#123;  
-          this.context.fillStyle = &#39;#0097D4&#39;;  
-          this.context.fillRect(50, 50, 100, 100);  
-        &#125;)  
-    &#125;  
-    .width(&#39;100%&#39;)  
-    .height(&#39;100%&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-3.png" alt="HarmonyOS Next Rectangle Drawing">  </p>
-<h3 id="3-Drawing-Circles"><a href="#3-Drawing-Circles" class="headerlink" title="(3) Drawing Circles"></a><strong>(3) Drawing Circles</strong></h3><p>Use <code>arc()</code> to draw circles.  </p>
-<pre><code class="language-typescript">@Entry  
-@Component  
-struct Index &#123;  
-  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
-  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
-
-  build() &#123;  
-    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
-      Canvas(this.context)  
-        .width(&#39;100%&#39;)  
-        .height(&#39;100%&#39;)  
-        .backgroundColor(&#39;#cbbbf2&#39;)  
-        .onReady(() =&gt; &#123;  
-          let region = new Path2D();  
-          region.arc(100, 75, 50, 0, 6.28); // (x, y, radius, startAngle, endAngle)  
-          this.context.stroke(region);  
-        &#125;)  
-    &#125;  
-    .width(&#39;100%&#39;)  
-    .height(&#39;100%&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-4.png" alt="HarmonyOS Next Circle Drawing">  </p>
-<h3 id="4-Drawing-Ellipses"><a href="#4-Drawing-Ellipses" class="headerlink" title="(4) Drawing Ellipses"></a><strong>(4) Drawing Ellipses</strong></h3><p>Use <code>ellipse()</code> for elliptical shapes.  </p>
-<pre><code class="language-typescript">@Entry  
-@Component  
-struct Index &#123;  
-  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
-  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
-
-  build() &#123;  
-    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
-      Canvas(this.context)  
-        .width(&#39;100%&#39;)  
-        .height(&#39;100%&#39;)  
-        .backgroundColor(&#39;#cbbbf2&#39;)  
-        .onReady(() =&gt; &#123;  
-          this.context.beginPath();  
-          this.context.ellipse(150, 150, 50, 100, Math.PI * 0.25, Math.PI * 0, Math.PI * 2);  
-          this.context.stroke();  
-        &#125;)  
-    &#125;  
-    .width(&#39;100%&#39;)  
-    .height(&#39;100%&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-5.png" alt="HarmonyOS Next Ellipse Drawing">  </p>
-<h3 id="5-Text-Rendering"><a href="#5-Text-Rendering" class="headerlink" title="(5) Text Rendering"></a><strong>(5) Text Rendering</strong></h3><p>Use <code>fillText()</code> (filled text) and <code>strokeText()</code> (outlined text).  </p>
-<pre><code class="language-typescript">@Entry  
-@Component  
-struct Index &#123;  
-  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
-  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
-
-  build() &#123;  
-    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
-      Canvas(this.context)  
-        .width(&#39;100%&#39;)  
-        .height(&#39;100%&#39;)  
-        .backgroundColor(&#39;#cbbbf2&#39;)  
-        .onReady(() =&gt; &#123;  
-          // Filled text  
-          this.context.font = &#39;50px bolder sans-serif&#39;;  
-          this.context.fillText(&quot;HarmonyOS!&quot;, 50, 100);  
-          // Outlined text  
-          this.context.strokeStyle = &quot;#ff0000&quot;;  
-          this.context.lineWidth = 2;  
-          this.context.font = &#39;50px bolder sans-serif&#39;;  
-          this.context.strokeText(&quot;HarmonyOS&quot;, 50, 150);  
-        &#125;)  
-    &#125;  
-    .width(&#39;100%&#39;)  
-    .height(&#39;100%&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-6.png" alt="HarmonyOS Next Text Drawing">  </p>
-<hr>
-<h2 id="4-Additional-Features"><a href="#4-Additional-Features" class="headerlink" title="4. Additional Features"></a><strong>4. Additional Features</strong></h2><ul>
-<li><strong>Image Drawing</strong>: Load and render images on Canvas.  </li>
-<li><strong>Pixel Manipulation</strong>: Process image pixel data.  </li>
-<li><strong>Gradients</strong>: Use <code>createLinearGradient()</code> and <code>createRadialGradient()</code> for smooth color transitions.</li>
-</ul>
-<hr>
-<h2 id="5-Summary"><a href="#5-Summary" class="headerlink" title="5. Summary"></a><strong>5. Summary</strong></h2><p>This guide explored <strong>custom graphics rendering in HarmonyOS Next</strong> using <strong>Canvas</strong>, covering:  </p>
-<ol>
-<li><strong>Direct Drawing</strong> with <code>CanvasRenderingContext2D</code>.  </li>
-<li><strong>Offscreen Rendering</strong> for performance optimization.  </li>
-<li><strong>Lottie Animation Support</strong> (not covered in detail here).</li>
-</ol>
-<p>Key takeaways:  </p>
-<ul>
-<li><strong><code>onReady</code> is crucial</strong> for ensuring Canvas dimensions are available before drawing.  </li>
-<li><strong>Offscreen rendering</strong> improves efficiency by reducing redraw operations.  </li>
-<li><strong>Shape drawing</strong> (lines, rectangles, circles, ellipses) and <strong>text rendering</strong> are fully supported.</li>
-</ul>
-<p>This API is ideal for <strong>data visualization, custom UI elements, and dynamic graphics</strong> in HarmonyOS Next applications.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -2018,7 +1880,7 @@ struct Index &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

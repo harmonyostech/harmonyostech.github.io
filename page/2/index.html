@@ -149,6 +149,296 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next/" class="post-title-link" itemprop="url">Practical Guide to Custom Graphics with Canvas in HarmonyOS Next</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 11:33:21 / Modified: 11:35:45" itemprop="dateCreated datePublished" datetime="2025-06-27T11:33:21+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next"><a href="#Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next" class="headerlink" title="Practical Guide to Custom Graphics with Canvas in HarmonyOS Next"></a><strong>Practical Guide to Custom Graphics with Canvas in HarmonyOS Next</strong></h3><p>HarmonyOS Next provides a <strong>Canvas</strong> component for custom graphics rendering, allowing developers to draw shapes, text, and images using <strong>CanvasRenderingContext2D</strong> and <strong>OffscreenCanvasRenderingContext2D</strong> objects.  </p>
+<p>HarmonyOS Next supports three approaches for custom graphics rendering on Canvas:  </p>
+<ol>
+<li><strong>Direct Drawing</strong> on Canvas using <code>CanvasRenderingContext2D</code>.  </li>
+<li><strong>Offscreen Rendering</strong> (pre-rendering content in a buffer and converting it into an image for faster drawing).  </li>
+<li><strong>Loading Lottie Animations</strong> on Canvas.</li>
+</ol>
+<hr>
+<h2 id="1-Canvas-Drawing-Steps"><a href="#1-Canvas-Drawing-Steps" class="headerlink" title="1. Canvas Drawing Steps"></a><strong>1. Canvas Drawing Steps</strong></h2><p>To begin drawing, we must first create a <code>RenderingContextSettings</code> object, which configures parameters such as anti-aliasing, and then initialize <code>CanvasRenderingContext2D</code>.  </p>
+<h3 id="Basic-Example"><a href="#Basic-Example" class="headerlink" title="Basic Example"></a><strong>Basic Example</strong></h3><pre><code class="language-typescript">private settings: RenderingContextSettings = new RenderingContextSettings(true);  
+private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
+
+build() &#123;  
+  RelativeContainer() &#123;  
+    Canvas(this.context)  
+      .width(&#39;100%&#39;)  
+      .height(&#39;100%&#39;)  
+      .backgroundColor(&#39;#660099&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5.png" alt="HarmonyOS Next Canvas Example">  </p>
+<p>This example sets a background color. The <code>settings</code> object configures <code>CanvasRenderingContext2D</code>, including anti-aliasing (<code>true</code> enables it).  </p>
+<p><strong>Key Notes:</strong>  </p>
+<ul>
+<li>Drawing operations must wait for the <code>onReady</code> callback, which ensures the Canvas is fully initialized and provides its dimensions.  </li>
+<li><code>onReady(event: () =&gt; void)</code> is triggered when the Canvas is ready, allowing access to its width and height for precise drawing.</li>
+</ul>
+<hr>
+<h2 id="2-Offscreen-Rendering"><a href="#2-Offscreen-Rendering" class="headerlink" title="2. Offscreen Rendering"></a><strong>2. Offscreen Rendering</strong></h2><p>Offscreen rendering improves performance by first drawing content in a buffer (<code>OffscreenCanvas</code>) and then transferring it to the main Canvas as an image.  </p>
+<h3 id="Process"><a href="#Process" class="headerlink" title="Process:"></a><strong>Process:</strong></h3><ol>
+<li>Use <code>transferToImageBitmap()</code> to convert the offscreen Canvas into an <code>ImageBitmap</code>.  </li>
+<li>Use <code>transferFromImageBitmap()</code> to display the <code>ImageBitmap</code> on the main Canvas.</li>
+</ol>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a><strong>Example:</strong></h3><pre><code class="language-typescript">@Entry  
+@Component  
+struct Index &#123;  
+  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
+  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
+  private offCanvas: OffscreenCanvas = new OffscreenCanvas(600, 600);  
+
+  build() &#123;  
+    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
+      Canvas(this.context)  
+        .width(&#39;100%&#39;)  
+        .height(&#39;100%&#39;)  
+        .backgroundColor(&#39;#5F3CE2&#39;)  
+        .onReady(() =&gt; &#123;  
+          let offContext = this.offCanvas.getContext(&quot;2d&quot;, this.settings);  
+          offContext.strokeRect(20, 20, 100, 100); // Draw a rectangle offscreen  
+          let image = this.offCanvas.transferToImageBitmap(); // Convert to ImageBitmap  
+          this.context.transferFromImageBitmap(image); // Display on main Canvas  
+        &#125;)  
+    &#125;  
+    .width(&#39;100%&#39;)  
+    .height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p><strong>Steps:</strong>  </p>
+<ol>
+<li>Create <code>RenderingContextSettings</code> (enabling anti-aliasing).  </li>
+<li>Initialize <code>OffscreenCanvas</code> with a specified width and height.  </li>
+<li>In <code>onReady</code>, get the offscreen context (<code>getContext(&quot;2d&quot;, settings)</code>).  </li>
+<li>Draw shapes (e.g., <code>strokeRect</code>) on the offscreen Canvas.  </li>
+<li>Convert the offscreen rendering to an <code>ImageBitmap</code> and transfer it to the main Canvas.</li>
+</ol>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-1.png" alt="HarmonyOS Next Offscreen Rendering">  </p>
+<hr>
+<h2 id="3-Drawing-Basic-Shapes"><a href="#3-Drawing-Basic-Shapes" class="headerlink" title="3. Drawing Basic Shapes"></a><strong>3. Drawing Basic Shapes</strong></h2><h3 id="1-Drawing-Lines"><a href="#1-Drawing-Lines" class="headerlink" title="(1) Drawing Lines"></a><strong>(1) Drawing Lines</strong></h3><p>Use <code>beginPath()</code>, <code>moveTo()</code>, and <code>lineTo()</code> to draw lines.  </p>
+<pre><code class="language-typescript">@Entry  
+@Component  
+struct Index &#123;  
+  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
+  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
+
+  build() &#123;  
+    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
+      Canvas(this.context)  
+        .width(&#39;100%&#39;)  
+        .height(&#39;100%&#39;)  
+        .backgroundColor(&#39;#cbbbf2&#39;)  
+        .onReady(() =&gt; &#123;  
+          this.context.beginPath();  
+          this.context.moveTo(150, 50);  
+          this.context.lineTo(200, 150);  
+          this.context.stroke();  
+        &#125;)  
+    &#125;  
+    .width(&#39;100%&#39;)  
+    .height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-2.png" alt="HarmonyOS Next Line Drawing">  </p>
+<h3 id="2-Drawing-Rectangles"><a href="#2-Drawing-Rectangles" class="headerlink" title="(2) Drawing Rectangles"></a><strong>(2) Drawing Rectangles</strong></h3><ul>
+<li><code>fillRect()</code> for solid rectangles.  </li>
+<li><code>strokeRect()</code> for outlined rectangles.</li>
+</ul>
+<p><strong>Example (Solid Rectangle):</strong>  </p>
+<pre><code class="language-typescript">@Entry  
+@Component  
+struct Index &#123;  
+  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
+  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
+
+  build() &#123;  
+    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
+      Canvas(this.context)  
+        .width(&#39;100%&#39;)  
+        .height(&#39;100%&#39;)  
+        .backgroundColor(&#39;#cbbbf2&#39;)  
+        .onReady(() =&gt; &#123;  
+          this.context.fillStyle = &#39;#0097D4&#39;;  
+          this.context.fillRect(50, 50, 100, 100);  
+        &#125;)  
+    &#125;  
+    .width(&#39;100%&#39;)  
+    .height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-3.png" alt="HarmonyOS Next Rectangle Drawing">  </p>
+<h3 id="3-Drawing-Circles"><a href="#3-Drawing-Circles" class="headerlink" title="(3) Drawing Circles"></a><strong>(3) Drawing Circles</strong></h3><p>Use <code>arc()</code> to draw circles.  </p>
+<pre><code class="language-typescript">@Entry  
+@Component  
+struct Index &#123;  
+  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
+  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
+
+  build() &#123;  
+    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
+      Canvas(this.context)  
+        .width(&#39;100%&#39;)  
+        .height(&#39;100%&#39;)  
+        .backgroundColor(&#39;#cbbbf2&#39;)  
+        .onReady(() =&gt; &#123;  
+          let region = new Path2D();  
+          region.arc(100, 75, 50, 0, 6.28); // (x, y, radius, startAngle, endAngle)  
+          this.context.stroke(region);  
+        &#125;)  
+    &#125;  
+    .width(&#39;100%&#39;)  
+    .height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-4.png" alt="HarmonyOS Next Circle Drawing">  </p>
+<h3 id="4-Drawing-Ellipses"><a href="#4-Drawing-Ellipses" class="headerlink" title="(4) Drawing Ellipses"></a><strong>(4) Drawing Ellipses</strong></h3><p>Use <code>ellipse()</code> for elliptical shapes.  </p>
+<pre><code class="language-typescript">@Entry  
+@Component  
+struct Index &#123;  
+  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
+  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
+
+  build() &#123;  
+    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
+      Canvas(this.context)  
+        .width(&#39;100%&#39;)  
+        .height(&#39;100%&#39;)  
+        .backgroundColor(&#39;#cbbbf2&#39;)  
+        .onReady(() =&gt; &#123;  
+          this.context.beginPath();  
+          this.context.ellipse(150, 150, 50, 100, Math.PI * 0.25, Math.PI * 0, Math.PI * 2);  
+          this.context.stroke();  
+        &#125;)  
+    &#125;  
+    .width(&#39;100%&#39;)  
+    .height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-5.png" alt="HarmonyOS Next Ellipse Drawing">  </p>
+<h3 id="5-Text-Rendering"><a href="#5-Text-Rendering" class="headerlink" title="(5) Text Rendering"></a><strong>(5) Text Rendering</strong></h3><p>Use <code>fillText()</code> (filled text) and <code>strokeText()</code> (outlined text).  </p>
+<pre><code class="language-typescript">@Entry  
+@Component  
+struct Index &#123;  
+  private settings: RenderingContextSettings = new RenderingContextSettings(true);  
+  private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);  
+
+  build() &#123;  
+    Flex(&#123; direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center &#125;) &#123;  
+      Canvas(this.context)  
+        .width(&#39;100%&#39;)  
+        .height(&#39;100%&#39;)  
+        .backgroundColor(&#39;#cbbbf2&#39;)  
+        .onReady(() =&gt; &#123;  
+          // Filled text  
+          this.context.font = &#39;50px bolder sans-serif&#39;;  
+          this.context.fillText(&quot;HarmonyOS!&quot;, 50, 100);  
+          // Outlined text  
+          this.context.strokeStyle = &quot;#ff0000&quot;;  
+          this.context.lineWidth = 2;  
+          this.context.font = &#39;50px bolder sans-serif&#39;;  
+          this.context.strokeText(&quot;HarmonyOS&quot;, 50, 150);  
+        &#125;)  
+    &#125;  
+    .width(&#39;100%&#39;)  
+    .height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E5%BD%A2Canvas%E5%AE%9E%E8%B7%B5-6.png" alt="HarmonyOS Next Text Drawing">  </p>
+<hr>
+<h2 id="4-Additional-Features"><a href="#4-Additional-Features" class="headerlink" title="4. Additional Features"></a><strong>4. Additional Features</strong></h2><ul>
+<li><strong>Image Drawing</strong>: Load and render images on Canvas.  </li>
+<li><strong>Pixel Manipulation</strong>: Process image pixel data.  </li>
+<li><strong>Gradients</strong>: Use <code>createLinearGradient()</code> and <code>createRadialGradient()</code> for smooth color transitions.</li>
+</ul>
+<hr>
+<h2 id="5-Summary"><a href="#5-Summary" class="headerlink" title="5. Summary"></a><strong>5. Summary</strong></h2><p>This guide explored <strong>custom graphics rendering in HarmonyOS Next</strong> using <strong>Canvas</strong>, covering:  </p>
+<ol>
+<li><strong>Direct Drawing</strong> with <code>CanvasRenderingContext2D</code>.  </li>
+<li><strong>Offscreen Rendering</strong> for performance optimization.  </li>
+<li><strong>Lottie Animation Support</strong> (not covered in detail here).</li>
+</ol>
+<p>Key takeaways:  </p>
+<ul>
+<li><strong><code>onReady</code> is crucial</strong> for ensuring Canvas dimensions are available before drawing.  </li>
+<li><strong>Offscreen rendering</strong> improves efficiency by reducing redraw operations.  </li>
+<li><strong>Shape drawing</strong> (lines, rectangles, circles, ellipses) and <strong>text rendering</strong> are fully supported.</li>
+</ul>
+<p>This API is ideal for <strong>data visualization, custom UI elements, and dynamic graphics</strong> in HarmonyOS Next applications.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-and-Practice-of-HarmonyOS-Next-User-Notification-Service-Notification-Kit/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1700,213 +1990,10 @@ struct Child &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/129-Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/129-Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Learning] Multiple Inheritance, Swiper Container, Event Propagation, Scroll Safe Area, Preloading Network Images</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:13:04 / Modified: 10:13:21" itemprop="dateCreated datePublished" datetime="2025-06-27T10:13:04+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images"><a href="#Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images" class="headerlink" title="[Daily HarmonyOS Next Learning] Multiple Inheritance, Swiper Container, Event Propagation, Scroll Safe Area, Preloading Network Images"></a>[Daily HarmonyOS Next Learning] Multiple Inheritance, Swiper Container, Event Propagation, Scroll Safe Area, Preloading Network Images</h3><h4 id="1-How-does-HarmonyOS-ArkTS-enable-a-class-to-inherit-capabilities-from-multiple-other-classes"><a href="#1-How-does-HarmonyOS-ArkTS-enable-a-class-to-inherit-capabilities-from-multiple-other-classes" class="headerlink" title="1. How does HarmonyOS ArkTS enable a class to inherit capabilities from multiple other classes?"></a>1. How does HarmonyOS ArkTS enable a class to inherit capabilities from multiple other classes?</h4><p>How can an ArkTS class possess capabilities from multiple other classes, similar to multiple inheritance?  </p>
-<ul>
-<li>Interfaces support multiple inheritance, while classes only support single inheritance (error: <code>Classes can only extend a single class.</code>).</li>
-</ul>
-<p><strong>Multiple inheritance for interfaces</strong>:  </p>
-<pre><code class="language-typescript">interface AreaSize &#123;
-  calculateAreaSize(): number
-&#125;
-interface Cal &#123;
-  Sub(a: number, b: number): number
-&#125;
-
-interface Area extends AreaSize, Cal &#123;
-  areaName: string
-  length: number
-  width: number
-&#125;
-</code></pre>
-<h4 id="2-For-the-HarmonyOS-Swiper-container-displayCount-3-true-sets-three-items-per-group-but-the-bottom-indicator-still-shows-the-total-list-size-How-to-set-the-indicator-to-list-size-3"><a href="#2-For-the-HarmonyOS-Swiper-container-displayCount-3-true-sets-three-items-per-group-but-the-bottom-indicator-still-shows-the-total-list-size-How-to-set-the-indicator-to-list-size-3" class="headerlink" title="2. For the HarmonyOS Swiper container, .displayCount(3, true) sets three items per group, but the bottom indicator still shows the total list size. How to set the indicator to list.size/3?"></a>2. For the HarmonyOS Swiper container, <code>.displayCount(3, true)</code> sets three items per group, but the bottom indicator still shows the total list size. How to set the indicator to <code>list.size/3</code>?</h4><p>When a Swiper displays 3 or more items per screen, how to ensure the indicator count is <code>array.length/3</code> instead of the total list size?  </p>
-<p>To display multiple identical components in the same window, wrap them in an outer component. For example, if the data length is 5, the number of navigation points is 5, and each window shows 3 images:  </p>
-<pre><code class="language-typescript">Swiper(this.swiperController) &#123;
-  LazyForEach(this.data, (item: string) =&gt; &#123;
-    Flex() &#123;
-      Image($r(&#39;app.media.startIcon&#39;))
-      Image($r(&#39;app.media.startIcon&#39;))
-      Image($r(&#39;app.media.startIcon&#39;))
-    &#125;.height(&#39;20%&#39;)
-  &#125;, (item: string) =&gt; item)
-&#125;
-</code></pre>
-<h4 id="3-Best-practices-for-HarmonyOS-event-propagation"><a href="#3-Best-practices-for-HarmonyOS-event-propagation" class="headerlink" title="3. Best practices for HarmonyOS event propagation?"></a>3. Best practices for HarmonyOS event propagation?</h4><ol>
-<li>What are the best practices for click events triggered between sibling components or parent components, where child components consume the events?  </li>
-<li>For events distributed from parent components to child components (e.g., page back events), how to handle scenarios where parent components need return values?</li>
-</ol>
-<p><strong>Bidirectional communication between parent and child components</strong>:<br>Refer to <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-component-state-management-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-component-state-management-V5</a>.  </p>
-<p><strong>Parent component calls child component methods</strong>:  </p>
-<pre><code class="language-typescript">@Component
-struct Child &#123;
-  @State private text: string = &#39;Initial value&#39;
-  private controller: ChildController = new ChildController();
-
-  aboutToAppear() &#123;
-    if (this.controller) &#123;
-      this.controller.changeText = this.changeText
-    &#125;
-    console.log(&#39;aaa&#39;)
-  &#125;
-
-  private changeText = (value: string) =&gt; &#123;
-    this.text = value
-    console.log(&#39;bbb&#39;)
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      Text(this.text)
-    &#125;
-  &#125;
-&#125;
-
-class ChildController &#123;
-  changeText = (value: string) =&gt; &#123;
-    console.log(&#39;11111&#39;)
-  &#125;
-&#125;
-
-export let ChildRef = new ChildController()
-
-@Entry
-@Component
-struct Parent &#123;
-  @State noShow: boolean = false
-  build() &#123;
-    Column() &#123;
-      Text(&#39;Access Child\&#39;s exposeMethods!&#39;).fontSize(&#39;18vp&#39;).fontColor(Color.Gray)
-      Divider()
-      Child(&#123; controller: ChildRef &#125;)
-      Child()
-      Button(&#39;Parent calls childer\&#39;s changeText&#39;).onClick(() =&gt; &#123;
-        ChildRef.changeText(&#39;Parent calls childer\&#39;s changeText&#39;)
-      &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Child component calls parent component methods</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct Index &#123;
-  @State message: string = &#39;Hello World&#39;;
-
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-        Child(&#123;
-          onClickOK: (): void =&gt; &#123;
-            console.log(&#39;test&#39;)
-          &#125;
-        &#125;)
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-&#125;
-
-@Component
-struct Child &#123;
-  onClickOK?: () =&gt; void;
-
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Button(&#39;Event&#39;)
-        .onClick(() =&gt; &#123;
-          if (this.onClickOK !== undefined) &#123;
-            this.onClickOK()
-          &#125;
-        &#125;)
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-HarmonyOS-scroll-safe-area-issue"><a href="#4-HarmonyOS-scroll-safe-area-issue" class="headerlink" title="4. HarmonyOS scroll safe area issue?"></a>4. HarmonyOS scroll safe area issue?</h4><p>When the software keyboard is not popped up, the layout and scroll height are normal. When the keyboard pops up, the scroll layout height is incorrect—the scrollable area should not exceed the top title bar.  </p>
-<p>Use the <code>expandSafeArea</code> attribute under the Column container to avoid conflicts:  </p>
-<pre><code class="language-typescript">.expandSafeArea([SafeAreaType.KEYBOARD]) 
-</code></pre>
-<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-expand-safe-area-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-expand-safe-area-V5</a>  </p>
-<h4 id="5-How-to-preload-network-images-in-HarmonyOS-and-display-them-via-the-Image-component-when-needed"><a href="#5-How-to-preload-network-images-in-HarmonyOS-and-display-them-via-the-Image-component-when-needed" class="headerlink" title="5. How to preload network images in HarmonyOS and display them via the Image component when needed?"></a>5. How to preload network images in HarmonyOS and display them via the Image component when needed?</h4><p>It is recommended to use the third-party library <code>imageknife</code> for image caching capabilities.<br>Documentation: <a target="_blank" rel="noopener" href="https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fimageknife">https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fimageknife</a>  </p>
-<p><em>ImageKnife is a purpose-built image loading and caching library for OpenHarmony, optimized for efficiency, lightness, and simplicity.</em></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1972,7 +2059,7 @@ struct Child &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

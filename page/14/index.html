@@ -149,6 +149,260 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/603-Daily-HarmonyOS-Next-Knowledge-Ability-Communication-Subcomponents-Click-Dropdown-Component-Refresh-XML-Processing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/603-Daily-HarmonyOS-Next-Knowledge-Ability-Communication-Subcomponents-Click-Dropdown-Component-Refresh-XML-Processing/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Ability Communication, Subcomponents, Click Dropdown, Component Refresh, XML Processing</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 10:54:45 / Modified: 10:55:17" itemprop="dateCreated datePublished" datetime="2025-06-25T10:54:45+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Ability-Communication-Subcomponents-Click-Dropdown-Component-Refresh-XML-Processing"><a href="#Daily-HarmonyOS-Next-Knowledge-Ability-Communication-Subcomponents-Click-Dropdown-Component-Refresh-XML-Processing" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Ability Communication, Subcomponents, Click Dropdown, Component Refresh, XML Processing"></a>[Daily HarmonyOS Next Knowledge] Ability Communication, Subcomponents, Click Dropdown, Component Refresh, XML Processing</h3><h4 id="1-How-does-communication-work-between-HarmonyOS-UIExtensionAbility-and-UIAbility"><a href="#1-How-does-communication-work-between-HarmonyOS-UIExtensionAbility-and-UIAbility" class="headerlink" title="1. How does communication work between HarmonyOS UIExtensionAbility and UIAbility?"></a>1. How does communication work between HarmonyOS UIExtensionAbility and UIAbility?</h4><p>After storing the windowStage object in AppStorage within UIAbility, when navigating from a UIAbility-loaded page to a page in extensionAbility, the value retrieved from AppStorage is undefined.  </p>
+<p>For communication, refer to the document:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-uiextensioncontext-V5#uiextensioncontextstartability">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-uiextensioncontext-V5#uiextensioncontextstartability</a>  </p>
+<h4 id="2-Does-HarmonyOS-List-allow-using-Builder-as-its-subcomponent"><a href="#2-Does-HarmonyOS-List-allow-using-Builder-as-its-subcomponent" class="headerlink" title="2. Does HarmonyOS List allow using @Builder as its subcomponent?"></a>2. Does HarmonyOS List allow using @Builder as its subcomponent?</h4><h4 id="3-Does-HarmonyOS-ArkTS-have-an-event-triggered-by-clicking-a-dropdown"><a href="#3-Does-HarmonyOS-ArkTS-have-an-event-triggered-by-clicking-a-dropdown" class="headerlink" title="3. Does HarmonyOS ArkTS have an event triggered by clicking a dropdown?"></a>3. Does HarmonyOS ArkTS have an event triggered by clicking a dropdown?</h4><p>The select event only triggers after an option is chosen. Since select options need to be dynamically queried via an interface, is there a way to implement this?  </p>
+<pre><code class="language-typescript">// xxx.ets
+@Entry
+@Component
+struct SelectExample &#123;
+  @State text: string = &quot;TTTTT&quot;
+  @State index: number = 2
+  @State space: number = 8
+  @State arrowPosition: ArrowPosition = ArrowPosition.END
+  @State options: Array&lt;SelectOption&gt; = [
+    &#123; value: &#39;aaa&#39;, icon: $r(&quot;app.media.app_icon&quot;) &#125;,
+    &#123; value: &#39;bbb&#39;, icon: $r(&quot;app.media.app_icon&quot;) &#125;,
+    &#123; value: &#39;ccc&#39;, icon: $r(&quot;app.media.app_icon&quot;) &#125;,
+    &#123; value: &#39;ddd&#39;, icon: $r(&quot;app.media.app_icon&quot;) &#125;]
+  @State options2: Array&lt;SelectOption&gt; = []
+  @State selected: string = &#39;&#39;
+  @State @Watch(&#39;onSelectedIndexUpData&#39;) selectedIndex: number = -1
+
+  onSelectedIndexUpData() &#123;
+    console.info(&#39;Data changed&#39;)
+    if (this.selectedIndex &lt; 0) &#123;
+      return
+    &#125;
+    this.options2.push(this.options[this.selectedIndex])
+  &#125;
+
+  build() &#123;
+    Row() &#123;
+      TextInput(&#123; placeholder: &#39;input ...&#39;, text: this.selected &#125;)
+        .onChange((value: string) =&gt; &#123;
+          this.selected = value
+          let index = this.options.findIndex(item =&gt; item.value === value)
+          this.selectedIndex = index &gt;= 0 ? index : -1
+          console.info(index.toString())
+        &#125;)
+        .width(&#39;60%&#39;)
+      Select(this.options2)//.selected(this.index)
+        .value(this.text)
+        .font(&#123; size: 16, weight: 500 &#125;)
+        .onSelect((index: number, text?: string | undefined) =&gt; &#123;
+          console.info(&#39;Select:&#39; + index)
+          this.index = index;
+          if (text) &#123;
+            this.text = text;
+          &#125;
+          this.options2.pop()
+          this.selectedIndex = -1
+        &#125;)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-How-to-refresh-the-content-of-HarmonyOS-Builder"><a href="#4-How-to-refresh-the-content-of-HarmonyOS-Builder" class="headerlink" title="4. How to refresh the content of HarmonyOS @Builder?"></a>4. How to refresh the content of HarmonyOS @Builder?</h4><pre><code class="language-typescript">/**
+ Online status area content for the title bar
+ */
+@ObservedV2
+export class AIOTitleOnlineStatusItem &#123;
+  builder: WrappedBuilder&lt;[AIOTitleOnlineStatusItem]&gt; | undefined = undefined;
+  @Trace title: string = &#39;&#39;;
+  @Trace subTitle: string = &#39;&#39;;
+&#125;
+/**
+ Data entity for title bar updates
+ */
+@ObservedV2
+export class AIOTitleModel &#123;
+  @Trace title: string = &#39;&#39;;
+
+  @Trace unreadCnt: number = 0;
+
+  @Trace memberCnt: number = 0;
+
+  @Trace onlineStatusItem: AIOTitleOnlineStatusItem | undefined = undefined;
+
+&#125;
+
+const TAG = &#39;TroopAIOTitleComponent&#39;;
+
+@Extend(Text) function navigationTextStyle() &#123;
+  .lineHeight(24)
+  .fontColor(Color.Black)
+  .fontSize(17)
+  .textAlign(TextAlign.Start)
+  .fontWeight(500)
+  .textOverflow(&#123; overflow: TextOverflow.Ellipsis &#125;)
+  .maxLines(1)
+&#125;
+
+@Builder
+export function getOnlineStatusBuilder(statusItem: AIOTitleOnlineStatusItem) &#123;
+  Row() &#123;
+    Text(statusItem.title).lineHeight(16)
+      .fontSize(12)
+    Text(statusItem.subTitle).lineHeight(16)
+      .fontSize(12)
+  &#125;.width(&#39;100%&#39;)
+  .align(Alignment.Start)
+    .height(20)
+&#125;
+
+const model: AIOTitleModel = new AIOTitleModel();
+
+@Entry
+@Component
+export struct Test &#123;
+  aboutToAppear(): void &#123;
+    model.title = &#39;Test Title&#39;;
+    model.unreadCnt = 25;
+  &#125;
+  build() &#123;
+    Column() &#123;
+      TitleComponent()
+      Button(&#39;Click to change title content&#39;).onClick(() =&gt; &#123;
+        if (model.onlineStatusItem != undefined) &#123;
+          model.onlineStatusItem.title += &#39;11&#39;;
+          model.onlineStatusItem.builder = wrapBuilder(getOnlineStatusBuilder)
+          // model.onlineStatusItem.builder = wrapBuilder(getOnlineStatusBuilder(&#123; paramsItem: this.onlineStatusItem &#125;))
+        &#125; else &#123;
+          model.onlineStatusItem = &#123;
+            builder: wrapBuilder(getOnlineStatusBuilder),
+            // builder: wrapBuilder(getOnlineStatusBuilder(&#123; paramsItem: this.onlineStatusItem &#125;)),
+            title: &#39;Currently Online&#39;,
+            subTitle: &#39;-test&#39;
+          &#125;;
+        &#125;
+      &#125;).margin(&#123;
+        top: 20
+      &#125;)
+    &#125;.alignItems(HorizontalAlign.Center)
+  &#125;
+&#125;
+
+@Component
+export struct TitleComponent &#123;
+
+  build() &#123;
+    // Content area
+    Flex(&#123; wrap: FlexWrap.Wrap, justifyContent: FlexAlign.Start, alignContent: FlexAlign.SpaceEvenly &#125;) &#123;
+      // Nickname
+      Text() &#123;
+        // Left ear
+        Span(&quot;TitleComponent&quot;)
+        // Title
+        Span(model.title)
+        // Right ear
+        // Group member count
+        Span(($&#123;model.memberCnt&#125;))
+
+      &#125;.navigationTextStyle()
+      .alignSelf(ItemAlign.Start)
+      .width(&#39;60%&#39;)
+      .backgroundColor(Color.Pink)
+      // Online status
+      if (model.onlineStatusItem != undefined) &#123;
+        model.onlineStatusItem.builder?.builder(model.onlineStatusItem)
+      &#125;
+    &#125;.height(44)
+    .alignSelf(ItemAlign.Center)
+    .backgroundColor(Color.Yellow)
+  &#125;
+&#125;
+</code></pre>
+<p>@ObservedV2 must be initialized with <code>new</code> and cannot be directly assigned.  </p>
+<h4 id="5-How-to-save-a-written-ohos-xml-as-a-file-in-HarmonyOS"><a href="#5-How-to-save-a-written-ohos-xml-as-a-file-in-HarmonyOS" class="headerlink" title="5. How to save a written ohos.xml as a file in HarmonyOS?"></a>5. How to save a written ohos.xml as a file in HarmonyOS?</h4><pre><code class="language-typescript">// 1. Construct an XmlSerializer object based on ArrayBuffer
+let arrayBuffer: ArrayBuffer = new ArrayBuffer(2048); // Create a 2048-byte buffer
+let thatSer: xml.XmlSerializer = new xml.XmlSerializer(arrayBuffer); // Construct XmlSerializer based on ArrayBuffer
+
+thatSer.setDeclaration(); // Write the XML declaration
+thatSer.startElement(&#39;bookstore&#39;); // Write the start tag of the element
+thatSer.startElement(&#39;book&#39;); // Write the start tag of the nested element
+thatSer.setAttributes(&#39;category&#39;, &#39;COOKING&#39;); // Write attributes and values
+thatSer.startElement(&#39;title&#39;);
+thatSer.setAttributes(&#39;lang&#39;, &#39;en&#39;);
+thatSer.setText(&#39;Everyday&#39;); // Write the tag value
+thatSer.endElement(); // Write the end tag
+thatSer.startElement(&#39;author&#39;);
+thatSer.setText(&#39;Giada&#39;);
+thatSer.endElement();
+thatSer.startElement(&#39;year&#39;);
+thatSer.setText(&#39;2005&#39;);
+thatSer.endElement();
+thatSer.endElement();
+thatSer.endElement();
+</code></pre>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/xml-generation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/xml-generation-V5</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/602-Daily-HarmonyOS-Next-Knowledge-Orientation-Control-Rotation-Lock-Font-Units-Background-Cleanup-Callback-Routing-Selection/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1021,170 +1275,10 @@ export struct MainPage &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/524-Daily-HarmonyOS-Next-Knowledge-Hide-Status-Bar-Launch-Pop-ups-in-Methods-System-Screen-Brightness-Monitoring-Photo-Zooming-and-Dragging-Prevent-Screenshots-of-Input-Interfaces/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/524-Daily-HarmonyOS-Next-Knowledge-Hide-Status-Bar-Launch-Pop-ups-in-Methods-System-Screen-Brightness-Monitoring-Photo-Zooming-and-Dragging-Prevent-Screenshots-of-Input-Interfaces/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Hide Status Bar, Launch Pop-ups in Methods, System Screen Brightness Monitoring, Photo Zooming and Dragging, Prevent Screenshots of Input Interfaces</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 10:10:51 / Modified: 10:11:17" itemprop="dateCreated datePublished" datetime="2025-06-25T10:10:51+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Hide-Status-Bar-Launch-Pop-ups-in-Methods-System-Screen-Brightness-Monitoring-Photo-Zooming-and-Dragging-Prevent-Screenshots-of-Input-Interfaces"><a href="#Daily-HarmonyOS-Next-Knowledge-Hide-Status-Bar-Launch-Pop-ups-in-Methods-System-Screen-Brightness-Monitoring-Photo-Zooming-and-Dragging-Prevent-Screenshots-of-Input-Interfaces" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Hide Status Bar, Launch Pop-ups in Methods, System Screen Brightness Monitoring, Photo Zooming and Dragging, Prevent Screenshots of Input Interfaces"></a>[Daily HarmonyOS Next Knowledge] Hide Status Bar, Launch Pop-ups in Methods, System Screen Brightness Monitoring, Photo Zooming and Dragging, Prevent Screenshots of Input Interfaces</h3><h4 id="1-How-to-hide-the-status-bar-when-pulling-down-in-HarmonyOS"><a href="#1-How-to-hide-the-status-bar-when-pulling-down-in-HarmonyOS" class="headerlink" title="1. How to hide the status bar when pulling down in HarmonyOS?"></a>1. How to hide the status bar when pulling down in HarmonyOS?</h4><p>To always hide the status bar, you can set relevant properties to transparent via the <code>setWindowSystemBarProperties</code> interface.<br>Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setwindowsystembarproperties9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setwindowsystembarproperties9</a>  </p>
-<p><code>setWindowSystemBarProperties(systemBarProperties: SystemBarProperties): Promise&lt;void&gt;</code><br>Sets the properties of the main window’s three-key navigation bar and status bar using a Promise asynchronous callback.<br>This interface does not take effect on 2in1 devices. On other devices, it does not take effect immediately in split-screen mode (i.e., window mode is <code>window.WindowStatusType.SPLIT_SCREEN</code>), free-floating window mode (i.e., window mode is <code>window.WindowStatusType.FLOATING</code>), or free multi-window mode (enabled by clicking the free multi-window button in the device control center). It only takes effect when entering the full-screen main window.  </p>
-<h4 id="2-How-to-launch-a-custom-pop-up-in-a-class-or-function-in-HarmonyOS-The-built-in-alert-works-but-custom-prompts-cannot-be-used"><a href="#2-How-to-launch-a-custom-pop-up-in-a-class-or-function-in-HarmonyOS-The-built-in-alert-works-but-custom-prompts-cannot-be-used" class="headerlink" title="2. How to launch a custom pop-up in a class or function in HarmonyOS? The built-in alert works, but custom prompts cannot be used."></a>2. How to launch a custom pop-up in a class or function in HarmonyOS? The built-in alert works, but custom prompts cannot be used.</h4><p>Please refer to the following code example:<br><strong>Main page</strong>  </p>
-<pre><code class="language-typescript">// Set the builder in @entry first, then directly call showTest  
-import &#123; customDialogBuilder, changeDialogBuilder, MyShowTest &#125; from ‘…/pages/Page’  
-let myShowTest = new MyShowTest()  
-@Entry  
-@Component  
-struct Index &#123;  
-  @State message: string = ‘Hello World’  
-  onPageShow(): void &#123;  
-    changeDialogBuilder(customDialogBuilder.bind(this))  
-  &#125;  
-
-  build() &#123;  
-    Row() &#123;  
-      Column() &#123;  
-        Text(this.message)  
-          .fontSize(50)  
-          .fontWeight(FontWeight.Bold)  
-          .onClick(() =&gt; &#123;  
-            myShowTest.showTest()  
-          &#125;)  
-      &#125;  
-      .width(‘100%’)  
-    &#125;  
-    .height(‘100%’)  
-  &#125;  
-&#125;  
-</code></pre>
-<p><strong>Custom class</strong>  </p>
-<pre><code class="language-typescript">// custom_dialog.ets  
-import promptAction from ‘@ohos.promptAction’  
-let myDialogBuilder: CustomBuilder;  
-let customDialogId: number = 0  
-
-@Builder  
-export function customDialogBuilder() &#123;  
-  Column() &#123;  
-    Text(‘Custom dialog Message’).fontSize(10)  
-    Row() &#123;  
-      Button(“Confirm”).onClick(() =&gt; &#123;  
-        promptAction.closeCustomDialog(customDialogId)  
-      &#125;)  
-      Blank().width(50)  
-      Button(“Cancel”).onClick(() =&gt; &#123;  
-        promptAction.closeCustomDialog(customDialogId)  
-      &#125;)  
-    &#125;  
-  &#125;.height(200).padding(5)  
-&#125;  
-
-export function changeDialogBuilder(builder: CustomBuilder) &#123;  
-  myDialogBuilder = builder  
-&#125;  
-
-export class MyShowTest&#123;  
-  showTest() &#123;  
-    if (myDialogBuilder === undefined) &#123;  
-      return  
-    &#125;  
-    promptAction.openCustomDialog(&#123;  
-      builder: myDialogBuilder  
-    &#125;).then((dialogId: number) =&gt; &#123;  
-      customDialogId = dialogId  
-    &#125;)  
-  &#125;  
-&#125;  
-</code></pre>
-<p>Modify <code>customDialogBuilder()</code> to the following code (add <code>backGroundColor</code> and <code>width</code> properties to Column) to customize the pop-up background color:  </p>
-<pre><code class="language-typescript">@Builder  
-export function customDialogBuilder() &#123;  
-  Column() &#123;  
-    Text(‘Custom dialog Message’).fontSize(10)  
-    Row() &#123;  
-      Button(“Confirm”).onClick(() =&gt; &#123;  
-        promptAction.closeCustomDialog(customDialogId)  
-      &#125;)  
-      Blank().width(50)  
-      Button(“Cancel”).onClick(() =&gt; &#123;  
-        promptAction.closeCustomDialog(customDialogId)  
-      &#125;)  
-    &#125;  
-  &#125;.height(200).padding(5).backgroundColor(Color.Green).width(‘100%’)  
-&#125;  
-</code></pre>
-<p>Using <code>backgroundImage</code> and <code>backgroundImageSize(ImageSize.Cover)</code> instead of <code>backgroundColor</code> can achieve similar effects, but the pop-up width cannot be changed currently.  </p>
-<h4 id="3-How-to-monitor-the-system-screen-brightness-in-HarmonyOS-After-setting-the-brightness-the-brightness-settings-in-the-system-control-center-no-longer-take-effect"><a href="#3-How-to-monitor-the-system-screen-brightness-in-HarmonyOS-After-setting-the-brightness-the-brightness-settings-in-the-system-control-center-no-longer-take-effect" class="headerlink" title="3. How to monitor the system screen brightness in HarmonyOS? After setting the brightness, the brightness settings in the system control center no longer take effect."></a>3. How to monitor the system screen brightness in HarmonyOS? After setting the brightness, the brightness settings in the system control center no longer take effect.</h4><p><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#ZH-CN_TOPIC_0000001884757714__setwindowbrightness9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#ZH-CN_TOPIC_0000001884757714__setwindowbrightness9</a>  </p>
-<p>Allows the application window to set the screen brightness value using a callback asynchronous callback.<br>Current screen brightness specification: When the window sets the screen brightness, the control center cannot adjust the system screen brightness. After the window restores the default system brightness, the control center can adjust the system brightness. The brightness value is a floating-point number, ranging from <code>[0.0, 1.0]</code> or -1.0. 1.0 represents the brightest, and -1.0 represents the default brightness.  </p>
-<h4 id="4-How-to-achieve-the-effect-of-dragging-and-browsing-photos-after-zooming-in-similar-to-the-system-photo-album-in-HarmonyOS"><a href="#4-How-to-achieve-the-effect-of-dragging-and-browsing-photos-after-zooming-in-similar-to-the-system-photo-album-in-HarmonyOS" class="headerlink" title="4. How to achieve the effect of dragging and browsing photos after zooming in, similar to the system photo album in HarmonyOS?"></a>4. How to achieve the effect of dragging and browsing photos after zooming in, similar to the system photo album in HarmonyOS?</h4><p>To implement a zooming and browsing effect for images, it is found that using <code>scale</code> to zoom the image can only enlarge the visible part and cannot drag to browse areas outside the image container’s visible area. Setting the image component size to achieve zooming cannot center the anchor point area. What solution should be adopted to achieve the drag-and-browse effect after zooming in, similar to the system photo album?  </p>
-<p>The current codelab “Electronic Album” includes scenarios for image zooming and dragging.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/codelabsPortal/carddetails/tutorials_NEXT-ElectronicAlbum">https://developer.huawei.com/consumer/cn/codelabsPortal/carddetails/tutorials_NEXT-ElectronicAlbum</a><br>In addition, third-party libraries are available: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony-sig/ohos_image_view_zoom">https://gitee.com/openharmony-sig/ohos_image_view_zoom</a>  </p>
-<h4 id="5-How-to-prevent-screenshot-or-screen-recording-of-the-password-input-interface-in-HarmonyOS"><a href="#5-How-to-prevent-screenshot-or-screen-recording-of-the-password-input-interface-in-HarmonyOS" class="headerlink" title="5. How to prevent screenshot or screen recording of the password input interface in HarmonyOS?"></a>5. How to prevent screenshot or screen recording of the password input interface in HarmonyOS?</h4><p>Set the <code>setWindowPrivacyMode</code> under <code>window</code> to privacy mode, which prevents the window content from being screenshot or screen recorded. For specific details, refer to the official document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setwindowprivacymode9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setwindowprivacymode9</a>  </p>
-<p><code>setWindowPrivacyMode(isPrivacyMode: boolean, callback: AsyncCallback&lt;void&gt;): void</code><br>Sets whether the window is in privacy mode using a callback asynchronous callback. The content of a window set to privacy mode cannot be screenshot or screen recorded. This interface can be used in scenarios where screenshot&#x2F;screen recording needs to be prohibited.  </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/15/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1250,7 +1344,7 @@ export function customDialogBuilder() &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

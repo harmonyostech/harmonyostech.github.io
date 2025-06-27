@@ -149,6 +149,209 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/129-Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/129-Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Learning] Multiple Inheritance, Swiper Container, Event Propagation, Scroll Safe Area, Preloading Network Images</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:13:04 / Modified: 10:13:21" itemprop="dateCreated datePublished" datetime="2025-06-27T10:13:04+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images"><a href="#Daily-HarmonyOS-Next-Learning-Multiple-Inheritance-Swiper-Container-Event-Propagation-Scroll-Safe-Area-Preloading-Network-Images" class="headerlink" title="[Daily HarmonyOS Next Learning] Multiple Inheritance, Swiper Container, Event Propagation, Scroll Safe Area, Preloading Network Images"></a>[Daily HarmonyOS Next Learning] Multiple Inheritance, Swiper Container, Event Propagation, Scroll Safe Area, Preloading Network Images</h3><h4 id="1-How-does-HarmonyOS-ArkTS-enable-a-class-to-inherit-capabilities-from-multiple-other-classes"><a href="#1-How-does-HarmonyOS-ArkTS-enable-a-class-to-inherit-capabilities-from-multiple-other-classes" class="headerlink" title="1. How does HarmonyOS ArkTS enable a class to inherit capabilities from multiple other classes?"></a>1. How does HarmonyOS ArkTS enable a class to inherit capabilities from multiple other classes?</h4><p>How can an ArkTS class possess capabilities from multiple other classes, similar to multiple inheritance?  </p>
+<ul>
+<li>Interfaces support multiple inheritance, while classes only support single inheritance (error: <code>Classes can only extend a single class.</code>).</li>
+</ul>
+<p><strong>Multiple inheritance for interfaces</strong>:  </p>
+<pre><code class="language-typescript">interface AreaSize &#123;
+  calculateAreaSize(): number
+&#125;
+interface Cal &#123;
+  Sub(a: number, b: number): number
+&#125;
+
+interface Area extends AreaSize, Cal &#123;
+  areaName: string
+  length: number
+  width: number
+&#125;
+</code></pre>
+<h4 id="2-For-the-HarmonyOS-Swiper-container-displayCount-3-true-sets-three-items-per-group-but-the-bottom-indicator-still-shows-the-total-list-size-How-to-set-the-indicator-to-list-size-3"><a href="#2-For-the-HarmonyOS-Swiper-container-displayCount-3-true-sets-three-items-per-group-but-the-bottom-indicator-still-shows-the-total-list-size-How-to-set-the-indicator-to-list-size-3" class="headerlink" title="2. For the HarmonyOS Swiper container, .displayCount(3, true) sets three items per group, but the bottom indicator still shows the total list size. How to set the indicator to list.size/3?"></a>2. For the HarmonyOS Swiper container, <code>.displayCount(3, true)</code> sets three items per group, but the bottom indicator still shows the total list size. How to set the indicator to <code>list.size/3</code>?</h4><p>When a Swiper displays 3 or more items per screen, how to ensure the indicator count is <code>array.length/3</code> instead of the total list size?  </p>
+<p>To display multiple identical components in the same window, wrap them in an outer component. For example, if the data length is 5, the number of navigation points is 5, and each window shows 3 images:  </p>
+<pre><code class="language-typescript">Swiper(this.swiperController) &#123;
+  LazyForEach(this.data, (item: string) =&gt; &#123;
+    Flex() &#123;
+      Image($r(&#39;app.media.startIcon&#39;))
+      Image($r(&#39;app.media.startIcon&#39;))
+      Image($r(&#39;app.media.startIcon&#39;))
+    &#125;.height(&#39;20%&#39;)
+  &#125;, (item: string) =&gt; item)
+&#125;
+</code></pre>
+<h4 id="3-Best-practices-for-HarmonyOS-event-propagation"><a href="#3-Best-practices-for-HarmonyOS-event-propagation" class="headerlink" title="3. Best practices for HarmonyOS event propagation?"></a>3. Best practices for HarmonyOS event propagation?</h4><ol>
+<li>What are the best practices for click events triggered between sibling components or parent components, where child components consume the events?  </li>
+<li>For events distributed from parent components to child components (e.g., page back events), how to handle scenarios where parent components need return values?</li>
+</ol>
+<p><strong>Bidirectional communication between parent and child components</strong>:<br>Refer to <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-component-state-management-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-component-state-management-V5</a>.  </p>
+<p><strong>Parent component calls child component methods</strong>:  </p>
+<pre><code class="language-typescript">@Component
+struct Child &#123;
+  @State private text: string = &#39;Initial value&#39;
+  private controller: ChildController = new ChildController();
+
+  aboutToAppear() &#123;
+    if (this.controller) &#123;
+      this.controller.changeText = this.changeText
+    &#125;
+    console.log(&#39;aaa&#39;)
+  &#125;
+
+  private changeText = (value: string) =&gt; &#123;
+    this.text = value
+    console.log(&#39;bbb&#39;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Text(this.text)
+    &#125;
+  &#125;
+&#125;
+
+class ChildController &#123;
+  changeText = (value: string) =&gt; &#123;
+    console.log(&#39;11111&#39;)
+  &#125;
+&#125;
+
+export let ChildRef = new ChildController()
+
+@Entry
+@Component
+struct Parent &#123;
+  @State noShow: boolean = false
+  build() &#123;
+    Column() &#123;
+      Text(&#39;Access Child\&#39;s exposeMethods!&#39;).fontSize(&#39;18vp&#39;).fontColor(Color.Gray)
+      Divider()
+      Child(&#123; controller: ChildRef &#125;)
+      Child()
+      Button(&#39;Parent calls childer\&#39;s changeText&#39;).onClick(() =&gt; &#123;
+        ChildRef.changeText(&#39;Parent calls childer\&#39;s changeText&#39;)
+      &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Child component calls parent component methods</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;Hello World&#39;;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+        Child(&#123;
+          onClickOK: (): void =&gt; &#123;
+            console.log(&#39;test&#39;)
+          &#125;
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+
+@Component
+struct Child &#123;
+  onClickOK?: () =&gt; void;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Button(&#39;Event&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.onClickOK !== undefined) &#123;
+            this.onClickOK()
+          &#125;
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-HarmonyOS-scroll-safe-area-issue"><a href="#4-HarmonyOS-scroll-safe-area-issue" class="headerlink" title="4. HarmonyOS scroll safe area issue?"></a>4. HarmonyOS scroll safe area issue?</h4><p>When the software keyboard is not popped up, the layout and scroll height are normal. When the keyboard pops up, the scroll layout height is incorrect—the scrollable area should not exceed the top title bar.  </p>
+<p>Use the <code>expandSafeArea</code> attribute under the Column container to avoid conflicts:  </p>
+<pre><code class="language-typescript">.expandSafeArea([SafeAreaType.KEYBOARD]) 
+</code></pre>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-expand-safe-area-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-expand-safe-area-V5</a>  </p>
+<h4 id="5-How-to-preload-network-images-in-HarmonyOS-and-display-them-via-the-Image-component-when-needed"><a href="#5-How-to-preload-network-images-in-HarmonyOS-and-display-them-via-the-Image-component-when-needed" class="headerlink" title="5. How to preload network images in HarmonyOS and display them via the Image component when needed?"></a>5. How to preload network images in HarmonyOS and display them via the Image component when needed?</h4><p>It is recommended to use the third-party library <code>imageknife</code> for image caching capabilities.<br>Documentation: <a target="_blank" rel="noopener" href="https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fimageknife">https://ohpm.openharmony.cn/#/cn/detail/@ohos%2Fimageknife</a>  </p>
+<p><em>ImageKnife is a purpose-built image loading and caching library for OpenHarmony, optimized for efficiency, lightness, and simplicity.</em></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/128-Daily-HarmonyOS-Next-Knowledge-Component-Size-Acquisition-No-Track-Solution-Poster-Component-Routing-Table-Text-Gradient-Effect/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1505,80 +1708,10 @@ for (let i = 0; i &lt; largeString.length; i += chunkSize) &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/119-Daily-HarmonyOS-Next-Knowledge-Two-way-Data-Binding-Child-Component-Radius-Video-Download-Hide-String-Replacement-Routing-Issues/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/119-Daily-HarmonyOS-Next-Knowledge-Two-way-Data-Binding-Child-Component-Radius-Video-Download-Hide-String-Replacement-Routing-Issues/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Two-way Data Binding, Child Component Radius, Video Download Hide, String Replacement, Routing Issues</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 09:53:56 / Modified: 09:54:10" itemprop="dateCreated datePublished" datetime="2025-06-27T09:53:56+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Two-way-Data-Binding-Child-Component-Radius-Video-Download-Hide-String-Replacement-Routing-Issues"><a href="#Daily-HarmonyOS-Next-Knowledge-Two-way-Data-Binding-Child-Component-Radius-Video-Download-Hide-String-Replacement-Routing-Issues" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Two-way Data Binding, Child Component Radius, Video Download Hide, String Replacement, Routing Issues"></a>[Daily HarmonyOS Next Knowledge] Two-way Data Binding, Child Component Radius, Video Download Hide, String Replacement, Routing Issues</h3><h4 id="1-HarmonyOS-value-passing-with"><a href="#1-HarmonyOS-value-passing-with" class="headerlink" title="1. HarmonyOS value passing with $$?"></a>1. HarmonyOS value passing with <code>$$</code>?</h4><p><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-two-way-sync-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-two-way-sync-V5</a><br><code>$$</code> is a built-in two-way synchronization operator for components, providing a reference to TS variables for system-built components. This keeps TS variables in sync with the internal state of system-built components, which is different from state variables.  </p>
-<h4 id="2-Which-container-component-in-HarmonyOS-can-set-the-angle-and-radius-of-child-components"><a href="#2-Which-container-component-in-HarmonyOS-can-set-the-angle-and-radius-of-child-components" class="headerlink" title="2. Which container component in HarmonyOS can set the angle and radius of child components?"></a>2. Which container component in HarmonyOS can set the angle and radius of child components?</h4><p>Angle and radius of child components can be set using absolute positioning. Coordinates of child component vertices can be calculated via Math functions.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-location-V5#position">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-location-V5#position</a>  </p>
-<h4 id="3-How-to-hide-the-download-button-for-video-tags-in-HarmonyOS-Web-components"><a href="#3-How-to-hide-the-download-button-for-video-tags-in-HarmonyOS-Web-components" class="headerlink" title="3. How to hide the download button for video tags in HarmonyOS Web components?"></a>3. How to hide the download button for video tags in HarmonyOS Web components?</h4><p>The download button can be hidden by adding <code>controls controlslist=&quot;nodownload&quot;</code> to the video tag. If this doesn’t work, use CSS to hide it:  </p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">video</span>::-internal-media-controls-download-button &#123;</span><br><span class="line">  <span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">video</span>::-webkit-media-controls-enclosure &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">video</span>::-webkit-media-controls-panel &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="built_in">calc</span>(<span class="number">100%</span> + <span class="number">30px</span>);</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### <span class="number">4</span>. After using Navigation routing in HarmonyOS, the second-level <span class="attribute">page</span> sets hideToolBar <span class="selector-tag">to</span> true, but the custom navigation bar <span class="selector-tag">header</span> remains blank and doesn’t <span class="attribute">display</span>.  </span><br><span class="line">Example workflow:  </span><br><span class="line"><span class="number">1</span>. In the first-level page, use `pushDestination` to stack the second-level page.  </span><br><span class="line"><span class="number">2</span>. In the second-level page, use `<span class="built_in">hideToolBar</span>(true)` to hide the toolbar.  </span><br><span class="line"><span class="number">3</span>. On pages where the toolbar should be shown, set `hideToolBar` to false.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### <span class="number">5</span>. Is there a way to replace a specific substring in a string with another character in HarmonyOS?  </span><br><span class="line">For example, replace `<span class="number">4</span>` with `<span class="number">0</span>` in `<span class="number">1243456748</span>`.  </span><br><span class="line">Reference demo:  </span><br><span class="line">```typescript</span><br><span class="line">let reg: RegExp = new <span class="built_in">RegExp</span>(<span class="string">&#x27;apple&#x27;</span>, <span class="string">&#x27;g&#x27;</span>);</span><br><span class="line">let str = &#x27;an apple apple apple apple.&#x27;;</span><br><span class="line">let newStr = str<span class="selector-class">.replace</span>(reg, &#x27;fruit&#x27;);</span><br><span class="line">console<span class="selector-class">.log</span>(newStr); // Output: an fruit fruit fruit fruit</span><br><span class="line">this.message = newStr;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1644,7 +1777,7 @@ for (let i = 0; i &lt; largeString.length; i += chunkSize) &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">200</span>
+          <span class="site-state-item-count">201</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
