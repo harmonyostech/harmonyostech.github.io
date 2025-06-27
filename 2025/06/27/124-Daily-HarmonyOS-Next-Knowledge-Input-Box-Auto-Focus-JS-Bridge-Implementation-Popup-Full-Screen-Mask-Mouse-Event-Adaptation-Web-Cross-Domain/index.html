@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain1. How to Auto-Focus a TextInput or TextArea in Harmony">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain1. How to Auto-Focus a TextInput or TextArea in Harmony">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-2.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-3.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-4.png">
+<meta property="article:published_time" content="2025-06-27T02:00:29.000Z">
+<meta property="article:modified_time" content="2025-06-27T02:03:47.204Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-2.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:00:29 / Modified: 10:03:47" itemprop="dateCreated datePublished" datetime="2025-06-27T10:00:29+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain"></a>[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</h3><h4 id="1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS"><a href="#1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS" class="headerlink" title="1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?"></a>1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?</h4><p>Use <code>focusControl.requestFocus</code> to set focus on components that need it. Refer to the documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5</a>  </p>
+<p><strong>Example Code</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct TextInputExample &#123;
+  controller: TextInputController = new TextInputController()
+  @State inputValue: string = &quot;&quot;
+  ep: number = 0;
+  del: boolean = false;
+
+  // Custom keyboard component
+  @Builder
+  CustomKeyboardBuilder() &#123;
+    Column() &#123;
+      Button(&#39;Close Keyboard&#39;).onClick(() =&gt; &#123;
+        // Close the custom keyboard
+        this.controller.stopEditing()
+      &#125;)
+      Button(&#39;Delete Character&#39;).onClick(() =&gt; &#123;
+        this.inputValue = this.inputValue.substring(0, this.ep-1) + this.inputValue.substring(this.ep)
+        this.del = true
+      &#125;)
+      Grid() &#123;
+        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, &#39;*&#39;, 0, &#39;#&#39;], (item: number | string) =&gt; &#123;
+          GridItem() &#123;
+            Button(item + &quot;&quot;)
+              .width(110).onClick(() =&gt; &#123;
+              this.inputValue = this.inputValue.substring(0, this.ep) + item + this.inputValue.substring(this.ep)
+              this.del = false
+            &#125;)
+          &#125;
+        &#125;)
+      &#125;.maxCount(3).columnsGap(10).rowsGap(10).padding(5)
+    &#125;.backgroundColor(Color.Gray)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      TextInput(&#123; controller: this.controller, text: this.inputValue &#125;)
+        // Bind the custom keyboard
+        .customKeyboard(this.CustomKeyboardBuilder())
+        .margin(10)
+        .id(&#39;input1&#39;) // Set an ID for the component
+        .border(&#123; width: 1 &#125;)
+        // Detect cursor changes and adjust cursor position
+        .onChange(() =&gt; &#123;
+          if(this.del)&#123;
+            this.controller.caretPosition(--this.ep)
+          &#125;else&#123;
+            this.controller.caretPosition(++this.ep)
+          &#125;
+        &#125;)
+        .onTextSelectionChange((ss) =&gt; &#123;
+          this.ep = ss;
+        &#125;)
+      Button(&quot;Trigger Focus&quot;)
+        .width(200).height(70).fontColor(Color.White)
+        .onClick(() =&gt; &#123;
+          focusControl.requestFocus(&#39;input1&#39;) // Focus the TextInput
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>The default input method keyboard type is text input (<code>textinputtype</code> 0). Refer to possible <code>textinputtype</code> values:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5</a>  </p>
+<h4 id="2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS"><a href="#2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS" class="headerlink" title="2. What Are the JSBridge Implementation Methods in HarmonyOS?"></a>2. What Are the JSBridge Implementation Methods in HarmonyOS?</h4><p>For app-frontend interactions, refer to:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5</a>  </p>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-2.png"></p>
+<p>The figure above shows the general architecture of a universally applicable mini-program. In this architecture, the logic layer relies on the JavaScript runtime自带 by the application, which runs within an existing C++ environment. Through Native interfaces, the logic layer can directly communicate with the view layer (where ArkWeb acts as the renderer) in the C++ environment without falling back to the ArkTS environment to use the ArkTS JSBridge interface.  </p>
+<p>The left diagram shows a mini-program solution using the ArkTS JSBridge interface. As indicated by the red box, the application must first call into the ArkTS environment and then into the C++ environment. The right diagram shows a solution using the Native JSBridge interface, which eliminates the need to switch between ArkTS and C++ environments, resulting in higher execution efficiency.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-3.png"><br>The Native JSBridge solution avoids redundant ArkTS environment switches and allows callbacks to run on non-UI threads, preventing UI blockages.  </p>
+<h4 id="3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS"><a href="#3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS" class="headerlink" title="3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?"></a>3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?</h4><p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct PopupExample &#123;
+  @State handlePopup: boolean = false
+  @State customPopup: boolean = false
+  
+  // Popup content builder
+  @Builder popupBuilder() &#123;
+    Row(&#123; space: 2 &#125;) &#123;
+      Image($r(&quot;app.media.startIcon&quot;)).width(24).height(24).margin(&#123; left: -5 &#125;)
+      Text(&#39;Custom Popup&#39;).fontSize(10)
+    &#125;.width(100).height(50).padding(5)
+  &#125;
+
+  build() &#123;
+    Flex(&#123; direction: FlexDirection.Column &#125;) &#123;
+      // PopupOptions configuration
+      Button(&#39;PopupOptions&#39;)
+        .onClick(() =&gt; &#123;
+          this.handlePopup = !this.handlePopup
+        &#125;)
+        .bindPopup(this.handlePopup, &#123;
+          builder: this.popupBuilder,
+          placement: Placement.Top,
+          mask: &#123;color: Color.Gray&#125;,
+          popupColor: Color.Yellow,
+          enableArrow: true,
+          message: &#39;This is a popup with PopupOptions&#39;,
+          placementOnTop: true,
+          showInSubWindow: false,
+          primaryButton: &#123;
+            value: &#39;confirm&#39;,
+            action: () =&gt; &#123;
+              this.handlePopup = !this.handlePopup
+              console.info(&#39;confirm Button click&#39;)
+            &#125;
+          &#125;,
+          // Secondary button
+          secondaryButton: &#123;
+            value: &#39;cancel&#39;,
+            action: () =&gt; &#123;
+              this.handlePopup = !this.handlePopup
+              console.info(&#39;cancel Button click&#39;)
+            &#125;
+          &#125;,
+          onStateChange: (e) =&gt; &#123;
+            console.info(JSON.stringify(e.isVisible))
+            if (!e.isVisible) &#123;
+              this.handlePopup = false
+            &#125;
+          &#125;
+        &#125;)
+        .position(&#123; x: 100, y: 150 &#125;)
+    &#125;.width(&#39;100%&#39;).padding(&#123; top: 5 &#125;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible"><a href="#4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible" class="headerlink" title="4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?"></a>4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?</h4><p>Refer to the Interaction Event Normalization interface to ensure consistent interaction experiences across different devices and minimize adaptation efforts:  </p>
+<ul>
+<li>Interaction Events Guide:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018">https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018</a>  </li>
+<li>Interaction Event Normalization Development Documentation:<br><a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md</a></li>
+</ul>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-4.png"></p>
+<h4 id="5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This"><a href="#5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This" class="headerlink" title="5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?"></a>5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?</h4><p>Configure <code>customizeSchemes</code> as described in the documentation:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F</a></li>
+</ul>
+<p>You need to configure <code>schemeMap</code> and <code>mimeTypeMap</code> manually.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/27/123-Daily-HarmonyOS-Next-Knowledge-Web-Cross-Origin-Resources-Web-Long-Press-Menu-Web-Request-Interception-Screen-Recording-Prevention-Base64-Image-Dimensions/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Web Cross-Origin Resources, Web Long-Press Menu, Web Request Interception, Screen Recording Prevention, Base64 Image Dimensions">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Web Cross-Origin Resources, Web Long-Press Menu, Web Request Interception, Screen Recording Prevention, Base64 Image Dimensions
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/" rel="next" title="[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance">
+      [Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS"><span class="nav-number">1.2.</span> <span class="nav-text">2. What Are the JSBridge Implementation Methods in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS"><span class="nav-number">1.3.</span> <span class="nav-text">3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible"><span class="nav-number">1.4.</span> <span class="nav-text">4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This"><span class="nav-number">1.5.</span> <span class="nav-text">5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">183</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
