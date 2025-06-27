@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Introduction and Practical Guide to HarmonyOS Next User Notification Service (Notification Kit)1. Overview of Notification KitNotification Kit provides developers with a local notification delivery ch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction and Practice of HarmonyOS Next User Notification Service Notification Kit">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/27/B-Introduction-and-Practice-of-HarmonyOS-Next-User-Notification-Service-Notification-Kit/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="Introduction and Practical Guide to HarmonyOS Next User Notification Service (Notification Kit)1. Overview of Notification KitNotification Kit provides developers with a local notification delivery ch">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-2.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-1.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-3.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-5.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-7.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/89950048fe1bbb966e818accda864be5_MD5.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/6db70bf2c578ac2b02881edbc5b1f8f4_MD5.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/812d8b9a6d1d0a23a2f671ef6a760c90_MD5.png">
+<meta property="article:published_time" content="2025-06-27T03:20:54.000Z">
+<meta property="article:modified_time" content="2025-06-27T03:32:22.175Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-2.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-and-Practice-of-HarmonyOS-Next-User-Notification-Service-Notification-Kit/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Introduction and Practice of HarmonyOS Next User Notification Service Notification Kit | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-and-Practice-of-HarmonyOS-Next-User-Notification-Service-Notification-Kit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction and Practice of HarmonyOS Next User Notification Service Notification Kit
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 11:20:54 / Modified: 11:32:22" itemprop="dateCreated datePublished" datetime="2025-06-27T11:20:54+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Introduction-and-Practical-Guide-to-HarmonyOS-Next-User-Notification-Service-Notification-Kit"><a href="#Introduction-and-Practical-Guide-to-HarmonyOS-Next-User-Notification-Service-Notification-Kit" class="headerlink" title="Introduction and Practical Guide to HarmonyOS Next User Notification Service (Notification Kit)"></a><strong>Introduction and Practical Guide to HarmonyOS Next User Notification Service (Notification Kit)</strong></h3><h4 id="1-Overview-of-Notification-Kit"><a href="#1-Overview-of-Notification-Kit" class="headerlink" title="1. Overview of Notification Kit"></a><strong>1. Overview of Notification Kit</strong></h4><p>Notification Kit provides developers with a local notification delivery channel, enabling apps to push notifications directly to users on the client side. These notifications—triggered by app events—can include ringtones, vibrations, banners, lock screen alerts, status bar notifications, and more, similar to Android’s notification system.  </p>
+<p><strong>Example: Status Bar Icon Display</strong>  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-2.png"></p>
+<p>Users can swipe down the status bar to access the notification drawer for details and actions.  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98.png"></p>
+<p><strong>Reminder-Style Notifications</strong>:<br><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-1.png"></p>
+<p>HarmonyOS offers equivalent capabilities through Notification Kit.  </p>
+<h4 id="2-Differences-Between-Notification-Kit-Call-Kit-and-Push-Kit"><a href="#2-Differences-Between-Notification-Kit-Call-Kit-and-Push-Kit" class="headerlink" title="2. Differences Between Notification Kit, Call Kit, and Push Kit"></a><strong>2. Differences Between Notification Kit, Call Kit, and Push Kit</strong></h4><ul>
+<li><strong>Notification Kit</strong>: Developers manually invoke APIs to create and define notifications.  </li>
+<li><strong>Push Kit</strong>: Huawei’s cloud-to-device messaging platform. Integrating Push Kit enables real-time app notifications, enhancing user engagement. Push Kit runs as a system daemon, launching the app process when notifications are tapped. Display scenarios include the notification center, lock screen, banners, and badge icons.  </li>
+<li><strong>Call Kit</strong>: Manages in-app call features (e.g., one-tap answer, banners, mute). When the app is in the background, Push Kit must first wake the app process before Call Kit can handle calls.</li>
+</ul>
+<p><strong>Relationship Diagram</strong>:<br><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-3.png"></p>
+<p><strong>Key Workflow</strong>:  </p>
+<ol>
+<li>Push Kit receives a notification and wakes the app.  </li>
+<li>The app uses Notification Kit to display the alert.  </li>
+<li>Tapping the notification triggers Call Kit for call handling.</li>
+</ol>
+<h4 id="3-Notification-Kit-Features-and-APIs"><a href="#3-Notification-Kit-Features-and-APIs" class="headerlink" title="3. Notification Kit Features and APIs"></a><strong>3. Notification Kit Features and APIs</strong></h4><p><strong>Core Workflow</strong>:  </p>
+<ol>
+<li>Request notification permissions.  </li>
+<li>Publish notifications via the service.  </li>
+<li>Display notifications in the system tray.<br><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-5.png"></li>
+</ol>
+<h5 id="Requesting-Permissions"><a href="#Requesting-Permissions" class="headerlink" title="Requesting Permissions"></a><strong>Requesting Permissions</strong></h5><p>Apps must obtain user consent before sending notifications. Use <code>requestEnableNotification()</code> to prompt the user; subsequent calls skip the prompt if already granted.  </p>
+<p><strong>API Reference</strong>:  </p>
+<table>
+<thead>
+<tr>
+<th><strong>API</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>isNotificationEnabled(): Promise&lt;boolean&gt;</code></td>
+<td>Checks if notifications are enabled.</td>
+</tr>
+<tr>
+<td><code>requestEnableNotification(context: UIAbilityContext): Promise&lt;void&gt;</code></td>
+<td>Requests permission (prompts user on first call).</td>
+</tr>
+</tbody></table>
+<p><strong>Code Example</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; notificationManager &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.NotificationKit&#x27;</span>;</span><br><span class="line"><span class="comment">// ... (other imports)</span></span><br><span class="line"><span class="keyword">const</span> <span class="attr">TAG</span>: <span class="built_in">string</span> = <span class="string">&#x27;[PublishOperation]&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> context = <span class="variable language_">this</span>.<span class="title function_">getUIContext</span>().<span class="title function_">getHostContext</span>() <span class="keyword">as</span> common.<span class="property">UIAbilityContext</span>;</span><br><span class="line">notificationManager.<span class="title function_">isNotificationEnabled</span>().<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="attr">data</span>: <span class="built_in">boolean</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!data) &#123;</span><br><span class="line">    notificationManager.<span class="title function_">requestEnableNotification</span>(context).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      hilog.<span class="title function_">info</span>(<span class="variable constant_">DOMAIN_NUMBER</span>, <span class="variable constant_">TAG</span>, <span class="string">`[ANS] requestEnableNotification success`</span>);</span><br><span class="line">    &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (err.<span class="property">code</span> === <span class="number">1600004</span>) &#123; <span class="comment">// Permission denied</span></span><br><span class="line">        hilog.<span class="title function_">error</span>(<span class="variable constant_">DOMAIN_NUMBER</span>, <span class="variable constant_">TAG</span>, <span class="string">`[ANS] requestEnableNotification refused, code: <span class="subst">$&#123;err.code&#125;</span>`</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">  hilog.<span class="title function_">error</span>(<span class="variable constant_">DOMAIN_NUMBER</span>, <span class="variable constant_">TAG</span>, <span class="string">`isNotificationEnabled failed: <span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h5 id="Publishing-Notifications"><a href="#Publishing-Notifications" class="headerlink" title="Publishing Notifications"></a><strong>Publishing Notifications</strong></h5><p>Common notification types:  </p>
+<table>
+<thead>
+<tr>
+<th><strong>Type</strong></th>
+<th><strong>Style</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Text</td>
+<td><img src="/../images/HarmonyOS%20Next%20%E7%94%A8%E6%88%B7%E9%80%9A%E7%9F%A5%E6%9C%8D%E5%8A%A1Notification%20Kit%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98-7.png"></td>
+<td>Max 3 lines (truncated with “…”).</td>
+</tr>
+<tr>
+<td>Multi-line Text</td>
+<td><img src="/../images/89950048fe1bbb966e818accda864be5_MD5.png"></td>
+<td>Truncates long lines.</td>
+</tr>
+<tr>
+<td>Badge</td>
+<td><img src="/../images/6db70bf2c578ac2b02881edbc5b1f8f4_MD5.png" alt="Badge"></td>
+<td>Numeric counter in top-right.</td>
+</tr>
+<tr>
+<td>Progress Bar</td>
+<td><img src="/../images/812d8b9a6d1d0a23a2f671ef6a760c90_MD5.png" alt="Progress"></td>
+<td>Shows download&#x2F;progress status.</td>
+</tr>
+</tbody></table>
+<p><strong>Example: Text Notification</strong>  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">request</span>: notificationManager.<span class="property">NotificationRequest</span> = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">content</span>: &#123;</span><br><span class="line">    <span class="attr">notificationContentType</span>: notificationManager.<span class="property">ContentType</span>.<span class="property">NOTIFICATION_CONTENT_BASIC_TEXT</span>,</span><br><span class="line">    <span class="attr">normal</span>: &#123; <span class="attr">title</span>: <span class="string">&#x27;test_title&#x27;</span>, <span class="attr">text</span>: <span class="string">&#x27;test_text&#x27;</span> &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">notificationManager.<span class="title function_">publish</span>(request, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* Handle errors */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Progress Bar Template</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Check template support</span></span><br><span class="line">notificationManager.<span class="title function_">isSupportTemplate</span>(<span class="string">&#x27;downloadTemplate&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">supported</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (supported) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">request</span>: notificationManager.<span class="property">NotificationRequest</span> = &#123;</span><br><span class="line">      <span class="attr">id</span>: <span class="number">5</span>,</span><br><span class="line">      <span class="attr">content</span>: &#123; <span class="comment">/* ... */</span> &#125;,</span><br><span class="line">      <span class="attr">template</span>: &#123; <span class="attr">name</span>: <span class="string">&#x27;downloadTemplate&#x27;</span>, <span class="attr">data</span>: &#123; <span class="attr">progressValue</span>: <span class="number">45</span> &#125; &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    notificationManager.<span class="title function_">publish</span>(request, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Canceling Notifications</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">notificationManager.<span class="title function_">cancel</span>(<span class="number">1</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;); <span class="comment">// Cancels notification with ID=1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-Use-Cases"><a href="#4-Use-Cases" class="headerlink" title="4. Use Cases"></a><strong>4. Use Cases</strong></h4><ul>
+<li><strong>Foreground&#x2F;Background</strong>:  <ul>
+<li>Foreground: Directly publish notifications.  </li>
+<li>Background: Requires Push Kit for cloud-delivered alerts.</li>
+</ul>
+</li>
+<li><strong>Scenarios</strong>: Syncing upload progress, payment alerts, fitness tracking.</li>
+</ul>
+<p><strong>System Limitations</strong>:  </p>
+<ul>
+<li>Max 24 notifications retained in the system tray.  </li>
+<li>200KB size limit per notification.  </li>
+<li>Rate limits: 10 new&#x2F;20 updates per second (per app); 15&#x2F;30 for all third-party apps combined.</li>
+</ul>
+<h4 id="5-IM-Scenario-Practical-Guide"><a href="#5-IM-Scenario-Practical-Guide" class="headerlink" title="5. IM Scenario Practical Guide"></a><strong>5. IM Scenario Practical Guide</strong></h4><p><strong>Basic Setup</strong>:  </p>
+<ul>
+<li><strong>Push Kit</strong>: Handles background notifications. Unlike Android, HarmonyOS cannot “keep apps alive,” so Push Kit is essential.  </li>
+<li><strong>Foreground Handling</strong>: Use <code>foregroundShow: false</code> in REST API to suppress notifications when the app is active.</li>
+</ul>
+<p><strong>Example Payload</strong>:  </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;payload&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;notification&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;foregroundShow&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;token&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;IQAAAA**********4Tw&quot;</span><span class="punctuation">]</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Custom Notifications</strong>:<br>Parse Push Kit messages and create text notifications dynamically:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">request</span>: notificationManager.<span class="property">NotificationRequest</span> = &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">content</span>: &#123; <span class="attr">normal</span>: &#123; <span class="attr">title</span>: notification.<span class="property">title</span>, <span class="attr">text</span>: notification.<span class="property">text</span> &#125; &#125;</span><br><span class="line">&#125;;</span><br><span class="line">notificationManager.<span class="title function_">publish</span>(request, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Badge Management</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Increment badge count</span></span><br><span class="line">notificationManager.<span class="title function_">setBadgeNumber</span>(<span class="number">9</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Decrement after viewing a notification</span></span><br><span class="line">notificationManager.<span class="title function_">setBadgeNumber</span>(<span class="number">8</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Notification Channels</strong>:<br>Define channels for different message types (e.g., chats vs. marketing):  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">notificationManager.<span class="title function_">addSlot</span>(notificationManager.<span class="property">SlotType</span>.<span class="property">SOCIAL_COMMUNICATION</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="comment">/* ... */</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Custom Ringtones</strong>:<br>Place audio files in <code>resources/rawfile/</code> and reference them via the <code>sound</code> field (requires app eligibility).  </p>
+<p><strong>Click Actions</strong>:<br>Use <code>WantAgent</code> to deep-link to specific app pages:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">wantAgentInfo</span>: wantAgent.<span class="property">WantAgentInfo</span> = &#123;</span><br><span class="line">  <span class="attr">wants</span>: [&#123; <span class="attr">bundleName</span>: <span class="string">&#x27;com.samples.notification&#x27;</span>, <span class="attr">abilityName</span>: <span class="string">&#x27;SecondAbility&#x27;</span> &#125;],</span><br><span class="line">  <span class="attr">actionType</span>: wantAgent.<span class="property">OperationType</span>.<span class="property">START_ABILITY</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-Summary"><a href="#6-Summary" class="headerlink" title="6. Summary"></a><strong>6. Summary</strong></h4><p>Notification Kit empowers developers to create local notifications with rich features (text, progress bars, badges, etc.), complementing Push Kit (cloud messaging) and Call Kit (call management). Key steps include:  </p>
+<ol>
+<li>Requesting permissions.  </li>
+<li>Building notification templates.  </li>
+<li>Publishing&#x2F;canceling notifications.</li>
+</ol>
+<p><strong>Best Practices</strong>:  </p>
+<ul>
+<li>Respect system limits (24 notifications, 200KB size).  </li>
+<li>Use Push Kit for background delivery.  </li>
+<li>Customize channels&#x2F;ringtones for specific scenarios.</li>
+</ul>
+<p>Ideal for IM, fitness apps, and other time-sensitive notifications.  </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-Introduction-to-HarmonyOS-Next-Application-UI-Generation-Tool/" rel="prev" title="Introduction to HarmonyOS Next Application UI Generation Tool">
+      <i class="fa fa-chevron-left"></i> Introduction to HarmonyOS Next Application UI Generation Tool
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-Practical-Guide-to-Custom-Graphics-with-Canvas-in-HarmonyOS-Next/" rel="next" title="Practical Guide to Custom Graphics with Canvas in HarmonyOS Next">
+      Practical Guide to Custom Graphics with Canvas in HarmonyOS Next <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-and-Practical-Guide-to-HarmonyOS-Next-User-Notification-Service-Notification-Kit"><span class="nav-number">1.</span> <span class="nav-text">Introduction and Practical Guide to HarmonyOS Next User Notification Service (Notification Kit)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Overview-of-Notification-Kit"><span class="nav-number">1.1.</span> <span class="nav-text">1. Overview of Notification Kit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Differences-Between-Notification-Kit-Call-Kit-and-Push-Kit"><span class="nav-number">1.2.</span> <span class="nav-text">2. Differences Between Notification Kit, Call Kit, and Push Kit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Notification-Kit-Features-and-APIs"><span class="nav-number">1.3.</span> <span class="nav-text">3. Notification Kit Features and APIs</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Requesting-Permissions"><span class="nav-number">1.3.1.</span> <span class="nav-text">Requesting Permissions</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Publishing-Notifications"><span class="nav-number">1.3.2.</span> <span class="nav-text">Publishing Notifications</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Use-Cases"><span class="nav-number">1.4.</span> <span class="nav-text">4. Use Cases</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-IM-Scenario-Practical-Guide"><span class="nav-number">1.5.</span> <span class="nav-text">5. IM Scenario Practical Guide</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Summary"><span class="nav-number">1.6.</span> <span class="nav-text">6. Summary</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">195</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

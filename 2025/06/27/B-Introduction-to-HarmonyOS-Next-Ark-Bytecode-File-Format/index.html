@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Introduction to HarmonyOS Next Ark Bytecode File FormatIn development, human-readable programming languages must be compiled into binary bytecode formats to be recognized by machines. In HarmonyOS Nex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction to HarmonyOS Next Ark Bytecode File Format">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="Introduction to HarmonyOS Next Ark Bytecode File FormatIn development, human-readable programming languages must be compiled into binary bytecode formats to be recognized by machines. In HarmonyOS Nex">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E6%96%B9%E8%88%9F%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%BB%8B%E7%BB%8D.png">
+<meta property="article:published_time" content="2025-06-27T02:30:12.000Z">
+<meta property="article:modified_time" content="2025-06-27T03:32:28.641Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E6%96%B9%E8%88%9F%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%BB%8B%E7%BB%8D.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Introduction to HarmonyOS Next Ark Bytecode File Format | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction to HarmonyOS Next Ark Bytecode File Format
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:30:12 / Modified: 11:32:28" itemprop="dateCreated datePublished" datetime="2025-06-27T10:30:12+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format"><a href="#Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format" class="headerlink" title="Introduction to HarmonyOS Next Ark Bytecode File Format"></a>Introduction to HarmonyOS Next Ark Bytecode File Format</h3><p>In development, human-readable programming languages must be compiled into binary bytecode formats to be recognized by machines. In HarmonyOS Next development, ArkTS is compiled into Ark Bytecode. What does Ark Bytecode look like? Take an ABC file compiled from a demo as an example:  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E6%96%B9%E8%88%9F%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E4%BB%8B%E7%BB%8D.png"></p>
+<p>Binary files appear like this. How can we understand them? We need to grasp the file format of Ark Bytecode.  </p>
+<h3 id="Bytecode-File-Layout"><a href="#Bytecode-File-Layout" class="headerlink" title="Bytecode File Layout"></a>Bytecode File Layout</h3><p>In the figure above, we see the recognizable letters “PANDA”. What do they mean? First, let’s understand the bytecode file layout.  </p>
+<p>A bytecode file starts with a <strong>Header</strong> structure. All structures in the file can be accessed directly or indirectly from the Header. References in the bytecode file include <strong>offsets</strong> (32-bit values indicating the distance from the file header, starting at 0) and <strong>indices</strong> (16-bit values indicating positions in index regions).  </p>
+<h4 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h4><p>Let’s examine the <strong>Header</strong> structure:  </p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Format</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">magic</td>
+<td align="left">uint8_t[8]</td>
+<td align="left">File header magic number. Must be ‘P’ ‘A’ ‘N’ ‘D’ ‘A’ ‘\0’ ‘\0’ ‘\0’.</td>
+</tr>
+<tr>
+<td align="left">checksum</td>
+<td align="left">uint32_t</td>
+<td align="left">Adler32 checksum of the bytecode file content excluding the magic number and this field.</td>
+</tr>
+<tr>
+<td align="left">version</td>
+<td align="left">uint8_t[4]</td>
+<td align="left">Bytecode file version (Major.Minor.Feature.Build).</td>
+</tr>
+<tr>
+<td align="left">file_size</td>
+<td align="left">uint32_t</td>
+<td align="left">Total size of the bytecode file in bytes.</td>
+</tr>
+<tr>
+<td align="left">foreign_off</td>
+<td align="left">uint32_t</td>
+<td align="left">Offset to the <strong>Foreign</strong> region, which contains ForeignClass or ForeignMethod elements.</td>
+</tr>
+<tr>
+<td align="left">foreign_size</td>
+<td align="left">uint32_t</td>
+<td align="left">Size of the <strong>Foreign</strong> region in bytes.</td>
+</tr>
+<tr>
+<td align="left">num_classes</td>
+<td align="left">uint32_t</td>
+<td align="left">Number of ClassIndex elements (i.e., classes defined in the file).</td>
+</tr>
+<tr>
+<td align="left">class_idx_off</td>
+<td align="left">uint32_t</td>
+<td align="left">Offset to the <strong>ClassIndex</strong> structure.</td>
+</tr>
+<tr>
+<td align="left">num_lnps</td>
+<td align="left">uint32_t</td>
+<td align="left">Number of LineNumberProgramIndex elements (i.e., line number programs).</td>
+</tr>
+<tr>
+<td align="left">lnp_idx_off</td>
+<td align="left">uint32_t</td>
+<td align="left">Offset to the <strong>LineNumberProgramIndex</strong> structure.</td>
+</tr>
+<tr>
+<td align="left">reserved</td>
+<td align="left">uint32_t</td>
+<td align="left">Reserved field for internal use by Ark Bytecode.</td>
+</tr>
+<tr>
+<td align="left">reserved</td>
+<td align="left">uint32_t</td>
+<td align="left">Reserved field for internal use by Ark Bytecode.</td>
+</tr>
+<tr>
+<td align="left">num_index_regions</td>
+<td align="left">uint32_t</td>
+<td align="left">Number of IndexSection elements (i.e., IndexHeaders in the file).</td>
+</tr>
+<tr>
+<td align="left">index_section_off</td>
+<td align="left">uint32_t</td>
+<td align="left">Offset to the <strong>IndexSection</strong> structure.</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>magic</strong>: The initial bytes 0x50, 0x41, 0x4e, 0x44, 0x41 correspond to the ASCII code for “PANDA”, followed by three 0s.  </li>
+<li><strong>checksum</strong>: Four-byte checksum (e.g., 0x5d, 0xe8, 0xde, 0xdf).  </li>
+<li><strong>version</strong>: Four-byte version number (e.g., 0x0C, 0x00, 0x06, 0x00).  </li>
+<li>…</li>
+</ul>
+<h4 id="Version"><a href="#Version" class="headerlink" title="Version"></a>Version</h4><p>The bytecode version number consists of four parts: <strong>Major.Minor.Feature.Build</strong>.  </p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Format</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Major Version</td>
+<td align="left">uint8_t</td>
+<td align="left">Indicates bytecode format changes due to overall architecture adjustments.</td>
+</tr>
+<tr>
+<td align="left">Minor Version</td>
+<td align="left">uint8_t</td>
+<td align="left">Indicates changes due to partial architecture or major feature adjustments.</td>
+</tr>
+<tr>
+<td align="left">Feature Version</td>
+<td align="left">uint8_t</td>
+<td align="left">Indicates changes from minor to medium feature additions.</td>
+</tr>
+<tr>
+<td align="left">Build Version</td>
+<td align="left">uint8_t</td>
+<td align="left">Indicates changes from bug fixes.</td>
+</tr>
+</tbody></table>
+<h4 id="ForeignClass"><a href="#ForeignClass" class="headerlink" title="ForeignClass"></a>ForeignClass</h4><p>Describes external classes declared in other files but referenced in the current bytecode file.  </p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Format</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">name</td>
+<td align="left">String</td>
+<td align="left">Name of the external class, following TypeDescriptor syntax.</td>
+</tr>
+</tbody></table>
+<h4 id="ForeignMethod"><a href="#ForeignMethod" class="headerlink" title="ForeignMethod"></a>ForeignMethod</h4><p>Describes external methods declared in other files but referenced in the current bytecode file.  </p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Format</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">class_idx</td>
+<td align="left">uint16_t</td>
+<td align="left">Index pointing to the class this method belongs to (a position in ClassRegionIndex, whose value is an offset to a Class or ForeignClass).</td>
+</tr>
+<tr>
+<td align="left">reserved</td>
+<td align="left">uint16_t</td>
+<td align="left">Reserved field for internal use.</td>
+</tr>
+<tr>
+<td align="left">name_off</td>
+<td align="left">uint32_t</td>
+<td align="left">Offset to the method name string.</td>
+</tr>
+<tr>
+<td align="left">index_data</td>
+<td align="left">uleb128</td>
+<td align="left">Method’s MethodIndexData.</td>
+</tr>
+</tbody></table>
+<p>The <code>class_idx</code> can be resolved by finding the appropriate <strong>IndexHeader</strong> via the <code>ForeignMethod</code> offset.  </p>
+<h3 id="Other-Structures"><a href="#Other-Structures" class="headerlink" title="Other Structures"></a>Other Structures</h3><p>Additional structures include <strong>Class</strong>, <strong>ClassAccessFlag</strong>, <strong>Field</strong>, <strong>Method</strong>, <strong>Code</strong>, <strong>TryBlock</strong>, <strong>CatchBlock</strong>, <strong>Annotation</strong>, <strong>LineNumberProgramIndex</strong>, <strong>DebugInfo</strong>, <strong>IndexSection</strong>, <strong>IndexHeader</strong>, <strong>ClassRegionIndex</strong>, <strong>Type</strong>, <strong>LiteralArray</strong>, and <strong>Literal</strong>. Detailed explanations are omitted here.  </p>
+<h3 id="Bytecode-File-Data-Types"><a href="#Bytecode-File-Data-Types" class="headerlink" title="Bytecode File Data Types"></a>Bytecode File Data Types</h3><h4 id="Integers"><a href="#Integers" class="headerlink" title="Integers"></a>Integers</h4><table>
+<thead>
+<tr>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">uint8_t</td>
+<td align="left">8-bit unsigned integer.</td>
+</tr>
+<tr>
+<td align="left">uint16_t</td>
+<td align="left">16-bit unsigned integer (little-endian).</td>
+</tr>
+<tr>
+<td align="left">uint32_t</td>
+<td align="left">32-bit unsigned integer (little-endian).</td>
+</tr>
+<tr>
+<td align="left">uleb128</td>
+<td align="left">Unsigned LEB128-encoded integer.</td>
+</tr>
+<tr>
+<td align="left">sleb128</td>
+<td align="left">Signed LEB128-encoded integer.</td>
+</tr>
+</tbody></table>
+<h4 id="Strings"><a href="#Strings" class="headerlink" title="Strings"></a>Strings</h4><table>
+<thead>
+<tr>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Format</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">utf16_length</td>
+<td align="left">uleb128</td>
+<td align="left">Value: <code>len &lt;&lt; 1 | is_ascii</code>, where <code>len</code> is the UTF-16 string length, and <code>is_ascii</code> (0&#x2F;1) indicates ASCII-only characters.</td>
+</tr>
+<tr>
+<td align="left">data</td>
+<td align="left">uint8_t[]</td>
+<td align="left">Null-terminated MUTF-8 encoded character sequence.</td>
+</tr>
+</tbody></table>
+<h4 id="TaggedValue"><a href="#TaggedValue" class="headerlink" title="TaggedValue"></a>TaggedValue</h4><table>
+<thead>
+<tr>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Format</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">tag</td>
+<td align="left">uint8_t</td>
+<td align="left">Tag indicating the data type.</td>
+</tr>
+<tr>
+<td align="left">data</td>
+<td align="left">uint8_t[]</td>
+<td align="left">Data content (type varies based on the tag; may be empty).</td>
+</tr>
+</tbody></table>
+<p><strong>Note</strong>: All multi-byte values in the bytecode file use <strong>little-endian</strong> byte order.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-Mastering-HarmonyOS-Next-System-Resource-Usage-in-One-Article/" rel="prev" title="Mastering HarmonyOS Next System Resource Usage in One Article">
+      <i class="fa fa-chevron-left"></i> Mastering HarmonyOS Next System Resource Usage in One Article
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/" rel="next" title="In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications">
+      In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format"><span class="nav-number">1.</span> <span class="nav-text">Introduction to HarmonyOS Next Ark Bytecode File Format</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bytecode-File-Layout"><span class="nav-number">2.</span> <span class="nav-text">Bytecode File Layout</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Header"><span class="nav-number">2.1.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Version"><span class="nav-number">2.2.</span> <span class="nav-text">Version</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ForeignClass"><span class="nav-number">2.3.</span> <span class="nav-text">ForeignClass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ForeignMethod"><span class="nav-number">2.4.</span> <span class="nav-text">ForeignMethod</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Other-Structures"><span class="nav-number">3.</span> <span class="nav-text">Other Structures</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bytecode-File-Data-Types"><span class="nav-number">4.</span> <span class="nav-text">Bytecode File Data Types</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Integers"><span class="nav-number">4.1.</span> <span class="nav-text">Integers</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Strings"><span class="nav-number">4.2.</span> <span class="nav-text">Strings</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TaggedValue"><span class="nav-number">4.3.</span> <span class="nav-text">TaggedValue</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">195</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Detailed Explanation of HarmonyOS Next Timer ComponentBackground IntroductionIn daily UI development, timer controls are frequently used. For example, time progress display during video playback and c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Detailed Explanation of HarmonyOS Next Timer Component">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="Detailed Explanation of HarmonyOS Next Timer ComponentBackground IntroductionIn daily UI development, timer controls are frequently used. For example, time progress display during video playback and c">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3.gif">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-1.gif">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-2.gif">
+<meta property="article:published_time" content="2025-06-27T02:35:56.000Z">
+<meta property="article:modified_time" content="2025-06-27T02:37:22.958Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3.gif">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Detailed Explanation of HarmonyOS Next Timer Component | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Detailed Explanation of HarmonyOS Next Timer Component
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:35:56 / Modified: 10:37:22" itemprop="dateCreated datePublished" datetime="2025-06-27T10:35:56+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Detailed-Explanation-of-HarmonyOS-Next-Timer-Component"><a href="#Detailed-Explanation-of-HarmonyOS-Next-Timer-Component" class="headerlink" title="Detailed Explanation of HarmonyOS Next Timer Component"></a>Detailed Explanation of HarmonyOS Next Timer Component</h2><h3 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h3><p>In daily UI development, timer controls are frequently used. For example, time progress display during video playback and call duration display in audio&#x2F;video calls require forward-counting timer controls. In some scenarios, countdown timer controls are needed, where a maximum time is set to start the countdown. In Android, we typically use <code>TextView</code> combined with <code>Handler</code> to update the <code>TextView</code> for timing effects. HarmonyOS Next provides the <code>TextTimer</code> component to achieve timing effects. Below is an introduction to the capabilities of <code>TextTimer</code>.  </p>
+<h3 id="Introduction-to-TextTimer"><a href="#Introduction-to-TextTimer" class="headerlink" title="Introduction to TextTimer"></a>Introduction to TextTimer</h3><p><code>TextTimer</code> is a component that displays timing information through text and controls its timer state. When the component is invisible, time changes will stop. The visibility state of the component is handled based on <code>onVisibleAreaChange</code>, and a visibility threshold ratio greater than 0 is considered visible.  </p>
+<h4 id="Attribute-Introduction"><a href="#Attribute-Introduction" class="headerlink" title="Attribute Introduction"></a>Attribute Introduction</h4><ul>
+<li><code>format(value: string)</code>: Sets a custom format, which must include at least one keyword from HH, mm, ss, or SS. If date formats like yy, MM, or dd are used, default values will apply.  </li>
+<li><code>fontColor(value: ResourceColor)</code>: Sets the font color.  </li>
+<li><code>fontWeight(value: number | FontWeight | string)</code>: Sets the font weight of the text. Excessively large values may cause truncation in different fonts. For the number type, values range from <code>[100, 900]</code> with an interval of 100 (default is 400); larger values make the font bolder. The string type supports numeric string forms (e.g., “400”) and keywords like “bold”, “bolder”, “lighter”, “regular”, and “medium”, corresponding to the respective enumeration values in <code>FontWeight</code>.  </li>
+<li><code>fontFamily(value: ResourceStr)</code>: Sets the font list, with the default font being ‘HarmonyOS Sans’. Applications currently support ‘HarmonyOS Sans’ and registered custom fonts, while cards only support ‘HarmonyOS Sans’.  </li>
+<li><code>textShadow(value: ShadowOptions | Array&lt;ShadowOptions&gt;)</code>: Sets text shadow effects. This interface supports array parameters for multiple shadows, but does not support the <code>fill</code> field or intelligent color pickup mode.  </li>
+<li><code>contentModifier(modifier: ContentModifier&lt;TextTimerConfiguration&gt;)</code>: A method to customize the content area of <code>TextTimer</code>, where <code>modifier</code> is a content modifier that developers need to implement by defining a class that adheres to the <code>ContentModifier</code> interface.</li>
+</ul>
+<p>The <code>TextTimer</code> constructor requires a <code>TextTimerOptions</code> object, which includes the following attributes:  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">isCountDown</td>
+<td align="left">boolean</td>
+<td align="left">No</td>
+<td align="left">Indicates whether to use countdown. When <code>true</code>, the timer starts counting down; when <code>false</code>, it starts counting up.<br><br>Default: <code>false</code></td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">number</td>
+<td align="left">No</td>
+<td align="left">Timer duration (effective when <code>isCountDown</code> is <code>true</code>), in milliseconds. The maximum duration is 86,400,000 milliseconds (24 hours). When <code>0 &lt; count &lt; 86,400,000</code>, <code>count</code> is the initial timer value; otherwise, the default value is used.<br><br>Default: <code>60000</code></td>
+</tr>
+<tr>
+<td align="left">controller</td>
+<td align="left">TextTimerController</td>
+<td align="left">No</td>
+<td align="left">The <code>TextTimer</code> controller, used to start, pause, etc.</td>
+</tr>
+</tbody></table>
+<p>The <code>TextTimerController</code> mainly controls the timer:  </p>
+<ul>
+<li><code>start()</code>: Starts the timer.  </li>
+<li><code>pause()</code>: Pauses the timer.  </li>
+<li><code>reset()</code>: Resets the timer.</li>
+</ul>
+<h4 id="Event-Introduction"><a href="#Event-Introduction" class="headerlink" title="Event Introduction"></a>Event Introduction</h4><p>The main event is <code>onTimer</code>:  </p>
+<ul>
+<li><code>onTimer(event: (utc: number, elapsedTime: number) =&gt; void)</code>: Triggered when the time text changes. This event is not triggered when the screen is locked or the app is in the background. When setting high-precision formats (SSS, SS), the callback interval may fluctuate. The parameter <code>utc</code> is a Linux timestamp (time elapsed since January 1, 1970) in the minimum unit of the set format; <code>elapsedTime</code> is the elapsed time of the timer, also in the minimum unit of the set format.</li>
+</ul>
+<h3 id="Usage-Examples"><a href="#Usage-Examples" class="headerlink" title="Usage Examples"></a>Usage Examples</h3><h4 id="Example-1-Button-Controlled-Timer"><a href="#Example-1-Button-Controlled-Timer" class="headerlink" title="Example 1: Button-Controlled Timer"></a>Example 1: Button-Controlled Timer</h4><pre><code class="language-typescript">@Entry
+@Component
+struct TextTimerExample &#123;
+  textTimerController: TextTimerController = new TextTimerController()
+  @State format: string = &#39;mm:ss.SS&#39;
+
+  build() &#123;
+    Column() &#123;
+      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
+        .format(this.format)
+        .fontColor(Color.Black)
+        .fontSize(50)
+        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
+          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
+        &#125;)
+      Row() &#123;
+        Button(&quot;start&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.start()
+        &#125;)
+        Button(&quot;pause&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.pause()
+        &#125;)
+        Button(&quot;reset&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.reset()
+        &#125;)
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>Effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3.gif"></p>
+<h4 id="Example-2-Automatic-Timing"><a href="#Example-2-Automatic-Timing" class="headerlink" title="Example 2: Automatic Timing"></a>Example 2: Automatic Timing</h4><pre><code class="language-typescript">@Entry
+@Component
+struct TextTimerStart &#123;
+  textTimerController: TextTimerController = new TextTimerController()
+  @State format: string = &#39;mm:ss.SS&#39;
+
+  build() &#123;
+    Column() &#123;
+      Scroll()
+        .height(&#39;20%&#39;)
+      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
+        .format(this.format)
+        .fontColor(Color.Black)
+        .fontSize(50)
+        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
+          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
+        &#125;)
+        .onAppear(() =&gt; &#123;
+          this.textTimerController.start()
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-1.gif"></p>
+<h3 id="Usage-Limitations"><a href="#Usage-Limitations" class="headerlink" title="Usage Limitations"></a>Usage Limitations</h3><p>For forward-counting scenarios, the timer always starts from 0, but some scenarios require starting from a specific time. For example, in page switching during a video call, the full-screen and floating-window pages should have continuous timing instead of restarting from 0. How to achieve this?  </p>
+<p><code>TextTimer</code> provides a content area customization method <code>contentModifier</code>, which requires implementing <code>ContentModifier&lt;TextTimerConfiguration&gt;</code>:  </p>
+<ol>
+<li>First, implement <code>MyTextTimerModifier</code> and encapsulate the <code>Builder</code> method in the <code>applyContent</code> method.  </li>
+<li>Customize the UI in the custom <code>Builder</code> method.  </li>
+<li>Configure the custom <code>MyTextTimerModifier</code> to <code>TextTimer</code> using <code>contentModifier</code>.  </li>
+<li>Remove color and font configurations from <code>TextTimer</code> and configure them in the custom UI.  </li>
+<li>The <code>format</code> setting affects the unit of <code>elapsedTime</code>.  </li>
+<li>Adding an initial value to <code>config.elapsedTime</code> starts timing from a specific time.  </li>
+<li>Convert seconds to the <code>mm:ss</code> format.</li>
+</ol>
+<p><strong>Code example</strong>:  </p>
+<pre><code class="language-typescript">let startTime: number = 100;  
+
+function formatData(diffTimeBySecond: number): string &#123;  
+  const hours = Math.floor(diffTimeBySecond / 3600);  
+  const minutes = Math.floor((diffTimeBySecond % 3600) / 60);  
+  const remainingSeconds = Math.floor(diffTimeBySecond % 60);  
+  
+  // Zero-padding function  
+  const pad = (num: number) =&gt; num.toString().padStart(2, &#39;0&#39;);  
+  
+  return hours &gt; 0  
+    ? `$&#123;pad(hours)&#125;:$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`  
+    : `$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`;  
+&#125;  
+class MyTextTimerModifier implements ContentModifier&lt;TextTimerConfiguration&gt; &#123;  
+  constructor() &#123;  
+  &#125;  
+  applyContent(): WrappedBuilder&lt;[TextTimerConfiguration]&gt; &#123;  
+    return wrapBuilder(buildTextTimer)  
+  &#125;  
+&#125;  
+  
+@Builder  
+function buildTextTimer(config: TextTimerConfiguration) &#123;  
+  Column() &#123;  
+      Column() &#123;  
+        Text(formatData(config.elapsedTime + startTime)).fontColor(Color.Red)  
+    &#125;  
+  &#125;&#125;  
+  
+@Entry  
+@Component  
+struct Index &#123;  
+  @State count: number = 10000  
+  @State myTimerModifier: MyTextTimerModifier = new MyTextTimerModifier()  
+  countUpTextTimerController: TextTimerController = new TextTimerController()  
+  
+  build() &#123;  
+    Row() &#123;  
+      Column() &#123;  
+        TextTimer(&#123; isCountDown: false, controller: this.countUpTextTimerController &#125;)  
+          .contentModifier(this.myTimerModifier)  
+          .onTimer((utc: number, elapsedTime: number) =&gt; &#123;  
+            console.info(&#39;textTimer onTimer utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)  
+          &#125;)  
+        Row() &#123;  
+          Button(&quot;start&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.start()  
+          &#125;).margin(10)  
+          Button(&quot;pause&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.pause()  
+          &#125;).margin(10)  
+          Button(&quot;reset&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.reset()  
+          &#125;).margin(10)  
+        &#125;.margin(20)  
+      &#125;.width(&#39;100%&#39;)  
+    &#125;.height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p>Final effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-2.gif"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/" rel="prev" title="In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications">
+      <i class="fa fa-chevron-left"></i> In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-Introduction-to-HarmonyOS-Next-Logging-Tools/" rel="next" title="Introduction to HarmonyOS Next Logging Tools">
+      Introduction to HarmonyOS Next Logging Tools <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Detailed-Explanation-of-HarmonyOS-Next-Timer-Component"><span class="nav-number">1.</span> <span class="nav-text">Detailed Explanation of HarmonyOS Next Timer Component</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Background Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-TextTimer"><span class="nav-number">1.2.</span> <span class="nav-text">Introduction to TextTimer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Attribute-Introduction"><span class="nav-number">1.2.1.</span> <span class="nav-text">Attribute Introduction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Event-Introduction"><span class="nav-number">1.2.2.</span> <span class="nav-text">Event Introduction</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Usage-Examples"><span class="nav-number">1.3.</span> <span class="nav-text">Usage Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Example-1-Button-Controlled-Timer"><span class="nav-number">1.3.1.</span> <span class="nav-text">Example 1: Button-Controlled Timer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Example-2-Automatic-Timing"><span class="nav-number">1.3.2.</span> <span class="nav-text">Example 2: Automatic Timing</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Usage-Limitations"><span class="nav-number">1.4.</span> <span class="nav-text">Usage Limitations</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">195</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

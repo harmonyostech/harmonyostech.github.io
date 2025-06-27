@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Introduction to the ArkTS Compilation Toolchain for HarmonyOS NextIn the field of HarmonyOS application development, ArkTS serves as a critical programming language, and its compilation process plays">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction to the ArkTS Compilation Toolchain for HarmonyOS Next">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-the-ArkTS-Compilation-Toolchain-for-HarmonyOS-Next/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="Introduction to the ArkTS Compilation Toolchain for HarmonyOS NextIn the field of HarmonyOS application development, ArkTS serves as a critical programming language, and its compilation process plays">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20ArkTS%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE%E4%BB%8B%E7%BB%8D.png">
+<meta property="article:published_time" content="2025-06-27T03:55:47.000Z">
+<meta property="article:modified_time" content="2025-06-27T03:56:46.379Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20ArkTS%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE%E4%BB%8B%E7%BB%8D.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-the-ArkTS-Compilation-Toolchain-for-HarmonyOS-Next/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Introduction to the ArkTS Compilation Toolchain for HarmonyOS Next | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-the-ArkTS-Compilation-Toolchain-for-HarmonyOS-Next/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction to the ArkTS Compilation Toolchain for HarmonyOS Next
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 11:55:47 / Modified: 11:56:46" itemprop="dateCreated datePublished" datetime="2025-06-27T11:55:47+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Introduction-to-the-ArkTS-Compilation-Toolchain-for-HarmonyOS-Next"><a href="#Introduction-to-the-ArkTS-Compilation-Toolchain-for-HarmonyOS-Next" class="headerlink" title="Introduction to the ArkTS Compilation Toolchain for HarmonyOS Next"></a>Introduction to the ArkTS Compilation Toolchain for HarmonyOS Next</h2><p><img src="/../images/HarmonyOS%20Next%20ArkTS%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE%E4%BB%8B%E7%BB%8D.png"><br>In the field of HarmonyOS application development, ArkTS serves as a critical programming language, and its compilation process plays a pivotal role in determining an application’s performance, security, and development efficiency. The ArkTS compilation toolchain is a comprehensive suite of tools designed to provide end-to-end support for compiling ArkTS applications, ensuring that developers can efficiently transform ArkTS&#x2F;TS&#x2F;JS source code into Ark bytecode files (<code>*.abc</code>) that run seamlessly on HarmonyOS.  </p>
+<hr>
+<h2 id="I-Core-Functions-of-the-Compilation-Toolchain"><a href="#I-Core-Functions-of-the-Compilation-Toolchain" class="headerlink" title="I. Core Functions of the Compilation Toolchain"></a><strong>I. Core Functions of the Compilation Toolchain</strong></h2><h3 id="1-1-Syntax-Checking"><a href="#1-1-Syntax-Checking" class="headerlink" title="1.1 Syntax Checking"></a><strong>1.1 Syntax Checking</strong></h3><p>Syntax checking is the initial and crucial phase of compilation, responsible for verifying the grammatical correctness of ArkTS&#x2F;TS code. Even experienced developers inevitably introduce syntax errors during coding. If left undetected and uncorrected, these errors can prevent successful compilation or runtime execution. For instance, common mistakes such as missing semicolons when defining variables or mismatched parameter counts in function calls are precisely identified by syntax-checking tools, which provide detailed error messages. This not only helps developers quickly locate issues but also prevents potential runtime errors early in the development cycle, significantly improving efficiency.  </p>
+<h3 id="1-2-UI-Transformation"><a href="#1-2-UI-Transformation" class="headerlink" title="1.2 UI Transformation"></a><strong>1.2 UI Transformation</strong></h3><p>ArkTS features a unique UI paradigm syntax that aligns with developers’ mental models for interface design. However, to facilitate subsequent compilation, this syntax must be converted into standard TS syntax. The UI transformation tool handles this conversion, automatically translating ArkTS UI-related code—such as declarative layout definitions and style declarations—into standard TS code.  </p>
+<p>For example, a simple button component defined in ArkTS using concise, intuitive syntax for styling and click events is transformed into equivalent standard TS code. This ensures smooth processing in later compilation stages while preserving the component’s functionality and characteristics.  </p>
+<h3 id="1-3-Source-Code-Obfuscation"><a href="#1-3-Source-Code-Obfuscation" class="headerlink" title="1.3 Source Code Obfuscation"></a><strong>1.3 Source Code Obfuscation</strong></h3><p>In today’s environment, where data security and intellectual property protection are paramount, source code obfuscation is essential. The ArkTS compilation toolchain integrates the ArkGuard obfuscation tool, which developers can enable based on their requirements. Obfuscation applies a series of transformations to the code—such as renaming variables and restructuring code—to make it difficult to reverse-engineer or analyze.  </p>
+<p>For commercial applications, obfuscated code effectively safeguards core algorithms, business logic, and sensitive information, preventing competitors from easily accessing or exploiting them. This enhances both the security and competitiveness of the application.  </p>
+<h3 id="1-4-Bytecode-Compilation"><a href="#1-4-Bytecode-Compilation" class="headerlink" title="1.4 Bytecode Compilation"></a><strong>1.4 Bytecode Compilation</strong></h3><p>Bytecode compilation is one of the core functions of the ArkTS compilation toolchain. The Ark Compiler transforms preprocessed code into Ark bytecode files (<code>*.abc</code>). Ark bytecode serves as an intermediate representation with advantages such as cross-platform compatibility and high execution efficiency. It can be interpreted and executed by the Ark runtime environment, ensuring consistent performance across different hardware devices and operating systems.  </p>
+<p>Through bytecode compilation, ArkTS&#x2F;TS&#x2F;JS source code is converted into a format optimized for HarmonyOS, laying the foundation for efficient application execution.  </p>
+<h3 id="1-5-Custom-Modification-of-Ark-Bytecode"><a href="#1-5-Custom-Modification-of-Ark-Bytecode" class="headerlink" title="1.5 Custom Modification of Ark Bytecode"></a><strong>1.5 Custom Modification of Ark Bytecode</strong></h3><p>To accommodate developers’ specific needs, the ArkTS compilation toolchain provides the capability to customize Ark bytecode before it is finalized. Developers can load and execute custom modification code at this stage, offering significant flexibility.  </p>
+<p>For example:  </p>
+<ul>
+<li><strong>Performance Optimization</strong>: Developers can apply bytecode-level optimizations to specific algorithms or code blocks.  </li>
+<li><strong>Feature Expansion</strong>: Custom logic can be injected to extend functionality.</li>
+</ul>
+<p>However, bytecode modifications must be performed cautiously, as incorrect changes may lead to application anomalies or runtime failures.  </p>
+<h3 id="1-6-Disassembly"><a href="#1-6-Disassembly" class="headerlink" title="1.6 Disassembly"></a><strong>1.6 Disassembly</strong></h3><p>The disassembler tool, <strong>Disassembler</strong>, plays a vital role in development and debugging. It converts bytecode files into human-readable assembly instructions, allowing developers to inspect the exact content and execution logic of the bytecode.  </p>
+<p>When performance issues or runtime anomalies arise, developers can use the disassembler to analyze bytecode, examine instruction sequences, and trace data processing flows to pinpoint root causes. This provides strong support for optimizing performance and troubleshooting complex problems.  </p>
+<hr>
+<h2 id="II-Detailed-Compilation-Process"><a href="#II-Detailed-Compilation-Process" class="headerlink" title="II. Detailed Compilation Process"></a><strong>II. Detailed Compilation Process</strong></h2><p>The ArkTS compilation toolchain’s workflow can be divided into the following stages:  </p>
+<ol>
+<li><p><strong>Syntax Transformation Stage</strong>  </p>
+<ul>
+<li><strong>Syntax Checking</strong>: The <code>Checker</code> first verifies the grammar of ArkTS&#x2F;TS source code. If errors are found, developers must fix them based on the prompts before proceeding.  </li>
+<li><strong>UI Transformation</strong>: ArkTS UI paradigm syntax is converted into standard TS syntax. Optionally, ArkGuard can be used for source code obfuscation to enhance security.</li>
+</ul>
+</li>
+<li><p><strong>Bytecode Generation Stage</strong>  </p>
+<ul>
+<li>The preprocessed code enters the bytecode compilation phase, where the Ark Compiler generates Ark bytecode.  </li>
+<li>If custom bytecode modifications are required, developers can inject custom code at this stage before the final <code>*.abc</code> file is produced.</li>
+</ul>
+</li>
+<li><p><strong>Application Packaging Stage</strong>  </p>
+<ul>
+<li>The generated bytecode files are packaged into a <code>.hap</code> file, which can be installed and run on HarmonyOS devices.  </li>
+<li>This stage also involves resource integration, signing, and other operations to ensure the application’s integrity and security.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="III-Conclusion"><a href="#III-Conclusion" class="headerlink" title="III. Conclusion"></a><strong>III. Conclusion</strong></h2><p>The ArkTS compilation toolchain, with its robust set of tools and rigorous compilation process, provides solid support for HarmonyOS application development. From fundamental syntax checking and UI transformation to critical bytecode compilation and secure source code obfuscation, and from flexible bytecode customization to practical disassembly capabilities, every component works in harmony to help developers build high-quality ArkTS applications.  </p>
+<p>As the HarmonyOS ecosystem continues to evolve, the ArkTS compilation toolchain will undergo ongoing optimization and enhancement, delivering increasingly efficient and convenient development experiences. This will drive continuous advancements in HarmonyOS application development technologies, empowering developers to create innovative and high-performance applications.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-Introduction-to-CodeGenie-The-Most-Powerful-AI-Powered-Programming-Assistant-for-HarmonyOS-Next/" rel="prev" title="Introduction to CodeGenie: The Most Powerful AI-Powered Programming Assistant for HarmonyOS Next">
+      <i class="fa fa-chevron-left"></i> Introduction to CodeGenie: The Most Powerful AI-Powered Programming Assistant for HarmonyOS Next
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/27/B-HarmonyOS-Next-ArkTS-Memory-Leak-Analysis/" rel="next" title="HarmonyOS Next ArkTS Memory Leak Analysis">
+      HarmonyOS Next ArkTS Memory Leak Analysis <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-the-ArkTS-Compilation-Toolchain-for-HarmonyOS-Next"><span class="nav-number">1.</span> <span class="nav-text">Introduction to the ArkTS Compilation Toolchain for HarmonyOS Next</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#I-Core-Functions-of-the-Compilation-Toolchain"><span class="nav-number">2.</span> <span class="nav-text">I. Core Functions of the Compilation Toolchain</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Syntax-Checking"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 Syntax Checking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-UI-Transformation"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 UI Transformation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Source-Code-Obfuscation"><span class="nav-number">2.3.</span> <span class="nav-text">1.3 Source Code Obfuscation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-Bytecode-Compilation"><span class="nav-number">2.4.</span> <span class="nav-text">1.4 Bytecode Compilation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-Custom-Modification-of-Ark-Bytecode"><span class="nav-number">2.5.</span> <span class="nav-text">1.5 Custom Modification of Ark Bytecode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-Disassembly"><span class="nav-number">2.6.</span> <span class="nav-text">1.6 Disassembly</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#II-Detailed-Compilation-Process"><span class="nav-number">3.</span> <span class="nav-text">II. Detailed Compilation Process</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#III-Conclusion"><span class="nav-number">4.</span> <span class="nav-text">III. Conclusion</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">195</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
