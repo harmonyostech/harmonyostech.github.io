@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops1. How to make phone calls and jump to the app store">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4129[Daily HarmonyOS Next Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/4129-Daily-HarmonyOS-Next-Knowledge-Web-Jumps-to-System-Apps-Dynamic-Page-Navigation-Observation-in-Non-UI-Contexts-MVVM-Pattern-Timing-Issues-in-Loops/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops1. How to make phone calls and jump to the app store">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-28T16:10:55.000Z">
+<meta property="article:modified_time" content="2025-06-28T16:11:30.206Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/4129-Daily-HarmonyOS-Next-Knowledge-Web-Jumps-to-System-Apps-Dynamic-Page-Navigation-Observation-in-Non-UI-Contexts-MVVM-Pattern-Timing-Issues-in-Loops/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>4129[Daily HarmonyOS Next Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4129-Daily-HarmonyOS-Next-Knowledge-Web-Jumps-to-System-Apps-Dynamic-Page-Navigation-Observation-in-Non-UI-Contexts-MVVM-Pattern-Timing-Issues-in-Loops/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          4129[Daily HarmonyOS Next Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 00:10:55 / Modified: 00:11:30" itemprop="dateCreated datePublished" datetime="2025-06-29T00:10:55+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Knowledge-Web-Jumps-to-System-Apps-Dynamic-Page-Navigation-Observation-in-Non-UI-Contexts-MVVM-Pattern-Timing-Issues-in-Loops"><a href="#Daily-HarmonyOS-Knowledge-Web-Jumps-to-System-Apps-Dynamic-Page-Navigation-Observation-in-Non-UI-Contexts-MVVM-Pattern-Timing-Issues-in-Loops" class="headerlink" title="[Daily HarmonyOS Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops"></a>[Daily HarmonyOS Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops</h1><h4 id="1-How-to-make-phone-calls-and-jump-to-the-app-store-in-HarmonyOS-Web-components"><a href="#1-How-to-make-phone-calls-and-jump-to-the-app-store-in-HarmonyOS-Web-components" class="headerlink" title="1. How to make phone calls and jump to the app store in HarmonyOS Web components?"></a>1. How to make phone calls and jump to the app store in HarmonyOS Web components?</h4><p><strong>Phone call demo</strong>:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import web_webview from &#x27;@ohos.web.webview&#x27;;</span><br><span class="line">import call from &#x27;@ohos.telephony.call&#x27;;</span><br><span class="line">import &#123; BusinessError &#125; from &#x27;@ohos.base&#x27;;</span><br><span class="line"></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct WebComponent &#123;</span><br><span class="line">  webviewController: web_webview.WebviewController = new web_webview.WebviewController();</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      Web(&#123; src: $rawfile(&#x27;call.html&#x27;), controller: this.webviewController &#125;)</span><br><span class="line">        .onLoadIntercept((event) =&gt; &#123;</span><br><span class="line">          if (event) &#123;</span><br><span class="line">            let url: string = event.data.getRequestUrl();</span><br><span class="line">            // Determine if the link is a dialing link</span><br><span class="line">            if (url.indexOf(&#x27;tel://&#x27;) === 0) &#123;</span><br><span class="line">              call.makeCall(url.substring(6), (err: BusinessError) =&gt; &#123;</span><br><span class="line">                if (!err) &#123;</span><br><span class="line">                  console.log(&quot;make call success.&quot;);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                  console.log(&quot;make call fail, err is:&quot; + JSON.stringify(err));</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;);</span><br><span class="line">              return true;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          return false;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**call.html**:  </span><br></pre></td></tr></table></figure>
+<!DOCTYPE html>
+<html>
+<body>
+<div>
+  <a href="tel://10086">拨打电话</a>
+</div>
+</body>
+</html>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**App store jump demo**:  </span><br></pre></td></tr></table></figure>
+import Want from '@ohos.app.ability.Want';
+import common from '@ohos.app.ability.common';
+
+<p>@Entry<br>@Component<br>struct Index {<br>  @State appId: string &#x3D; “要跳转的AppID”;<br>  controller: TextInputController &#x3D; new TextInputController();</p>
+<p>  build() {<br>    Row() {<br>      Column() {<br>        TextInput({ text: this.appId, placeholder: ‘请输入应用的appId’, controller: this.controller })<br>          .width(‘90%’)<br>          .onChange((value: string) &#x3D;&gt; {<br>            this.appId &#x3D; value<br>          })<br>        Button(‘点击跳转到HarmonyOS版应用市场详情页面’)<br>          .margin({ top: 50 })<br>          .onClick(() &#x3D;&gt; {<br>            const want: Want &#x3D; {<br>              uri: <code>store://appgallery.huawei.com/app/id=$&#123;this.appId&#125;</code><br>            };<br>            const context &#x3D; getContext(this) as common.UIAbilityContext;<br>            context.startAbility(want).then(() &#x3D;&gt; {<br>              &#x2F;&#x2F; Successful launch<br>            }).catch(() &#x3D;&gt; {<br>              &#x2F;&#x2F; Failed to launch<br>            });<br>          })<br>      }<br>      .width(‘100%’)<br>    }<br>    .height(‘100%’)<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#### 2. In HarmonyOS, how to dynamically display different page components based on logic for part of a page?  </span><br></pre></td></tr></table></figure>
+<p>class Tmp {<br>  paramA1: string &#x3D; ‘’<br>}</p>
+<p>@Builder function overBuilder(params: Tmp) {<br>  Row() {<br>    Text(<code>overBuilder: $&#123;params.paramA1&#125; </code>)<br>  }<br>}</p>
+<p>@Builder function overBuilder2(params: Tmp) {<br>  Row() {<br>    Text(<code>overBuilder2: $&#123;params.paramA1&#125; </code>)<br>  }<br>}</p>
+<p>@Entry<br>@Component<br>struct Index123 {<br>  @State label: string &#x3D; ‘Hello’;<br>  @State buildSet: boolean &#x3D; false;</p>
+<p>  build() {<br>    Row() {<br>      Column() {<br>        if (this.buildSet) {<br>          overBuilder({ paramA1: this.label })<br>        } else {<br>          overBuilder2({ paramA1: this.label })<br>        }<br>      }<br>      .width(‘100%’)<br>    }<br>    .height(‘100%’)<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#### 3. How to observe changes in non-UI contexts (e.g., aboutToAppear) for variables decorated with @ObservedV2 in HarmonyOS?  </span><br><span class="line">The `aboutToAppear` lifecycle is triggered only when a page is created. It executes after a custom component&#x27;s new instance is created and before its `build()` function. You can change state variables in `aboutToAppear`, and the changes will take effect when `build()` is executed subsequently.  </span><br><span class="line">Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-lifecycle-V5#abouttoappear  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. What is the MVVM pattern in HarmonyOS, and how does ViewModel relate to View? How does ViewModel notify View decorators of data changes?  </span><br><span class="line">**Application example: Address book demo**  </span><br><span class="line">Variables decorated with `@State` trigger UI re-rendering when updated, re-executing the `build` method to display real-time data. `@Provide` shares `@State` characteristics and works with `@Consume` to synchronize data across parent, child, and descendant components.  </span><br><span class="line">For details on these decorators, refer to: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-component-state-management-V5  </span><br><span class="line"></span><br><span class="line">**Address book demo code (Index.ets)**:  </span><br></pre></td></tr></table></figure>
+<p>import { Person, Address, AddressBook, ObservedArray } from ‘..&#x2F;viewmodel&#x2F;ListViewModel’<br>import emitter from ‘@ohos.events.emitter’;</p>
+<p>&#x2F;&#x2F; Renders the name of a Person object and the first number in an ObservedArray<string><br>&#x2F;&#x2F; To update phone numbers, use @ObjectLink for person and phones;<br>&#x2F;&#x2F; Using this.person.phones directly won’t observe internal array changes.<br>&#x2F;&#x2F; The onClick in AddressBookView and PersonEditView updates selectedPerson<br>@Component<br>struct PersonView {<br>  @ObjectLink person: Person;<br>  @ObjectLink phones: ObservedArray<string>;<br>  @Link selectedPerson: Person;</p>
+<p>  build() {<br>    Flex({ direction: FlexDirection.Row, justifyContent: FlexAlign.SpaceBetween }) {<br>      Text(this.person.name)<br>      if (this.phones.length) {<br>        Text(this.phones[0])<br>      }<br>    }<br>    .height(55)<br>    .backgroundColor(this.selectedPerson.name &#x3D;&#x3D; this.person.name ? “#ffa0a0” : “#ffffff”)<br>    .onClick(() &#x3D;&gt; {<br>      this.selectedPerson &#x3D; this.person;<br>    })<br>  }<br>}</p>
+<p>@Component<br>struct phonesNumber {<br>  @ObjectLink phoneNumber: ObservedArray<string></p>
+<p>  build() {<br>    Column() {<br>      ForEach(this.phoneNumber,<br>        (phone: ResourceStr, index?: number) &#x3D;&gt; {<br>          TextInput({ text: phone })<br>            .width(150)<br>            .onChange((value) &#x3D;&gt; {<br>              console.log(<code>$&#123;index&#125;. $&#123;value&#125; value has changed</code>)<br>              this.phoneNumber[index!] &#x3D; value;<br>            })<br>        },<br>        (phone: ResourceStr, index: number) &#x3D;&gt; <code>$&#123;this.phoneNumber[index] + index&#125;</code><br>      )<br>    }<br>  }<br>}</p>
+<p>&#x2F;&#x2F; Renders detailed Person information<br>&#x2F;&#x2F; The @Prop-decorated variable DeepCopy data from the parent component AddressBookView, retaining changes locally;<br>&#x2F;&#x2F; TextInput changes only modify the local copy.<br>&#x2F;&#x2F; Clicking “Save Changes” syncs all copied data from @Prop to @Link for synchronization with other components<br>@Component<br>struct PersonEditView {<br>  @Consume addrBook: AddressBook;<br>  &#x2F;* Reference to the parent component’s selectedPerson <em>&#x2F;<br>  @Link selectedPerson: Person;<br>  &#x2F;</em> Edit on the local copy until saving *&#x2F;<br>  @Prop name: string &#x3D; “”;<br>  @Prop address: Address &#x3D; new Address(“”, 0, “”);<br>  @Prop phones: ObservedArray<string> &#x3D; [];</p>
+<p>  selectedPersonIndex(): number {<br>    return this.addrBook.contacts.findIndex((person: Person) &#x3D;&gt; person.id_ &#x3D;&#x3D; this.selectedPerson.id_);<br>  }</p>
+<p>  build() {<br>    Column() {<br>      TextInput({ text: this.name })<br>        .onChange((value) &#x3D;&gt; {<br>          this.name &#x3D; value;<br>        })<br>      TextInput({ text: this.address.street })<br>        .onChange((value) &#x3D;&gt; {<br>          this.address.street &#x3D; value;<br>        })<br>      TextInput({ text: this.address.city })<br>        .onChange((value) &#x3D;&gt; {<br>          this.address.city &#x3D; value;<br>        })<br>      TextInput({ text: this.address.zip.toString() })<br>        .onChange((value) &#x3D;&gt; {<br>          const result &#x3D; Number.parseInt(value);<br>          this.address.zip &#x3D; Number.isNaN(result) ? 0 : result;<br>        })<br>      if (this.phones.length &gt; 0) {<br>        phonesNumber({ phoneNumber: this.phones })<br>      }<br>      Flex({ direction: FlexDirection.Row, justifyContent: FlexAlign.SpaceBetween }) {<br>        Text(“Save Changes”)<br>          .onClick(() &#x3D;&gt; {<br>            &#x2F;&#x2F; Assign updated local copy values to the reference pointing to the parent component’s selectedPerson<br>            &#x2F;&#x2F; Avoid creating new objects; modify existing properties<br>            this.selectedPerson.name &#x3D; this.name;<br>            this.selectedPerson.address &#x3D; new Address(this.address.street, this.address.zip, this.address.city)<br>            this.phones.forEach((phone: string, index: number) &#x3D;&gt; {<br>              this.selectedPerson.phones[index] &#x3D; phone<br>            });<br>            emitter.emit(‘setModelData’, {<br>              data: {<br>                id: this.selectedPerson.id_,<br>                name: this.name<br>              }<br>            })<br>          })<br>        Button(‘getData’)<br>          .onClick(() &#x3D;&gt; {<br>            emitter.emit(‘getModelData’);<br>            this.selectedPerson &#x3D; this.addrBook.me;<br>          })<br>        if (this.selectedPersonIndex() !&#x3D; -1) {<br>          Text(“Delete Contact”)<br>            .onClick(() &#x3D;&gt; {<br>              let index &#x3D; this.selectedPersonIndex();<br>              console.log(<code>delete contact at index $&#123;index&#125;</code>);<br>              &#x2F;&#x2F; Delete the current contact<br>              this.addrBook.contacts.splice(index, 1);<br>              &#x2F;&#x2F; Delete the current selectedPerson and shift the selection forward by one<br>              index &#x3D; (index &lt; this.addrBook.contacts.length) ? index : index - 1;<br>              &#x2F;&#x2F; If no contacts remain, set me as the selected state<br>              this.selectedPerson &#x3D; (index &gt;&#x3D; 0) ? this.addrBook.contacts[index] : this.addrBook.me;<br>            })<br>        }<br>      }<br>    }<br>  }<br>}</p>
+<p>@Component<br>struct AddressBookView {<br>  @ObjectLink me: Person;<br>  @ObjectLink contacts: ObservedArray<Person>;<br>  @State selectedPerson: Person &#x3D; new Person(“”, “”, 0, “”, []);</p>
+<p>  aboutToAppear() {<br>    this.selectedPerson &#x3D; this.me;<br>  }</p>
+<p>  build() {<br>    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Start }) {<br>      Text(“Me:”)<br>      PersonView({<br>        person: this.me,<br>        phones: this.me.phones,<br>        selectedPerson: this.selectedPerson<br>      })<br>      Divider().height(8)<br>      ForEach(this.contacts, (contact: Person) &#x3D;&gt; {<br>        PersonView({<br>          person: contact,<br>          phones: contact.phones as ObservedArray<string>,<br>          selectedPerson: this.selectedPerson<br>        })<br>      },<br>        (contact: Person): string &#x3D;&gt; {<br>          return contact.id_;<br>        }<br>      )<br>      Divider().height(8)<br>      Text(“Edit:”)<br>      PersonEditView({<br>        selectedPerson: this.selectedPerson,<br>        name: this.selectedPerson.name,<br>        address: this.selectedPerson.address,<br>        phones: this.selectedPerson.phones<br>      })<br>    }<br>    .borderStyle(BorderStyle.Solid).borderWidth(5).borderColor(0xAFEEEE).borderRadius(5)<br>  }<br>}</p>
+<p>@Entry<br>@Component<br>struct Index {<br>  @StorageLink(“contacts”) @Watch(“contactsChange”) contacts: Array<Person> &#x3D; [];<br>  @Provide addrBook: AddressBook &#x3D; new AddressBook(<br>    new Person(“Gigi”, “Itamerenkatu 9”, 180, “Helsinki”, [“18*********”, “18*********”, “18*********”]),<br>    [<br>      new Person(“Oly”, “Itamerenkatu 9”, 180, “Helsinki”, [“11*********”, “12*********”]),<br>      new Person(“Sam”, “Itamerenkatu 9”, 180, “Helsinki”, [“13*********”, “14*********”]),<br>      new Person(“Vivi”, “Itamerenkatu 9”, 180, “Helsinki”, [“15*********”, “168*********”]),<br>    ]);</p>
+<p>  contactsChange(propName: string): void {<br>    this.addrBook.contacts &#x3D; AppStorage.get(propName) as ObservedArray<Person>;<br>  }</p>
+<p>  build() {<br>    Column() {<br>      AddressBookView({<br>        me: this.addrBook.me,<br>        contacts: this.addrBook.contacts,<br>        selectedPerson: this.addrBook.me<br>      })<br>    }<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**MVVM mechanism**:  </span><br><span class="line">- ViewModel and Model update data through state variables.  </span><br><span class="line">- ViewModel triggers the `build` method of the View page and the execution of `@Builder` custom build functions via state variable updates.  </span><br><span class="line">- The execution of `build` and `@Builder` functions changes corresponding state variables, achieving &quot;updating the view directly when data is updated.&quot;  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 5. Why does using setTimeout in a for loop fail in HarmonyOS, and how to construct delays in a for loop?  </span><br><span class="line">**Problem**: Using `setTimeout` in a for loop is ineffective, and empty loops with `data` cause crashes.  </span><br><span class="line"></span><br><span class="line">**Solution**: Wrap `setTimeout` as a Promise and use related APIs.  </span><br><span class="line">Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V2/async-concurrency-overview-0000001632690002-V2  </span><br><span class="line"></span><br><span class="line">**Example (non-blocking delay)**:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Wait asynchronously<br>const delay &#x3D; (ms: number) &#x3D;&gt; new Promise(resolve &#x3D;&gt; setTimeout(resolve, ms));</p>
+<p>for (let i &#x3D; 0; i &lt; 5; i++) {<br>  console.log(<code>Start iteration $&#123;i&#125;</code>);<br>  await delay(1000); &#x2F;&#x2F; Wait 1 second per iteration<br>  console.log(<code>End iteration $&#123;i&#125;</code>);<br>}<br>&#96;&#96;&#96;</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4128-Daily-HarmonyOS-Next-Knowledge-Listening-for-Input-Box-Delete-Key-Network-Requests-Before-Page-Entry-Same-Layer-Rendering-GridCol-Left-Alignment-and-Custom-Popup-Gesture-Prevention/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Listening for Input Box Delete Key, Network Requests Before Page Entry, Same-Layer Rendering, GridCol Left Alignment, and Custom Popup Gesture Prevention">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Listening for Input Box Delete Key, Network Requests Before Page Entry, Same-Layer Rendering, GridCol Left Alignment, and Custom Popup Gesture Prevention
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41210-Daily-HarmonyOS-Next-Knowledge-Stopping-Animations-Controlling-Swipe-Gestures-Login-Page-Navigation-Web-Component-Album-Access-and-Disabling-Edge-Swipes/" rel="next" title="[Daily HarmonyOS Next Knowledge] Stopping Animations, Controlling Swipe Gestures, Login Page Navigation, Web Component Album Access, and Disabling Edge Swipes">
+      [Daily HarmonyOS Next Knowledge] Stopping Animations, Controlling Swipe Gestures, Login Page Navigation, Web Component Album Access, and Disabling Edge Swipes <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Knowledge-Web-Jumps-to-System-Apps-Dynamic-Page-Navigation-Observation-in-Non-UI-Contexts-MVVM-Pattern-Timing-Issues-in-Loops"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Knowledge] Web Jumps to System Apps, Dynamic Page Navigation, Observation in Non-UI Contexts, MVVM Pattern, Timing Issues in Loops</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-make-phone-calls-and-jump-to-the-app-store-in-HarmonyOS-Web-components"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. How to make phone calls and jump to the app store in HarmonyOS Web components?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">212</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
