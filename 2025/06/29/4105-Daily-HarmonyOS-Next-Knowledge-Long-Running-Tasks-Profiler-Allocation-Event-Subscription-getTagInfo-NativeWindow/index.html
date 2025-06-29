@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow1. Error occurs when using long-running tasks in HarmonyOS?Steps to start a long-r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/4105-Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow1. Error occurs when using long-running tasks in HarmonyOS?Steps to start a long-r">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-29T02:32:40.000Z">
+<meta property="article:modified_time" content="2025-06-29T02:32:59.398Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/4105-Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4105-Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:32:40 / Modified: 10:32:59" itemprop="dateCreated datePublished" datetime="2025-06-29T10:32:40+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow"><a href="#Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow"></a>[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow</h1><h2 id="1-Error-occurs-when-using-long-running-tasks-in-HarmonyOS"><a href="#1-Error-occurs-when-using-long-running-tasks-in-HarmonyOS" class="headerlink" title="1. Error occurs when using long-running tasks in HarmonyOS?"></a>1. Error occurs when using long-running tasks in HarmonyOS?</h2><p><strong>Steps to start a long-running task as per official documentation</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">startContinuousTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">wantAgentInfo</span>: wantAgent.<span class="property">WantAgentInfo</span> = &#123;</span><br><span class="line">    <span class="comment">// List of actions to execute when the notification is clicked</span></span><br><span class="line">    <span class="comment">// Add the bundleName and abilityName of the app to be launched</span></span><br><span class="line">    <span class="attr">wants</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">bundleName</span>: <span class="string">&quot;com.xxxx.xxxx.news&quot;</span>,</span><br><span class="line">        <span class="attr">abilityName</span>: <span class="string">&quot;com.xxxx.xxxx.news.EntryAbility&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// Specify that the action after clicking the notification is to launch an ability</span></span><br><span class="line">    <span class="attr">actionType</span>: wantAgent.<span class="property">OperationType</span>.<span class="property">START_ABILITY</span>,</span><br><span class="line">    <span class="comment">// A private value defined by the user</span></span><br><span class="line">    <span class="attr">requestCode</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="comment">// Execution properties of the action after clicking the notification</span></span><br><span class="line">    <span class="attr">wantAgentFlags</span>: [wantAgent.<span class="property">WantAgentFlags</span>.<span class="property">UPDATE_PRESENT_FLAG</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get the WantAgent object via the getWantAgent method in the wantAgent module</span></span><br><span class="line">  wantAgent.<span class="title function_">getWantAgent</span>(wantAgentInfo).<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="attr">wantAgentObj</span>: <span class="title class_">WantAgent</span></span>) =&gt;</span> &#123;</span><br><span class="line">    backgroundTaskManager.<span class="title function_">startBackgroundRunning</span>(<span class="title function_">getContext</span>(),</span><br><span class="line">      backgroundTaskManager.<span class="property">BackgroundMode</span>.<span class="property">AUDIO_RECORDING</span>, wantAgentObj).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">`Succeeded in operationing startBackgroundRunning.`</span>);</span><br><span class="line">    &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to operation startBackgroundRunning. Code is <span class="subst">$&#123;err.code&#125;</span>, message is <span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">stopContinuousTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">  backgroundTaskManager.<span class="title function_">stopBackgroundRunning</span>(<span class="title function_">getContext</span>()).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">`Succeeded in operationing stopBackgroundRunning.`</span>);</span><br><span class="line">  &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to operation stopBackgroundRunning. Code is <span class="subst">$&#123;err.code&#125;</span>, message is <span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Error when calling `</span>stopContinuousTask<span class="string">`**:  </span></span><br></pre></td></tr></table></figure>
+<p>Failed to operation stopBackgroundRunning. Code is 9800005, message is BussinessError 9800005: Continuous Task verification failed. The application has not applied for a continuous task.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**Reason**:  </span><br><span class="line">Long-running tasks have constraints and limitations. Under runtime restrictions, if an app applies for a long-running task but does not actually execute the corresponding task or the task has ended, the system will manage the app.  </span><br><span class="line">**Explanation**:  </span><br><span class="line">After applying for a long-running task, the system checks within 5 seconds whether the app executes the task. If not, the task is terminated immediately, and calling `stopContinuousTask` will trigger this error.  </span><br><span class="line">**Constraints and limitations**:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5#%E7%BA%A6%E6%9D%9F%E4%B8%8E%E9%99%90%E5%88%B6  </span><br><span class="line"></span><br><span class="line">- **Application restrictions**:  </span><br><span class="line">  - In the Stage model, only UIAbility can apply for long-running tasks.  </span><br><span class="line">  - In the FA model, only ServiceAbility can apply for long-running tasks.  </span><br><span class="line">- **Quantity restrictions**:  </span><br><span class="line">  - One UIAbility (or ServiceAbility in the FA model) can only apply for one long-running task at a time. A new task can only be applied for after the previous one ends. If an app needs multiple long-running tasks, it must create multiple UIAbilities.  </span><br><span class="line">  - After a UIAbility in an app applies for a long-running task, all processes in the app will not be suspended.  </span><br><span class="line">- **Runtime restrictions**:  </span><br><span class="line">  - **Scenario 1**: If an app applies for a long-running task but does not execute it or the task ends, the system will manage the app. For example, if the app applies for AUDIO_PLAYBACK (audio/video playback) but does not actually play music, the long-running task will be canceled.  </span><br><span class="line">  - **Scenario 2**: If an app executes a long-running task without applying for the corresponding type, the system will manage the app. For example, if the app only applies for AUDIO_PLAYBACK but also performs recording (AUDIO_RECORDING), the system will intervene.  </span><br><span class="line">  - **Scenario 3**: If the background load of the process running the long-running task持续 exceeds the typical load of the applied type, the system will manage the app.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 2. The ArkTS Allocation lane is missing in the profiler allocation view?  </span><br><span class="line">**Issue**:  </span><br><span class="line">The ArkTS Allocation lane is missing in the profiler allocation view (only Memory and Native Allocation lanes are present).  </span><br><span class="line"></span><br><span class="line">**Solution**:  </span><br><span class="line">The ArkTS Allocation lane needs to be enabled in the Snapshot template. Use Snapshot to analyze ArkTS memory leaks and Allocation to analyze native memory leaks.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 3. If multiple pages in HarmonyOS subscribe to the same event, will unsubscribing after the previous page is destroyed affect the events of other pages?  </span><br><span class="line">**Reference for emitter usage**:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-emitter-V5  </span><br><span class="line"></span><br><span class="line">**Note**:  </span><br><span class="line">The callback added in `on` and the callback used in `off` must be the same instance. Otherwise, all subscriptions will be canceled.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 4. Error occurs when calling `getTagInfo` for NFC in a HarmonyOS app?  </span><br><span class="line">**Code to declare `want`**:  </span><br><span class="line">```typescript</span><br><span class="line">let want: Want = &#123;</span><br><span class="line">  deviceId: &#x27;&#x27;, // Empty deviceId indicates the local device</span><br><span class="line">  bundleName: &#x27;com.example.wht_app&#x27;,</span><br><span class="line">  abilityName: &#x27;EntryAbility&#x27;,</span><br><span class="line">  moduleName: &#x27;entry&#x27; // moduleName is optional</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// Then call getTagInfo</span><br><span class="line">try &#123;</span><br><span class="line">  tagInfo = tag.getTagInfo(want);</span><br><span class="line">&#125; catch (error) &#123;</span><br><span class="line">  console.log(&#x27;手机NFC功能报错&#x27;, &quot;tag.getTagInfo catched error: &quot; + error)</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">**Error on real device**:  </span><br></pre></td></tr></table></figure>
+<p>tag.getTagInfo catched error: Error: Parameter error. The parameter number is invalid.</p>
+<pre><code>
+**Reason**:  
+According to the official documentation, the `Want` parameter must be obtained from the parameters of the system&#39;s `onCreate` entry function when distributing the ability.  
+**Reference**:  
+https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/nfc-tag-access-guide-V5  
+
+
+## 5. How to create and destroy NativeWindow in HarmonyOS?  
+**Question**:  
+After registering callbacks for NativeWindow, when are `OnSurfaceCreated` and `OnSurfaceDestroyed` triggered, and how to trigger these callbacks manually?  
+
+**Reference**:  
+`https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/_o_h___native_x_component-V5#onsurfacecreated`
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4106-Daily-HarmonyOS-Next-Knowledge-Startup-Time-Analysis-IDE-Errors-Emitter-Memory-Leaks-Radio-C-API-SDK-Download-Failures/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Startup Time Analysis, IDE Errors, Emitter Memory Leaks, Radio C API, SDK Download Failures">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Startup Time Analysis, IDE Errors, Emitter Memory Leaks, Radio C API, SDK Download Failures
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4104-Daily-HarmonyOS-Next-Knowledge-DevEco-HDC-Errors-C-Database-Calls-Testing-Tools-codegen/" rel="next" title="4104[Daily HarmonyOS Next Knowledge] DevEco, HDC Errors, C Database Calls, Testing Tools, codegen">
+      4104[Daily HarmonyOS Next Knowledge] DevEco, HDC Errors, C Database Calls, Testing Tools, codegen <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Error-occurs-when-using-long-running-tasks-in-HarmonyOS"><span class="nav-number">1.1.</span> <span class="nav-text">1. Error occurs when using long-running tasks in HarmonyOS?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

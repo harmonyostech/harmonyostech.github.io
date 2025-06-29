@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack1. How to make the Text component fill t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/41129-Daily-HarmonyOS-Next-Knowledge-Text-Filling-Parent-Control-Native-Array-Reception-JS-Logic-Execution-Issue-UIAbility-Context-Problem-Page-Navigation-Stack/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack1. How to make the Text component fill t">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.11.29.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.11.29-1.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.11.29-2.png">
+<meta property="article:published_time" content="2025-06-29T01:28:59.000Z">
+<meta property="article:modified_time" content="2025-06-29T01:32:07.893Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.11.29.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/41129-Daily-HarmonyOS-Next-Knowledge-Text-Filling-Parent-Control-Native-Array-Reception-JS-Logic-Execution-Issue-UIAbility-Context-Problem-Page-Navigation-Stack/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41129-Daily-HarmonyOS-Next-Knowledge-Text-Filling-Parent-Control-Native-Array-Reception-JS-Logic-Execution-Issue-UIAbility-Context-Problem-Page-Navigation-Stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:28:59 / Modified: 09:32:07" itemprop="dateCreated datePublished" datetime="2025-06-29T09:28:59+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Text-Filling-Parent-Control-Native-Array-Reception-JS-Logic-Execution-Issue-UIAbility-Context-Problem-Page-Navigation-Stack"><a href="#Daily-HarmonyOS-Next-Knowledge-Text-Filling-Parent-Control-Native-Array-Reception-JS-Logic-Execution-Issue-UIAbility-Context-Problem-Page-Navigation-Stack" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack"></a>[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack</h1><h4 id="1-How-to-make-the-Text-component-fill-the-parent-component-in-HarmonyOS"><a href="#1-How-to-make-the-Text-component-fill-the-parent-component-in-HarmonyOS" class="headerlink" title="1. How to make the Text component fill the parent component in HarmonyOS?"></a>1. How to make the Text component fill the parent component in HarmonyOS?</h4><pre><code class="language-typescript">build() &#123;
+  Row() &#123;
+    Row() &#123;
+      Text(this.str)
+        .constraintSize(&#123; maxWidth: &#39;100%&#39;, minHeight: &quot;30vp&quot; &#125;)
+        .backgroundColor(Color.Gray)
+        .fontSize(&#39;24vp&#39;)
+    &#125;
+    .key(&#39;row1&#39;)
+    .constraintSize(&#123; maxWidth: &#39;100%&#39;&#125;)
+    .backgroundColor(Color.Green)
+  &#125;
+  .key(&#39;row2&#39;)
+  .backgroundColor(Color.Yellow)
+  .width(&#39;90%&#39;)
+
+  Button(&#39;add&#39;)
+    .onClick(() =&gt; &#123;
+      this.str += &#39;hello&#39;;
+    &#125;)
+  Button(&#39;reset&#39;)
+    .onClick(() =&gt; &#123;
+      this.str = &#39;hello&#39;;
+    &#125;)
+&#125;
+</code></pre>
+<p><strong>Requirement</strong>: Make row1’s size change with the Text component, auto-wrap when the outermost row2 width is insufficient, and fully fill the row2 container. Currently, there is an unfilled area outside row1 (yellow area on the right in the image). How to modify it to make row1&#x2F;Text fully fill row2?  </p>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.11.29.png"><br><strong>Solution</strong>: Remove the <code>width</code> attribute from row2. Use <code>margin</code> for layout adjustment if needed.  </p>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.11.29-1.png"></p>
+<h4 id="2-In-HarmonyOS-NAPI-how-to-receive-a-Uint8Array-passed-from-the-ArkTS-side-in-Native"><a href="#2-In-HarmonyOS-NAPI-how-to-receive-a-Uint8Array-passed-from-the-ArkTS-side-in-Native" class="headerlink" title="2. In HarmonyOS NAPI, how to receive a Uint8Array passed from the ArkTS side in Native?"></a>2. In HarmonyOS NAPI, how to receive a Uint8Array passed from the ArkTS side in Native?</h4><p>Refer to the following code:  </p>
+<pre><code class="language-c">napi_typedarray_type arr_type;
+napi_value arr_buffer;
+size_t arr_offset;
+size_t arr_i, arr_length;
+// Get the length and type of the passed array
+napi_status status = napi_get_typedarray_info(env, arr, &amp;arr_type, &amp;arr_length, NULL, &amp;arr_buffer, &amp;arr_offset);
+LOGI(&quot;-------arr--%&#123;public&#125;d-------&quot;, arr_length);
+void *data;
+size_t byte_len;
+napi_create_array_with_length(env, arr_length, &amp;arr_buffer);
+napi_get_arraybuffer_info(env, arr_buffer, &amp;data, &amp;byte_len);
+napi_value output_buffer;
+void *output_ptr = NULL;
+napi_create_arraybuffer(env, byte_len, &amp;output_ptr, &amp;output_buffer);
+napi_value out_arr;
+napi_create_typedarray(env, arr_type, arr_length, output_buffer, arr_offset, &amp;out_arr);
+if (arr_type == napi_uint8_array) &#123;
+  uint8_t *input_bytes = (uint8_t *)(data) + arr_offset;
+  uint8_t *output_bytes = (uint8_t *)(output_ptr);
+  for (arr_i = 0; arr_i &lt; arr_length; arr_i++) &#123;
+    OH_LOG_INFO(LOG_APP, &quot;Multiply_for_arraybuffer input_bytes %&#123;public&#125;d&quot;, input_bytes[arr_i]);
+    output_bytes[arr_i] = (uint8_t)(input_bytes[arr_i] * 1);
+    LOGI(&quot;Final result,============%&#123;public&#125;zi&quot;, output_bytes[arr_i]);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-After-opening-a-new-page-via-window-open-hyperlink-blank-in-a-HarmonyOS-H5-page-the-JS-logic-of-the-original-page-does-not-execute-when-returning"><a href="#3-After-opening-a-new-page-via-window-open-hyperlink-blank-in-a-HarmonyOS-H5-page-the-JS-logic-of-the-original-page-does-not-execute-when-returning" class="headerlink" title="3. After opening a new page via window.open(&quot;hyperlink&quot;, &quot;_blank&quot;) in a HarmonyOS H5 page, the JS logic of the original page does not execute when returning."></a>3. After opening a new page via <code>window.open(&quot;hyperlink&quot;, &quot;_blank&quot;)</code> in a HarmonyOS H5 page, the JS logic of the original page does not execute when returning.</h4><p><strong>Cause</strong>: If the Web component supports multi-windows (i.e., <code>multiWindowAccess</code> is set to <code>true</code>), the <code>event.handler.setWebController</code> interface must be called in <code>onWindowNew</code>; otherwise, the Render process will be blocked. The issue occurs because the app did not call this interface.  </p>
+<p><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkweb/ts-basic-components-web.md#onwindownew9">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkweb/ts-basic-components-web.md#onwindownew9</a>  </p>
+<h4 id="4-In-HarmonyOS-TS-BaseAbility-extends-UIAbility-shows-Cannot-find-name-Context"><a href="#4-In-HarmonyOS-TS-BaseAbility-extends-UIAbility-shows-Cannot-find-name-Context" class="headerlink" title="4. In HarmonyOS TS, BaseAbility extends UIAbility shows Cannot find name &#39;Context&#39;."></a>4. In HarmonyOS TS, <code>BaseAbility extends UIAbility</code> shows <code>Cannot find name &#39;Context&#39;</code>.</h4><pre><code class="language-typescript">export default abstract class BaseAbility extends UIAbility &#123;
+
+  static appContext: common.ApplicationContext;
+
+  onWindowStageCreate(windowStage: window.WindowStage): void &#123;
+    BaseAbility.appContext = this.context.getApplicationContext()
+    Logger.info(&#39;testTag&#39;, &#39;%&#123;public&#125;s&#39;, &#39;BaseAbility onWindowStageCreate&#39;);
+    super.onWindowStageCreate(windowStage)
+  &#125;
+
+  static getContext(): common.ApplicationContext &#123;
+    return BaseAbility.appContext;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-How-to-obtain-the-navigation-stack-for-page-transitions-in-HarmonyOS"><a href="#5-How-to-obtain-the-navigation-stack-for-page-transitions-in-HarmonyOS" class="headerlink" title="5. How to obtain the navigation stack for page transitions in HarmonyOS?"></a>5. How to obtain the navigation stack for page transitions in HarmonyOS?</h4><p><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#navpathstack10">Navigation</a><br><code>NavPathStack</code> is the Navigation route stack, allowing inheritance. Developers can add attributes&#x2F;methods to derived classes or override methods of the base <code>NavPathStack</code>. Derived class objects can replace base <code>NavPathStack</code> objects. Provided methods include:  </p>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.11.29-2.png"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41130-Daily-HarmonyOS-Next-Knowledge-hvigor-Upgrade-Dialog-Animation-LocalStorage-Inefficiency-Page-and-Subcomponent-Lifecycles-Cookie-Settings/" rel="prev" title="[Daily HarmonyOS Next Knowledge] hvigor Upgrade, Dialog Animation, LocalStorage Inefficiency, Page and Subcomponent Lifecycles, Cookie Settings">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] hvigor Upgrade, Dialog Animation, LocalStorage Inefficiency, Page and Subcomponent Lifecycles, Cookie Settings
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41128-Daily-HarmonyOS-Next-Knowledge-userAgent-Identification-StatusBar-Color-Operating-the-Same-Object-in-taskpool-Scroll-Component/" rel="next" title="[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component">
+      [Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Text-Filling-Parent-Control-Native-Array-Reception-JS-Logic-Execution-Issue-UIAbility-Context-Problem-Page-Navigation-Stack"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-make-the-Text-component-fill-the-parent-component-in-HarmonyOS"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. How to make the Text component fill the parent component in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-In-HarmonyOS-NAPI-how-to-receive-a-Uint8Array-passed-from-the-ArkTS-side-in-Native"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2. In HarmonyOS NAPI, how to receive a Uint8Array passed from the ArkTS side in Native?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-After-opening-a-new-page-via-window-open-hyperlink-blank-in-a-HarmonyOS-H5-page-the-JS-logic-of-the-original-page-does-not-execute-when-returning"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3. After opening a new page via window.open(&quot;hyperlink&quot;, &quot;_blank&quot;) in a HarmonyOS H5 page, the JS logic of the original page does not execute when returning.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-In-HarmonyOS-TS-BaseAbility-extends-UIAbility-shows-Cannot-find-name-Context"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4. In HarmonyOS TS, BaseAbility extends UIAbility shows Cannot find name &#39;Context&#39;.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-How-to-obtain-the-navigation-stack-for-page-transitions-in-HarmonyOS"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">5. How to obtain the navigation stack for page transitions in HarmonyOS?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

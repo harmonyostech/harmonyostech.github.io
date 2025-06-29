@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue1. How to create a single-thread in Harmon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="41029[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/41029-Daily-HarmonyOS-Next-Knowledge-Thread-Creation-Variable-Initialization-in-Constructor-List-Drag-and-Drop-JS-Code-Invocation-and-CSR-File-Selection-Issue/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue1. How to create a single-thread in Harmon">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.10.29.png">
+<meta property="article:published_time" content="2025-06-29T02:07:19.000Z">
+<meta property="article:modified_time" content="2025-06-29T02:08:16.830Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.10.29.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/41029-Daily-HarmonyOS-Next-Knowledge-Thread-Creation-Variable-Initialization-in-Constructor-List-Drag-and-Drop-JS-Code-Invocation-and-CSR-File-Selection-Issue/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>41029[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41029-Daily-HarmonyOS-Next-Knowledge-Thread-Creation-Variable-Initialization-in-Constructor-List-Drag-and-Drop-JS-Code-Invocation-and-CSR-File-Selection-Issue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          41029[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:07:19 / Modified: 10:08:16" itemprop="dateCreated datePublished" datetime="2025-06-29T10:07:19+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Thread-Creation-Variable-Initialization-in-Constructor-List-Drag-and-Drop-JS-Code-Invocation-and-CSR-File-Selection-Issue"><a href="#Daily-HarmonyOS-Next-Knowledge-Thread-Creation-Variable-Initialization-in-Constructor-List-Drag-and-Drop-JS-Code-Invocation-and-CSR-File-Selection-Issue" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue"></a>[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue</h1><h4 id="1-How-to-create-a-single-thread-in-HarmonyOS"><a href="#1-How-to-create-a-single-thread-in-HarmonyOS" class="headerlink" title="1. How to create a single-thread in HarmonyOS?"></a>1. How to create a single-thread in HarmonyOS?</h4><ol>
+<li>Is a worker a single-thread or multi-thread?  </li>
+<li>If workers are not single-threaded, how to create a single-thread?</li>
+</ol>
+<p>ArkTS uses a single-thread model, so workers are also single-threaded. They are child threads created on the host thread: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/worker-introduction-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/worker-introduction-V5</a>  </p>
+<h4 id="2-Why-does-an-error-still-occur-after-creating-a-variable-in-the-constructor-in-HarmonyOS"><a href="#2-Why-does-an-error-still-occur-after-creating-a-variable-in-the-constructor-in-HarmonyOS" class="headerlink" title="2. Why does an error still occur after creating a variable in the constructor in HarmonyOS?"></a>2. Why does an error still occur after creating a variable in the constructor in HarmonyOS?</h4><p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.10.29.png"></p>
+<p>Reference code:  </p>
+<pre><code class="language-typescript">cat1?: Cat
+constructor() &#123;
+  super();
+  this.cat1 = new Cat()
+&#125;
+// Or:
+cat1: Cat = new Cat()
+constructor() &#123;
+  super();
+  // this.cat1 = new Cat()
+&#125;
+// Or:
+cat1!: Cat
+constructor() &#123;
+  super();
+  this.cat1 = new Cat()
+&#125;
+</code></pre>
+<h4 id="3-How-to-support-vertical-drag-and-drop-sorting-for-List-items-in-HarmonyOS"><a href="#3-How-to-support-vertical-drag-and-drop-sorting-for-List-items-in-HarmonyOS" class="headerlink" title="3. How to support vertical drag-and-drop sorting for List items in HarmonyOS?"></a>3. How to support vertical drag-and-drop sorting for List items in HarmonyOS?</h4><p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">import curves from &#39;@ohos.curves&#39;;
+import Curves from &#39;@ohos.curves&#39;; // xxx.ets
+
+@Entry
+@Component
+struct ListDemo &#123;
+  @State private arr: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  @State dragItem: number = -1;
+  @State scaleItem: number = -1;
+  @State neighborItem: number = -1;
+  @State neighborScale: number = -1;
+  private dragRefOffset: number = 0;
+  @State offsetX: number = 0;
+  @State offsetY: number = 0;
+  private ITEM_INTV: number = 120;
+
+  scaleSelect(item: number): number &#123;
+    if (this.scaleItem === item) &#123;
+      return 1.05;
+    &#125; else if (this.neighborItem === item) &#123;
+      return this.neighborScale;
+    &#125; else &#123;
+      return 1;
+    &#125;
+  &#125;
+
+  itemMove(index: number, newIndex: number): void &#123;
+    let tmp = this.arr.splice(index, 1);
+    this.arr.splice(newIndex, 0, tmp[0]);
+  &#125;
+
+  build() &#123;
+    Stack() &#123;
+      List(&#123; space: 20, initialIndex: 0 &#125;) &#123;
+        ForEach(this.arr, (item: number) =&gt; &#123;
+          ListItem() &#123;
+            Text(&#39;&#39; + item)
+              .width(&#39;100%&#39;)
+              .height(100)
+              .fontSize(16)
+              .textAlign(TextAlign.Center)
+              .borderRadius(10)
+              .backgroundColor(0xFFFFFF)
+              .shadow(this.scaleItem === item ? &#123; radius: 70, color: &#39;#15000000&#39;, offsetX: 0, offsetY: 0 &#125; : &#123;
+                radius: 0,
+                color: &#39;#15000000&#39;,
+                offsetX: 0,
+                offsetY: 0
+              &#125;)
+              .animation(&#123; curve: Curve.Sharp, duration: 300 &#125;);
+          &#125;
+          .margin(&#123; left: 12, right: 12 &#125;)
+          .scale(&#123; x: this.scaleSelect(item), y: this.scaleSelect(item) &#125;)
+          .zIndex(this.dragItem === item ? 1 : 0)
+          .translate(this.dragItem === item ? &#123; y: this.offsetY &#125; : &#123; y: 0 &#125;)
+          .gesture(
+            // The following combined gestures are recognized in sequence; drag gestures will not trigger if long-press gestures fail.
+            GestureGroup(GestureMode.Sequence, LongPressGesture(&#123; repeat: true &#125;)
+              .onAction((event?: GestureEvent) =&gt; &#123;
+                animateTo(&#123; curve: Curve.Friction, duration: 300 &#125;, () =&gt; &#123;
+                  this.scaleItem = item;
+                &#125;);
+              &#125;)
+              .onActionEnd(() =&gt; &#123;
+                animateTo(&#123;
+                  curve: Curve.Friction, duration: 300
+                &#125;, () =&gt; &#123;
+                  this.scaleItem = -1;
+                &#125;);
+              &#125;),
+              PanGesture(&#123; fingers: 1, direction: null, distance: 0 &#125;)
+                .onActionStart(() =&gt; &#123;
+                  this.dragItem = item;
+                  this.dragRefOffset = 0;
+                &#125;)
+                .onActionUpdate((event: GestureEvent) =&gt; &#123;
+                  this.offsetY = event.offsetY - this.dragRefOffset;
+                  // console.log(&#39;Y:&#39; + this.offsetY.toString());
+                  this.neighborItem = -1;
+                  let index = this.arr.indexOf(item);
+                  let curveValue = Curves.initCurve(Curve.Sharp);
+                  let value: number = 0; // Calculate adjacent item scale based on displacement
+                  if (this.offsetY &lt; 0) &#123;
+                    value = curveValue.interpolate(-this.offsetY / this.ITEM_INTV);
+                    this.neighborItem = this.arr[index - 1];
+                    this.neighborScale = 1 - value / 20;
+                    console.log(&#39;neighborScale:&#39; + this.neighborScale.toString());
+                  &#125; else if (this.offsetY &gt; 0) &#123;
+                    value = curveValue.interpolate(this.offsetY / this.ITEM_INTV);
+                    this.neighborItem = this.arr[index + 1];
+                    this.neighborScale = 1 - value / 20;
+                  &#125; // Swap order based on displacement
+                  if (this.offsetY &gt; this.ITEM_INTV / 2) &#123;
+                    animateTo(&#123; curve: curves.interpolatingSpring(0, 1, 400, 38) &#125;, () =&gt; &#123;
+                      this.offsetY -= this.ITEM_INTV;
+                      this.dragRefOffset += this.ITEM_INTV;
+                      this.itemMove(index, index + 1);
+                    &#125;);
+                  &#125; else if (this.offsetY &lt; -this.ITEM_INTV / 2) &#123;
+                    animateTo(&#123; curve: curves.interpolatingSpring(0, 1, 400, 38) &#125;, () =&gt; &#123;
+                      this.offsetY += this.ITEM_INTV;
+                      this.dragRefOffset -= this.ITEM_INTV;
+                      this.itemMove(index, index - 1);
+                    &#125;);
+                  &#125;
+                &#125;)
+                .onActionEnd((event: GestureEvent) =&gt; &#123;
+                  animateTo(&#123; curve: curves.interpolatingSpring(0, 1, 400, 38) &#125;, () =&gt; &#123;
+                    this.dragItem = -1;
+                    this.neighborItem = -1;
+                  &#125;);
+                  animateTo(&#123; curve: curves.interpolatingSpring(14, 1, 170, 17), delay: 150 &#125;, () =&gt; &#123;
+                    this.scaleItem = -1;
+                  &#125;);
+                &#125;))
+              .onCancel(() =&gt; &#123;
+                animateTo(&#123; curve: curves.interpolatingSpring(0, 1, 400, 38) &#125;, () =&gt; &#123;
+                  this.dragItem = -1;
+                  this.neighborItem = -1;
+                &#125;);
+                animateTo(&#123; curve: curves.interpolatingSpring(14, 1, 170, 17), delay: 150 &#125;, () =&gt; &#123;
+                  this.scaleItem = -1;
+                &#125;);
+              &#125;))
+        &#125;, (item: number) =&gt; item.toString());
+      &#125;
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(0xDCDCDC)
+    .padding(&#123; top: 5 &#125;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-How-to-invoke-JS-code-in-HarmonyOS"><a href="#4-How-to-invoke-JS-code-in-HarmonyOS" class="headerlink" title="4. How to invoke JS code in HarmonyOS?"></a>4. How to invoke JS code in HarmonyOS?</h4><p>Applications can invoke JavaScript functions on front-end pages via the <code>runJavaScript()</code> method.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-in-app-frontend-page-function-invoking-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-in-app-frontend-page-function-invoking-V5</a>  </p>
+<h4 id="5-Inability-to-select-local-CSR-files-when-creating-development-and-release-certificates-in-HarmonyOS"><a href="#5-Inability-to-select-local-CSR-files-when-creating-development-and-release-certificates-in-HarmonyOS" class="headerlink" title="5. Inability to select local CSR files when creating development and release certificates in HarmonyOS?"></a>5. Inability to select local CSR files when creating development and release certificates in HarmonyOS?</h4><p>Please try the following solutions:  </p>
+<ol>
+<li>Verify if the account is实名认证 (identity-verified).  </li>
+<li>Each account can apply for up to 1 release certificate and 2 debug certificates.  </li>
+<li>If certificates are expired or unused, delete them by clicking “Revoke”. After deleting expired certificates, refresh the page to check if new certificates can be added.</li>
+</ol>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-releaseharmony-0000001933963166">https://developer.huawei.com/consumer/cn/doc/app/agc-help-releaseharmony-0000001933963166</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41030-Daily-HarmonyOS-Next-Knowledge-WebView-Performance-Optimization-Taskpool-Hot-Update-Navigation-Issues-and-Reinstall-Problems-During-Debugging/" rel="prev" title="[Daily HarmonyOS Next Knowledge] WebView Performance Optimization, Taskpool, Hot Update, Navigation Issues, and Reinstall Problems During Debugging">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] WebView Performance Optimization, Taskpool, Hot Update, Navigation Issues, and Reinstall Problems During Debugging
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41028-Daily-HarmonyOS-Next-Knowledge-Type-Judgment-three-js-Support-Grid-Drag-Control-Subwindow-Routing-and-Real-Device-Breakpoint-Issues/" rel="next" title="[Daily HarmonyOS Next Knowledge] Type Judgment, three.js Support, Grid Drag Control, Subwindow Routing, and Real Device Breakpoint Issues">
+      [Daily HarmonyOS Next Knowledge] Type Judgment, three.js Support, Grid Drag Control, Subwindow Routing, and Real Device Breakpoint Issues <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Thread-Creation-Variable-Initialization-in-Constructor-List-Drag-and-Drop-JS-Code-Invocation-and-CSR-File-Selection-Issue"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Thread Creation, Variable Initialization in Constructor, List Drag-and-Drop, JS Code Invocation, and CSR File Selection Issue</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-create-a-single-thread-in-HarmonyOS"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. How to create a single-thread in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Why-does-an-error-still-occur-after-creating-a-variable-in-the-constructor-in-HarmonyOS"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2. Why does an error still occur after creating a variable in the constructor in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-How-to-support-vertical-drag-and-drop-sorting-for-List-items-in-HarmonyOS"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3. How to support vertical drag-and-drop sorting for List items in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-How-to-invoke-JS-code-in-HarmonyOS"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4. How to invoke JS code in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Inability-to-select-local-CSR-files-when-creating-development-and-release-certificates-in-HarmonyOS"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">5. Inability to select local CSR files when creating development and release certificates in HarmonyOS?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

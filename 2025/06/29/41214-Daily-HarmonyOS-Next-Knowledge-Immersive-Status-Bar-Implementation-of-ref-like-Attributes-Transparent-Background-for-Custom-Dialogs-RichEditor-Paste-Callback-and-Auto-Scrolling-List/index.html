@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List1. HarmonyOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/41214-Daily-HarmonyOS-Next-Knowledge-Immersive-Status-Bar-Implementation-of-ref-like-Attributes-Transparent-Background-for-Custom-Dialogs-RichEditor-Paste-Callback-and-Auto-Scrolling-List/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List1. HarmonyOS">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-29T00:41:55.000Z">
+<meta property="article:modified_time" content="2025-06-29T00:42:10.488Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/41214-Daily-HarmonyOS-Next-Knowledge-Immersive-Status-Bar-Implementation-of-ref-like-Attributes-Transparent-Background-for-Custom-Dialogs-RichEditor-Paste-Callback-and-Auto-Scrolling-List/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41214-Daily-HarmonyOS-Next-Knowledge-Immersive-Status-Bar-Implementation-of-ref-like-Attributes-Transparent-Background-for-Custom-Dialogs-RichEditor-Paste-Callback-and-Auto-Scrolling-List/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 08:41:55 / Modified: 08:42:10" itemprop="dateCreated datePublished" datetime="2025-06-29T08:41:55+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Immersive-Status-Bar-Implementation-of-ref-like-Attributes-Transparent-Background-for-Custom-Dialogs-RichEditor-Paste-Callback-and-Auto-Scrolling-List"><a href="#Daily-HarmonyOS-Next-Knowledge-Immersive-Status-Bar-Implementation-of-ref-like-Attributes-Transparent-Background-for-Custom-Dialogs-RichEditor-Paste-Callback-and-Auto-Scrolling-List" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List"></a>[Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List</h1><h4 id="1-HarmonyOS-Immersive-Status-Bar"><a href="#1-HarmonyOS-Immersive-Status-Bar" class="headerlink" title="1. HarmonyOS Immersive Status Bar"></a>1. HarmonyOS Immersive Status Bar</h4><p>When implementing immersive status bar functionality, each custom component currently requires a <code>padding top</code> set to the status bar height. Is there a way to set this uniformly without adding <code>padding top</code> to each component?  </p>
+<p>There is currently no uniform setting method. You can encapsulate the <code>padding top</code> for each page’s bottom into a unified component and introduce it on each page for consistent maintenance, improving development efficiency and reducing maintenance costs.  </p>
+<h4 id="2-How-to-Implement-ref-like-Attribute-Functionality-in-HarmonyOS-Custom-Components-Similar-to-React-or-Vue-in-Web-Development"><a href="#2-How-to-Implement-ref-like-Attribute-Functionality-in-HarmonyOS-Custom-Components-Similar-to-React-or-Vue-in-Web-Development" class="headerlink" title="2. How to Implement ref-like Attribute Functionality in HarmonyOS Custom Components (Similar to React or Vue in Web Development)?"></a>2. How to Implement ref-like Attribute Functionality in HarmonyOS Custom Components (Similar to React or Vue in Web Development)?</h4><p>In React or Vue, the <code>ref</code> attribute obtains a reference to a component to call methods exposed to the outside. In HarmonyOS development, system-built components like <code>Web</code> have corresponding controllers. For custom components, how to implement controller functionality? For example, encapsulating a <code>LottieView</code> to declaratively display Lottie animations while exposing methods like <code>play()</code>, <code>pause()</code>, <code>stop()</code> for external use.  </p>
+<p>Refer to the following case: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0203144585061300847?fid=0109140870620153026">https://developer.huawei.com/consumer/cn/forum/topic/0203144585061300847?fid=0109140870620153026</a>  </p>
+<h4 id="3-Transparent-Background-for-HarmonyOS-CustomDialogController"><a href="#3-Transparent-Background-for-HarmonyOS-CustomDialogController" class="headerlink" title="3. Transparent Background for HarmonyOS CustomDialogController"></a>3. Transparent Background for HarmonyOS CustomDialogController</h4><p>When customizing a view with <code>CustomDialogController</code>, setting the background color to <code>Color.Transparent</code> is ineffective, and the default is white. How to set the background to transparent?  </p>
+<p>Set <code>customStyle</code> to <code>true</code> for custom styling, which makes the background transparent.<br>Documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5#customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5#customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E</a>  </p>
+<h4 id="4-No-Callback-for-HarmonyOS-RichEditor-Paste-Events"><a href="#4-No-Callback-for-HarmonyOS-RichEditor-Paste-Events" class="headerlink" title="4. No Callback for HarmonyOS RichEditor Paste Events"></a>4. No Callback for HarmonyOS RichEditor Paste Events</h4><p><code>RichEditor</code> triggers callbacks for <code>aboutToIMEInput</code> and <code>onIMEInputComplete</code> during input or deletion, but not for direct pasting. The documentation provides an <code>onPaste</code> method, which only blocks the default paste event. Is there a callback for successful pasting?  </p>
+<p>Add a timer in the <code>onPaste</code> callback for the paste completion event:  </p>
+<pre><code class="language-typescript">.onPaste((): void =&gt; &#123;
+  setTimeout(() =&gt; &#123;
+    const spans = this.controller.getSpans();
+    console.log(spans.length.toString() + JSON.stringify(spans));
+  &#125;, 0);
+&#125;)
+</code></pre>
+<h4 id="5-Auto-Horizontal-Scrolling-List-in-HarmonyOS"><a href="#5-Auto-Horizontal-Scrolling-List-in-HarmonyOS" class="headerlink" title="5. Auto-Horizontal Scrolling List in HarmonyOS"></a>5. Auto-Horizontal Scrolling List in HarmonyOS</h4><p>Refer to the following code. For auto-scrolling, use <code>setInterval</code> to call <code>scroller.scrollTo</code>:  </p>
+<pre><code class="language-typescript">class Article &#123;
+  id: string;
+  title: string;
+  brief: string;
+
+  constructor(id: string, title: string, brief: string) &#123;
+    this.id = id;
+    this.title = title;
+    this.brief = brief;
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct ArticleListView &#123;
+  @State isListReachEnd: boolean = false;
+  @State articleList: Array&lt;Article&gt; = [
+    new Article(&#39;001&#39;, &#39;第1篇文章&#39;, &#39;文章简介内容&#39;),
+    new Article(&#39;002&#39;, &#39;第2篇文章&#39;, &#39;文章简介内容&#39;),
+    new Article(&#39;003&#39;, &#39;第3篇文章&#39;, &#39;文章简介内容&#39;),
+    new Article(&#39;004&#39;, &#39;第4篇文章&#39;, &#39;文章简介内容&#39;),
+    new Article(&#39;005&#39;, &#39;第5篇文章&#39;, &#39;文章简介内容&#39;),
+    new Article(&#39;006&#39;, &#39;第6篇文章&#39;, &#39;文章简介内容&#39;)
+  ]
+
+  loadMoreArticles() &#123;
+    this.articleList.push(this.articleList[0]);
+    this.articleList.splice(0, 1);
+  &#125;
+
+  build() &#123;
+    Column(&#123; space: 5 &#125;) &#123;
+      List() &#123;
+        ForEach(this.articleList, (item: Article) =&gt; &#123;
+          ListItem() &#123;
+            ArticleCard(&#123; article: item &#125;)
+              .margin(&#123; top: 20 &#125;)
+          &#125;
+        &#125;, (item: Article) =&gt; item.id)
+      &#125;
+      .onReachEnd(() =&gt; &#123;
+        this.loadMoreArticles();
+      &#125;)
+      .padding(20)
+      .scrollBar(BarState.Off)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(0xF1F3F5)
+  &#125;
+&#125;
+
+@Component
+struct ArticleCard &#123;
+  @Prop article: Article;
+
+  build() &#123;
+    Row() &#123;
+      Image($r(&#39;app.media.startIcon&#39;))
+        .width(80)
+        .height(80)
+        .margin(&#123; right: 20 &#125;)
+      Column() &#123;
+        Text(this.article.title)
+          .fontSize(20)
+          .margin(&#123; bottom: 8 &#125;)
+        Text(this.article.brief)
+          .fontSize(16)
+          .fontColor(Color.Gray)
+          .margin(&#123; bottom: 8 &#125;)
+      &#125;
+      .alignItems(HorizontalAlign.Start)
+      .width(&#39;80%&#39;)
+      .height(&#39;100%&#39;)
+    &#125;
+    .padding(20)
+    .borderRadius(12)
+    .backgroundColor(&#39;#FFECECEC&#39;)
+    .height(120)
+    .width(&#39;100%&#39;)
+    .justifyContent(FlexAlign.SpaceBetween)
+  &#125;
+&#125;
+</code></pre>
+<p>Refer to the following case for implementation: <a target="_blank" rel="noopener" href="https://gitee.com/harmonyos-cases/cases/tree/master/CommonAppDevelopment/feature/marquee">https://gitee.com/harmonyos-cases/cases/tree/master/CommonAppDevelopment/feature/marquee</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41213-Daily-HarmonyOS-Next-Knowledge-Reverse-Page-Data-Passing-Image-Filling-Issues-Clearing-Web-Cache-Refresh-Support-for-Swiper-POP-Color-Not-Working/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Reverse Page Data Passing, Image Filling Issues, Clearing Web Cache, Refresh Support for Swiper, POP Color Not Working">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Reverse Page Data Passing, Image Filling Issues, Clearing Web Cache, Refresh Support for Swiper, POP Color Not Working
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41215-Daily-HarmonyOS-Next-Knowledge-Web-Component-Safe-Area-any-Related-Issues-Flow-Layout-Collapse-Effect-Double-Callback-Triggered-by-Click-and-Invalid-History/" rel="next" title="[Daily HarmonyOS Next Knowledge] Web Component Safe Area, any-Related Issues, Flow Layout Collapse Effect, Double Callback Triggered by Click, and Invalid History">
+      [Daily HarmonyOS Next Knowledge] Web Component Safe Area, any-Related Issues, Flow Layout Collapse Effect, Double Callback Triggered by Click, and Invalid History <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Immersive-Status-Bar-Implementation-of-ref-like-Attributes-Transparent-Background-for-Custom-Dialogs-RichEditor-Paste-Callback-and-Auto-Scrolling-List"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Immersive Status Bar, Implementation of ref-like Attributes, Transparent Background for Custom Dialogs, RichEditor Paste Callback, and Auto-Scrolling List</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HarmonyOS-Immersive-Status-Bar"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. HarmonyOS Immersive Status Bar</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-to-Implement-ref-like-Attribute-Functionality-in-HarmonyOS-Custom-Components-Similar-to-React-or-Vue-in-Web-Development"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2. How to Implement ref-like Attribute Functionality in HarmonyOS Custom Components (Similar to React or Vue in Web Development)?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Transparent-Background-for-HarmonyOS-CustomDialogController"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3. Transparent Background for HarmonyOS CustomDialogController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-No-Callback-for-HarmonyOS-RichEditor-Paste-Events"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4. No Callback for HarmonyOS RichEditor Paste Events</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Auto-Horizontal-Scrolling-List-in-HarmonyOS"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">5. Auto-Horizontal Scrolling List in HarmonyOS</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

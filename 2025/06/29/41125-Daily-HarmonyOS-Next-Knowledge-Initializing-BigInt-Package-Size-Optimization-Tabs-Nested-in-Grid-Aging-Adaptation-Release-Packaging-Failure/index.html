@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure1. How to initialize a BigInt type property in a class">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/41125-Daily-HarmonyOS-Next-Knowledge-Initializing-BigInt-Package-Size-Optimization-Tabs-Nested-in-Grid-Aging-Adaptation-Release-Packaging-Failure/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure1. How to initialize a BigInt type property in a class">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-29T01:36:36.000Z">
+<meta property="article:modified_time" content="2025-06-29T01:37:15.971Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/41125-Daily-HarmonyOS-Next-Knowledge-Initializing-BigInt-Package-Size-Optimization-Tabs-Nested-in-Grid-Aging-Adaptation-Release-Packaging-Failure/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41125-Daily-HarmonyOS-Next-Knowledge-Initializing-BigInt-Package-Size-Optimization-Tabs-Nested-in-Grid-Aging-Adaptation-Release-Packaging-Failure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:36:36 / Modified: 09:37:15" itemprop="dateCreated datePublished" datetime="2025-06-29T09:36:36+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Initializing-BigInt-Package-Size-Optimization-Tabs-Nested-in-Grid-Aging-Adaptation-Release-Packaging-Failure"><a href="#Daily-HarmonyOS-Next-Knowledge-Initializing-BigInt-Package-Size-Optimization-Tabs-Nested-in-Grid-Aging-Adaptation-Release-Packaging-Failure" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure"></a>[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure</h1><h4 id="1-How-to-initialize-a-BigInt-type-property-in-a-class-in-HarmonyOS"><a href="#1-How-to-initialize-a-BigInt-type-property-in-a-class-in-HarmonyOS" class="headerlink" title="1. How to initialize a BigInt type property in a class in HarmonyOS?"></a>1. How to initialize a BigInt type property in a class in HarmonyOS?</h4><p>BigInt can be initialized using the keyword, for example:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><span class="line">let a = BigInt(1); let b = BigInt(&quot;2&quot;); </span><br><span class="line">```  </span><br><span class="line">Example of mutual conversion between Uint8Array and string:  </span><br><span class="line">```typescript</span><br><span class="line">// String to Uint8Array  </span><br><span class="line">let text1 = &quot;hello world&quot;;</span><br><span class="line">let buf = new ArrayBuffer(text1.length * 2);</span><br><span class="line">let uint8 = new Uint8Array(buf);</span><br><span class="line">for (let i = 0; i &lt; text1.length; i++) &#123;</span><br><span class="line">  uint8[i] = text1.charCodeAt(i);</span><br><span class="line">&#125;</span><br><span class="line">console.log(&#x27;uint8----&#x27;, uint8);</span><br><span class="line"></span><br><span class="line">// Uint8Array to string  </span><br><span class="line">let spArray = uint8.slice(0, 3);</span><br><span class="line">let dataString = &#x27;&#x27;;</span><br><span class="line">for (let i = 0; i &lt; spArray.length; i++) &#123;</span><br><span class="line">  dataString += String.fromCharCode(spArray[i]);</span><br><span class="line">&#125;</span><br><span class="line">console.log(&#x27;dataString-----&#x27;, dataString);</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 2. Can the same so be merged when packaging final apps for different haps? Reduce package size due to duplicate so files.  </span><br><span class="line">Reducing the app package size is crucial for improving download and installation experience. Compressing, streamlining, or reusing code/resources in the app can effectively reduce its size, enhance download/installation speed, and minimize system space occupation.  </span><br><span class="line"></span><br><span class="line">Developers can refer to the following three methods to reduce the app package size:  </span><br><span class="line"></span><br><span class="line">##### Configure so compression options  </span><br><span class="line">By compressing so libraries, the app package size can be reduced. In scenarios with multiple packages (HAP, HSP), use HSP (Harmony Shared Package) to dynamically share code/resources among multiple packages, eliminating duplicate copies caused by HAR (Harmony Archive) static shared packages.  </span><br><span class="line"></span><br><span class="line">**Configuration method**: https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/module-configuration-file.md  </span><br><span class="line">Modify the `compressNativeLibs` field in the module configuration file `module.json5` to `true`:  </span><br><span class="line">```json5</span><br><span class="line">&#123;</span><br><span class="line">  &quot;module&quot;: &#123;</span><br><span class="line">    // ...</span><br><span class="line">    &quot;compressNativeLibs&quot;: true // Indicate that libs should be packaged in compressed form</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">##### So compression effect  </span><br><span class="line">Taking the default C++ library in DevEco Studio as an example, the size comparison before/after compression is as follows:  </span><br><span class="line">| File Name | Original Size | Compressed Size | Compression Rate |  </span><br><span class="line">|-----------|---------------|-----------------|------------------|  </span><br><span class="line">| armeabi-v7a/libc++_shared.so | 1,108k | 386k | 34% |  </span><br><span class="line"></span><br><span class="line">##### Use HSP to share code/resources in multi-package scenarios  </span><br><span class="line">The system provides two shared packages: HAR (static) and HSP (dynamic).  </span><br><span class="line">- HAR code/resources are compiled with the user, leading to duplicate copies in multiple users&#x27; outputs.  </span><br><span class="line">- HSP code/resources are independently compiled, with only one copy existing in a process at runtime.  </span><br><span class="line"></span><br><span class="line">In multi-package scenarios, using HAR for sharing causes redundant copies. Replacing HAR with HSP can reduce the package size when the total size of shared resources exceeds HSP (11k).  </span><br><span class="line"></span><br><span class="line">##### Use scanning tools to analyze app packages  </span><br><span class="line">Scanning tools can:  </span><br><span class="line">- Scan duplicate files.  </span><br><span class="line">- Identify files exceeding specified sizes.  </span><br><span class="line">- Statistically analyze the total size and proportion of each file type.  </span><br><span class="line"></span><br><span class="line">**Optimization measures based on scan results**:  </span><br><span class="line">- Remove duplicate resources within the same package.  </span><br><span class="line">- Use HSP to reuse duplicate resources across multi-packages.  </span><br><span class="line">- Compress large files (e.g., JPG, PNG, GIF).  </span><br><span class="line">- Compress so files by configuring compression options.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 3. Issues with Tabs nested in Grid in HarmonyOS?  </span><br><span class="line">When using a Grid container in TabContent, the dynamic number of Grid elements causes inconsistent TabContent heights (the height of the TabContent with the most elements is applied to all).  </span><br><span class="line"></span><br><span class="line">**Solution**:  </span><br><span class="line">The TabContent component does not support universal height settings, as its height is determined by the Tabs parent component and TabBar. The Grid component can achieve adaptive height by setting `maxCount` (which acts as a height control switch). For details, refer to:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-grid-V5#example6  </span><br><span class="line"></span><br><span class="line">```typescript</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State numbers: string[] = [];</span><br><span class="line"></span><br><span class="line">  aboutToAppear() &#123;</span><br><span class="line">    for (let i = 1; i &lt;= 35; i++) &#123;</span><br><span class="line">      this.numbers.push(i + &#x27;&#x27;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Scroll() &#123;</span><br><span class="line">      Column(&#123; space: 5 &#125;) &#123;</span><br><span class="line">        Blank();</span><br><span class="line">        Text(&#x27;rowsTemplate and columnsTemplate are not set; layoutDirection, maxcount, minCount, and cellLength take effect&#x27;)</span><br><span class="line">          .fontSize(15)</span><br><span class="line">          .fontColor(0xCCCCCC)</span><br><span class="line">          .width(&#x27;90%&#x27;);</span><br><span class="line">        Grid() &#123;</span><br><span class="line">          ForEach(this.numbers, (day: string) =&gt; &#123;</span><br><span class="line">            GridItem() &#123;</span><br><span class="line">              Text(day).fontSize(16).backgroundColor(0xF9CF93);</span><br><span class="line">            &#125;.width(40).height(80).borderWidth(2).borderColor(Color.Red);</span><br><span class="line">          &#125;, (day: string) =&gt; day);</span><br><span class="line">        &#125;</span><br><span class="line">        .columnsGap(10)</span><br><span class="line">        .rowsGap(10)</span><br><span class="line">        .backgroundColor(0xFAEEE0)</span><br><span class="line">        .maxCount(6)</span><br><span class="line">        .minCount(2)</span><br><span class="line">        .cellLength(0)</span><br><span class="line">        .layoutDirection(GridDirection.Row)</span><br><span class="line">        .backgroundColor(Color.Blue);</span><br><span class="line">      &#125;.width(&#x27;90%&#x27;).margin(&#123; top: 5, left: 5, right: 5 &#125;).align(Alignment.Center);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. Are there best practices or demos for aging adaptation in HarmonyOS?  </span><br><span class="line">When the system font size is adjusted, the app layout may become ugly. It is desired to limit the font size within a specific range (min/max) regardless of system settings.  </span><br><span class="line"></span><br><span class="line">```typescript</span><br><span class="line">// xxx.ets</span><br><span class="line">import measure from &#x27;@ohos.measure&#x27;;</span><br><span class="line"></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct TextInputExample &#123;</span><br><span class="line">  @State text: string = &#x27;&#x27;;</span><br><span class="line">  @State truncatedHint: string = &quot;Text not truncated&quot;;</span><br><span class="line">  controller: TextInputController = new TextInputController();</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      TextInput(&#123; text: this.text, placeholder: &#x27;input your word...&#x27;, controller: this.controller &#125;)</span><br><span class="line">        .placeholderColor(Color.Grey)</span><br><span class="line">        .placeholderFont(&#123; size: 14, weight: 400 &#125;)</span><br><span class="line">        .caretColor(Color.Blue)</span><br><span class="line">        .width(400)</span><br><span class="line">        .height(40)</span><br><span class="line">        .margin(20)</span><br><span class="line">        .fontSize(14)</span><br><span class="line">        .fontColor(Color.Black)</span><br><span class="line">        .onChange((value: string) =&gt; &#123;</span><br><span class="line">          this.text = value;</span><br><span class="line">          let textSizeShow1: SizeOptions = measure.measureTextSize(&#123;</span><br><span class="line">            textContent: this.text,</span><br><span class="line">            constraintWidth: 100,</span><br><span class="line">            fontSize: 14,</span><br><span class="line">            overflow: TextOverflow.Ellipsis,</span><br><span class="line">            maxLines: 2</span><br><span class="line">          &#125;);</span><br><span class="line">          let textSizeShow2: SizeOptions = measure.measureTextSize(&#123;</span><br><span class="line">            textContent: this.text + &quot; &quot;,</span><br><span class="line">            constraintWidth: 100,</span><br><span class="line">            fontSize: 14,</span><br><span class="line">            overflow: TextOverflow.Ellipsis,</span><br><span class="line">            maxLines: 2000000</span><br><span class="line">          &#125;);</span><br><span class="line">          console.log(&quot;tag textSizeShow1.height=&quot; + textSizeShow1.height);</span><br><span class="line">          console.log(&quot;tag textSizeShow2.height=&quot; + textSizeShow2.height);</span><br><span class="line"></span><br><span class="line">          if (textSizeShow2 &amp;&amp; textSizeShow1 &amp;&amp; textSizeShow2?.height &amp;&amp; textSizeShow1?.height &amp;&amp; (textSizeShow2?.height &gt; textSizeShow1?.height)) &#123;</span><br><span class="line">            console.log(&quot;tag Text truncated&quot;);</span><br><span class="line">            this.truncatedHint = &quot;Text truncated&quot;;</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            console.log(&quot;tag Text not truncated&quot;);</span><br><span class="line">            this.truncatedHint = &quot;Text not truncated&quot;;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      Text(this.text)</span><br><span class="line">        .maxLines(2)</span><br><span class="line">        .width(100)</span><br><span class="line">        .textOverflow(&#123; overflow: TextOverflow.Ellipsis &#125;)</span><br><span class="line">        .border(&#123; width: 1 &#125;)</span><br><span class="line">        .minFontSize(14)</span><br><span class="line">        .maxFontSize(24);</span><br><span class="line">      Text(this.truncatedHint);</span><br><span class="line">    &#125;.width(&#x27;100%&#x27;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 5. Release package compilation failed?  </span><br></pre></td></tr></table></figure>
+<p>hvigor ERROR: Failed ::PackageApp…<br>hvigor ERROR: Tools execution failed.<br>2024&#x2F;06&#x2F;17 16:55:38.923 - Ohos BundleTool [Error]: debug is different.<br>2024&#x2F;06&#x2F;17 16:55:38.923 - Ohos BundleTool [Error]: some app variable is different.<br>2024&#x2F;06&#x2F;17 16:55:38.923 - Ohos BundleTool [Error]: Compressor::compressAppMode compress failed.<br>2024&#x2F;06&#x2F;17 16:55:38.926 - Ohos BundleTool [Error]: Compressor::compressProcess Bundle exception.<br>2024&#x2F;06&#x2F;17 16:55:38.926 - Ohos BundleTool [Error]: Compressor::compressProcess compress failed.<br>2024&#x2F;06&#x2F;17 16:55:38.926 - Ohos BundleTool [Error]: CompressEntrance::main exit, compress failed<br>Detail: Please check the message from tools.<br>hvigor ERROR: BUILD FAILED in 23 s 837 ms</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**Cause**: Inconsistent `vendor` fields in `app.json5` of multi-module references.  </span><br><span class="line"></span><br><span class="line">**Troubleshooting steps**:  </span><br><span class="line">1. In File -&gt; Settings -&gt; Build, Execution, Deployment -&gt; Build Tools -&gt; Hvigor, set Use log level to Debug.  </span><br><span class="line">2. Rebuild the app.  </span><br><span class="line">3. Search the build log for &quot;app_packing_tool&quot; parameters (–hap-path, –hsp-path) to identify all dependent haps/hsps.  </span><br><span class="line">4. Ensure consistent `vendor` fields across haps/hsps.  </span><br><span class="line"></span><br><span class="line">Example build log snippet:  </span><br></pre></td></tr></table></figure>
+<p>hvigor DEBUG BasePackAppTask Use tool [PackageApp][‘java’,‘-Dfile.encoding&#x3D;GBK’,‘-jar’,<br>‘D:\DevEco_pakage\Huawei\harmonyos\HarmonyOS-NEXT-DP1\base\toolchains\lib\app_packing_tool.jar’,‘–mode’,‘app’,‘–pack-info-path’,‘D:\demo\MyApplication\build\outputs\default\pack.info’,‘–hap-path’,<br>‘D:\demo\MyApplication\entry\build\default\outputs\default\app\entry-default.hap’,‘–hsp-path’,<br>‘D:\demo\MyApplication\library\build\default\outputs\default\app\library-default.hsp’,‘–force’,‘true’,‘–out-path’,<br>‘D:\demo\MyApplication\build\outputs\default\MyApplication-default-unsigned.app’,‘–main-module-limit’,‘2’,‘–normal-module-limit’,‘2’]</p>
+<pre><code>
+For specific configuration procedures, refer to: https://developer.huawei.com/consumer/cn/doc/app/agc-help-harmonyos-internalrelease-0000001756878768
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41126-Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41124-Daily-HarmonyOS-Next-Knowledge-PersistentStorage-Persistence-Slot-Methods-Relative-Layout-Pull-to-Load-and-Pull-to-Refresh-List-Linked-Sliding/" rel="next" title="[Daily HarmonyOS Next Knowledge] PersistentStorage Persistence, Slot Methods, Relative Layout, Pull-to-Load and Pull-to-Refresh, List Linked Sliding">
+      [Daily HarmonyOS Next Knowledge] PersistentStorage Persistence, Slot Methods, Relative Layout, Pull-to-Load and Pull-to-Refresh, List Linked Sliding <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Initializing-BigInt-Package-Size-Optimization-Tabs-Nested-in-Grid-Aging-Adaptation-Release-Packaging-Failure"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-initialize-a-BigInt-type-property-in-a-class-in-HarmonyOS"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. How to initialize a BigInt type property in a class in HarmonyOS?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

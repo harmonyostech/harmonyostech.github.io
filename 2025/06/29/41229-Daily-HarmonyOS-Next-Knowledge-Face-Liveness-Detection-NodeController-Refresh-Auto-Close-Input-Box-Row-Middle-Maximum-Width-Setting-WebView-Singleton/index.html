@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton1. How to invoke face liveness detection in Harmon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/41229-Daily-HarmonyOS-Next-Knowledge-Face-Liveness-Detection-NodeController-Refresh-Auto-Close-Input-Box-Row-Middle-Maximum-Width-Setting-WebView-Singleton/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton1. How to invoke face liveness detection in Harmon">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-29T01:22:57.000Z">
+<meta property="article:modified_time" content="2025-06-29T01:36:47.515Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/41229-Daily-HarmonyOS-Next-Knowledge-Face-Liveness-Detection-NodeController-Refresh-Auto-Close-Input-Box-Row-Middle-Maximum-Width-Setting-WebView-Singleton/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41229-Daily-HarmonyOS-Next-Knowledge-Face-Liveness-Detection-NodeController-Refresh-Auto-Close-Input-Box-Row-Middle-Maximum-Width-Setting-WebView-Singleton/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:22:57 / Modified: 09:36:47" itemprop="dateCreated datePublished" datetime="2025-06-29T09:22:57+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Knowledge-Face-Liveness-Detection-NodeController-Refresh-Auto-Close-Input-Box-Row-Middle-Maximum-Width-Setting-WebView-Singleton"><a href="#Daily-HarmonyOS-Knowledge-Face-Liveness-Detection-NodeController-Refresh-Auto-Close-Input-Box-Row-Middle-Maximum-Width-Setting-WebView-Singleton" class="headerlink" title="[Daily HarmonyOS Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton"></a>[Daily HarmonyOS Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton</h1><h4 id="1-How-to-invoke-face-liveness-detection-in-HarmonyOS"><a href="#1-How-to-invoke-face-liveness-detection-in-HarmonyOS" class="headerlink" title="1. How to invoke face liveness detection in HarmonyOS?"></a>1. How to invoke face liveness detection in HarmonyOS?</h4><p>For H5 to call app-side methods, refer to the following demo:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.ets</span></span><br><span class="line"><span class="title class_">Web</span>() <span class="comment">// Register methods</span></span><br><span class="line">  .<span class="title function_">javaScriptProxy</span>(&#123;</span><br><span class="line">    <span class="attr">object</span>: <span class="variable language_">this</span>.<span class="property">testObj</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;testObjName&quot;</span>,</span><br><span class="line">    <span class="attr">methodList</span>: [<span class="string">&quot;getLocationTS&quot;</span>],</span><br><span class="line">    <span class="attr">controller</span>: <span class="variable language_">this</span>.<span class="property">webController</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">testClass</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">getLocationTS</span>(): <span class="title class_">Promise</span>&lt;<span class="built_in">string</span>&gt; &#123;</span><br><span class="line">    <span class="comment">// App-side method logic</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// H5 Page</span></span><br><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot;&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Get Location Information&lt;/title&gt;</span><br><span class="line">    &lt;style&gt;</span><br><span class="line">        #prize &#123;</span><br><span class="line">            border-radius: 16px 16px 16px 16px;</span><br><span class="line">            background-image: linear-gradient(180deg, #A2DAFF 0%, #EAF5FF 100%);</span><br><span class="line">            margin-left: 1.82%;</span><br><span class="line">            margin-top: 1.43%;</span><br><span class="line">            width: 96.5%;</span><br><span class="line">            height: 96.7%;</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div style=&quot;width:1000px;height:500px&quot;&gt;</span><br><span class="line">    &lt;input style=&quot;width:1000px;height:100px;font-size:30px&quot; id=&quot;inputText&quot;/&gt;</span><br><span class="line">    &lt;p style=&quot;width:1000px;height:100px;font-size:30px&quot; id=&quot;demo&quot;&gt;p1&lt;/p&gt;</span><br><span class="line">    &lt;button style=&quot;width:1000px;height:100px&quot; onclick=&quot;getLocation()&quot;&gt;</span><br><span class="line">        &lt;span style=&quot;font-size:30px&quot;&gt;Get Location&lt;/span&gt;</span><br><span class="line">    &lt;/button&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    function getLocation() &#123;</span><br><span class="line">        // If the ArkTS side returns a promise object, use this method to handle it</span><br><span class="line">        // For details, refer to the API for frontend pages to call app-side functions, including simple and complex types</span><br><span class="line">        // https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/web-in-page-app-function-invoking-0000001844832802</span><br><span class="line">        </span><br><span class="line">        // H5-side method call</span><br><span class="line">        testObjName.getLocationTS()</span><br><span class="line">        .then((param) =&gt; &#123; document.getElementById(&quot;demo&quot;).innerHTML = &quot;testObjName.getLocationTS()--&quot; + JSON.stringify(param) &#125;)</span><br><span class="line">        .catch((param) =&gt; &#123; document.getElementById(&quot;demo&quot;).innerHTML = &quot;testObjName.getLocationTS()--&quot; + JSON.stringify(param) &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">#### 2. After calling `this.rebuild()` in HarmonyOS NodeController, the screen does not refresh.  </span><br><span class="line">Using NodeController, when first entering the page, `makeNode` is automatically called back to draw three question boxes. Later, an external call to `onSelectBoxChange` updates `nodeArray` and manually calls `this.rebuild()`. `makeNode` is called back again, but the newly drawn boxes do not appear on the page.  </span><br><span class="line"></span><br><span class="line">Reference demo:  </span><br><span class="line">```typescript</span><br><span class="line">import &#123; RenderNode, DrawContext, FrameNode, NodeController &#125; from &quot;@ohos.ArkUI.node&quot;;</span><br><span class="line">import drawing from &quot;@ohos.graphics.drawing&quot;;</span><br><span class="line"></span><br><span class="line">class TextRenderNode extends RenderNode &#123;</span><br><span class="line">  async draw(context: DrawContext) &#123;</span><br><span class="line">    const canvas = context.canvas;</span><br><span class="line">    const pen = new drawing.Pen();</span><br><span class="line">    pen.setStrokeWidth(5);</span><br><span class="line">    pen.setColor(&#123; alpha: 255, red: 255, green: 0, blue: 0 &#125;);</span><br><span class="line">    let path = new drawing.Path();</span><br><span class="line">    path.moveTo(10, 10);</span><br><span class="line">    path.arcTo(10, 10, 200, 200, 0, 150);</span><br><span class="line">    path.close();</span><br><span class="line">    canvas.attachPen(pen);</span><br><span class="line">    canvas.drawPath(path);</span><br><span class="line">    canvas.detachPen();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MyNodeController extends NodeController &#123;</span><br><span class="line">  private rootNode: FrameNode | null = null;</span><br><span class="line">  private nodeArray: Array&lt;TextRenderNode&gt; = [];</span><br><span class="line"></span><br><span class="line">  addMyNode(item: TextRenderNode) &#123;</span><br><span class="line">    this.nodeArray.push(item);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  makeNode(uiContext: UIContext): FrameNode | null &#123;</span><br><span class="line">    this.rootNode = new FrameNode(uiContext);</span><br><span class="line">    const renderNode = this.rootNode.getRenderNode();</span><br><span class="line">    if (renderNode === null) &#123;</span><br><span class="line">      return this.rootNode;</span><br><span class="line">    &#125;</span><br><span class="line">    if (renderNode) &#123;</span><br><span class="line">      renderNode.clearChildren();</span><br><span class="line">      this.nodeArray.forEach((item) =&gt; &#123;</span><br><span class="line">        renderNode.appendChild(item);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    return this.rootNode;</span><br><span class="line">  &#125;</span><br><span class="line">  // onTouchEvent(event: TouchEvent): void &#123;</span><br><span class="line">  //   this.nodeArray.forEach((node, index) =&gt; &#123; // this is undefined, cannot access parameters of the current class&lt;---------</span><br><span class="line">  //     console.log(JSON.stringify(this.nodeArray) + &#x27;De-Ma-Xi-Ya&#x27;)</span><br><span class="line">  //   &#125;)</span><br><span class="line">  // &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State newNode: TextRenderNode = new TextRenderNode();</span><br><span class="line">  @State nodeCV: MyNodeController = new MyNodeController();</span><br><span class="line">  tempY = 0;</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      Column() &#123;</span><br><span class="line">        NodeContainer(this.nodeCV)</span><br><span class="line">          .width(&#x27;100%&#x27;)</span><br><span class="line">          .height(200);</span><br><span class="line">        Button(&#x27;Invalidate&#x27;)</span><br><span class="line">          .onClick(() =&gt; &#123;</span><br><span class="line">            let newNode = new TextRenderNode();</span><br><span class="line">            newNode.frame = &#123; x: 0, y: this.tempY, width: 200, height: 100 &#125;;</span><br><span class="line">            this.nodeCV.addMyNode(newNode);</span><br><span class="line">            this.nodeCV.rebuild();</span><br><span class="line">            this.tempY += 100;</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">      .width(&#x27;100%&#x27;)</span><br><span class="line">      .height(&#x27;100%&#x27;);</span><br><span class="line">    &#125;</span><br><span class="line">    .height(&#x27;100%&#x27;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">#### 3. In HarmonyOS TextInput, how to automatically close the input box when the text reaches a certain length?  </span><br><span class="line">Demo for automatically closing TextInput when the input character count reaches the set length:  </span><br><span class="line">```typescript</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct FirstTest &#123;</span><br><span class="line">  @State message1: string = &#x27;Hello World&#x27;;</span><br><span class="line">  private controller: TextInputController = new TextInputController();</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      Text(&quot;FirstTest: &quot; + this.message1)</span><br><span class="line">        .fontSize(25)</span><br><span class="line">        .fontWeight(FontWeight.Bold);</span><br><span class="line"></span><br><span class="line">      TextInput(&#123; placeholder: &#x27;Waiting for input&#x27;, text: $$this.message1, controller: this.controller &#125;)</span><br><span class="line">        .fontSize(25)</span><br><span class="line">        .fontWeight(FontWeight.Bold)</span><br><span class="line">        .onChange(() =&gt; &#123;</span><br><span class="line">          if (this.message1.length &gt;= 20) &#123;</span><br><span class="line">            this.controller.stopEditing();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">#### 4. How to set the maximum width for the middle element in a HarmonyOS Row?  </span><br><span class="line">Use `constraintSize(&#123; maxWidth: Infinity &#125;)` to limit the size range.  </span><br><span class="line"></span><br><span class="line">#### 5. How to create a singleton WebView component in HarmonyOS?  </span><br><span class="line">Only a singleton object can be created. Example:  </span><br><span class="line">```typescript</span><br><span class="line">export class GlobalContext &#123;</span><br><span class="line">  private constructor() &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  private static instance: GlobalContext;</span><br><span class="line">  private _objects = new Map&lt;string, Object&gt;();</span><br><span class="line"></span><br><span class="line">  public static getContext(): GlobalContext &#123;</span><br><span class="line">    if (!GlobalContext.instance) &#123;</span><br><span class="line">      GlobalContext.instance = new GlobalContext();</span><br><span class="line">    &#125;</span><br><span class="line">    return GlobalContext.instance;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getObject(value: string): Object | undefined &#123;</span><br><span class="line">    return this._objects.get(value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  setObject(key: string, objectClass: Object): void &#123;</span><br><span class="line">    this._objects.set(key, objectClass);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41228-Daily-HarmonyOS-Next-Knowledge-Shape-Description-Global-Loading-Component-Checkbox-Style-H5-Keyboard-Hide-Listening-Popup-Not-Closing/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Shape Description, Global Loading Component, Checkbox Style, H5 Keyboard Hide Listening, Popup Not Closing">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Shape Description, Global Loading Component, Checkbox Style, H5 Keyboard Hide Listening, Popup Not Closing
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41230-Daily-HarmonyOS-Next-Knowledge-Input-Box-Cursor-Display-Issue-Web-Component-Callback-Async-Problem-Image-Loading-Process-Monitoring-Background-Image-Size-Not-Working-Alert-Not-Functioning/" rel="next" title="[Daily HarmonyOS Next Knowledge] Input Box Cursor Display Issue, Web Component Callback Async Problem, Image Loading Process Monitoring, Background Image Size Not Working, Alert Not Functioning">
+      [Daily HarmonyOS Next Knowledge] Input Box Cursor Display Issue, Web Component Callback Async Problem, Image Loading Process Monitoring, Background Image Size Not Working, Alert Not Functioning <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Knowledge-Face-Liveness-Detection-NodeController-Refresh-Auto-Close-Input-Box-Row-Middle-Maximum-Width-Setting-WebView-Singleton"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Knowledge] Face Liveness Detection, NodeController Refresh, Auto-Close Input Box, Row Middle Maximum Width Setting, WebView Singleton</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-to-invoke-face-liveness-detection-in-HarmonyOS"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. How to invoke face liveness detection in HarmonyOS?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps1. In HarmonyOS, if only the">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/41126-Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps1. In HarmonyOS, if only the">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-29T01:35:32.000Z">
+<meta property="article:modified_time" content="2025-06-29T01:36:10.430Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/41126-Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41126-Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:35:32 / Modified: 09:36:10" itemprop="dateCreated datePublished" datetime="2025-06-29T09:35:32+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps"><a href="#Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps"></a>[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps</h1><h4 id="1-In-HarmonyOS-if-only-the-root-node’s-dispose-is-called-can-its-child-nodes-be-destroyed-or-do-child-nodes-need-to-be-traversed-and-their-dispose-methods-executed-for-proper-destruction"><a href="#1-In-HarmonyOS-if-only-the-root-node’s-dispose-is-called-can-its-child-nodes-be-destroyed-or-do-child-nodes-need-to-be-traversed-and-their-dispose-methods-executed-for-proper-destruction" class="headerlink" title="1. In HarmonyOS, if only the root node’s dispose is called, can its child nodes be destroyed, or do child nodes need to be traversed and their dispose methods executed for proper destruction?"></a>1. In HarmonyOS, if only the root node’s dispose is called, can its child nodes be destroyed, or do child nodes need to be traversed and their dispose methods executed for proper destruction?</h4><p>Frontend-referenced objects need to be disposed, and builderNodes and FrameNodes created with new also require dispose. Calling only the root node’s dispose cannot guarantee that child nodes will be properly released.  </p>
+<h4 id="2-How-to-distinguish-between-mobile-and-pad-devices-in-the-Web-UserAgent-of-HarmonyOS"><a href="#2-How-to-distinguish-between-mobile-and-pad-devices-in-the-Web-UserAgent-of-HarmonyOS" class="headerlink" title="2. How to distinguish between mobile and pad devices in the Web UserAgent of HarmonyOS?"></a>2. How to distinguish between mobile and pad devices in the Web UserAgent of HarmonyOS?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/multi-faq-V5#ZH-CN_TOPIC_0000001884757262__%E5%A6%82%E4%BD%95%E6%9F%A5%E8%AF%A2%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/multi-faq-V5#ZH-CN_TOPIC_0000001884757262__%E5%A6%82%E4%BD%95%E6%9F%A5%E8%AF%A2%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B</a>  </p>
+<ol>
+<li><p>Query device type via command line.<br>Query the specified system parameter (const.product.devicetype) via command line to determine the device type:  </p>
+<pre><code class="language-bash"># Method 1  
+hdc shell param get &quot;const.product.devicetype&quot;  
+# Method 2  
+hdc shell cat /etc/param/ohos.para | grep const.product.devicetype  
+</code></pre>
+</li>
+<li><p>Query device type during application development.  </p>
+<pre><code class="language-typescript">import &#123; deviceInfo &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+@Entry
+@Component
+struct GetDeviceTypeSample &#123;
+  @State deviceType: string = &#39;unknown&#39;;
+
+  aboutToAppear() &#123;
+    this.deviceType = deviceInfo.deviceType;
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Text(this.deviceType).fontSize(24);
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;);
+  &#125;
+&#125;
+</code></pre>
+</li>
+</ol>
+<h4 id="3-Navigation-routing-issues-in-HarmonyOS"><a href="#3-Navigation-routing-issues-in-HarmonyOS" class="headerlink" title="3. Navigation routing issues in HarmonyOS?"></a>3. Navigation routing issues in HarmonyOS?</h4><p>When navigating from the Index page to the PageOne page, the navigation bar is hidden (hideNavBar), but why does a white screen appear when returning from PageOne to the previous page?  </p>
+<pre><code class="language-typescript">// Index.ets  
+@Entry
+@Component
+struct Index &#123;
+  @State hideNavBar: boolean = false;
+  private pageStack: NavPathStack = new NavPathStack();
+
+  build() &#123;
+    Navigation(this.pageStack) &#123;
+      Column() &#123;
+        Button(&#39;Jump to PageOne, hide NavBar&#39;)
+          .onClick(() =&gt; &#123;
+            this.hideNavBar = true;
+            this.pageStack.replacePath(&#123;
+              name: &#39;PageOne&#39;
+            &#125;);
+          &#125;);
+      &#125;
+      .height(&#39;100%&#39;)
+      .justifyContent(FlexAlign.Center);
+    &#125;
+    .hideNavBar(this.hideNavBar)
+    .hideTitleBar(true)
+    .hideBackButton(true);
+  &#125;
+&#125;
+
+// PageOne.ets  
+@Builder
+function PageOneBuilder() &#123;
+  PageOne();
+&#125;
+
+@Component
+export struct PageOne &#123;
+  pageStack: NavPathStack | null = null;
+  build() &#123;
+    NavDestination() &#123;
+      Column() &#123;
+        Button(&#39;Return to previous page&#39;)
+          .onClick(() =&gt; &#123;
+            // Return to the previous page here  
+            this.pageStack?.pop?.();
+          &#125;);
+      &#125;.height(&#39;100%&#39;);
+    &#125;
+    .hideTitleBar(true)
+    .onReady((ctx: NavDestinationContext) =&gt; &#123;
+      this.pageStack = ctx.pathStack;
+    &#125;);
+  &#125;
+&#125;
+</code></pre>
+<p>API reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-navigation-navigation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-navigation-navigation-V5</a>  </p>
+<p><strong>White screen cause</strong>: Hiding the navigation bar via hideNavBar(true) leads to this issue. Setting it to false restores the previous page’s navigation bar buttons. Adding a Button component to Navigation ensures visibility even when Navigation is hidden. Refer to the API documentation for details.  </p>
+<h4 id="4-Width-issues-with-the-HarmonyOS-Tabs-component"><a href="#4-Width-issues-with-the-HarmonyOS-Tabs-component" class="headerlink" title="4. Width issues with the HarmonyOS Tabs component?"></a>4. Width issues with the HarmonyOS Tabs component?</h4><p>Documentation states that the Tabs component’s indicator matches the view width. The app’s home page has numerous columns, with a semi-transparent cover strip and button on the right, causing operational issues—some columns may be unreachable. Is there a way to separate these elements or use alternative components?  </p>
+<p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct tabTest &#123;
+  @State tabArray: Array&lt;number&gt; = [0, 1, 2, 3, 4];
+  @State focusIndex: number = 0;
+  @State pre: number = 0;
+  @State index: number = 0;
+  private controller: TabsController = new TabsController();
+  @State test: boolean = false;
+  @State animationDuration: number = 300;
+  @State indicatorLeftMargin: number = 0;
+  @State indicatorWidth: number = 0;
+  private tabsWidth: number = 0;
+  private tabWidth: number = 0;
+  private scrollerForScroll: Scroller = new Scroller();
+
+  // Individual tab  
+  @Builder
+  Tab(tabName: string, tabItem: number, tabIndex: number) &#123;
+    Row(&#123; space: 20 &#125;) &#123;
+      Text(tabName)
+        .fontSize(18)
+        .fontColor(tabIndex === this.focusIndex ? Color.Blue : Color.Black)
+        .id(tabIndex.toString())
+        .onAreaChange((oldValue: Area, newValue: Area) =&gt; &#123;
+          if (this.focusIndex === tabIndex &amp;&amp; (this.indicatorLeftMargin === 0 || this.indicatorWidth === 0)) &#123;
+            if (newValue.position.x !== undefined) &#123;
+              let positionX = Number.parseFloat(newValue.position.x.toString());
+              this.indicatorLeftMargin = Number.isNaN(positionX) ? 0 : positionX;
+            &#125;
+            let width = Number.parseFloat(newValue.width.toString());
+            this.tabWidth = Number.isNaN(width) ? 0 : width;
+            this.indicatorWidth = this.tabWidth;
+          &#125;
+        &#125;);
+    &#125;
+    .justifyContent(FlexAlign.Center)
+    .constraintSize(&#123; minWidth: 35 &#125;)
+    .width(100)
+    .height(30)
+    .onClick(() =&gt; &#123;
+      this.controller.changeIndex(tabIndex);
+      this.focusIndex = tabIndex;
+    &#125;)
+    .backgroundColor(&quot;#ffb7b7b7&quot;);
+  &#125;
+
+  @Builder
+  textTest(textName: string) &#123;
+    Row(&#123; space: 20 &#125;) &#123;
+      Text(textName).fontSize(18);
+    &#125;
+    .justifyContent(FlexAlign.Center)
+    .constraintSize(&#123; minWidth: 35 &#125;)
+    .height(30)
+    .backgroundColor(&quot;#ffb7b7b7&quot;);
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;
+        Column() &#123;
+          // Tabs  
+          Row(&#123; space: 8 &#125;) &#123;
+            List(&#123; space: 20, initialIndex: 0, scroller: this.scrollerForScroll &#125;) &#123;
+              ForEach(this.tabArray, (item: number, index: number) =&gt; &#123;
+                ListItem() &#123;
+                  this.Tab(&quot;Tab &quot; + item, item, index);
+                &#125;
+              &#125;, (item: string) =&gt; item);
+            &#125;
+            .listDirection(Axis.Horizontal)
+            .height(30)
+            .width(&#39;80%&#39;)
+            .friction(0.6)
+            .alignListItem(ListItemAlign.Start)
+            .scrollBar(BarState.Off)
+            .width(&#39;80%&#39;)
+            .backgroundColor(&quot;#ffb7b7b7&quot;)
+            .onScroll((xOffset: number, yOffset: number) =&gt; &#123;
+              this.indicatorLeftMargin -= xOffset;
+            &#125;);
+            this.textTest(&#39;More&#39;);
+          &#125;
+          .alignItems(VerticalAlign.Bottom)
+          .width(&#39;100%&#39;)
+          .backgroundColor(&quot;#ffb7b7b7&quot;);
+        &#125;
+        .alignItems(HorizontalAlign.Start)
+        .width(&#39;100%&#39;);
+
+        Column()
+          .height(2)
+          .width(this.indicatorWidth)
+          .margin(&#123; left: this.indicatorLeftMargin, top: 30 &#125;)
+          .backgroundColor(Color.Blue);
+        Column()
+          .height(10)
+          .width(&quot;20%&quot;)
+          .margin(&#123; left: &#39;80%&#39;, top: 28 &#125;)
+          .backgroundColor(&quot;#ffb7b7b7&quot;);
+      &#125;
+      .height(40)
+      .width(&#39;100%&#39;)
+      .backgroundColor(&quot;#ffb7b7b7&quot;);
+      // Tabs  
+      Tabs(&#123; barPosition: BarPosition.Start, controller: this.controller &#125;) &#123;
+        ForEach(this.tabArray, (item: number, index: number) =&gt; &#123;
+          TabContent() &#123;
+            Text(&#39;Content of Page &#39; + item)
+              .height(300)
+              .width(&#39;100%&#39;)
+              .fontSize(30);
+          &#125;
+          .backgroundColor(Color.White);
+        &#125;, (item: string) =&gt; item);
+      &#125;
+      .onAreaChange((oldValue: Area, newValue: Area) =&gt; &#123;
+        let width = Number.parseFloat(newValue.width.toString());
+        this.tabsWidth = Number.isNaN(width) ? 0 : width;
+      &#125;)
+      .width(&#39;100%&#39;)
+      .barHeight(0)
+      .animationDuration(100)
+      .onChange((index: number) =&gt; &#123;
+        console.log(&#39;foo change&#39;);
+        this.focusIndex = index;
+        this.scrollerForScroll.scrollToIndex(index - 1, true);
+      &#125;)
+      .onAnimationStart((index: number, targetIndex: number, event: TabsAnimationEvent) =&gt; &#123;
+        // Callback triggered at the start of the tab switch animation. The underline slides with the page.  
+        this.focusIndex = targetIndex;
+        let targetIndexInfo = this.getTextInfo(targetIndex);
+        this.startAnimateTo(this.animationDuration, targetIndexInfo.left, targetIndexInfo.width);
+      &#125;)
+      .onAnimationEnd((index: number, event: TabsAnimationEvent) =&gt; &#123;
+        // Callback triggered at the end of the tab switch animation. The underline animation stops.  
+        let currentIndicatorInfo = this.getCurrentIndicatorInfo(index, event);
+        this.startAnimateTo(0, currentIndicatorInfo.left, currentIndicatorInfo.width);
+      &#125;)
+      .onGestureSwipe((index: number, event: TabsAnimationEvent) =&gt; &#123;
+        // Callback triggered frame-by-frame during page swipe.  
+        let currentIndicatorInfo = this.getCurrentIndicatorInfo(index, event);
+        this.focusIndex = currentIndicatorInfo.index;
+        this.indicatorLeftMargin = currentIndicatorInfo.left;
+        this.tabWidth = currentIndicatorInfo.width;
+        this.indicatorWidth = currentIndicatorInfo.width;
+      &#125;);
+    &#125;
+    .height(&#39;100%&#39;);
+  &#125;
+
+  private getTextInfo(index: number): Record&lt;string, number&gt; &#123;
+    let strJson = getInspectorByKey(index.toString());
+    try &#123;
+      let obj: Record&lt;string, string&gt; = JSON.parse(strJson);
+      let rectInfo: number[][] = JSON.parse(&#39;[&#39; + obj.$rect + &#39;]&#39;);
+      return &#123; &#39;left&#39;: px2vp(rectInfo[0][0]), &#39;width&#39;: px2vp(rectInfo[1][0] - rectInfo[0][0]) &#125;;
+    &#125; catch (error) &#123;
+      return &#123; &#39;left&#39;: 0, &#39;width&#39;: 0 &#125;;
+    &#125;
+  &#125;
+
+  private getCurrentIndicatorInfo(index: number, event: TabsAnimationEvent): Record&lt;string, number&gt; &#123;
+    let nextIndex = index;
+    if (index &gt; 0 &amp;&amp; event.currentOffset &gt; 0) &#123;
+      nextIndex--;
+    &#125; else if (index &lt; 4 &amp;&amp; event.currentOffset &lt; 0) &#123;
+      nextIndex++;
+    &#125;
+    let indexInfo = this.getTextInfo(index);
+    let nextIndexInfo = this.getTextInfo(nextIndex);
+    let swipeRatio = Math.abs(event.currentOffset / this.tabsWidth);
+    let currentIndex = swipeRatio &gt; 0.5 ? nextIndex : index; // Switch to the next tab if the page swipe exceeds half.  
+    let currentLeft = indexInfo.left + (nextIndexInfo.left - indexInfo.left) * swipeRatio;
+    let currentWidth = indexInfo.width + (nextIndexInfo.width - indexInfo.width) * swipeRatio;
+    return &#123; &#39;index&#39;: currentIndex, &#39;left&#39;: currentLeft, &#39;width&#39;: currentWidth &#125;;
+  &#125;
+
+  private startAnimateTo(duration: number, leftMargin: number, width: number) &#123;
+    animateTo(&#123;
+      duration: duration, // Animation duration  
+      curve: Curve.Linear, // Animation curve  
+      iterations: 1, // Number of plays  
+      playMode: PlayMode.Normal, // Animation mode  
+      onFinish: () =&gt; &#123;
+        console.info(&#39;play end&#39;);
+      &#125;
+    &#125;, () =&gt; &#123;
+      this.indicatorLeftMargin = leftMargin;
+      this.tabWidth = width;
+      this.indicatorWidth = width;
+    &#125;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-How-to-monitor-Maps-in-HarmonyOS"><a href="#5-How-to-monitor-Maps-in-HarmonyOS" class="headerlink" title="5. How to monitor Maps in HarmonyOS?"></a>5. How to monitor Maps in HarmonyOS?</h4><p>Map variables can be decorated with @State. Currently, Map and Set types are supported, but HashMap is not.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41127-Daily-HarmonyOS-Next-Knowledge-Web-Height-Adaptation-Variable-Declaration-Specifications-Animation-Cancellation-Signature-Files-and-Package-Size-Optimization-related/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Web Height Adaptation, Variable Declaration Specifications, Animation Cancellation, Signature Files, and Package Size Optimization-related">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Web Height Adaptation, Variable Declaration Specifications, Animation Cancellation, Signature Files, and Package Size Optimization-related
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41125-Daily-HarmonyOS-Next-Knowledge-Initializing-BigInt-Package-Size-Optimization-Tabs-Nested-in-Grid-Aging-Adaptation-Release-Packaging-Failure/" rel="next" title="[Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure">
+      [Daily HarmonyOS Next Knowledge] Initializing BigInt, Package Size Optimization, Tabs Nested in Grid, Aging Adaptation, Release Packaging Failure <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-In-HarmonyOS-if-only-the-root-node%E2%80%99s-dispose-is-called-can-its-child-nodes-be-destroyed-or-do-child-nodes-need-to-be-traversed-and-their-dispose-methods-executed-for-proper-destruction"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. In HarmonyOS, if only the root node’s dispose is called, can its child nodes be destroyed, or do child nodes need to be traversed and their dispose methods executed for proper destruction?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-to-distinguish-between-mobile-and-pad-devices-in-the-Web-UserAgent-of-HarmonyOS"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2. How to distinguish between mobile and pad devices in the Web UserAgent of HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Navigation-routing-issues-in-HarmonyOS"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3. Navigation routing issues in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Width-issues-with-the-HarmonyOS-Tabs-component"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4. Width issues with the HarmonyOS Tabs component?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-How-to-monitor-Maps-in-HarmonyOS"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">5. How to monitor Maps in HarmonyOS?</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

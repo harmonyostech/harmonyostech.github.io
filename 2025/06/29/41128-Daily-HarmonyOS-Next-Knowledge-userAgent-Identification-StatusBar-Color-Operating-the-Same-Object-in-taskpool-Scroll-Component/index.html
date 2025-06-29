@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component1. What values can be obtained by HarmonyOS window.navigator.userAgen">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/41128-Daily-HarmonyOS-Next-Knowledge-userAgent-Identification-StatusBar-Color-Operating-the-Same-Object-in-taskpool-Scroll-Component/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component1. What values can be obtained by HarmonyOS window.navigator.userAgen">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-29T01:33:11.000Z">
+<meta property="article:modified_time" content="2025-06-29T01:34:23.193Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/41128-Daily-HarmonyOS-Next-Knowledge-userAgent-Identification-StatusBar-Color-Operating-the-Same-Object-in-taskpool-Scroll-Component/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41128-Daily-HarmonyOS-Next-Knowledge-userAgent-Identification-StatusBar-Color-Operating-the-Same-Object-in-taskpool-Scroll-Component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:33:11 / Modified: 09:34:23" itemprop="dateCreated datePublished" datetime="2025-06-29T09:33:11+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-userAgent-Identification-StatusBar-Color-Operating-the-Same-Object-in-taskpool-Scroll-Component"><a href="#Daily-HarmonyOS-Next-Knowledge-userAgent-Identification-StatusBar-Color-Operating-the-Same-Object-in-taskpool-Scroll-Component" class="headerlink" title="[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component"></a>[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component</h1><h4 id="1-What-values-can-be-obtained-by-HarmonyOS-window-navigator-userAgent-toLowerCase"><a href="#1-What-values-can-be-obtained-by-HarmonyOS-window-navigator-userAgent-toLowerCase" class="headerlink" title="1. What values can be obtained by HarmonyOS window.navigator.userAgent.toLowerCase()?"></a>1. What values can be obtained by HarmonyOS window.navigator.userAgent.toLowerCase()?</h4><p>H5 cannot identify through window.navigator.userAgent for the time being, and can only be identified by injecting fixed fields natively. You can refer to this document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0201145720536373106?fid=0101587866109860105">https://developer.huawei.com/consumer/cn/forum/topic/0201145720536373106?fid=0101587866109860105</a>  </p>
+<h4 id="2-How-to-dynamically-set-the-font-color-in-the-StatusBar-in-HarmonyOS"><a href="#2-How-to-dynamically-set-the-font-color-in-the-StatusBar-in-HarmonyOS" class="headerlink" title="2. How to dynamically set the font color in the StatusBar in HarmonyOS?"></a>2. How to dynamically set the font color in the StatusBar in HarmonyOS?</h4><p>The APP has set an immersive layout, but the status bar font color at the top does not change when switching the theme color. How to handle this? The following code shows our setting method:  </p>
+<pre><code class="language-typescript">private checkDarkMode(darkModeConfig: DarkModeSettingsConfig): void &#123;
+  AppStorage.setOrCreate&lt;DarkModeSettingsConfig&gt;(&#39;darkModeConfig&#39;, darkModeConfig);
+  let applicationContext = getContext(this).getApplicationContext();
+  let colorMode: ConfigurationConstant.ColorMode = ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET;
+  if (darkModeConfig.switchType === DarkModeType.FOLLOW_UP) &#123;
+    colorMode = (getContext(this) as common.UIAbilityContext).config.colorMode ||
+    ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
+  &#125; else if (darkModeConfig.switchType === DarkModeType.DARK) &#123;
+    colorMode = ConfigurationConstant.ColorMode.COLOR_MODE_DARK;
+  &#125; else &#123;
+    colorMode = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
+  &#125;
+  AppStorage.setOrCreate(&#39;currentColorMode&#39;, colorMode);
+  applicationContext.setColorMode(colorMode);
+  try &#123;
+    AppUtil.getMainWindow()?.setWindowSystemBarProperties(&#123;
+      statusBarContentColor: colorMode === ConfigurationConstant.ColorMode.COLOR_MODE_DARK ?  &#39;0xffffffff&#39; : &#39;0x00000000&#39;,
+    &#125;, (err: BusinessError) =&gt; &#123;
+      const errCode: number = err.code;
+      if (errCode) &#123;
+        console.error(&#39;Failed to set the system bar properties. Cause: &#39; + JSON.stringify(err));
+        return;
+      &#125;
+      console.info(&#39;Succeeded in setting the system bar properties.&#39;);
+    &#125;);
+  &#125; catch (exception) &#123;
+    console.error(&#39;Failed to set the system bar properties. Cause: &#39; + JSON.stringify(exception));
+  &#125;
+&#125;
+</code></pre>
+<p>Currently, setting the status bar color uses the window’s API, which adjusts the dimension from the entire window. To achieve page-level control, you need to adjust it in the page’s lifecycle and directly call the setWindowSystemBarProperties method on the page that needs to change. You can refer to the official document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setwindowsystembarproperties9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setwindowsystembarproperties9</a>  </p>
+<p>Sample code is as follows:  </p>
+<pre><code class="language-typescript">onPageShow(): void &#123;
+  window.getLastWindow(getContext(), (err, data) =&gt; &#123;
+    let win: window.Window;
+    if (err.code) &#123;
+      console.error(&quot;error code :&quot; + JSON.stringify(err.code))
+      return;
+    &#125;
+    try &#123;
+      win = data;
+      // Set the window to full-screen mode
+      win.setWindowLayoutFullScreen(true);
+      // Set the status bar
+      win.setWindowSystemBarProperties(&#123;
+        // Set the status bar color to another color
+        statusBarColor: &#39;#00ff00&#39;,
+        // Set the status bar text color to white
+        statusBarContentColor: &#39;#353535&#39;
+      &#125;)
+      console.info(&#39;Immersive window with status bar set up&#39;)
+    &#125; catch (expextion) &#123;
+      console.error(&quot;error cause :&quot; + JSON.stringify(expextion))
+    &#125;
+  &#125;)
+&#125;
+// The demo is implemented using API10, and the complete demo is as follows:
+import window1 from &#39;@ohos.window&#39;;
+import &#123; BusinessError &#125; from &#39;@ohos.base&#39;;
+import Stack from &#39;@ohos.util.Stack&#39;;
+
+
+class StatusBarColor &#123;
+  statusBarColor: string;
+  statusBarContentColor: string
+
+  constructor(statusBarColor: string, statusBarContentColor: string) &#123;
+    // Status bar background
+    this.statusBarColor = statusBarColor;
+    // Status bar content
+    this.statusBarContentColor = statusBarContentColor;
+  &#125;
+&#125;
+
+export class StatusBarUtils &#123;
+  static testNumber: number = 0;
+  private static barColor: Stack&lt;StatusBarColor&gt; = new Stack();
+
+  private static setBarColor(statusBarColor: StatusBarColor) &#123;
+    let mainWindow: window1.Window | undefined = AppStorage.get(&quot;mainWindow&quot;)
+    let sysBarProps: window1.SystemBarProperties = &#123;
+      statusBarColor: statusBarColor.statusBarColor,
+      statusBarContentColor: statusBarColor.statusBarContentColor,
+    &#125;;
+    mainWindow?.setWindowSystemBarProperties(sysBarProps, (err: BusinessError) =&gt; &#123;
+      let errCode: number = err.code;
+      if (errCode) &#123;
+        console.error(&#39;[StaticUtils] Failed to set the system bar properties. Cause: &#39; + JSON.stringify(err));
+        return;
+      &#125;
+      console.info(&#39;[StaticUtils] Succeeded in setting the system bar properties.&#39;);
+    &#125;);
+  &#125;
+
+  static pushStatusColor(statusBarColor: string, statusBarContentColor: string) &#123;
+    StatusBarUtils.barColor.push(new StatusBarColor(statusBarColor, statusBarContentColor))
+    StatusBarUtils.setBarColor(StatusBarUtils.barColor.peek());
+  &#125;
+
+  static popStatusColor() &#123;
+    if (!StatusBarUtils.barColor.isEmpty()) &#123;
+      StatusBarUtils.barColor.pop();
+      if (!StatusBarUtils.barColor.isEmpty()) &#123;
+        StatusBarUtils.setBarColor(StatusBarUtils.barColor.peek());
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-How-to-operate-the-same-object-in-multiple-taskpools-in-HarmonyOS"><a href="#3-How-to-operate-the-same-object-in-multiple-taskpools-in-HarmonyOS" class="headerlink" title="3. How to operate the same object in multiple taskpools in HarmonyOS?"></a>3. How to operate the same object in multiple taskpools in HarmonyOS?</h4><p>The goal here is to jointly operate a cache class in multiple taskpool threads and populate values into the cache class. Since taskpool is thread-isolated, the @sendable annotation is used. After using the @sendable annotation, it is found that certain types of fields cannot be serialized. What is the solution? Or if @sendable is not used, are there other ways to operate the same cache object in multiple threads?  </p>
+<p>Only SharedArrayBuffer sharing and @sendable are available, with no other methods.  </p>
+<h4 id="4-Issues-with-HarmonyOS-scroll-components"><a href="#4-Issues-with-HarmonyOS-scroll-components" class="headerlink" title="4. Issues with HarmonyOS scroll components?"></a>4. Issues with HarmonyOS scroll components?</h4><ol>
+<li><p>How to use the ontouch callback to handle the calculation of the y-axis offset distance for multiple fingers  </p>
+</li>
+<li><p>Why can’t a scroll nested in relative scroll? The relative contains 2 Row components, the first component is above the second component, and the second component has a height of 100%  </p>
+</li>
+<li><p>How to use the ontouch callback to handle the calculation of the y-axis offset for multiple fingers: The onActionUpdate method of the PanGesture event can be used to obtain the gesture offset and set the number of fingers triggering the swipe gesture. Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-basic-gestures-pangesture-0000001815767760#ZH-CN_TOPIC_0000001815767760__%E4%BA%8B%E4%BB%B6">https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ts-basic-gestures-pangesture-0000001815767760#ZH-CN_TOPIC_0000001815767760__%E4%BA%8B%E4%BB%B6</a><br>If the ontouch callback must be used for processing, record the y-axis coordinate when the finger presses and when the finger lifts, then subtract the two to obtain the y-axis offset. For multiple fingers, the position of each finger will be recorded, which can be obtained through the touches array of the TouchEvent object, where the order of fingers is determined by the order of touching the screen.  </p>
+</li>
+<li><p>The problem that the RelativeContainer component cannot scroll: Set the second sub-component in the RelativeContainer to use the first sub-component as an anchor and position it below the first sub-component, and set the height attribute of the RelativeContainer to auto. The reason why it does not scroll with two Row components is that the RelativeContainer component itself is rendered starting from the upper-left corner of the screen, and parts exceeding the upper-left corner will be invisible or not rendered, resulting in no scrolling. Therefore, if the RelativeContainer component itself is to be scrollable, the sub-component anchor must be determined as the component at the upper-left corner of the screen.  </p>
+</li>
+<li><p>No callback when the scrollTo animation ends.</p>
+</li>
+</ol>
+<h4 id="5-When-AppStorage-is-updated-in-HarmonyOS-using-it-in-a-mask-does-not-trigger-re-rendering"><a href="#5-When-AppStorage-is-updated-in-HarmonyOS-using-it-in-a-mask-does-not-trigger-re-rendering" class="headerlink" title="5. When AppStorage is updated in HarmonyOS, using it in a mask does not trigger re-rendering."></a>5. When AppStorage is updated in HarmonyOS, using it in a mask does not trigger re-rendering.</h4><p>When storage is updated, all components that use it will be updated. Therefore, the intention is to encapsulate a mask (overlay), reference the corresponding key, and open&#x2F;close the mask by toggling a switch (updating storage), but in fact, the update is not triggered.  </p>
+<p>All parameters of custom pop-ups do not support dynamic refresh. @Link and @Prop have different refresh mechanisms: @Link is equivalent to reference passing, and @State will directly notify @Link after an update. It is recommended to use @Link here.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41129-Daily-HarmonyOS-Next-Knowledge-Text-Filling-Parent-Control-Native-Array-Reception-JS-Logic-Execution-Issue-UIAbility-Context-Problem-Page-Navigation-Stack/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Text Filling Parent Control, Native Array Reception, JS Logic Execution Issue, UIAbility Context Problem, Page Navigation Stack
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/41127-Daily-HarmonyOS-Next-Knowledge-Web-Height-Adaptation-Variable-Declaration-Specifications-Animation-Cancellation-Signature-Files-and-Package-Size-Optimization-related/" rel="next" title="[Daily HarmonyOS Next Knowledge] Web Height Adaptation, Variable Declaration Specifications, Animation Cancellation, Signature Files, and Package Size Optimization-related">
+      [Daily HarmonyOS Next Knowledge] Web Height Adaptation, Variable Declaration Specifications, Animation Cancellation, Signature Files, and Package Size Optimization-related <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-userAgent-Identification-StatusBar-Color-Operating-the-Same-Object-in-taskpool-Scroll-Component"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] userAgent Identification, StatusBar Color, Operating the Same Object in taskpool, Scroll Component</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-What-values-can-be-obtained-by-HarmonyOS-window-navigator-userAgent-toLowerCase"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1. What values can be obtained by HarmonyOS window.navigator.userAgent.toLowerCase()?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-to-dynamically-set-the-font-color-in-the-StatusBar-in-HarmonyOS"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2. How to dynamically set the font color in the StatusBar in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-How-to-operate-the-same-object-in-multiple-taskpools-in-HarmonyOS"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3. How to operate the same object in multiple taskpools in HarmonyOS?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Issues-with-HarmonyOS-scroll-components"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4. Issues with HarmonyOS scroll components?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-When-AppStorage-is-updated-in-HarmonyOS-using-it-in-a-mask-does-not-trigger-re-rendering"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">5. When AppStorage is updated in HarmonyOS, using it in a mask does not trigger re-rendering.</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">285</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
