@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup1. Failed to import cardEmulation in HarmonyOS?Importing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/4926-Daily-HarmonyOS-Next-Knowledge-Importing-cardEmulation-Custom-Decorators-CallState-Status-Code-Order-KV-Configuration-Signature-File-Setup/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup1. Failed to import cardEmulation in HarmonyOS?Importing">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.26.png">
+<meta property="article:published_time" content="2025-06-29T03:02:33.000Z">
+<meta property="article:modified_time" content="2025-06-29T03:03:13.334Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.26.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/4926-Daily-HarmonyOS-Next-Knowledge-Importing-cardEmulation-Custom-Decorators-CallState-Status-Code-Order-KV-Configuration-Signature-File-Setup/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4926-Daily-HarmonyOS-Next-Knowledge-Importing-cardEmulation-Custom-Decorators-CallState-Status-Code-Order-KV-Configuration-Signature-File-Setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 11:02:33 / Modified: 11:03:13" itemprop="dateCreated datePublished" datetime="2025-06-29T11:02:33+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Importing-cardEmulation-Custom-Decorators-CallState-Status-Code-Order-KV-Configuration-Signature-File-Setup"><a href="#Daily-HarmonyOS-Next-Knowledge-Importing-cardEmulation-Custom-Decorators-CallState-Status-Code-Order-KV-Configuration-Signature-File-Setup" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup"></a>[Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup</h1><h2 id="1-Failed-to-import-cardEmulation-in-HarmonyOS"><a href="#1-Failed-to-import-cardEmulation-in-HarmonyOS" class="headerlink" title="1. Failed to import cardEmulation in HarmonyOS?"></a>1. Failed to import cardEmulation in HarmonyOS?</h2><p>Importing <code>cardEmulation</code> fails in the <code>index.ets</code> file of the entry module.  </p>
+<p><strong>Solution</strong>: Add the SystemCapability in <code>src/main/syscap.json</code> (create this file manually) with the following content:  </p>
+<pre><code class="language-json">&#123;
+  &quot;devices&quot;: &#123;
+    &quot;general&quot;: [
+      // Must match the device type in module.json5
+      &quot;phone&quot;
+    ]
+  &#125;,
+  &quot;development&quot;: &#123;
+    &quot;addedSysCaps&quot;: [
+      &quot;SystemCapability.Communication.NFC.CardEmulation&quot;
+    ]
+  &#125;
+&#125;
+</code></pre>
+<h2 id="2-How-to-use-custom-decorator-ClassDecorator"><a href="#2-How-to-use-custom-decorator-ClassDecorator" class="headerlink" title="2. How to use custom decorator ClassDecorator?"></a>2. How to use custom decorator ClassDecorator?</h2><p>ArkTS supports TypeScript decorator syntax prior to TS5.0. For decorator definitions and runtime behavior, refer to the TS official documentation: <a target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/decorators.html">https://www.typescriptlang.org/docs/handbook/decorators.html</a>. Note that if defining decorators in <code>.ets</code> files, they must comply with ArkTS syntax rules (e.g., no use of <code>any</code>).  </p>
+<p><strong>Simple examples for class, property, method, and parameter decorators</strong>:  </p>
+<pre><code class="language-typescript">function TestClassDecorator(target: Function) &#123;&#125;
+function TestMemberDecorator(target: testClass, memberName: String) &#123;&#125;
+function TestFunDecorator(target: testClass, propertyName: String, descriptor: PropertyDescriptor) &#123;&#125;
+function TestArgDecorator(target: Function, methodName: String, paramIndex: Number) &#123;&#125;
+
+@TestClassDecorator
+class testClass &#123;
+  @TestMemberDecorator
+  count: number = 123;
+
+  @TestFunDecorator
+  TestFun(@TestArgDecorator param: string) &#123;&#125;
+&#125;
+</code></pre>
+<h2 id="3-What-is-the-order-of-CallState-status-codes-when-a-user-makes-a-call-in-HarmonyOS"><a href="#3-What-is-the-order-of-CallState-status-codes-when-a-user-makes-a-call-in-HarmonyOS" class="headerlink" title="3. What is the order of CallState status codes when a user makes a call in HarmonyOS?"></a>3. What is the order of CallState status codes when a user makes a call in HarmonyOS?</h2><p>Status code changes for three scenarios when a user dials (outgoing call), including rejection, answer, or no answer:  </p>
+<ul>
+<li><strong>Active call rejected by the other party &#x2F; Caller hangs up during ringing</strong>: <code>2 -&gt; 0</code>  </li>
+<li><strong>Other party answers</strong>: <code>2 -&gt; 2</code> (status code remains <code>2</code> during ringing)</li>
+</ul>
+<h2 id="4-How-to-create-and-read-key-value-custom-configurations-in-HarmonyOS"><a href="#4-How-to-create-and-read-key-value-custom-configurations-in-HarmonyOS" class="headerlink" title="4. How to create and read key-value custom configurations in HarmonyOS?"></a>4. How to create and read key-value custom configurations in HarmonyOS?</h2><p>Requirement: Store key-value custom configurations accessible to all modules in the app directory, with values of flexible types (string, number, boolean). The goal is to read values directly by key without parsing the entire file.  </p>
+<h3 id="1-Create-a-JSON-file-under-resources-base-element-e-g-boolean-json"><a href="#1-Create-a-JSON-file-under-resources-base-element-e-g-boolean-json" class="headerlink" title="1. Create a JSON file under resources/base/element/ (e.g., boolean.json):"></a>1. Create a JSON file under <code>resources/base/element/</code> (e.g., <code>boolean.json</code>):</h3><pre><code class="language-json">&#123;
+  &quot;boolean&quot;: [
+    &#123;
+      &quot;name&quot;: &quot;module_desc&quot;,
+      &quot;value&quot;: true
+    &#125;,
+    &#123;
+      &quot;name&quot;: &quot;EntryAbility_desc&quot;,
+      &quot;value&quot;: false
+    &#125;,
+    &#123;
+      &quot;name&quot;: &quot;EntryAbility_label&quot;,
+      &quot;value&quot;: false
+    &#125;
+  ]
+&#125;
+</code></pre>
+<h3 id="2-Access-via-resource-management-API-getBoolean"><a href="#2-Access-via-resource-management-API-getBoolean" class="headerlink" title="2. Access via resource management API (getBoolean):"></a>2. Access via resource management API (<code>getBoolean</code>):</h3><pre><code class="language-typescript">import &#123; common &#125; from &#39;@kit.AbilityKit&#39;;
+
+@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;Hello World&#39;;
+  private context = getContext(this) as common.UIAbilityContext;
+
+  build() &#123;
+    RelativeContainer() &#123;
+      Text(this.message)
+        .id(&#39;HelloWorld&#39;)
+        .fontSize(50)
+        .fontWeight(FontWeight.Bold)
+        .onClick(() =&gt; &#123;
+          let aa: boolean = this.context.resourceManager.getBoolean($r(&#39;app.boolean.EntryAbility_desc&#39;).id);
+          console.log(&#39;lujun EntryAbility_desc value is &#39; + aa);
+        &#125;)
+        .alignRules(&#123;
+          center: &#123; anchor: &#39;__container__&#39;, align: VerticalAlign.Center &#125;,
+          middle: &#123; anchor: &#39;__container__&#39;, align: HorizontalAlign.Center &#125;
+        &#125;)
+    &#125;
+    .height(&#39;100%&#39;)
+    .width(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h2 id="5-Issue-Signature-file-not-supported-during-HarmonyOS-signing"><a href="#5-Issue-Signature-file-not-supported-during-HarmonyOS-signing" class="headerlink" title="5. Issue: Signature file not supported during HarmonyOS signing"></a>5. Issue: Signature file not supported during HarmonyOS signing</h2><p>Problem: When packaging a HarmonyOS app, a “signature file not supported” error occurs, even though the signature file was generated via commands.  </p>
+<h3 id="Scenario-description"><a href="#Scenario-description" class="headerlink" title="Scenario description:"></a>Scenario description:</h3><p>Generating a signature file with the command:  </p>
+<pre><code class="language-bash">keytool -genkeypair -alias &quot;zofund&quot; -keyalg EC -sigalg SHA256withECDSA -dname &quot;C=CN,O=zofund,OU=zofund,CN=zofund&quot;  -keystore /Users/lidaofu/DevEcoStudioProjects\debug.p12 -storetype pkcs12 -validity 9125 -storepass *** -keypass **** 
+</code></pre>
+<p><strong>Note</strong>: The profile for signing should be a <code>.p7b</code> file.  </p>
+<h3 id="Manual-signing-process"><a href="#Manual-signing-process" class="headerlink" title="Manual signing process:"></a>Manual signing process:</h3><ol>
+<li><strong>Generate a CSR file</strong>:<br>In the editor, go to <strong>Build</strong> &gt; <strong>Generate Key and CSR</strong>.  </li>
+<li>Select “Use existing p12” (or create a new one), fill in <code>Alias</code>, <code>Password</code>, etc., and remember the credentials.  </li>
+<li>Click <strong>Finish</strong> to complete CSR creation.</li>
+</ol>
+<h3 id="Apply-for-a-debug-signature-certificate"><a href="#Apply-for-a-debug-signature-certificate" class="headerlink" title="Apply for a debug signature certificate:"></a>Apply for a debug signature certificate:</h3><ol>
+<li>Log in to AppGallery Connect, go to <strong>Users &amp; Access</strong>.  </li>
+<li>In <strong>Certificate Management</strong> on the left, click <strong>Add Certificate</strong>, upload the generated CSR, and download the certificate for future use.  </li>
+<li>In <strong>Device Management</strong> on the left, add corresponding devices.</li>
+</ol>
+<h3 id="Apply-for-a-debug-profile"><a href="#Apply-for-a-debug-profile" class="headerlink" title="Apply for a debug profile:"></a>Apply for a debug profile:</h3><ol>
+<li>Log in to AppGallery Connect, go to <strong>My Projects</strong>.  </li>
+<li>Find the project, navigate to <strong>Manage HAP Provision Profile</strong>.  </li>
+<li>Manage the profile as needed.</li>
+</ol>
+<p><strong>Related documentation</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-debug-app-0000001914423098">https://developer.huawei.com/consumer/cn/doc/app/agc-help-debug-app-0000001914423098</a><br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.26.png"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4927-Daily-HarmonyOS-Next-Knowledge-Taro-Native-Layer-File-Width-Acquisition-Location-Change-Callbacks-Data-Migration-and-Explanation-of-oh-modules/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Taro, Native Layer File Width Acquisition, Location Change Callbacks, Data Migration, and Explanation of oh_modules">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Taro, Native Layer File Width Acquisition, Location Change Callbacks, Data Migration, and Explanation of oh_modules
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4925-Daily-HarmonyOS-Next-Knowledge-Advertising-ID-NFC-Mobile-Top-Up-CSS-Support-Syntax-PC-Emulator-Interaction-SO-Hot-Update-etc/" rel="next" title="[Daily HarmonyOS Next Knowledge] Advertising ID, NFC Mobile Top-Up, CSS Support Syntax, PC-Emulator Interaction, SO Hot Update, etc.">
+      [Daily HarmonyOS Next Knowledge] Advertising ID, NFC Mobile Top-Up, CSS Support Syntax, PC-Emulator Interaction, SO Hot Update, etc. <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Importing-cardEmulation-Custom-Decorators-CallState-Status-Code-Order-KV-Configuration-Signature-File-Setup"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Importing cardEmulation, Custom Decorators, CallState Status Code Order, KV Configuration, Signature File Setup</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Failed-to-import-cardEmulation-in-HarmonyOS"><span class="nav-number">1.1.</span> <span class="nav-text">1. Failed to import cardEmulation in HarmonyOS?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-How-to-use-custom-decorator-ClassDecorator"><span class="nav-number">1.2.</span> <span class="nav-text">2. How to use custom decorator ClassDecorator?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-What-is-the-order-of-CallState-status-codes-when-a-user-makes-a-call-in-HarmonyOS"><span class="nav-number">1.3.</span> <span class="nav-text">3. What is the order of CallState status codes when a user makes a call in HarmonyOS?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-How-to-create-and-read-key-value-custom-configurations-in-HarmonyOS"><span class="nav-number">1.4.</span> <span class="nav-text">4. How to create and read key-value custom configurations in HarmonyOS?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Create-a-JSON-file-under-resources-base-element-e-g-boolean-json"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. Create a JSON file under resources&#x2F;base&#x2F;element&#x2F; (e.g., boolean.json):</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Access-via-resource-management-API-getBoolean"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. Access via resource management API (getBoolean):</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Issue-Signature-file-not-supported-during-HarmonyOS-signing"><span class="nav-number">1.5.</span> <span class="nav-text">5. Issue: Signature file not supported during HarmonyOS signing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scenario-description"><span class="nav-number">1.5.1.</span> <span class="nav-text">Scenario description:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Manual-signing-process"><span class="nav-number">1.5.2.</span> <span class="nav-text">Manual signing process:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Apply-for-a-debug-signature-certificate"><span class="nav-number">1.5.3.</span> <span class="nav-text">Apply for a debug signature certificate:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Apply-for-a-debug-profile"><span class="nav-number">1.5.4.</span> <span class="nav-text">Apply for a debug profile:</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">300</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

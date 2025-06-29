@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations1. How to determine if a device">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/4929-Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations1. How to determine if a device">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29-1.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29-2.png">
+<meta property="article:published_time" content="2025-06-29T02:40:49.000Z">
+<meta property="article:modified_time" content="2025-06-29T02:42:06.959Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29-1.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/4929-Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4929-Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:40:49 / Modified: 10:42:06" itemprop="dateCreated datePublished" datetime="2025-06-29T10:40:49+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations"><a href="#Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations"></a>[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations</h1><h2 id="1-How-to-determine-if-a-device-supports-Bluetooth-Low-Energy-in-HarmonyOS-next"><a href="#1-How-to-determine-if-a-device-supports-Bluetooth-Low-Energy-in-HarmonyOS-next" class="headerlink" title="1. How to determine if a device supports Bluetooth Low Energy in HarmonyOS next?"></a>1. How to determine if a device supports Bluetooth Low Energy in HarmonyOS next?</h2><p>You can use <code>canIUse(&quot;SystemCapability.Communication.Bluetooth.Core&quot;)</code> to check support. For usage of <code>canIUse</code>, refer to the official documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-syscap-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-syscap-V5</a>  </p>
+<p>System Capability (SysCap) refers to each relatively independent feature in the operating system. Different devices correspond to different system capability sets, and each system capability maps to one or more APIs. Developers can judge whether an interface can be used based on system capabilities.  </p>
+<p><strong>canIUse(syscap: string): boolean</strong><br><strong>Parameters:</strong>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">syscap</td>
+<td align="left">string</td>
+<td align="left">Yes</td>
+<td align="left">Name of the system capability to query.</td>
+</tr>
+</tbody></table>
+<p><strong>Return Value:</strong>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">boolean</td>
+<td align="left">Query result of system capability. <code>true</code> indicates support; <code>false</code> indicates no support.</td>
+</tr>
+</tbody></table>
+<p><strong>Example</strong>  </p>
+<pre><code class="language-typescript">import &#123; geoLocationManager &#125; from &#39;@kit.LocationKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+const isLocationAvailable = canIUse(&#39;SystemCapability.Location.Location.Core&#39;);
+if (isLocationAvailable) &#123;
+  geoLocationManager.getCurrentLocation((err: BusinessError, location: geoLocationManager.Location) =&gt; &#123;
+      if (err) &#123;
+          console.error(&#39;err=&#39; + JSON.stringify(err));
+      &#125;
+      if (location) &#123;
+          console.log(&#39;location=&#39; + JSON.stringify(location));
+      &#125;
+  &#125;);
+&#125; else &#123;
+  console.log(&#39;Location not supported by this device.&#39;);
+&#125;
+</code></pre>
+<h2 id="2-Does-HarmonyOS-currently-support-fingerprint-authentication"><a href="#2-Does-HarmonyOS-currently-support-fingerprint-authentication" class="headerlink" title="2. Does HarmonyOS currently support fingerprint authentication?"></a>2. Does HarmonyOS currently support fingerprint authentication?</h2><p>Is there a corresponding capability to add fingerprint login based on account-password login?  </p>
+<p>Refer to the development guide for switching to custom authentication in User Authentication Kit: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/apply-custom-authentication-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/apply-custom-authentication-V5</a>  </p>
+<p>The unified user authentication framework provides a mechanism to switch to business-customized authentication. If device manufacturers have customized other authentication capabilities and connected them to the unified user authentication framework, application developers can switch to custom authentication methods.  </p>
+<p>For example, in payment scenarios, if a manufacturer has customized a payment password authentication method, users can choose to switch to payment password authentication after system face or fingerprint authentication fails.  </p>
+<p>Payment password authentication does not belong to system authentication capabilities. Therefore, when initiating authentication, the business needs to pass explicit information about navigation keys, such as “Use Payment Password”, so that the authentication interface shown to users includes a “Use Payment Password” button.  </p>
+<p>When the user clicks this button, the business application that initiated the authentication will receive a special authentication result from the unified user authentication framework, indicating that system authentication has ended, and the business needs to launch its custom authentication interface. Thus, after clicking “Use Payment Password”, the user will see the system authentication control disappear and the business-customized payment password authentication interface displayed.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29-1.png"> </p>
+<p>The Kit supports biometric authentication + business-customized authentication methods, with fingerprint + account-password authentication being one of them. Applications can also integrate embedded fingerprint authentication controls on the account authentication interface. See: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/user-auth-icon-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/user-auth-icon-V5</a><br>Mainly used to provide face and fingerprint authentication icons displayed in the application interface, with specific functions as follows:  </p>
+<ol>
+<li>Provides embedded face and fingerprint authentication control icons for application integration.  </li>
+<li>Supports customizing icon color and size, but the icon style cannot be changed.  </li>
+<li>Clicking the control icon can launch the system pop-up face or fingerprint authentication control.</li>
+</ol>
+<p>Currently supported authentication types for using authentication controls include:  </p>
+<ul>
+<li>Face authentication  </li>
+<li>Fingerprint authentication  </li>
+<li>Face + lock screen password authentication  </li>
+<li>Fingerprint + lock screen password authentication  </li>
+<li>Face + fingerprint + lock screen password authentication<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29.png"></li>
+</ul>
+<h2 id="3-HarmonyOS-raw-file-reading-reference-examples"><a href="#3-HarmonyOS-raw-file-reading-reference-examples" class="headerlink" title="3. HarmonyOS raw file reading reference examples?"></a>3. HarmonyOS raw file reading reference examples?</h2><pre><code class="language-typescript">// Read test text using getRawFileContent and print the content
+async loadFromRawFile(context: Context, rawFileName: string): void &#123;
+  let rawFileRes: Uint8Array = await context.resourceManager.getRawFileContent(rawFileName);
+  let bufferLike: ArrayBufferLike = rawFileRes.buffer;
+  let rawFileBuffer: ArrayBuffer = bufferLike.slice(0, bufferLike.byteLength);
+  log.info(&#39;loadFromRawFile: &#39; + rawFileBuffer.byteLength);
+  const decoder = util.TextDecoder.create(&#39;utf-8&#39;);
+  const str = decoder.decodeWithStream(new Uint8Array(rawFileBuffer));
+  log.info(&#39;loadFromRawFile &#39; + str);
+&#125;
+</code></pre>
+<pre><code class="language-typescript">loadRawFd(context: Context, rawFileName: string) &#123;
+  context.resourceManager.getRawFd(rawFileName, (err: BusinessError, value: resourceManager.RawFileDescriptor) =&gt; &#123;
+    let fd = value.fd;
+    let offset = value.offset;
+    let fdLength = value.length;
+    log.info(&#39;fd: &#39; + value.fd + &#39;, offset: &#39; + offset + &#39;, length: &#39; + fdLength);
+    let stream: fs.Stream = fs.fdopenStreamSync(fd, &#39;r&#39;);
+
+    let stringBuffer = new ArrayBuffer(128); // Default capacity of 128 bytes per read
+    let currentLength = 0; // Current read length
+    let readLength = 128; // Default read length of 128 bytes
+    while (currentLength &lt; fdLength) &#123;
+      readLength = (fdLength - currentLength &gt; 128) ? 128 : (fdLength - currentLength);
+      stringBuffer = new ArrayBuffer(readLength);
+      stream.readSync(stringBuffer, &#123; offset: offset + currentLength, length: readLength &#125;);
+      let decoder = util.TextDecoder.create(&#39;utf-8&#39;);
+      let str = decoder.decodeWithStream(new Uint8Array(stringBuffer));
+      log.info(str); // Parse to string and print log
+      currentLength += readLength; // Update read start position
+    &#125;
+
+    context.resourceManager.closeRawFdSync(rawFileName); // Close FD after reading
+    // fs.closeSync(fd); // Do not use this API; optimization guidance has been provided to R&amp;D.
+    stream.closeSync();
+  &#125;);
+&#125;
+</code></pre>
+<h2 id="4-Can-HarmonyOS-CommonEvents-work-across-threads"><a href="#4-Can-HarmonyOS-CommonEvents-work-across-threads" class="headerlink" title="4. Can HarmonyOS CommonEvents work across threads?"></a>4. Can HarmonyOS CommonEvents work across threads?</h2><p>For example, an SDK performs CPU-intensive operations and continuously sends events to the host module during execution to notify progress or other statuses. Essentially, the SDK is unaware of the external environment and executes tasks in a thread, needing to synchronize status to the outside during the process.  </p>
+<p>Common events support cross-thread operations. Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/common-event-overview-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/common-event-overview-V5</a>  </p>
+<p>Common Event Schematic:<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29-2.png"></p>
+<h2 id="5-Explanation-of-HarmonyOS-location-parameters"><a href="#5-Explanation-of-HarmonyOS-location-parameters" class="headerlink" title="5. Explanation of HarmonyOS location parameters?"></a>5. Explanation of HarmonyOS location parameters?</h2><ol>
+<li>When calling <code>geoLocationManager.getCurrentLocation(request?: CurrentLocationRequest)</code> to obtain location, the optional parameter <code>request</code> can configure <code>priority</code>, <code>scenario</code>, <code>maxAccuracy</code>, and <code>timeoutMs</code>. If <code>request</code> is not passed (i.e., directly calling <code>geoLocationManager.getCurrentLocation()</code>), what are the default values for these configurations?  </li>
+<li>Consult the meanings of parameters in the location change listening API:</li>
+</ol>
+<pre><code class="language-typescript">let requestInfo: geoLocationManager.LocationRequest = &#123;&#39;priority&#39;: geoLocationManager.LocationRequestPriority.FIRST_FIX, &#39;timeInterval&#39;: 0, &#39;distanceInterval&#39;: 0, &#39;maxAccuracy&#39;: 0&#125;;
+geoLocationManager.on(&#39;locationChange&#39;, requestInfo, locationChange);
+</code></pre>
+<ul>
+<li>What does <code>distanceInterval</code> mean? Does it trigger a callback when the position deviation between two updates exceeds <code>distanceInterval</code> meters?  </li>
+<li>What is the specific meaning of <code>maxAccuracy</code> as accuracy information?<br>The <code>provider</code> in the location callback information <code>additions</code> appears to be the location source. What values can <code>provider</code> have, and what do they mean?</li>
+</ul>
+<h3 id="Question-1"><a href="#Question-1" class="headerlink" title="Question 1:"></a>Question 1:</h3><p>For <code>priority</code>, <code>scenario</code>, <code>maxAccuracy</code>, etc., refer to:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5</a></li>
+</ul>
+<p>The default value for <code>timeoutMs</code> is currently 30 seconds.<br>If <code>request</code> is not passed, calling <code>geoLocationManager.getCurrentLocation()</code> uses default configurations, with <code>priority</code> set to <code>First_Fix</code>.  </p>
+<h3 id="Question-2"><a href="#Question-2" class="headerlink" title="Question 2:"></a>Question 2:</h3><ul>
+<li><code>distanceInterval</code>: Distance interval. A callback is triggered when the position deviation between two updates exceeds <code>distanceInterval</code> meters.  </li>
+<li><code>maxAccuracy</code>: Accuracy information, filtering and displaying coordinates within <code>maxAccuracy</code> meters from the center point.<br>The <code>provider</code> in the location callback information <code>additions</code> currently only provides the <code>network</code> type.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4930-Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4928-Daily-HarmonyOS-Next-Knowledge-UI-Automation-Tools-Low-Code-Platform-Capabilities-Method-for-Synchronously-Obtaining-Screen-Brightness-mbedtls-Library-Compilation-and-Issue-of-DevEco-Failing-to-Recognize-Mobile-Phones/" rel="next" title="[Daily HarmonyOS Next Knowledge] UI Automation Tools, Low-Code Platform Capabilities, Method for Synchronously Obtaining Screen Brightness, mbedtls Library Compilation, and Issue of DevEco Failing to Recognize Mobile Phones">
+      [Daily HarmonyOS Next Knowledge] UI Automation Tools, Low-Code Platform Capabilities, Method for Synchronously Obtaining Screen Brightness, mbedtls Library Compilation, and Issue of DevEco Failing to Recognize Mobile Phones <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-How-to-determine-if-a-device-supports-Bluetooth-Low-Energy-in-HarmonyOS-next"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to determine if a device supports Bluetooth Low Energy in HarmonyOS next?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Does-HarmonyOS-currently-support-fingerprint-authentication"><span class="nav-number">1.2.</span> <span class="nav-text">2. Does HarmonyOS currently support fingerprint authentication?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-HarmonyOS-raw-file-reading-reference-examples"><span class="nav-number">1.3.</span> <span class="nav-text">3. HarmonyOS raw file reading reference examples?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Can-HarmonyOS-CommonEvents-work-across-threads"><span class="nav-number">1.4.</span> <span class="nav-text">4. Can HarmonyOS CommonEvents work across threads?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Explanation-of-HarmonyOS-location-parameters"><span class="nav-number">1.5.</span> <span class="nav-text">5. Explanation of HarmonyOS location parameters?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Question-1"><span class="nav-number">1.5.1.</span> <span class="nav-text">Question 1:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Question-2"><span class="nav-number">1.5.2.</span> <span class="nav-text">Question 2:</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">300</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

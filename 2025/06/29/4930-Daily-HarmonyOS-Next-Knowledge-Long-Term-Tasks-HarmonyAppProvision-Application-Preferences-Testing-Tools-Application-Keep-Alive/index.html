@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive1. How does HarmonyOS solve the issue where voice chat and communic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/29/4930-Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive1. How does HarmonyOS solve the issue where voice chat and communic">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-29T02:39:22.000Z">
+<meta property="article:modified_time" content="2025-06-29T02:40:03.976Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/29/4930-Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4930-Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:39:22 / Modified: 10:40:03" itemprop="dateCreated datePublished" datetime="2025-06-29T10:39:22+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive"><a href="#Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive"></a>[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive</h1><h2 id="1-How-does-HarmonyOS-solve-the-issue-where-voice-chat-and-communication-apps-stop-system-collection-and-playback-callbacks-when-moved-to-the-background-and-fail-to-resume-when-returning-to-the-foreground"><a href="#1-How-does-HarmonyOS-solve-the-issue-where-voice-chat-and-communication-apps-stop-system-collection-and-playback-callbacks-when-moved-to-the-background-and-fail-to-resume-when-returning-to-the-foreground" class="headerlink" title="1. How does HarmonyOS solve the issue where voice chat and communication apps stop system collection and playback callbacks when moved to the background, and fail to resume when returning to the foreground?"></a>1. How does HarmonyOS solve the issue where voice chat and communication apps stop system collection and playback callbacks when moved to the background, and fail to resume when returning to the foreground?</h2><p>The reason why app callbacks for system collection and playback stop when the app is moved to the background is as follows: To reduce device power consumption and ensure smooth user experience, the system manages background apps by suspending processes (i.e., the system no longer allocates CPU resources to the app process, and corresponding public events are no longer sent to the app process) or terminating processes.  </p>
+<p>It is recommended to use <strong>long-term tasks</strong> in background task development services. Apply for a long-term task in the <code>onPageHide</code> lifecycle of the page and cancel it in <code>onPageShow</code>. You can use the <code>backgroundTaskManager.startBackgroundRunning</code> API to apply for a long-term task.  </p>
+<ul>
+<li>Refer to the demo in the guide, preferably the Stage model demo, which includes development instructions and precautions. Link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5</a>  </li>
+<li>API documentation for task application. Link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resourceschedule-backgroundtaskmanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resourceschedule-backgroundtaskmanager-V5</a></li>
+</ul>
+<h3 id="Stage-Model-Example-Code"><a href="#Stage-Model-Example-Code" class="headerlink" title="Stage Model Example Code:"></a>Stage Model Example Code:</h3><ol>
+<li><strong>Permission Application</strong>: Apply for the <code>ohos.permission.KEEP_BACKGROUND_RUNNING</code> permission. For configuration, refer to declaring permissions.  </li>
+<li><strong>Declare Background Mode Type</strong>: In the <code>module.json5</code> configuration file, declare the corresponding long-term task type for the UIAbility that needs to use long-term tasks (fill in the configuration item for the long-term task type in the configuration file).</li>
+</ol>
+<pre><code class="language-json">&quot;module&quot;: &#123;
+    &quot;abilities&quot;: [
+        &#123;
+            &quot;backgroundModes&quot;: [
+                // Configuration item for the long-term task type
+                &quot;audioRecording&quot;
+            ], 
+        &#125;
+    ],
+    ...
+&#125;
+</code></pre>
+<ol start="3">
+<li><strong>Import Modules</strong>: The modules related to long-term tasks are <code>@ohos.resourceschedule.backgroundTaskManager</code> and <code>@ohos.app.ability.wantAgent</code>, with other modules imported as needed.</li>
+</ol>
+<pre><code class="language-typescript">import backgroundTaskManager from &#39;@ohos.resourceschedule.backgroundTaskManager&#39;;
+import UIAbility from &#39;@ohos.app.ability.UIAbility&#39;;
+import window from &#39;@ohos.window&#39;;
+import AbilityConstant from &#39;@ohos.app.ability.AbilityConstant&#39;;
+import Want from &#39;@ohos.app.ability.Want&#39;;
+import rpc from &#39;@ohos.rpc&#39;;
+import &#123; BusinessError &#125; from &#39;@ohos.base&#39;;
+import wantAgent, &#123; WantAgent &#125; from &#39;@ohos.app.ability.wantAgent&#39;;
+</code></pre>
+<ol start="4">
+<li><strong>Apply and Cancel Long-Term Tasks</strong>:  <ul>
+<li>In the Stage model, long-term tasks support applications from the same device and app. Cross-device or cross-app applications are only open to system apps. Example code for applying for a long-term task from the <strong>same device and app</strong> is as follows:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;ContinuousTask&#39;;
+  // Get the UIAbility context of the page through the getContext method.
+  private context: Context = getContext(this);
+
+  startContinuousTask() &#123;
+    let wantAgentInfo: wantAgent.WantAgentInfo = &#123;
+      // List of actions to be executed after clicking the notification
+      // Add the bundleName and abilityName of the app to be launched
+      wants: [
+        &#123;
+          bundleName: &quot;com.example.myapplication&quot;,
+          abilityName: &quot;com.example.myapplication.MainAbility&quot;
+        &#125;
+      ],
+      // Specify that the action after clicking the notification is to launch the ability
+      actionType: wantAgent.OperationType.START_ABILITY,
+      // A private value defined by the user
+      requestCode: 0,
+      // Action execution attributes after clicking the notification
+      wantAgentFlags: [wantAgent.WantAgentFlags.UPDATE_PRESENT_FLAG]
+    &#125;;
+
+    // Get the WantAgent object through the getWantAgent method in the wantAgent module
+    wantAgent.getWantAgent(wantAgentInfo).then((wantAgentObj: WantAgent) =&gt; &#123;
+        backgroundTaskManager.startBackgroundRunning(this.context,
+          backgroundTaskManager.BackgroundMode.AUDIO_RECORDING, wantAgentObj).then(() =&gt; &#123;
+          console.info(`Succeeded in operationing startBackgroundRunning.`);
+        &#125;).catch((err: BusinessError) =&gt; &#123;
+          console.error(`Failed to operation startBackgroundRunning. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+        &#125;);
+     &#125;);
+   &#125;
+
+   stopContinuousTask() &#123;
+      backgroundTaskManager.stopBackgroundRunning(this.context).then(() =&gt; &#123;
+        console.info(`Succeeded in operationing stopBackgroundRunning.`);
+      &#125;).catch((err: BusinessError) =&gt; &#123;
+        console.error(`Failed to operation stopBackgroundRunning. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+      &#125;);
+   &#125;
+
+   build() &#123;
+     Row() &#123;
+       Column() &#123;
+         Text(&quot;Index&quot;)
+           .fontSize(50)
+           .fontWeight(FontWeight.Bold)
+
+        Button() &#123;
+           Text(&#39;Apply for Long-Term Task&#39;).fontSize(25).fontWeight(FontWeight.Bold)
+         &#125;
+         .type(ButtonType.Capsule)
+         .margin(&#123; top: 10 &#125;)
+         .backgroundColor(&#39;#0D9FFB&#39;)
+         .width(250)
+         .height(40)
+         .onClick(() =&gt; &#123;
+           // Apply for a long-term task via the button
+           this.startContinuousTask();
+
+           // Execute specific long-term task logic here, such as audio playback.
+         &#125;)
+
+         Button() &#123;
+           Text(&#39;Cancel Long-Term Task&#39;).fontSize(25).fontWeight(FontWeight.Bold)
+         &#125;
+         .type(ButtonType.Capsule)
+         .margin(&#123; top: 10 &#125;)
+         .backgroundColor(&#39;#0D9FFB&#39;)
+         .width(250)
+         .height(40)
+         .onClick(() =&gt; &#123;
+           // End the execution of the specific long-term task here
+
+           // Cancel the long-term task via the button
+           this.stopContinuousTask();
+         &#125;)
+       &#125;
+       .width(&#39;100%&#39;)
+     &#125;
+     .height(&#39;100%&#39;)
+   &#125;
+ &#125;    
+</code></pre>
+<h2 id="2-Why-does-applying-for-HarmonyAppProvision-information-still-result-in-permission-denial"><a href="#2-Why-does-applying-for-HarmonyAppProvision-information-still-result-in-permission-denial" class="headerlink" title="2. Why does applying for HarmonyAppProvision information still result in permission denial?"></a>2. Why does applying for HarmonyAppProvision information still result in permission denial?</h2><ul>
+<li>For steps to apply for restricted ACL permissions, refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-signing-0000001587684945#section157591551175916">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-signing-0000001587684945#section157591551175916</a>  </li>
+<li>Currently, some permissions support quick application through automatic signing: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-signing-V5#section9786111152213">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-signing-V5#section9786111152213</a>  </li>
+<li>Permissions marked with <code>ACL enabled: true</code> in the app permission list can be applied for through AppGallery Connect (AGC): <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/permissions-for-all-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/permissions-for-all-V5</a></li>
+</ul>
+<h2 id="3-What-storage-solution-is-recommended-when-the-data-stored-in-HarmonyOS-preferences-exceeds-the-maximum-length"><a href="#3-What-storage-solution-is-recommended-when-the-data-stored-in-HarmonyOS-preferences-exceeds-the-maximum-length" class="headerlink" title="3. What storage solution is recommended when the data stored in HarmonyOS preferences exceeds the maximum length?"></a>3. What storage solution is recommended when the data stored in HarmonyOS preferences exceeds the maximum length?</h2><p>Use a key-value database—<strong>single-version database</strong>—where the key length ≤ 1 KB and the value length &lt; 4 MB per record.<br>Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/data-persistence-by-kv-store-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/data-persistence-by-kv-store-V5</a>  </p>
+<h2 id="4-When-using-the-Deveco-Testing-tool-how-to-detect-the-power-consumption-status-of-APP-CPU-and-GPU-while-performing-APP-performance-testing"><a href="#4-When-using-the-Deveco-Testing-tool-how-to-detect-the-power-consumption-status-of-APP-CPU-and-GPU-while-performing-APP-performance-testing" class="headerlink" title="4. When using the Deveco Testing tool, how to detect the power consumption status of APP CPU and GPU while performing APP performance testing?"></a>4. When using the Deveco Testing tool, how to detect the power consumption status of APP CPU and GPU while performing APP performance testing?</h2><p>Currently, this can be detected through <strong>“Performance Power Consumption Testing&#x2F;Scenario-based Performance Testing”</strong>.  </p>
+<h2 id="5-Questions-about-HarmonyOS-application-keep-alive"><a href="#5-Questions-about-HarmonyOS-application-keep-alive" class="headerlink" title="5. Questions about HarmonyOS application keep-alive:"></a>5. Questions about HarmonyOS application keep-alive:</h2><ol>
+<li>Does an app need to apply for only one background task? For example, when an app is in the background on certain pages, does it need one background task for keep-alive, or does each page need a separate application?  </li>
+<li>What is the API for background keep-alive?</li>
+</ol>
+<h3 id="Answers"><a href="#Answers" class="headerlink" title="Answers:"></a>Answers:</h3><ol>
+<li>You can apply for one or multiple types of long-term tasks at the same time. For multi-type services, only the main business type needs to be applied for. As long as the main task exists, the app will not be frozen.  </li>
+<li>For background long-term tasks, refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5</a></li>
+</ol>
+<h3 id="Constraints-and-Limitations-for-Long-Term-Task-Application"><a href="#Constraints-and-Limitations-for-Long-Term-Task-Application" class="headerlink" title="Constraints and Limitations for Long-Term Task Application:"></a>Constraints and Limitations for Long-Term Task Application:</h3><ul>
+<li><strong>Application Restrictions</strong>: In the Stage model, long-term tasks are only supported by UIAbility; in the FA model, they are only supported by ServiceAbility.  </li>
+<li><strong>Quantity Restrictions</strong>: A UIAbility (ServiceAbility in the FA model) can only apply for one long-term task at a time, meaning a new task can only be applied for after the previous one ends. If an app needs to apply for multiple long-term tasks, multiple UIAbilities must be created. Once a UIAbility in an app applies for a long-term task, all processes under the app will not be suspended.  </li>
+<li><strong>Operation Restrictions</strong>: On mobile devices, the system performs long-term task validation:  <ul>
+<li><strong>Scenario 1</strong>: If an app applies for a long-term task but does not actually execute the task of the applied type or the task has ended, the system will manage the app. For example, if the system detects that an app has applied for <code>AUDIO_PLAYBACK</code> (audio&#x2F;video playback) but is not playing music, the long-term task will be canceled.  </li>
+<li><strong>Scenario 2</strong>: If an app executes a long-term task of a type it has not applied for, the system will manage the app. For example, if the system detects that an app has only applied for <code>AUDIO_PLAYBACK</code> but is also recording (corresponding to <code>AUDIO_RECORDING</code>), the app will be managed.  </li>
+<li><strong>Scenario 3</strong>: If the background load of the process running the long-term task continuously exceeds the typical load of the applied type, the system will manage the app.</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4101-Daily-HarmonyOS-Next-Knowledge-Charles-Packet-Capture-Lock-File-Handling-WebView-Component-NFC-Related-Issues-CallMethod-Failures/" rel="prev" title="[Daily HarmonyOS Next Knowledge] Charles Packet Capture, Lock File Handling, WebView Component, NFC-Related Issues, CallMethod Failures">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] Charles Packet Capture, Lock File Handling, WebView Component, NFC-Related Issues, CallMethod Failures
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/29/4929-Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations/" rel="next" title="[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations">
+      [Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive"><span class="nav-number">1.</span> <span class="nav-text">[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-How-does-HarmonyOS-solve-the-issue-where-voice-chat-and-communication-apps-stop-system-collection-and-playback-callbacks-when-moved-to-the-background-and-fail-to-resume-when-returning-to-the-foreground"><span class="nav-number">1.1.</span> <span class="nav-text">1. How does HarmonyOS solve the issue where voice chat and communication apps stop system collection and playback callbacks when moved to the background, and fail to resume when returning to the foreground?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage-Model-Example-Code"><span class="nav-number">1.1.1.</span> <span class="nav-text">Stage Model Example Code:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Why-does-applying-for-HarmonyAppProvision-information-still-result-in-permission-denial"><span class="nav-number">1.2.</span> <span class="nav-text">2. Why does applying for HarmonyAppProvision information still result in permission denial?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-What-storage-solution-is-recommended-when-the-data-stored-in-HarmonyOS-preferences-exceeds-the-maximum-length"><span class="nav-number">1.3.</span> <span class="nav-text">3. What storage solution is recommended when the data stored in HarmonyOS preferences exceeds the maximum length?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-When-using-the-Deveco-Testing-tool-how-to-detect-the-power-consumption-status-of-APP-CPU-and-GPU-while-performing-APP-performance-testing"><span class="nav-number">1.4.</span> <span class="nav-text">4. When using the Deveco Testing tool, how to detect the power consumption status of APP CPU and GPU while performing APP performance testing?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Questions-about-HarmonyOS-application-keep-alive"><span class="nav-number">1.5.</span> <span class="nav-text">5. Questions about HarmonyOS application keep-alive:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Answers"><span class="nav-number">1.5.1.</span> <span class="nav-text">Answers:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Constraints-and-Limitations-for-Long-Term-Task-Application"><span class="nav-number">1.5.2.</span> <span class="nav-text">Constraints and Limitations for Long-Term Task Application:</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">300</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
