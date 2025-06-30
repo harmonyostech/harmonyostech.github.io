@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Introduction to HarmonyOS Next Build Tool Lycium Principles![[HarmonyOS Next 构建工具 lycium 原理介绍.png]] Background IntroductionMany system APIs in HarmonyOS Next are provided as C++ interfaces. To use C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction to HarmonyOS Next Build Tool Lycium Principles">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-Introduction-to-HarmonyOS-Next-Build-Tool-Lycium-Principles/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="Introduction to HarmonyOS Next Build Tool Lycium Principles![[HarmonyOS Next 构建工具 lycium 原理介绍.png]] Background IntroductionMany system APIs in HarmonyOS Next are provided as C++ interfaces. To use C++">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7%20lycium%20%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D.png">
+<meta property="article:published_time" content="2025-06-30T14:01:45.000Z">
+<meta property="article:modified_time" content="2025-06-30T14:02:39.552Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7%20lycium%20%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-Introduction-to-HarmonyOS-Next-Build-Tool-Lycium-Principles/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Introduction to HarmonyOS Next Build Tool Lycium Principles | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-Introduction-to-HarmonyOS-Next-Build-Tool-Lycium-Principles/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction to HarmonyOS Next Build Tool Lycium Principles
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 22:01:45 / Modified: 22:02:39" itemprop="dateCreated datePublished" datetime="2025-06-30T22:01:45+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Introduction-to-HarmonyOS-Next-Build-Tool-Lycium-Principles"><a href="#Introduction-to-HarmonyOS-Next-Build-Tool-Lycium-Principles" class="headerlink" title="Introduction to HarmonyOS Next Build Tool Lycium Principles"></a>Introduction to HarmonyOS Next Build Tool Lycium Principles</h1><p>![[HarmonyOS Next 构建工具 lycium 原理介绍.png]]<br><img src="/../images/HarmonyOS%20Next%20%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7%20lycium%20%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D.png"></p>
+<h3 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h3><p>Many system APIs in HarmonyOS Next are provided as C++ interfaces. To use C++ interfaces, NAPI must be used for interaction between ArkTS and C++. In such scenarios, the cross-compilation tools integrated in DevEco-Studio and the CMake build tool are fully sufficient. However, for scenarios involving third-party library migration, such as FFmpeg and OpenSSL, configuring the compilation environment and scripts independently can be cumbersome. Key concerns during cross-compilation include: how to perform cross-compilation with different build methods, how to configure cross-compilation environments for different build platforms, how to configure different cross-compilation architectures, and how to test and verify artifacts after cross-compilation. Currently, open-source C&#x2F;C++ third-party libraries have diverse compilation methods, with the following mainstream cross-compilation approaches:  </p>
+<ul>
+<li>CMake build  </li>
+<li>Configure build  </li>
+<li>Make build</li>
+</ul>
+<p>The official cross-compilation tool Lycium helps quickly build third-party libraries.  </p>
+<h3 id="Introduction-to-Lycium-Tool"><a href="#Introduction-to-Lycium-Tool" class="headerlink" title="Introduction to Lycium Tool"></a>Introduction to Lycium Tool</h3><p>Lycium is a compilation framework tool that assists developers in achieving rapid cross-compilation of C&#x2F;C++ third-party libraries through shell scripts and quick verification on the OpenHarmony system. Developers only need to set the compilation method and parameters for the corresponding C&#x2F;C++ third-party library, and Lycium can quickly build binary files operable on the OpenHarmony system.  </p>
+<p>The construction principle of Lycium is that the transplantation process must not modify source code (i.e., no patching of C&#x2F;C++ files or build scripts). If patching is necessary for transplantation, it must undergo review with sufficient justification. (Business patches are not accepted.)  </p>
+<p>Lycium build tool address: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony-sig/tpc_c_cplusplus">https://gitee.com/openharmony-sig/tpc_c_cplusplus</a>  </p>
+<h3 id="Usage-Example"><a href="#Usage-Example" class="headerlink" title="Usage Example"></a>Usage Example</h3><ol>
+<li><strong>Compilation Environment Preparation</strong>: The Lycium framework supports third-party libraries with various build methods. To ensure normal compilation, the environment must include basic compilation commands: <code>gcc</code>, <code>cmake</code>, <code>make</code>, <code>pkg-config</code>, <code>autoconf</code>, <code>autoreconf</code>, <code>automake</code>. If any command is missing, download the corresponding toolset from the official website or install it via commands on the build machine. For example, install CMake on Ubuntu with: <code>sudo apt install cmake</code>.  </li>
+<li><strong>Modify Third-Party Library Compilation Methods and Parameters</strong>: The Lycium framework provides an HPKBUILD file for developers to configure compilation settings for corresponding C&#x2F;C++ third-party libraries. Specific steps:  <ul>
+<li>Create a new directory for the third-party library named <code>pkgname</code> under the <code>thirdparty</code> directory.  </li>
+<li>Copy the HPKBUILD template file to the new third-party library directory.  </li>
+<li>Modify the HPKBUILD template based on the actual situation of the third-party library, referring to the minizip co-construction for file modification.</li>
+</ul>
+</li>
+<li><strong>Quick Compilation of Third-Party Libraries</strong>: After configuring the compilation method parameters for the third-party library, execute <code>./build.sh pkgname</code> in the Lycium directory to automatically compile the library and package it into <code>usr/pkgname/ARCH/</code> in the current directory.  <ul>
+<li><code>ARCH</code> directory: <code>./build.sh</code> (compiles all libraries in the <code>thirdparty</code> directory by default).  </li>
+<li><code>./build.sh aaa bbb ccc ...</code> (compiles specified libraries <code>aaa</code>, <code>bbb</code>, <code>ccc</code>, etc., in the <code>thirdparty</code> directory; if <code>aaa</code> has dependencies, ensure they are included in the parameters, or <code>aaa</code> will not compile).</li>
+</ul>
+</li>
+</ol>
+<p><strong>The Lycium framework is written in Linux shell scripts</strong>. Next, we analyze the shell code of the build tool to understand the build process, which helps locate compilation failures.  </p>
+<h3 id="Introduction-to-Build-Script-Principles"><a href="#Introduction-to-Build-Script-Principles" class="headerlink" title="Introduction to Build Script Principles"></a>Introduction to Build Script Principles</h3><p>The Lycium framework mainly consists of the following components:  </p>
+<ol>
+<li>HPKBUILD build configuration  </li>
+<li>Top-level build script <code>build.sh</code>  </li>
+<li>Cross-compilation toolchain  </li>
+<li>Test verification environment</li>
+</ol>
+<h4 id="Build-Process"><a href="#Build-Process" class="headerlink" title="Build Process"></a>Build Process</h4><h5 id="1-Build-Configuration-Preparation"><a href="#1-Build-Configuration-Preparation" class="headerlink" title="1. Build Configuration Preparation"></a>1. Build Configuration Preparation</h5><p>Developers need to create a directory for the third-party library to be compiled under the <code>thirdparty</code> directory and write an HPKBUILD build configuration file. The HPKBUILD file defines:  </p>
+<ul>
+<li>Source code acquisition method  </li>
+<li>Compilation parameter configuration  </li>
+<li>Dependency declaration  </li>
+<li>Installation rules</li>
+</ul>
+<p>HPKBUILD build configuration file example:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br></pre></td><td class="code"><pre><span class="line"># Contributor: Jeff Han &lt;hanjinfei@foxmail.com&gt;</span><br><span class="line"># Maintainer: Jeff Han &lt;hanjinfei@foxmail.com&gt;</span><br><span class="line">pkgname=FFmpeg</span><br><span class="line">pkgver=n6.0</span><br><span class="line">pkgrel=0</span><br><span class="line">pkgdesc=&quot;FFmpeg is a collection of libraries and tools to process multimedia content such as audio, video, subtitles and related metadata.&quot;</span><br><span class="line">url=&quot;https://github.com/FFmpeg/FFmpeg/&quot;</span><br><span class="line">archs=(&quot;armeabi-v7a&quot; &quot;arm64-v8a&quot;)</span><br><span class="line">license=(&quot;GPL2&quot; &quot;GPL3&quot; &quot;LGPL3&quot; &quot;MIT&quot; &quot;X11&quot; &quot;BSD-styl&quot;)</span><br><span class="line">depends=(&quot;rtmpdump&quot; &quot;openssl_1_0_2u&quot;)</span><br><span class="line">makedepends=()</span><br><span class="line">source=&quot;https://github.com/FFmpeg/$pkgname/archive/refs/tags/$pkgver.tar.gz&quot;</span><br><span class="line"></span><br><span class="line">autounpack=false</span><br><span class="line">downloadpackage=true</span><br><span class="line">buildtools=&quot;configure&quot;</span><br><span class="line"></span><br><span class="line">builddir=$pkgname-$&#123;pkgver&#125;</span><br><span class="line">packagename=$builddir.tar.gz</span><br><span class="line">source envset.sh</span><br><span class="line">buildhost=true</span><br><span class="line">arch=</span><br><span class="line">ldflags=</span><br><span class="line"></span><br><span class="line">prepare() &#123;</span><br><span class="line">    if [ &quot;$LYCIUM_BUILD_OS&quot; == &quot;Linux&quot; ]</span><br><span class="line">    then</span><br><span class="line">        hostosname=linux</span><br><span class="line">    elif [ &quot;$LYCIUM_BUILD_OS&quot; == &quot;Darwi&quot; ]</span><br><span class="line">    then</span><br><span class="line">        hostosname=darwin</span><br><span class="line">    else</span><br><span class="line">        echo &quot;System cannot recognize, exiting&quot;</span><br><span class="line">        return -1</span><br><span class="line">    fi</span><br><span class="line">    if [ $buildhost == true ]</span><br><span class="line">    then</span><br><span class="line">        tar -zxf $packagename</span><br><span class="line">        cd $builddir</span><br><span class="line">        ./configure --enable-static --enable-shared --disable-doc --disable-htmlpages \</span><br><span class="line">            --target-os=$hostosname --disable-optimizations --prefix=`pwd`/hostbuild &gt; $publicbuildlog 2&gt;&amp;1</span><br><span class="line">        $MAKE &gt;&gt; $publicbuildlog 2&gt;&amp;1</span><br><span class="line">        $MAKE install &gt;&gt; $publicbuildlog 2&gt;&amp;1</span><br><span class="line">        export LD_LIBRARY_PATH=`pwd`/hostbuild/lib:$LD_LIBRARY_PATH</span><br><span class="line">        sed -i.bak &#x27;s/include $(SRC_PATH)\/tests\/fate\/source.mak/#include $(SRC_PATH)\/tests\/fate\/source.mak/g&#x27; tests/Makefile</span><br><span class="line">        $MAKE check &gt;&gt; $publicbuildlog 2&gt;&amp;1</span><br><span class="line">        ret=$?</span><br><span class="line">        buildhost=false</span><br><span class="line">        cd $OLDPWD</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    mkdir $pkgname-$ARCH-build</span><br><span class="line">    tar -zxf $packagename -C $pkgname-$ARCH-build</span><br><span class="line">    cd  $pkgname-$ARCH-build/$builddir</span><br><span class="line">    patch -p1 &lt; ../../FFmpeg_oh_test.patch</span><br><span class="line">    cd $OLDPWD</span><br><span class="line"></span><br><span class="line">    if [ $ARCH == &quot;armeabi-v7a&quot; ]</span><br><span class="line">    then</span><br><span class="line">        setarm32ENV</span><br><span class="line">        arch=arm</span><br><span class="line">        ldflags=&quot;-L$&#123;OHOS_SDK&#125;/native/sysroot/usr/lib/arm-linux-ohos&quot;</span><br><span class="line">    elif [ $ARCH == &quot;arm64-v8a&quot; ]</span><br><span class="line">    then</span><br><span class="line">        setarm64ENV</span><br><span class="line">        arch=aarch64</span><br><span class="line">        ldflags=&quot;-L$&#123;OHOS_SDK&#125;/native/sysroot/usr/lib/aarch64-linux-ohos&quot;</span><br><span class="line">    else</span><br><span class="line">        echo &quot;$&#123;ARCH&#125; not support&quot;</span><br><span class="line">        return -1</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    return $ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">build() &#123;</span><br><span class="line">    cd $pkgname-$ARCH-build/$builddir</span><br><span class="line">    PKG_CONFIG_LIBDIR=&quot;$&#123;pkgconfigpath&#125;&quot; ./configure &quot;$@&quot; --enable-neon --enable-asm --enable-network \</span><br><span class="line">    --disable-vulkan --enable-cross-compile --enable-librtmp --disable-x86asm --enable-openssl --enable-protocols \</span><br><span class="line">    --enable-static --enable-shared --disable-doc --disable-htmlpages --target-os=linux --arch=$arch \</span><br><span class="line">    --cc=$&#123;CC&#125; --ld=$&#123;CC&#125; --strip=$&#123;STRIP&#125; --host-cc=&quot;$&#123;CC&#125;&quot; --host-ld=&quot;$&#123;CC&#125;&quot; --host-os=linux \</span><br><span class="line">    --host-ldflags=$&#123;ldflags&#125; --sysroot=$&#123;OHOS_SDK&#125;/native/sysroot &gt; $buildlog 2&gt;&amp;1</span><br><span class="line">    $MAKE &gt;&gt; $buildlog 2&gt;&amp;1</span><br><span class="line">    ret=$?</span><br><span class="line">    cd $OLDPWD</span><br><span class="line">    return $ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">package() &#123;</span><br><span class="line">    cd $pkgname-$ARCH-build/$builddir</span><br><span class="line">    $MAKE install &gt;&gt; $buildlog 2&gt;&amp;1</span><br><span class="line">    cd $OLDPWD</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">checktestfiles() &#123;</span><br><span class="line">    cd $pkgname-$ARCH-build/$builddir/tests/ref</span><br><span class="line"></span><br><span class="line">    tmpdir=(&quot;fate&quot; &quot;acodec&quot; &quot;lavf&quot; &quot;lavf-fate&quot; &quot;pixfmt&quot; &quot;seek&quot; &quot;vsynth&quot;)</span><br><span class="line">    for dir in $&#123;tmpdir[*]&#125;</span><br><span class="line">    do</span><br><span class="line">        for file in `ls $dir`</span><br><span class="line">        do</span><br><span class="line">            if [ ! -f $dir/$file ]; then</span><br><span class="line">                continue</span><br><span class="line">            fi</span><br><span class="line">            str=`cat $dir/$file | grep &quot;\*tests&quot;`</span><br><span class="line">            if [ ! -z &quot;$str&quot; ]</span><br><span class="line">            then</span><br><span class="line">                sed -i.bak &#x27;s/\*tests/tests/g&#x27; $dir/$file</span><br><span class="line">            fi</span><br><span class="line">        done</span><br><span class="line">    done</span><br><span class="line"></span><br><span class="line">    cd $OLDPWD</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">copyhostbin() &#123;</span><br><span class="line">    file=$1</span><br><span class="line">    if [[ -f tests/$file ]] &amp;&amp; [[ ! -f tests/$file.$&#123;ARCH&#125; ]]</span><br><span class="line">    then</span><br><span class="line">        mv tests/$file tests/$file.$&#123;ARCH&#125;</span><br><span class="line">        cp ../../$builddir/tests/$file tests/$file</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">check() &#123;</span><br><span class="line">    cd $pkgname-$ARCH-build/$builddir</span><br><span class="line">    # disable running cmd</span><br><span class="line">    sed -i.bak &#x27;s/	$(Q)$(SRC_PATH)\/tests\/fate-run.sh/#	$(Q)$(SRC_PATH)\/tests\/fate-run.sh/g&#x27; tests/Makefile</span><br><span class="line">    # disable check git sources</span><br><span class="line">    sed -i.bak &#x27;s/include $(SRC_PATH)\/tests\/fate\/source.mak/#include $(SRC_PATH)\/tests\/fate\/source.mak/g&#x27; tests/Makefile</span><br><span class="line">    # disable check ffprobe,this use xmllint command, which ohos is not support</span><br><span class="line">    sed -i.bak &#x27;s/include $(SRC_PATH)\/tests\/fate\/ffprobe.mak/#include $(SRC_PATH)\/tests\/fate\/ffprobe.mak/g&#x27; tests/Makefile</span><br><span class="line"></span><br><span class="line">    # change x86 cmd for generate test target</span><br><span class="line">    mv ffmpeg ffmpeg.$&#123;ARCH&#125;</span><br><span class="line">    cp ../../$builddir/ffmpeg ./</span><br><span class="line">    retrytimes=0</span><br><span class="line">    ret=0</span><br><span class="line">    while true</span><br><span class="line">    do</span><br><span class="line">        $MAKE check &gt;&gt; $buildlog 2&gt;&amp;1</span><br><span class="line">        if [ $? -eq 0 ]</span><br><span class="line">        then</span><br><span class="line">            break;</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">        copyhostbin base64</span><br><span class="line">        copyhostbin audiomatch</span><br><span class="line">        copyhostbin audiogen</span><br><span class="line">        copyhostbin videogen</span><br><span class="line">        copyhostbin tiny_psnr</span><br><span class="line">        copyhostbin tiny_ssim</span><br><span class="line">        copyhostbin rotozoom</span><br><span class="line"></span><br><span class="line">        let retrytimes=$retrytimes+1</span><br><span class="line">        if [ $retrytimes -gt 4 ]</span><br><span class="line">        then</span><br><span class="line">            ret=1</span><br><span class="line">            break</span><br><span class="line">        fi</span><br><span class="line">    done</span><br><span class="line"></span><br><span class="line">    mv ffmpeg.$&#123;ARCH&#125; ffmpeg</span><br><span class="line">    for file in `ls tests/*.$&#123;ARCH&#125;`</span><br><span class="line">    do</span><br><span class="line">        tmpfile=$&#123;file%.*&#125;</span><br><span class="line">        mv $file $tmpfile</span><br><span class="line">    done</span><br><span class="line"></span><br><span class="line">    # reduction running cmd for real test</span><br><span class="line">    sed -i.bak &#x27;s/#	$(Q)$(SRC_PATH)\/tests\/fate-run.sh/	$(Q)$(SRC_PATH)\/tests\/fate-run.sh/g&#x27; tests/Makefile</span><br><span class="line">    cd $OLDPWD</span><br><span class="line">    checktestfiles</span><br><span class="line"></span><br><span class="line">    echo &quot;The test must be on an OpenHarmony device!&quot;</span><br><span class="line">    # skip running test on host</span><br><span class="line">    # real test CMD</span><br><span class="line">    # make check</span><br><span class="line"></span><br><span class="line">    return $ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">recoverpkgbuildenv() &#123;</span><br><span class="line">    unset arch</span><br><span class="line">    unset ldflags</span><br><span class="line">    if [ $ARCH == &quot;armeabi-v7a&quot; ]</span><br><span class="line">    then</span><br><span class="line">        unsetarm32ENV</span><br><span class="line">    elif [ $ARCH == &quot;arm64-v8a&quot; ]</span><br><span class="line">    then</span><br><span class="line">        unsetarm64ENV</span><br><span class="line">    else</span><br><span class="line">        echo &quot;$&#123;ARCH&#125; not support&quot;</span><br><span class="line">        return -1</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 清理环境</span><br><span class="line">cleanbuild() &#123;</span><br><span class="line">    rm -rf $&#123;PWD&#125;/$&#123;builddir&#125; $&#123;PWD&#125;/$pkgname-arm64-v8a-build $&#123;PWD&#125;/$pkgname-armeabi-v7a-build #$&#123;PWD&#125;/$packagename</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">##### 2. Build Process  </span><br><span class="line">The main entry `build.sh` script executes the following steps:  </span><br><span class="line">1. Parse command-line parameters to determine the target library to compile.  </span><br><span class="line">2. Check the compilation environment (compilation toolchain, etc.).  </span><br><span class="line">3. Read the HPKBUILD configuration of the target library.  </span><br><span class="line">4. Compile each library in the order of dependencies.  </span><br><span class="line">5. For each library, execute:  </span><br><span class="line">   - Acquire source code  </span><br><span class="line">   - Configure compilation parameters  </span><br><span class="line">   - Perform compilation  </span><br><span class="line">   - Install to the specified directory  </span><br><span class="line"></span><br><span class="line">Compilation environment check code:  </span><br></pre></td></tr></table></figure>
+<h1 id="检测操作系统类型"><a href="#检测操作系统类型" class="headerlink" title="检测操作系统类型"></a>检测操作系统类型</h1><p>unames&#x3D;<code>uname -s</code><br>osname&#x3D;${unames:0:5}</p>
+<h1 id="设置根目录"><a href="#设置根目录" class="headerlink" title="设置根目录"></a>设置根目录</h1><p>LYCIUM_ROOT&#x3D;$(cd $(dirname ${BASH_SOURCE[0]}); pwd)</p>
+<h1 id="检查-OHOS-SDK-环境"><a href="#检查-OHOS-SDK-环境" class="headerlink" title="检查 OHOS_SDK 环境"></a>检查 OHOS_SDK 环境</h1><p>if [ -z ${OHOS_SDK} ]<br>then<br>    echo “OHOS_SDK 未设置…”<br>    exit 1<br>fi</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Dependency management check:  </span><br></pre></td></tr></table></figure>
+<h1 id="依赖库暂存文件"><a href="#依赖库暂存文件" class="headerlink" title="依赖库暂存文件"></a>依赖库暂存文件</h1><p>depend_tmp_file&#x3D;”&#x2F;tmp&#x2F;$USER-lycium_deps-$build_time”<br>export LYCIUM_DEPEND_PKGNAMES&#x3D;$depend_tmp_file</p>
+<h1 id="已完成库列表"><a href="#已完成库列表" class="headerlink" title="已完成库列表"></a>已完成库列表</h1><p>donelist&#x3D;()<br>donelibs&#x3D;()</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">The core function `buildhpk()` implements build process control:  </span><br><span class="line">1. Execute tasks in rounds.  </span><br><span class="line">2. Handle dependency relationships.  </span><br><span class="line">3. Implement error handling mechanisms.  </span><br><span class="line"></span><br><span class="line">Main variables:  </span><br><span class="line">- `nextroundlist`: Next round of tasks to build  </span><br><span class="line">- `notdonelist`: List of incomplete tasks  </span><br><span class="line">- `buildfalselist`: List of build failures  </span><br><span class="line"></span><br><span class="line">Key function descriptions:  </span><br><span class="line">- `checkbuildenv()`: Check if necessary build tools (e.g., `gcc`, `cmake`, `make`, `autoconf`, `automake`, `git`, `curl`) are installed.  </span><br><span class="line">- `prepareshell()`: Prepare necessary scripts for each build directory (e.g., `build_hpk.sh` for project building, `envset.sh` for environment setup).  </span><br><span class="line">- `makelibsdir()`: Manage build directories (check validity, filter built projects, and add to the build queue).  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### 3. Cross-Compilation Support  </span><br><span class="line">The framework achieves cross-compilation through:  </span><br><span class="line">1. Using the cross-compilation toolchain provided by the OpenHarmony NDK.  </span><br><span class="line">2. Configuring cross-compilation parameters in HPKBUILD.  </span><br><span class="line">3. Supporting multi-architecture compilation (arm32/arm64/x86, etc.).  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### 4. Artifact Output  </span><br><span class="line">Compilation artifacts are organized as follows:  </span><br></pre></td></tr></table></figure>
+<p>usr&#x2F;<br>  └── ${pkgname}&#x2F;<br>       └── ${ARCH}&#x2F;<br>            ├── lib&#x2F;      # Library files<br>            ├── include&#x2F;  # Header files<br>            └── bin&#x2F;      # Executable files</p>
+<pre><code>
+
+#### build_hpk.sh Build Script Description  
+Core build function descriptions:  
+##### 1. `prepare()`: Prepare the build environment (host build when `buildhost=true`), extract the source package, apply patches, and set up the cross-compilation environment.  
+##### 2. `build()`: Execute the build process (configure build parameters, run `configure`, execute `make`, and return build results).  
+##### 3. `package()`: Install and package (run `make install` and generate the final installation package).  
+##### 4. `check()`: Test and verify (modify test configurations, prepare the test environment, execute test cases, and process results).  
+##### 5. Environment management functions:  
+   - `recoverpkgbuildenv()`: Clean up compilation environment variables and restore the original environment.  
+   - `cleanbuild()`: Clean up build directories and delete temporary files.  
+
+
+### Summary  
+This article introduces the functionality, usage, and principles of the HarmonyOS Next cross-platform build script, as well as the related shell code of the build script.
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-Floating-Window-Implementation-for-Call-Effect-in-HarmonyOS-Next/" rel="prev" title="Floating Window Implementation for Call Effect in HarmonyOS Next">
+      <i class="fa fa-chevron-left"></i> Floating Window Implementation for Call Effect in HarmonyOS Next
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-Mastering-HarmonyOS-Next-Logging-Knowledge/" rel="next" title="Mastering HarmonyOS Next Logging Knowledge">
+      Mastering HarmonyOS Next Logging Knowledge <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction-to-HarmonyOS-Next-Build-Tool-Lycium-Principles"><span class="nav-number">1.</span> <span class="nav-text">Introduction to HarmonyOS Next Build Tool Lycium Principles</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-Introduction"><span class="nav-number">1.0.1.</span> <span class="nav-text">Background Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-Lycium-Tool"><span class="nav-number">1.0.2.</span> <span class="nav-text">Introduction to Lycium Tool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Usage-Example"><span class="nav-number">1.0.3.</span> <span class="nav-text">Usage Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-Build-Script-Principles"><span class="nav-number">1.0.4.</span> <span class="nav-text">Introduction to Build Script Principles</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Build-Process"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">Build Process</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-Build-Configuration-Preparation"><span class="nav-number">1.0.4.1.1.</span> <span class="nav-text">1. Build Configuration Preparation</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">检测操作系统类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%A0%B9%E7%9B%AE%E5%BD%95"><span class="nav-number">3.</span> <span class="nav-text">设置根目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5-OHOS-SDK-%E7%8E%AF%E5%A2%83"><span class="nav-number">4.</span> <span class="nav-text">检查 OHOS_SDK 环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%BA%93%E6%9A%82%E5%AD%98%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">依赖库暂存文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%B2%E5%AE%8C%E6%88%90%E5%BA%93%E5%88%97%E8%A1%A8"><span class="nav-number">6.</span> <span class="nav-text">已完成库列表</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">353</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

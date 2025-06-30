@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS Native Intelligence: Face Detection PracticeBackgroundMany scenarios in our company require face detection and recognition functions. Our image team has developed self-research models for fa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS Native Intelligence: Face Detection Practice">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Native-Intelligence-Face-Detection-Practice/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS Native Intelligence: Face Detection PracticeBackgroundMany scenarios in our company require face detection and recognition functions. Our image team has developed self-research models for fa">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-30T13:56:03.000Z">
+<meta property="article:modified_time" content="2025-06-30T13:56:55.094Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Native-Intelligence-Face-Detection-Practice/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS Native Intelligence: Face Detection Practice | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Native-Intelligence-Face-Detection-Practice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS Native Intelligence: Face Detection Practice
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 21:56:03 / Modified: 21:56:55" itemprop="dateCreated datePublished" datetime="2025-06-30T21:56:03+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-Native-Intelligence-Face-Detection-Practice"><a href="#HarmonyOS-Native-Intelligence-Face-Detection-Practice" class="headerlink" title="HarmonyOS Native Intelligence: Face Detection Practice"></a>HarmonyOS Native Intelligence: Face Detection Practice</h1><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Many scenarios in our company require face detection and recognition functions. Our image team has developed self-research models for face recognition and detection, where face recognition and pose recognition run on mobile devices, leveraging the TensorFlow engine for inference. After detecting a face, the data is sent to the server for face matching. Special scenarios like empty room detection also apply image technologies. Although HarmonyOS provides face detection interfaces, aligning with the effects on Android and iOS requires running self-developed models.  </p>
+<p>The initial approach to run local models was to compile the open-source TensorFlow Lite inference engine into a HarmonyOS version and load existing models for inference. This requires compiling the TFLite open-source C++ library for HarmonyOS. Additionally, TFLite on Android supports GPU acceleration through Android’s GPU inference APIs, but HarmonyOS currently lacks such adaptation and has no announced plans. Relying solely on CPU may result in poor performance.  </p>
+<p>Later, we discovered that HarmonyOS’ official edge AI framework, MindSpore Lite, supports inference with converted TFLite models. MindSpore Lite is a lightweight, high-performance edge AI engine that provides standard model inference and training interfaces, built-in high-performance operator libraries for general hardware, and native support for Neural Network Runtime Kit (NNRT) to enable AI-dedicated chip acceleration for inference, facilitating the creation of full-scenario intelligent applications.  </p>
+<p>This article introduces practical face detection inference using MindSpore Lite for TFLite models.  </p>
+<h3 id="Model-Conversion"><a href="#Model-Conversion" class="headerlink" title="Model Conversion"></a>Model Conversion</h3><p>MindSpore Lite uses .ms format models for inference. For third-party framework models like TensorFlow, TensorFlow Lite, Caffe, and ONNX, MindSpore Lite’s model conversion tools can convert them to .ms models. Thus, we first convert the TFLite model to .ms. For demonstration, we use the open-source face detection model from Google MediaPipe.  </p>
+<p>First, install the model conversion tool (also obtainable via source code compilation; here, we use the ready-made tool):  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Component</th>
+<th align="left">Hardware Platform</th>
+<th align="left">OS</th>
+<th align="left">Link</th>
+<th align="left">SHA-256</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Edge Inference &amp; Training Benchmark Tool, Converter Tool, Cropper Tool</td>
+<td align="left">CPU</td>
+<td align="left">Linux-x86_64</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://ms-release.obs.cn-north-4.myhuaweicloud.com/2.1.0/MindSpore/lite/release/linux/x86_64/mindspore-lite-2.1.0-linux-x64.tar.gz">mindspore-lite-2.1.0-linux-x64.tar.gz</a></td>
+<td align="left">b267e5726720329200389e47a178c4f882bf526833b714ba6e630c8e2920fe89</td>
+</tr>
+</tbody></table>
+<p>MindSpore Lite’s model conversion tool offers various parameter settings. Run <code>./converter_lite --help</code> to get command parameters. Convert the TFLite model to .ms using:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. ./converter_lite --fmk=TFLITE --modelFile=facedetech.tflite --outputFile=facedetech</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### Model Deployment and Inference  </span><br><span class="line">HarmonyOS MindSpore Lite inference engine provides C++ and ArkTS APIs. Here, we use C++ interfaces to demonstrate model deployment.  </span><br><span class="line"></span><br><span class="line">First, create the context environment:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Create and configure context, set runtime thread count to 2 with big-core priority binding<br>OH_AI_ContextHandle context &#x3D; OH_AI_ContextCreate();<br>if (context &#x3D;&#x3D; NULL) {<br>  printf(“OH_AI_ContextCreate failed.\n”);<br>  return OH_AI_STATUS_LITE_ERROR;<br>}<br>&#x2F;&#x2F; Prioritize NNRT inference.<br>&#x2F;&#x2F; Use the first found NNRT hardware of type ACCELERATORS to create device info with high-performance mode.<br>&#x2F;&#x2F; Alternatively, use OH_AI_GetAllNNRTDeviceDescs() to get all NNRT hardware descriptions and select by name&#x2F;type.<br>OH_AI_DeviceInfoHandle nnrt_device_info &#x3D; OH_AI_CreateNNRTDeviceInfoByType(OH_AI_NNRTDEVICE_ACCELERATOR);<br>if (nnrt_device_info &#x3D;&#x3D; NULL) {<br>  printf(“OH_AI_DeviceInfoCreate failed.\n”);<br>  OH_AI_ContextDestroy(&amp;context);<br>  return OH_AI_STATUS_LITE_ERROR;<br>}<br>OH_AI_DeviceInfoSetPerformanceMode(nnrt_device_info, OH_AI_PERFORMANCE_HIGH);<br>OH_AI_ContextAddDeviceInfo(context, nnrt_device_info);</p>
+<p>&#x2F;&#x2F; Then set up CPU inference.<br>OH_AI_DeviceInfoHandle cpu_device_info &#x3D; OH_AI_DeviceInfoCreate(OH_AI_DEVICETYPE_CPU);<br>if (cpu_device_info &#x3D;&#x3D; NULL) {<br>  printf(“OH_AI_DeviceInfoCreate failed.\n”);<br>  OH_AI_ContextDestroy(&amp;context);<br>  return OH_AI_STATUS_LITE_ERROR;<br>}<br>OH_AI_ContextAddDeviceInfo(context, cpu_device_info);</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">This creates a heterogeneous inference context for NNRT (Neural Network Runtime) and CPU. NNRT interfaces with acceleration hardware like NPU for strong inference but limited operator support; CPU offers weaker inference but broader operator coverage. MindSpore Lite supports heterogeneous inference: operators are scheduled to NNRT first, and unsupported ones fall back to CPU.  </span><br><span class="line"></span><br><span class="line">Next, create and load the model:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Create model<br>OH_AI_ModelHandle model &#x3D; OH_AI_ModelCreate();<br>if (model &#x3D;&#x3D; NULL) {<br>  printf(“OH_AI_ModelCreate failed.\n”);<br>  OH_AI_ContextDestroy(&amp;context);<br>  return OH_AI_STATUS_LITE_ERROR;<br>}</p>
+<p>&#x2F;&#x2F; Load and compile model (model type: OH_AI_MODELTYPE_MINDIR)<br>int ret &#x3D; OH_AI_ModelBuildFromFile(model, argv[1], OH_AI_MODELTYPE_MINDIR, context);<br>if (ret !&#x3D; OH_AI_STATUS_SUCCESS) {<br>  printf(“OH_AI_ModelBuildFromFile failed, ret: %d.\n”, ret);<br>  OH_AI_ModelDestroy(&amp;model);<br>  return ret;<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Load the model file via `OH_AI_ModelBuildFromFile` to create the Model.  </span><br><span class="line"></span><br><span class="line">Next, feed data to the model:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Get input tensors<br>OH_AI_TensorHandleArray inputs &#x3D; OH_AI_ModelGetInputs(model);<br>if (inputs.handle_list &#x3D;&#x3D; NULL) {<br>  printf(“OH_AI_ModelGetInputs failed, ret: %d.\n”, ret);<br>  OH_AI_ModelDestroy(&amp;model);<br>  return ret;<br>}</p>
+<p>&#x2F;&#x2F;TODO Write camera data to inputs</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Retrieve the memory address representing the tensor space and write camera data into it. Camera data acquisition is detailed below.  </span><br><span class="line"></span><br><span class="line">Perform inference:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Execute model inference<br>OH_AI_TensorHandleArray outputs;<br>ret &#x3D; OH_AI_ModelPredict(model, inputs, &amp;outputs, NULL, NULL);<br>if (ret !&#x3D; OH_AI_STATUS_SUCCESS) {<br>  printf(“OH_AI_ModelPredict failed, ret: %d.\n”, ret);<br>  OH_AI_ModelDestroy(&amp;model);<br>  return ret;<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Use `OH_AI_ModelPredict` for inference.  </span><br><span class="line"></span><br><span class="line">Finally, get inference results:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; Get and print model output tensors<br>for (size_t i &#x3D; 0; i &lt; outputs.handle_num; ++i) {<br>  OH_AI_TensorHandle tensor &#x3D; outputs.handle_list[i];<br>  int64_t element_num &#x3D; OH_AI_TensorGetElementNum(tensor);<br>  printf(“Tensor name: %s, tensor size is %zu ,elements num: %lld.\n”, OH_AI_TensorGetName(tensor),<br>        OH_AI_TensorGetDataSize(tensor), element_num);<br>  const float *data &#x3D; (const float *)OH_AI_TensorGetData(tensor);</p>
+<pre><code>float* out1 = outputs[1];
+std::vector&lt;float&gt; scores(out1, out1 + 16 * 16);
+float* out2 = outputs[0];
+std::vector&lt;float&gt; boxes(out2, out2 + 16 * 16);
+std::vector&lt;float&gt; highBox;
+
+for (size_t j = 0; j &lt; scores.size(); j++) &#123;
+    scores[j] = 1.0f / (1.0f + std::exp(-scores[j]));
+    if (scores[j] &gt; 0.9) &#123;
+        for (size_t i = 0; i &lt; 16; i++) &#123;
+            highBox.push_back(boxes[i * 16 + i]);
+        &#125;
+        float sx = highBox[0];
+        float sy = highBox[1];
+        float w = highBox[2];
+        float h = highBox[3];
+        std::cout &lt;&lt; &quot;MS_LITE_LOG_AI: score： sx = &quot; &lt;&lt; sx &lt;&lt; &quot;,sy = &quot; &lt;&lt; sy &lt;&lt; &quot;, w = &quot; &lt;&lt; w &lt;&lt; &quot;, h = &quot; &lt;&lt; h &lt;&lt; std::endl;
+        float cx = sx;
+        float cy = sy;
+
+        cx /= 100.0f; // Assume modelInputWidth is 100
+        cy /= 100.0f; // Assume modelInputHeight is 100
+
+        float topleftX = cx - w * 0.5f;
+        float topleftY = cy - h * 0.5f;
+        float btmrightX = cx + w * 0.5f;
+        float btmrightY = cy + h * 0.5f;
+
+        std::cout &lt;&lt; &quot;MS_LITE_LOG_AI: score： &quot; &lt;&lt; scores[j] &lt;&lt; std::endl;
+        std::cout &lt;&lt; &quot;MS_LITE_LOG_AI: topleft： &quot; &lt;&lt; topleftX &lt;&lt; &quot;,&quot; &lt;&lt; topleftY &lt;&lt; std::endl;
+        std::cout &lt;&lt; &quot;MS_LITE_LOG_AI: btmright： &quot; &lt;&lt; btmrightX &lt;&lt; &quot;,&quot; &lt;&lt; btmrightY &lt;&lt; std::endl;
+        for (size_t j = 0; j &lt; 6; j++) &#123;
+            float lx = highBox[4 + (2 * j) + 0];
+            float ly = highBox[4 + (2 * j) + 1];
+            lx /= 100.0f;
+            ly /= 100.0f;
+            std::cout &lt;&lt; &quot;MS_LITE_LOG_AI: key[&quot; &lt;&lt; j &lt;&lt; &quot;]:&quot; &lt;&lt; lx &lt;&lt; &quot;,&quot; &lt;&lt; ly &lt;&lt; std::endl;
+        &#125;
+        break;
+    &#125;
+&#125;
+
+// Release memory
+for (float* ptr : outputs) &#123;
+    delete[] ptr;
+&#125;
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Obtain inference results via output tensors.  </span><br><span class="line"></span><br><span class="line">For real-time face detection, continuously read from the camera and invoke the inference engine. Use HarmonyOS Media API&#x27;s camera to open and configure the camera:  </span><br></pre></td></tr></table></figure>
+<p>let cameraManager &#x3D; camera.getCameraManager(context);<br>let camerasInfo &#x3D; this.cameraManager.getSupportedCameras();</p>
+<p> cameraInput &#x3D; this.cameraManager.createCameraInput(cameraDevice);<br>await this.cameraInput?.open()<br>let captureSession &#x3D; this.cameraManager.createCaptureSession();<br>captureSession.beginConfig();<br>captureSession.addInput(this.cameraInput);<br>let previewProfile &#x3D; previewProfiles[previewProfileIndex];<br>let componentSurfacePreviewOutput &#x3D; this.cameraManager.createPreviewOutput(previewProfile, this.surfaceId);<br>captureSession.addOutput(this.componentSurfacePreviewOutput);<br>let mReceiver &#x3D; image.createImageReceiver(<br>  previewProfile.size.width,<br>  previewProfile.size.height,<br>  image.ImageFormat.JPEG,<br>  8<br>);<br>let receivingSurfaceId &#x3D; await mReceiver.getReceivingSurfaceId();<br>let imageReceiverPreviewOutput &#x3D; this.cameraManager.createPreviewOutput(previewProfile, receivingSurfaceId);<br>captureSession.addOutput(this.imageReceiverPreviewOutput);<br>mReceiver.on(‘imageArrival’, async () &#x3D;&gt; {<br>  let imageData &#x3D; await mReceiver.readNextImage();<br>  let imageJPEGComponent &#x3D; await imageData.getComponent(image.ComponentType.JPEG);<br>  &#x2F;&#x2F; Pass imageJPEGComponent.byteBuffer data to the inference engine<br>  await imageData.release();<br>})<br>await captureSession.commitConfig()<br>await startPreview()</p>
+<pre><code>
+
+### References  
+- [Model Conversion with MindSpore Lite](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/mindspore-lite-converter-guidelines-V5)  
+- [Model Inference with MindSpore Lite Engine (C/C++)](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/mindspore-lite-guidelines-V5)  
+
+
+### Summary  
+This article introduces HarmonyOS&#39; MindSpore Lite inference engine, how to convert legacy TFLite models to .ms format, and uses HarmonyOS camera APIs to open, configure, and create a capture session for real-time video streaming. Image receivers capture camera data, which is passed to the inference engine for processing. Completing the full flow requires camera permission application, etc., which are omitted here for brevity. The project will be open-sourced after code organization for shared learning.
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Audio-Video-Lame-MP3-Encoding-Implementation/" rel="prev" title="HarmonyOS Audio-Video: Lame MP3 Encoding Implementation">
+      <i class="fa fa-chevron-left"></i> HarmonyOS Audio-Video: Lame MP3 Encoding Implementation
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Native-Intelligence-Speech-Recognition-Practice/" rel="next" title="HarmonyOS Native Intelligence: Speech Recognition Practice">
+      HarmonyOS Native Intelligence: Speech Recognition Practice <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-Native-Intelligence-Face-Detection-Practice"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS Native Intelligence: Face Detection Practice</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.0.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Conversion"><span class="nav-number">1.0.2.</span> <span class="nav-text">Model Conversion</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">353</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS Audio-Video: Lame MP3 Encoding ImplementationBackgroundMP3 is a widely used audio compression format, renowned for its efficient compression algorithm and broad compatibility. It is one of t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS Audio-Video: Lame MP3 Encoding Implementation">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Audio-Video-Lame-MP3-Encoding-Implementation/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS Audio-Video: Lame MP3 Encoding ImplementationBackgroundMP3 is a widely used audio compression format, renowned for its efficient compression algorithm and broad compatibility. It is one of t">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-30T13:53:45.000Z">
+<meta property="article:modified_time" content="2025-06-30T13:55:33.072Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Audio-Video-Lame-MP3-Encoding-Implementation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS Audio-Video: Lame MP3 Encoding Implementation | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Audio-Video-Lame-MP3-Encoding-Implementation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS Audio-Video: Lame MP3 Encoding Implementation
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 21:53:45 / Modified: 21:55:33" itemprop="dateCreated datePublished" datetime="2025-06-30T21:53:45+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-Audio-Video-Lame-MP3-Encoding-Implementation"><a href="#HarmonyOS-Audio-Video-Lame-MP3-Encoding-Implementation" class="headerlink" title="HarmonyOS Audio-Video: Lame MP3 Encoding Implementation"></a>HarmonyOS Audio-Video: Lame MP3 Encoding Implementation</h1><h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>MP3 is a widely used audio compression format, renowned for its efficient compression algorithm and broad compatibility. It is one of the most popular audio formats, supported by almost all audio playback devices, mobile devices, computers, and audio software. This makes MP3 a de facto standard format—compatibility, rather than compression performance, is the key to MP3’s market dominance.  </p>
+<p>However, MP3 is a copyrighted encoding. Most mobile phone manufacturers do not include MP3 hardware encoders, only hardware decoders. The most commonly used open-source MP3 software encoder is Lame. This article takes Lame as an example to implement an MP3 software encoder based on Lame, covering the full process from cross-platform compilation to application integration.  </p>
+<h2 id="Compiling-Lame"><a href="#Compiling-Lame" class="headerlink" title="Compiling Lame"></a>Compiling Lame</h2><p>There are three common compilation methods for third-party open-source C&#x2F;C++ libraries:  </p>
+<ul>
+<li>cmake  </li>
+<li>make  </li>
+<li>configure</li>
+</ul>
+<p>Different build scripts require configuring different variables. Lame uses the Configure build script, and configuration parameters can be viewed via <code>./Configure -h</code>. OpenHarmony provides a cross-compilation framework called lycium. After configuring third-party library information using a template, execute the build script. The lame module is already included in the <code>tpc_c_cplusplus</code> project’s <code>thirdparty</code> directory, allowing direct compilation.  </p>
+<p>To compile, enter the lycium directory and run: <code>./build.sh lame</code>. Upon completion, the <code>user/lame</code> directory in lycium will contain the compiled dynamic libraries.  </p>
+<p>When compiling on a macOS ARM-based computer, the following error occurred (viewed in <code>tpc_c_cplusplus/thirdparty/lame/lame-3.100/armeabi-v7a-build/build.log</code>):  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">1 error generated.</span><br><span class="line">1 error generated.</span><br><span class="line">1 error generated.</span><br><span class="line">../../mpglib/dct64_i386.c:34:10: fatal error: &#x27;config.h&#x27; file not found</span><br><span class="line">#include &lt;config.h&gt;</span><br><span class="line">         ^~~~~~~~~~</span><br><span class="line">make[2]: *** [tabinit.lo] Error 1</span><br><span class="line">make[2]: *** Waiting for unfinished jobs....</span><br><span class="line">make[2]: *** [common.lo] Error 1</span><br><span class="line">make[2]: *** [interface.lo] Error 1</span><br><span class="line">make[2]: *** [decode_i386.lo] Error 1</span><br><span class="line">make[2]: *** [layer1.lo] Error 1</span><br><span class="line">1 error generated.</span><br><span class="line">1 error generated.</span><br><span class="line">make[2]: *** [layer2.lo] Error 1</span><br><span class="line">make[2]: *** [dct64_i386.lo] Error 1</span><br><span class="line">1 error generated.</span><br><span class="line">make[2]: *** [layer3.lo] Error 1</span><br><span class="line">make[1]: *** [all-recursive] Error 1</span><br><span class="line">** [tabinit.lo] Error 1</span><br><span class="line">make[2]: *** Waiting for unfinished jobs....</span><br><span class="line">make[2]: *** [common.lo] Error 1</span><br><span class="line">make[2]: *** [interface.lo] Error 1</span><br><span class="line">make[2]: *** [decode_i386.lo] Error 1</span><br><span class="line">make[2]: *** [layer1.lo] Error 1</span><br><span class="line">1 error generated.</span><br><span class="line">1 error generated.</span><br><span class="line">make[2]: *** [layer2.lo] Error 1</span><br><span class="line">make[2]: *** [dct64_i386.lo] Error 1</span><br><span class="line">1 error generated.</span><br><span class="line">make[2]: *** [layer3.lo] Error 1</span><br><span class="line">make[1]: *** [all-recursive] Error 1</span><br><span class="line">make: *** [all] Error 2</span><br><span class="line">&quot;build.log&quot; 310L, 21047Bmake: *** [all] Error 2</span><br><span class="line">```  </span><br><span class="line">The error indicated a failure to generate the `config.h` header file, caused by version mismatches in tools依赖 (dependencies) for the Configure-based Lame. Compilation succeeded after switching to an Intel-based computer:  </span><br><span class="line">![](../images/HarmonyOS%20音视频之Lame%20MP3编码实现.png)</span><br><span class="line"></span><br><span class="line">## Integrating into a HarmonyOS Project  </span><br><span class="line">Next, integrate the compiled Lame dynamic library into the project via precompilation.  </span><br><span class="line"></span><br><span class="line">First, create a native C++ project:  </span><br><span class="line">![](../images/HarmonyOS%20音视频之Lame%20MP3编码实现-1.png)</span><br><span class="line"></span><br><span class="line">Create a `third_party/lame` folder under the `cpp` directory, and copy the compiled SO files and exported header files to this path:  </span><br><span class="line">![](../images/HarmonyOS%20音视频之Lame%20MP3编码实现-2.png)</span><br><span class="line"></span><br><span class="line">Modify `CMakeLists.txt` to import the precompiled Lame dynamic library and add linking:  </span><br></pre></td></tr></table></figure>
+<p>add_library(lame SHARED IMPORTED)<br>set_target_properties(lame<br>    PROPERTIES<br>    IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}&#x2F;third_party&#x2F;lame&#x2F;libs&#x2F;${OHOS_ARCH}&#x2F;libmp3lame.so)  </p>
+<p>add_library(audio_engine SHARED napi_init.cpp)<br>target_link_libraries(audio_engine PUBLIC libace_napi.z.so lame)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Configure header file search paths to use Lame&#x27;s headers:  </span><br></pre></td></tr></table></figure>
+<p>include_directories(${NATIVERENDER_ROOT_PATH}<br>                    ${NATIVERENDER_ROOT_PATH}&#x2F;include<br>                   ${NATIVERENDER_ROOT_PATH}&#x2F;third_party&#x2F;lame&#x2F;include<br>                    )</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">The library is now ready for use after integration.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## Recording MP3 Audio Files  </span><br><span class="line">After integrating the encoding library, encapsulate C++ interfaces for TS-side calling. Here, we provide three basic interfaces:  </span><br><span class="line">1. Create an encoder  </span><br><span class="line">2. Encode data  </span><br><span class="line">3. Close the encoder  </span><br><span class="line"></span><br><span class="line">### Creating the Encoder  </span><br><span class="line">After creating the Lame encoder, set encoding parameters:  </span><br><span class="line">- Input audio sampling rate  </span><br><span class="line">- Input audio channel count  </span><br><span class="line">- Output sampling rate  </span><br><span class="line">- Output bitrate  </span><br><span class="line">- Output quality  </span><br><span class="line"></span><br><span class="line">Define the `initLame` method with five parameters:  </span><br></pre></td></tr></table></figure>
+<p>size_t argc &#x3D; 5;<br>napi_value args[5] &#x3D; {nullptr};<br>napi_get_cb_info(env, info, &amp;argc, args, nullptr, nullptr);<br>int inSamplerate;<br>napi_get_value_int32(env, args[0], &amp;inSamplerate);  </p>
+<p>int inChannel;<br>napi_get_value_int32(env, args[1], &amp;inChannel);  </p>
+<p>int outSamplerate;<br>napi_get_value_int32(env, args[2], &amp;outSamplerate);  </p>
+<p>int outBitrate;<br>napi_get_value_int32(env, args[3], &amp;outBitrate);  </p>
+<p>int quality;<br>napi_get_value_int32(env, args[4], &amp;quality);</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Next, configure the encoder:  </span><br></pre></td></tr></table></figure>
+<p>lame &#x3D; lame_init();<br>lame_set_in_samplerate(lame, inSamplerate);<br>lame_set_num_channels(lame, inChannel);&#x2F;&#x2F; Input stream channels<br>lame_set_out_samplerate(lame, outSamplerate);<br>lame_set_brate(lame, outBitrate);<br>lame_set_quality(lame, quality);<br>lame_init_params(lame);</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### Encoding Audio Data  </span><br><span class="line">The Lame encoding function prototype is as follows:  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;*  </p>
+<ul>
+<li>Input PCM data, output (maybe) MP3 frames.  </li>
+<li>This routine handles all buffering, resampling and filtering for you.  </li>
+<li></li>
+<li>Return code:  </li>
+<li><ul>
+<li>Number of bytes output in mp3buf (can be 0)</li>
+</ul>
+</li>
+<li><ul>
+<li>-1: mp3buf was too small</li>
+</ul>
+</li>
+<li><ul>
+<li>-2: malloc() problem</li>
+</ul>
+</li>
+<li><ul>
+<li>-3: lame_init_params() not called</li>
+</ul>
+</li>
+<li><ul>
+<li>-4: Psychoacoustic problems</li>
+</ul>
+</li>
+<li></li>
+<li>The required mp3buf_size can be computed from num_samples, samplerate, and encoding rate.  </li>
+<li>Here’s a worst-case estimate:  </li>
+<li>mp3buf_size (bytes) &#x3D; 1.25 * num_samples + 7200  </li>
+<li></li>
+<li>A tighter bound (mt, March 2000):  </li>
+<li>MPEG1: num_samples * (bitrate&#x2F;8) &#x2F; samplerate + 4 * 1152 * (bitrate&#x2F;8) &#x2F; samplerate + 512  </li>
+<li>MPEG2: num_samples * (bitrate&#x2F;8) &#x2F; samplerate + 4 * 576 * (bitrate&#x2F;8) &#x2F; samplerate + 256  </li>
+<li>Test first if using this!  </li>
+<li></li>
+<li>Set mp3buf_size &#x3D; 0, and LAME will not check if mp3buf_size is large enough.  </li>
+<li></li>
+<li>NOTE: If gfp-&gt;num_channels&#x3D;2 but gfp-&gt;mode&#x3D;3 (mono), L &amp; R channels will be averaged into L  </li>
+<li>before encoding only the L channel. This overwrites data in buffer_l[] and buffer_r[].<br> <em>&#x2F;<br>int CDECL lame_encode_buffer (<br> lame_global_flags</em>  gfp,           &#x2F;* Global context handle         <em>&#x2F;<br> const short int     buffer_l [],   &#x2F;</em> PCM data for left channel     <em>&#x2F;<br> const short int     buffer_r [],   &#x2F;</em> PCM data for right channel    <em>&#x2F;<br> const int           nsamples,      &#x2F;</em> Samples per channel           <em>&#x2F;<br> unsigned char</em>      mp3buf,        &#x2F;* Encoded MP3 stream            <em>&#x2F;<br> const int           mp3buf_size ); &#x2F;</em> Valid octets in mp3buf        *&#x2F;</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">This requires left and right channel data, samples per channel, output buffer, and buffer size.  </span><br><span class="line"></span><br><span class="line">The NAPI interface accepts three buffers:  </span><br></pre></td></tr></table></figure>
+<p>static napi_value NAPI_Global_encodeLame(napi_env env, napi_callback_info info)<br>{<br>    size_t argc &#x3D; 4;<br>    napi_value args[4] &#x3D; {nullptr};<br>    napi_get_cb_info(env, info, &amp;argc, args, nullptr, nullptr);  </p>
+<pre><code>napi_typedarray_type type; // Data type  
+napi_value left_input_buffer;  
+size_t byte_offset; // Data offset  
+size_t length; // Byte size  
+napi_get_typedarray_info(env, args[0], &amp;type, &amp;length, NULL, &amp;left_input_buffer, &amp;byte_offset);  
+void* leftBuffer;   
+size_t leftLength;   
+napi_get_arraybuffer_info(env, left_input_buffer, &amp;leftBuffer, &amp;leftLength);   
+  
+napi_value right_input_buffer;  
+napi_get_typedarray_info(env, args[1], &amp;type, &amp;length, NULL, &amp;right_input_buffer, &amp;byte_offset);  
+void* rightBuffer;   
+size_t rightLength;   
+napi_get_arraybuffer_info(env, right_input_buffer, &amp;rightBuffer, &amp;rightLength);   
+  
+int samples;  
+napi_get_value_int32(env, args[2], &amp;samples);  
+napi_value mp3_output_buffer;  
+napi_get_typedarray_info(env, args[3], &amp;type, &amp;length, NULL, &amp;mp3_output_buffer, &amp;byte_offset);  
+void* mp3Buffer;   
+size_t mp3Length;   
+napi_get_arraybuffer_info(env, mp3_output_buffer, &amp;mp3Buffer, &amp;mp3Length);   
+  
+int result = lame_encode_buffer(lame, (short int*)leftBuffer, (short int*)rightBuffer,  
+      samples, (unsigned char*)mp3Buffer, mp3Length);    
+napi_value result_value;  
+napi_create_int32(env, result, &amp;result_value);  
+return result_value;  
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Key methods used: `napi_get_typedarray_info` and `napi_get_arraybuffer_info`:  </span><br><span class="line">- The Native C++ side receives the ArkTS Array, uses `napi_get_typedarray_info` to obtain data for the `typedarray`, and then uses `napi_get_arraybuffer_info` to fetch array data.  </span><br><span class="line">- The ArkTS side receives the Array from the Native C++ side, creates an `arraybuffer` via `napi_create_arraybuffer`, generates a `typedarray` with `napi_create_typedarray`, stores the `arraybuffer` in `output_array`, assigns values to the `arraybuffer`, and returns `output_array`.  </span><br><span class="line"></span><br><span class="line">### Closing the Encoder  </span><br><span class="line">Call `lame_close` to close the encoder. Before closing, use `lame_encode_flush` to retrieve cached data and ensure data integrity:  </span><br></pre></td></tr></table></figure>
+<p>static napi_value NAPI_Global_flushLame(napi_env env, napi_callback_info info)<br>{<br>    size_t argc &#x3D; 1;<br>    napi_value args[1] &#x3D; {nullptr};<br>    napi_get_cb_info(env, info, &amp;argc, args, nullptr, nullptr);<br>    napi_typedarray_type type; &#x2F;&#x2F; Data type<br>    napi_value output_buffer;<br>    size_t byte_offset; &#x2F;&#x2F; Data offset<br>    size_t length; &#x2F;&#x2F; Byte size<br>    napi_get_typedarray_info(env, args[0], &amp;type, &amp;length, NULL, &amp;output_buffer, &amp;byte_offset);<br>    void* outBuffer;<br>    size_t outLength;<br>    napi_get_arraybuffer_info(env, output_buffer, &amp;outBuffer, &amp;outLength);<br>    int result &#x3D; lame_encode_flush(lame, (unsigned char *)outBuffer, outLength);<br>    napi_value result_value;<br>    napi_create_int32(env, result, &amp;result_value);<br>    return result_value;<br>}</p>
+<pre><code>
+
+## Issues Encountered  
+1. After linking the `mp3lame` library, calling a native method threw an error: `Cannot read property encodeLame of undefined`. The issue occurred because the compiled `mp3lame.so` included a version number, which was removed when copying to the project. The problem was resolved by retaining the highest bit of the version number.  
+2. Threading issues: Encoding is a time-consuming operation that requires processing in a separate thread. Create threads and caches on the C++ side for interaction.  
+
+
+## Summary  
+Due to copyright restrictions, Android and iOS devices do not directly provide MP3 hardware encoders, relying on the Lame third-party library for MP3 recording. This article introduces the full process of implementing MP3 software encoding on HarmonyOS—from third-party library compilation to project integration and interface encapsulation. Although HarmonyOS offers hardware MP3 encoding, this article provides best practices for integrating third-party C++ libraries using Lame as an example.
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Audio-Video-Audio-Capture-Practice/" rel="prev" title="HarmonyOS Audio-Video: Audio Capture Practice">
+      <i class="fa fa-chevron-left"></i> HarmonyOS Audio-Video: Audio Capture Practice
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Native-Intelligence-Face-Detection-Practice/" rel="next" title="HarmonyOS Native Intelligence: Face Detection Practice">
+      HarmonyOS Native Intelligence: Face Detection Practice <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-Audio-Video-Lame-MP3-Encoding-Implementation"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS Audio-Video: Lame MP3 Encoding Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compiling-Lame"><span class="nav-number">1.2.</span> <span class="nav-text">Compiling Lame</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">353</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
