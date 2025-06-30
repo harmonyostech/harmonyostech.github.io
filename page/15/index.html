@@ -149,6 +149,532 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:04:39 / Modified: 10:05:14" itemprop="dateCreated datePublished" datetime="2025-06-27T10:04:39+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance"><a href="#Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance"></a>[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</h3><h4 id="1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS"><a href="#1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS" class="headerlink" title="1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?"></a>1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?</h4><p>The <code>onPageShow</code> lifecycle method does not execute when switching tabs because <code>onPageShow</code> is a page-level lifecycle callback. Tab switching triggers the component-level lifecycle method <code>aboutToAppear()</code> for child components. You can call <code>showPage()</code> within this lifecycle. If you need the <code>showPage</code> method in <code>TabContent</code> to execute every time a tab is switched, use <code>onTabBarClick(event: (index: number) =&gt; void)</code> to get the currently clicked tab index in the parent component.  </p>
+<p>Define a <code>currentTabIndex</code> variable in the parent component using <code>@State</code>, assign the clicked index to <code>currentTabIndex</code> in the <code>onTabBarClick</code> callback, and pass this value to child components wrapped by <code>TabContent</code>. In child components, use <code>@Props</code> and <code>@Watch</code> to listen for changes to the value passed from the parent component and execute the <code>showPage</code> method in each <code>TabContent</code>.  </p>
+<p><strong>Demo Reference</strong>:  </p>
+<pre><code class="language-typescript">// xxx.ets
+import &#123; FirstPage &#125; from &#39;./FirstPage&#39;
+
+@Entry
+@Component
+struct TabsExample &#123;
+  @State fontColor: string = &#39;#182431&#39;
+  @State selectedFontColor: string = &#39;#007DFF&#39;
+  @State currentIndex: number = 0
+  private controller: TabsController = new TabsController()
+  @State mainPageState: boolean = false
+  
+  @Builder tabBuilder(index: number, name: string) &#123;
+    Column() &#123;
+      Text(name)
+        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
+        .fontSize(16)
+        .fontWeight(this.currentIndex === index ? 500 : 400)
+        .lineHeight(22)
+        .margin(&#123; top: 17, bottom: 7 &#125;)
+      Divider()
+        .strokeWidth(2)
+        .color(&#39;#007DFF&#39;)
+        .opacity(this.currentIndex === index ? 1 : 0)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Tabs(&#123; barPosition: BarPosition.Start, index: this.currentIndex, controller: this.controller &#125;) &#123;
+        TabContent() &#123;
+          FirstPage(&#123; mainPageState: this.mainPageState &#125;).width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#00CB87&#39;)
+        &#125;.tabBar(this.tabBuilder(0, &#39;green&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#007DFF&#39;)
+        &#125;.tabBar(this.tabBuilder(1, &#39;blue&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#FFBF00&#39;)
+        &#125;.tabBar(this.tabBuilder(2, &#39;yellow&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#E67C92&#39;)
+        &#125;.tabBar(this.tabBuilder(3, &#39;pink&#39;))
+      &#125;
+      .vertical(false)
+      .barMode(BarMode.Fixed)
+      .barWidth(360)
+      .barHeight(56)
+      .animationDuration(400)
+      .onChange((index: number) =&gt; &#123;
+        this.currentIndex = index
+      &#125;)
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+      .margin(&#123; top: 52 &#125;)
+      .backgroundColor(&#39;#F1F3F5&#39;)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+
+  onPageShow(): void &#123;
+    console.log(&#39;index--- onPageShow&#39;)
+    this.mainPageState = true
+  &#125;
+  
+  onPageHide(): void &#123;
+    console.log(&#39;index--- onPageHide&#39;)
+    this.mainPageState = false
+  &#125;
+&#125;
+</code></pre>
+<pre><code class="language-typescript">import &#123; router &#125; from &#39;@kit.ArkUI&#39;;
+import &#123; FaultLogger &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
+
+@Entry
+@Component
+export struct FirstPage &#123;
+  @State message: string = &#39;Hello World&#39;;
+  @Link @Watch(&#39;mainIsShow&#39;) mainPageState: boolean
+  
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+          .onClick(() =&gt; &#123;
+            router.pushUrl(&#123;
+              url: &#39;pages/DetailPage&#39;,
+            &#125;)
+          &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+  
+  mainIsShow() &#123;
+    console.log(&#39;mainIsShow--&#39;, this.mainPageState)
+  &#125;
+  
+  aboutToAppear(): void &#123;
+    console.log(&#39;firstPAGE--- aboutToAppear&#39;)
+  &#125;
+
+  onPageShow(): void &#123;
+    console.log(&#39;firstPAGE--- onPageShow&#39;)
+  &#125;
+  
+  onPageHide(): void &#123;
+    console.log(&#39;firstPAGE--- onPageHide&#39;)
+  &#125;
+  
+  aboutToRecycle(): void &#123;
+    console.log(&#39;firstPAGE--- aboutToRecycle&#39;)
+  &#125;
+&#125;
+</code></pre>
+<pre><code class="language-typescript">import &#123; Notification &#125; from &#39;@kit.NotificationKit&#39;;
+
+@Entry
+@Component
+struct DetailPage &#123;
+  @State message: string = &#39;Detail&#39;;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+  
+  onPageShow(): void &#123;
+  &#125;
+  
+  onPageHide(): void &#123;
+    console.log(&#39;firstPAGE--- onPageHide&#39;)
+  &#125;
+  
+  onBackPress(): boolean | void &#123;
+    console.log(&#39;firstPAGE--- onBackPress&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-Assemble-Complex-JSON-Data"><a href="#2-How-to-Assemble-Complex-JSON-Data" class="headerlink" title="2. How to Assemble Complex JSON Data?"></a>2. How to Assemble Complex JSON Data?</h4><p><strong>Reference Demo</strong>:  </p>
+<pre><code class="language-typescript">jsonObject: Record&lt;string, Object&gt; = &#123;&#125;
+
+aboutToAppear(): void &#123;
+  this.jsonObject[&quot;k1&quot;] = &quot;v1&quot;
+  this.jsonObject[&quot;k2&quot;] = 20
+  let json: string = JSON.stringify(this.jsonObject)
+  console.log(json)
+&#125;
+</code></pre>
+<h4 id="3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS"><a href="#3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS" class="headerlink" title="3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?"></a>3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?</h4><p>When displaying text in the middle of a layout with other UI elements above and below, wrap the <code>Text</code> component with a <code>Scroll</code> component. To prevent other UI elements from being pushed off-screen when the text is too long, set a maximum height for the <code>Scroll</code> component.  </p>
+<p><strong>Reference Demo</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct NestedScroll &#123;
+  @State listPosition: number = 0; // 0: scroll to top, 1: middle, 2: scroll to bottom
+  private arr: number[] = [1]
+  private scrollerForList: Scroller = new Scroller()
+
+  build() &#123;
+    Flex() &#123;
+      Column() &#123;
+        Text(&quot;Header&quot;)
+          .width(&quot;100%&quot;)
+          .height(&quot;20%&quot;)
+          .backgroundColor(0X330000FF)
+          .fontSize(16)
+          .textAlign(TextAlign.Center)
+
+        List(&#123; space: 20, scroller: this.scrollerForList &#125;) &#123;
+          ForEach(this.arr, (item: number) =&gt; &#123;
+            ListItem() &#123;
+              Text(&quot;This is a very long text...&quot;) // Omitted for brevity
+                .borderRadius(15)
+                .fontSize(16)
+                .backgroundColor(Color.White)
+            &#125;.width(&quot;100%&quot;)
+          &#125;, (item: string) =&gt; item)
+        &#125;
+        .borderColor(Color.Green)
+        .borderWidth(2)
+        .width(&quot;100%&quot;)
+        .edgeEffect(EdgeEffect.None)
+        .friction(0.6)
+        .onReachStart(() =&gt; &#123;
+          this.listPosition = 0
+        &#125;)
+        .onReachEnd(() =&gt; &#123;
+          this.listPosition = 2
+        &#125;)
+        .onScrollFrameBegin((offset: number) =&gt; &#123;
+          if ((this.listPosition == 0 &amp;&amp; offset &lt;= 0) || (this.listPosition == 2 &amp;&amp; offset &gt;= 0)) &#123;
+            return &#123; offsetRemain: 0 &#125;
+          &#125;
+          this.listPosition = 1
+          return &#123; offsetRemain: offset &#125;;
+        &#125;)
+        .constraintSize(&#123; maxHeight: 400 &#125;)
+
+        Text(&quot;Footer&quot;)
+          .width(&quot;100%&quot;)
+          .height(&quot;20%&quot;)
+          .backgroundColor(0X330000FF)
+          .fontSize(16)
+          .textAlign(TextAlign.Center)
+      &#125;
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS"><a href="#4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS" class="headerlink" title="4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?"></a>4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?</h4><p><strong>Compilation Error</strong>:<br><code>Object literals cannot be used as type declarations (ArkTS-no-obj-literals-as-types) &lt;ArkTSCheck&gt;</code>  </p>
+<p><strong>Code</strong>:  </p>
+<pre><code class="language-typescript">@Builder overBuilder($$: &#123; paramA1: string &#125;) &#123;
+  Row() &#123;
+    Text(`UseStateVarByReference: $&#123;$$.paramA1&#125; `)
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Solution</strong>:  </p>
+<pre><code class="language-typescript">class Tmp &#123;
+  paramA1: string = &#39;&#39;
+&#125;
+
+@Builder function overBuilder($$: Tmp) &#123;
+  Text($$.paramA1)
+    .width(400)
+    .height(50)
+    .backgroundColor(Color.Blue)
+&#125;
+</code></pre>
+<h4 id="5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize"><a href="#5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize" class="headerlink" title="5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?"></a>5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?</h4><p><strong>Best Practices Reference</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5">https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5</a>  </p>
+<p>ArkWeb is a Web component platform designed to display Web content in applications and provide developers with capabilities such as page loading, interaction, and debugging. In the digital age, page loading speed directly impacts app fluency, user perception, and experience. Fast-loading pages reduce wait times and improve satisfaction.  </p>
+<p>The Web page display process involves multiple stages: DNS resolution, connection establishment, request sending, response receiving, HTML parsing, and resource downloading. Factors affecting page speed include network latency, server response time, page size, and resource compression. To enhance performance, optimize page loading, resource downloading, and rendering.  </p>
+<p><strong>Common Optimization Methods</strong>:  </p>
+<ul>
+<li><strong>Web Page Loading Optimization</strong>: Critical for user experience; faster loading improves app fluency.  </li>
+<li><strong>JSBridge</strong>: Reduces redundant ArkTS environment switches and avoids UI blockages.  </li>
+<li><strong>Same-Layer Rendering</strong>: Renders page elements in layers to minimize repaints and reflows, improving rendering efficiency.</li>
+</ul>
+<p>ArkWeb provides methods to optimize page display speed. These optimizations enhance app performance and user experience, enabling faster, smoother Web browsing and increasing user satisfaction and retention.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:00:29 / Modified: 10:03:47" itemprop="dateCreated datePublished" datetime="2025-06-27T10:00:29+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain"></a>[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</h3><h4 id="1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS"><a href="#1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS" class="headerlink" title="1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?"></a>1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?</h4><p>Use <code>focusControl.requestFocus</code> to set focus on components that need it. Refer to the documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5</a>  </p>
+<p><strong>Example Code</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct TextInputExample &#123;
+  controller: TextInputController = new TextInputController()
+  @State inputValue: string = &quot;&quot;
+  ep: number = 0;
+  del: boolean = false;
+
+  // Custom keyboard component
+  @Builder
+  CustomKeyboardBuilder() &#123;
+    Column() &#123;
+      Button(&#39;Close Keyboard&#39;).onClick(() =&gt; &#123;
+        // Close the custom keyboard
+        this.controller.stopEditing()
+      &#125;)
+      Button(&#39;Delete Character&#39;).onClick(() =&gt; &#123;
+        this.inputValue = this.inputValue.substring(0, this.ep-1) + this.inputValue.substring(this.ep)
+        this.del = true
+      &#125;)
+      Grid() &#123;
+        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, &#39;*&#39;, 0, &#39;#&#39;], (item: number | string) =&gt; &#123;
+          GridItem() &#123;
+            Button(item + &quot;&quot;)
+              .width(110).onClick(() =&gt; &#123;
+              this.inputValue = this.inputValue.substring(0, this.ep) + item + this.inputValue.substring(this.ep)
+              this.del = false
+            &#125;)
+          &#125;
+        &#125;)
+      &#125;.maxCount(3).columnsGap(10).rowsGap(10).padding(5)
+    &#125;.backgroundColor(Color.Gray)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      TextInput(&#123; controller: this.controller, text: this.inputValue &#125;)
+        // Bind the custom keyboard
+        .customKeyboard(this.CustomKeyboardBuilder())
+        .margin(10)
+        .id(&#39;input1&#39;) // Set an ID for the component
+        .border(&#123; width: 1 &#125;)
+        // Detect cursor changes and adjust cursor position
+        .onChange(() =&gt; &#123;
+          if(this.del)&#123;
+            this.controller.caretPosition(--this.ep)
+          &#125;else&#123;
+            this.controller.caretPosition(++this.ep)
+          &#125;
+        &#125;)
+        .onTextSelectionChange((ss) =&gt; &#123;
+          this.ep = ss;
+        &#125;)
+      Button(&quot;Trigger Focus&quot;)
+        .width(200).height(70).fontColor(Color.White)
+        .onClick(() =&gt; &#123;
+          focusControl.requestFocus(&#39;input1&#39;) // Focus the TextInput
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>The default input method keyboard type is text input (<code>textinputtype</code> 0). Refer to possible <code>textinputtype</code> values:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5</a>  </p>
+<h4 id="2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS"><a href="#2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS" class="headerlink" title="2. What Are the JSBridge Implementation Methods in HarmonyOS?"></a>2. What Are the JSBridge Implementation Methods in HarmonyOS?</h4><p>For app-frontend interactions, refer to:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5</a>  </p>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-2.png"></p>
+<p>The figure above shows the general architecture of a universally applicable mini-program. In this architecture, the logic layer relies on the JavaScript runtime自带 by the application, which runs within an existing C++ environment. Through Native interfaces, the logic layer can directly communicate with the view layer (where ArkWeb acts as the renderer) in the C++ environment without falling back to the ArkTS environment to use the ArkTS JSBridge interface.  </p>
+<p>The left diagram shows a mini-program solution using the ArkTS JSBridge interface. As indicated by the red box, the application must first call into the ArkTS environment and then into the C++ environment. The right diagram shows a solution using the Native JSBridge interface, which eliminates the need to switch between ArkTS and C++ environments, resulting in higher execution efficiency.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-3.png"><br>The Native JSBridge solution avoids redundant ArkTS environment switches and allows callbacks to run on non-UI threads, preventing UI blockages.  </p>
+<h4 id="3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS"><a href="#3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS" class="headerlink" title="3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?"></a>3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?</h4><p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct PopupExample &#123;
+  @State handlePopup: boolean = false
+  @State customPopup: boolean = false
+  
+  // Popup content builder
+  @Builder popupBuilder() &#123;
+    Row(&#123; space: 2 &#125;) &#123;
+      Image($r(&quot;app.media.startIcon&quot;)).width(24).height(24).margin(&#123; left: -5 &#125;)
+      Text(&#39;Custom Popup&#39;).fontSize(10)
+    &#125;.width(100).height(50).padding(5)
+  &#125;
+
+  build() &#123;
+    Flex(&#123; direction: FlexDirection.Column &#125;) &#123;
+      // PopupOptions configuration
+      Button(&#39;PopupOptions&#39;)
+        .onClick(() =&gt; &#123;
+          this.handlePopup = !this.handlePopup
+        &#125;)
+        .bindPopup(this.handlePopup, &#123;
+          builder: this.popupBuilder,
+          placement: Placement.Top,
+          mask: &#123;color: Color.Gray&#125;,
+          popupColor: Color.Yellow,
+          enableArrow: true,
+          message: &#39;This is a popup with PopupOptions&#39;,
+          placementOnTop: true,
+          showInSubWindow: false,
+          primaryButton: &#123;
+            value: &#39;confirm&#39;,
+            action: () =&gt; &#123;
+              this.handlePopup = !this.handlePopup
+              console.info(&#39;confirm Button click&#39;)
+            &#125;
+          &#125;,
+          // Secondary button
+          secondaryButton: &#123;
+            value: &#39;cancel&#39;,
+            action: () =&gt; &#123;
+              this.handlePopup = !this.handlePopup
+              console.info(&#39;cancel Button click&#39;)
+            &#125;
+          &#125;,
+          onStateChange: (e) =&gt; &#123;
+            console.info(JSON.stringify(e.isVisible))
+            if (!e.isVisible) &#123;
+              this.handlePopup = false
+            &#125;
+          &#125;
+        &#125;)
+        .position(&#123; x: 100, y: 150 &#125;)
+    &#125;.width(&#39;100%&#39;).padding(&#123; top: 5 &#125;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible"><a href="#4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible" class="headerlink" title="4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?"></a>4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?</h4><p>Refer to the Interaction Event Normalization interface to ensure consistent interaction experiences across different devices and minimize adaptation efforts:  </p>
+<ul>
+<li>Interaction Events Guide:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018">https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018</a>  </li>
+<li>Interaction Event Normalization Development Documentation:<br><a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md</a></li>
+</ul>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-4.png"></p>
+<h4 id="5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This"><a href="#5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This" class="headerlink" title="5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?"></a>5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?</h4><p>Configure <code>customizeSchemes</code> as described in the documentation:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F</a></li>
+</ul>
+<p>You need to configure <code>schemeMap</code> and <code>mimeTypeMap</code> manually.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/123-Daily-HarmonyOS-Next-Knowledge-Web-Cross-Origin-Resources-Web-Long-Press-Menu-Web-Request-Interception-Screen-Recording-Prevention-Base64-Image-Dimensions/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -977,235 +1503,6 @@ struct TextInputExample &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/115-Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/115-Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Animated GIF Looping, Tab Switch Monitoring, Rich Text Scroll, Tab Default Centering, A Tag Calling Dialer</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 08:42:10 / Modified: 09:50:05" itemprop="dateCreated datePublished" datetime="2025-06-27T08:42:10+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer"><a href="#Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Animated GIF Looping, Tab Switch Monitoring, Rich Text Scroll, Tab Default Centering, A Tag Calling Dialer"></a>[Daily HarmonyOS Next Knowledge] Animated GIF Looping, Tab Switch Monitoring, Rich Text Scroll, Tab Default Centering, A Tag Calling Dialer</h3><h4 id="1-Image-loads-a-network-animated-GIF-that-stops-playing-after-one-loop-How-to-set-loop-play"><a href="#1-Image-loads-a-network-animated-GIF-that-stops-playing-after-one-loop-How-to-set-loop-play" class="headerlink" title="1. Image loads a network animated GIF that stops playing after one loop. How to set loop play?"></a>1. Image loads a network animated GIF that stops playing after one loop. How to set loop play?</h4><p>Currently, ArkUI does not support setting the loop count for GIF images. You can use the third-party library <code>ohos-gif-drawable</code> to set the loop count. Update the loop count in the callback method <code>getLoopFinish()</code> after one play ends, and set the play rate <code>setSpeedFactor()</code> to 0 to stop playing when the specified count is reached.  </p>
-<p><strong>Reference Document</strong>: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony-sig/ohos_gif-drawable">https://gitee.com/openharmony-sig/ohos_gif-drawable</a><br><code>ohos-gif-drawable</code> is drawn based on Canvas, with main capabilities including:  </p>
-<ul>
-<li>Support for playing GIF images.  </li>
-<li>Support for controlling GIF play&#x2F;pause.  </li>
-<li>Support for resetting GIF play animation.  </li>
-<li>Support for adjusting GIF play rate.  </li>
-<li>Support for listening to callbacks after all GIF frames are displayed.  </li>
-<li>Support for setting display size.  </li>
-<li>Support for 7 different display types.  </li>
-<li>Support for setting the display area background color.</li>
-</ul>
-<h4 id="2-How-to-monitor-when-a-TabContent-page-is-switched-to-in-HarmonyOS"><a href="#2-How-to-monitor-when-a-TabContent-page-is-switched-to-in-HarmonyOS" class="headerlink" title="2. How to monitor when a TabContent page is switched to in HarmonyOS?"></a>2. How to monitor when a TabContent page is switched to in HarmonyOS?</h4><p>When switching TabContent pages, how to monitor that the current page is active? Does switching trigger the lifecycle methods of the page in TabContent?  </p>
-<p>Use the <code>onTabBarClick</code> event.<br><strong>Reference Document</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-tabs-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-tabs-V5</a><br>Tab switching should trigger the component-level lifecycle <code>aboutToAppear</code> of the child component.  </p>
-<h4 id="3-Can-HarmonyOS-RichText-slide-left-and-up"><a href="#3-Can-HarmonyOS-RichText-slide-left-and-up" class="headerlink" title="3. Can HarmonyOS RichText slide left and up?"></a>3. Can HarmonyOS RichText slide left and up?</h4><p>Use the Web component for display.<br><strong>Reference Link</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5</a>  </p>
-<pre><code class="language-typescript">// xxx.ets
-import &#123; webview &#125; from &#39;@kit.ArkWeb&#39;;
-import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
-
-@Entry
-@Component
-struct WebComponent &#123;
-  controller: webview.WebviewController = new webview.WebviewController();
-
-  build() &#123;
-    Column() &#123;
-      Button(&#39;loadData&#39;)
-        .onClick(() =&gt; &#123;
-          try &#123;
-            this.controller.loadData(
-              &quot;&lt;html&gt;&lt;body&gt; &lt;p style=\&quot;font-size: 100; color: #999999;\&quot;&gt;我是一个richtext&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;,
-              &quot;text/html&quot;,
-              &quot;UTF-8&quot;, &quot; &quot;, &quot; &quot; // If there are special characters like #, the last two parameters should be changed to a space
-            );
-            this.controller.setScrollable(false); // Set whether to enable scrolling
-          &#125; catch (error) &#123;
-            console.error(`ErrorCode: $&#123;(error as BusinessError).code&#125;,  Message: $&#123;(error as BusinessError).message&#125;`);
-          &#125;
-        &#125;)
-      Web(&#123; src: &#39;&#39;, controller: this.controller &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-How-to-implement-horizontal-tab-quick-scrolling-in-HarmonyOS-with-tabs-automatically-centered-and-selected-after-stopping"><a href="#4-How-to-implement-horizontal-tab-quick-scrolling-in-HarmonyOS-with-tabs-automatically-centered-and-selected-after-stopping" class="headerlink" title="4. How to implement horizontal tab quick scrolling in HarmonyOS, with tabs automatically centered and selected after stopping?"></a>4. How to implement horizontal tab quick scrolling in HarmonyOS, with tabs automatically centered and selected after stopping?</h4><p>In the List component, use the <code>.scrollSnapAlign(ScrollSnapAlign.CENTER)</code> property of the <code>onScrollIndex</code> method to achieve centering. To position the tab to the middle of the visible area after scrolling stops, use the <code>onScrollStop</code> event to listen for the stop and adjust the position. To keep it centered in the visible area, directly position it to the middle.<br><strong>Reference Link</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#ZH-CN_TOPIC_0000001930756925__onscrollindex">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#ZH-CN_TOPIC_0000001930756925__onscrollindex</a>  </p>
-<h4 id="5-Using-the-element-in-an-H5-page-to-invoke-the-system-dialer-does-not-work-in-HarmonyOS-Next"><a href="#5-Using-the-element-in-an-H5-page-to-invoke-the-system-dialer-does-not-work-in-HarmonyOS-Next" class="headerlink" title="5. Using the &lt;a&gt; element in an H5 page to invoke the system dialer does not work in HarmonyOS Next."></a>5. Using the <code>&lt;a&gt;</code> element in an H5 page to invoke the system dialer does not work in HarmonyOS Next.</h4><p>Possible reasons include:  </p>
-<ul>
-<li><strong>Page loading issues</strong>: If the <code>system.onmessage</code> function in the H5 page has complex logic and relies on external JS library references, incomplete page loading may prevent the system dialer from being called. In this case, trigger the system dialer in the <code>onpagefinish</code> event handler.  </li>
-<li><strong>System permission issues</strong>: Ensure the device has enabled the system dialer and the app has the corresponding permissions. Check the app permission configuration in device settings.  </li>
-<li><strong>Network issues</strong>: Ensure the device is connected to a network with normal connectivity.  </li>
-<li><strong>Page loading order issues</strong>: If the page has resources to load (e.g., images, scripts), the system dialer may not be called until these resources finish loading. Place the system dialer code after resource loading is complete.  </li>
-<li><strong>Page lifecycle issues</strong>:  <ul>
-<li>Ensure page lifecycle events (e.g., <code>onload</code>, <code>onready</code>) are handled correctly to trigger the system dialer after page loading.  </li>
-<li>Check the page loading order to execute the system dialer code after resources are loaded.  </li>
-<li>Set page lifecycle events to trigger the system dialer using <code>onload</code> or <code>onready</code> after page loading.  </li>
-<li>Verify system permissions in device settings to ensure the app can call the system dialer.  </li>
-<li>Ensure the device is connected to a network with normal connectivity.</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/114-Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/114-Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Screenshot Component for Lists, Toggle Component, Web Component Request Headers, List Selection Popup, Game Acceleration</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 08:41:22 / Modified: 09:50:18" itemprop="dateCreated datePublished" datetime="2025-06-27T08:41:22+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration"><a href="#Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Screenshot Component for Lists, Toggle Component, Web Component Request Headers, List Selection Popup, Game Acceleration"></a>[Daily HarmonyOS Next Knowledge] Screenshot Component for Lists, Toggle Component, Web Component Request Headers, List Selection Popup, Game Acceleration</h3><h4 id="1-How-does-HarmonyOS-handle-screenshotting-components-that-exceed-the-screen-such-as-lists-and-scrollable-content-using-componentSnapshot"><a href="#1-How-does-HarmonyOS-handle-screenshotting-components-that-exceed-the-screen-such-as-lists-and-scrollable-content-using-componentSnapshot" class="headerlink" title="1. How does HarmonyOS handle screenshotting components that exceed the screen, such as lists and scrollable content, using componentSnapshot?"></a>1. How does HarmonyOS handle screenshotting components that exceed the screen, such as lists and scrollable content, using componentSnapshot?</h4><p>The official componentSnapshot currently does not support capturing ultra-long images of components beyond the screen. For details, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentsnapshot-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentsnapshot-V5</a>  </p>
-<p>This module provides the ability to capture screenshots of components, including both loaded and unloaded components. Component screenshots can only capture the area within the component’s size. If the component or its child components are drawn beyond their defined areas, the content outside the component’s area will not appear in the screenshot. Sibling nodes stacked within the component’s area will not be displayed in the screenshot.  </p>
-<p><strong>Alternative solutions</strong>:  </p>
-<ol>
-<li>When capturing the screen, control the scroll coordinates of the list or scrollable content to take multiple screenshots, then stitch the images together.  </li>
-<li>Draw all UI components in the view onto a canvas, then capture the entire canvas to obtain the image.</li>
-</ol>
-<h4 id="2-When-switching-dark-mode-within-the-onChange-callback-of-the-HarmonyOS-Toggle-component-the-callback-triggers-twice-with-opposite-states-How-to-handle-this"><a href="#2-When-switching-dark-mode-within-the-onChange-callback-of-the-HarmonyOS-Toggle-component-the-callback-triggers-twice-with-opposite-states-How-to-handle-this" class="headerlink" title="2. When switching dark mode within the onChange callback of the HarmonyOS Toggle component, the callback triggers twice with opposite states. How to handle this?"></a>2. When switching dark mode within the onChange callback of the HarmonyOS Toggle component, the callback triggers twice with opposite states. How to handle this?</h4><p>Clicking the Toggle switch on the page correctly switches the page to dark mode, but the switch state of the button remains unchanged. Investigation shows the callback triggers twice with conflicting states. How to ensure callback correctness in this scenario?  </p>
-<p><strong>Reference demo</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct TogglePage2 &#123;
-  @State isDarkMode: boolean = false
-  build() &#123;
-    Column() &#123;
-      Toggle(&#123; type: ToggleType.Switch, isOn: this.isDarkMode &#125;) // Do not omit the isOn property when the page refresh is triggered.
-        .onChange((isOn: boolean) =&gt; &#123;
-          console.log(&#39;Toggle.onChange2： isOn&#39;, isOn)
-          this.isDarkMode = isOn
-          getContext(this).getApplicationContext().setColorMode(this.isDarkMode ? 0 : 1) // Triggers secondary rendering. If isOn is not assigned, the default value (false) will cause incorrect state.
-        &#125;)
-    &#125;.width(&quot;100%&quot;).height(&quot;100%&quot;).padding(32)
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Note</strong>: Do not omit the isOn property of Toggle in scenarios that trigger secondary rendering. Secondary rendering reads the default value, and omitting isOn will use the default value (false), leading to incorrect toggle states.  </p>
-<h4 id="3-How-to-attach-request-headers-to-the-HarmonyOS-Web-component"><a href="#3-How-to-attach-request-headers-to-the-HarmonyOS-Web-component" class="headerlink" title="3. How to attach request headers to the HarmonyOS Web component?"></a>3. How to attach request headers to the HarmonyOS Web component?</h4><p>Write the loadUrl method within the Web component’s lifecycle:  </p>
-<pre><code class="language-typescript">Web(&#123; src: &quot;&quot;, controller: this.controller &#125;)
-  .onControllerAttached(() =&gt; &#123;
-    this.controller.loadUrl(&quot;xxxxxxxxx&quot;, header)
-  &#125;)
-</code></pre>
-<h4 id="4-How-to-customize-the-style-of-the-HarmonyOS-list-selection-popup-ActionSheet"><a href="#4-How-to-customize-the-style-of-the-HarmonyOS-list-selection-popup-ActionSheet" class="headerlink" title="4. How to customize the style of the HarmonyOS list selection popup (ActionSheet)?"></a>4. How to customize the style of the HarmonyOS list selection popup (ActionSheet)?</h4><p>ActionSheet does not provide a custom style interface. For custom styles, use the CustomDialog component: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5</a>  </p>
-<p>Display custom popups using the CustomDialogController class. Custom popups are preferred for easier style and content customization.  </p>
-<h4 id="5-Does-HarmonyOS-support-game-loading-with-the-TBS-X5-kernel"><a href="#5-Does-HarmonyOS-support-game-loading-with-the-TBS-X5-kernel" class="headerlink" title="5. Does HarmonyOS support game loading with the TBS (X5) kernel?"></a>5. Does HarmonyOS support game loading with the TBS (X5) kernel?</h4><p>You can try using the system’s native webview component.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1275,7 +1572,7 @@ struct TogglePage2 &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-count">317</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

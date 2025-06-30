@@ -149,6 +149,300 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4126-Daily-HarmonyOS-Next-Knowledge-Desktop-Shortcut-API-Swiper-Display-Anomalies-Page-Screenshot-Prevention-Tabs-Component-Show-Hide-Listening-PDF-Page-Turning-Callbacks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4126-Daily-HarmonyOS-Next-Knowledge-Desktop-Shortcut-API-Swiper-Display-Anomalies-Page-Screenshot-Prevention-Tabs-Component-Show-Hide-Listening-PDF-Page-Turning-Callbacks/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Desktop Shortcut API, Swiper Display Anomalies, Page Screenshot Prevention, Tabs Component Show/Hide Listening, PDF Page Turning Callbacks</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 00:08:05 / Modified: 00:08:24" itemprop="dateCreated datePublished" datetime="2025-06-29T00:08:05+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Knowledge-Desktop-Shortcut-API-Swiper-Display-Anomalies-Page-Screenshot-Prevention-Tabs-Component-Show-Hide-Listening-PDF-Page-Turning-Callbacks"><a href="#Daily-HarmonyOS-Knowledge-Desktop-Shortcut-API-Swiper-Display-Anomalies-Page-Screenshot-Prevention-Tabs-Component-Show-Hide-Listening-PDF-Page-Turning-Callbacks" class="headerlink" title="[Daily HarmonyOS Knowledge] Desktop Shortcut API, Swiper Display Anomalies, Page Screenshot Prevention, Tabs Component Show&#x2F;Hide Listening, PDF Page Turning Callbacks"></a>[Daily HarmonyOS Knowledge] Desktop Shortcut API, Swiper Display Anomalies, Page Screenshot Prevention, Tabs Component Show&#x2F;Hide Listening, PDF Page Turning Callbacks</h1><h4 id="1-API-Description-for-HarmonyOS-desktop-shortcut-handling"><a href="#1-API-Description-for-HarmonyOS-desktop-shortcut-handling" class="headerlink" title="1. API Description for HarmonyOS desktop shortcut handling?"></a>1. API Description for HarmonyOS desktop shortcut handling?</h4><p>HarmonyOS does not consider opening desktop shortcut capabilities. It is recommended to use service cards to customize corresponding scenarios.  </p>
+<p>Shortcuts displayed by long-pressing the app icon can be configured through the <code>shortcuts</code> tag in the <code>module.json5</code> file. These shortcuts only allow jumping to a specific UIAbility, cannot directly jump to non-entry pages, and can configure up to four shortcuts.  </p>
+<p>For app shortcuts, developers can currently implement similar capabilities through service cards. Clicking a service card can jump to a specified UIAbility, and developers can launch different pages based on passed parameters. However, service cards cannot be created within the app and can only be added to the desktop by users through the steps: long-press the app -&gt; preview -&gt; add.  </p>
+<p>Reference documents:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/module-configuration-file-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/module-configuration-file-V5</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/formkit-overview-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/formkit-overview-V5</a></li>
+</ul>
+<h4 id="2-HarmonyOS-Swiper-shows-anomalies-after-using-customContentTransition-cards-overlap-instead-of-switching"><a href="#2-HarmonyOS-Swiper-shows-anomalies-after-using-customContentTransition-cards-overlap-instead-of-switching" class="headerlink" title="2. HarmonyOS Swiper shows anomalies after using customContentTransition (cards overlap instead of switching)?"></a>2. HarmonyOS Swiper shows anomalies after using customContentTransition (cards overlap instead of switching)?</h4><pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State cardChangeAnimationDuration: number = 0
+  swiperController: SwiperController = new SwiperController()
+  @State autoPlay: boolean = true
+  userScrolled: boolean = false
+  dataList: Color[] = [Color.Red, Color.Yellow, Color.Blue]
+
+  aboutToAppear(): void &#123;
+    setInterval(() =&gt; &#123;
+      if (this.autoPlay) &#123;
+        this.swiperController.showNext()
+        promptAction.showToast(&#123; message: &#39;Switch to next card&#39; &#125;)
+      &#125;
+    &#125;, 2000);
+  &#125;
+
+  build() &#123;
+    Stack() &#123;
+      Swiper(this.swiperController) &#123;
+        ForEach(this.dataList, (item: Color, index) =&gt; &#123;
+          Text(`Card $&#123;index&#125;`)
+            .textAlign(TextAlign.Center)
+            .font(&#123; size: 17, weight: 500 &#125;)
+            .backgroundColor(item)
+            .opacity(0.5)
+        &#125;)
+      &#125;
+      .autoPlay(false) // The component does not autoplay; autoplay logic is handled by VM calling scrollToIndex/showNext
+      .loop(this.autoPlay)
+      .indicator(false)
+      .duration(this.cardChangeAnimationDuration) // Switching duration can be configured
+      .curve(Curve.Linear) // Note: &lt;=API12 requires .curve(Curve.Linear) for duration to take effect
+      .cachedCount(3)
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+      .nestedScroll(SwiperNestedScrollMode.SELF_FIRST)
+      .onClick(() =&gt; &#123;
+        this.cardChangeAnimationDuration = !this.autoPlay ? 700 : 400
+        this.autoPlay = !this.autoPlay
+        if (this.autoPlay) &#123;
+          this.userScrolled = false
+        &#125;
+      &#125;)
+      .onGestureSwipe((index: number, extraInfo: SwiperAnimationEvent) =&gt; &#123;
+        this.userScrolled = true
+      &#125;)
+      .onAnimationEnd((index: number, extraInfo: SwiperAnimationEvent) =&gt; &#123;
+        if (extraInfo.currentOffset == 0 &amp;&amp; this.userScrolled) &#123;
+          this.autoPlay = false
+        &#125;
+      &#125;)
+      .customContentTransition(&#123;
+        timeout: 1000,
+        transition: (proxy: SwiperContentTransitionProxy) =&gt; &#123;
+
+        &#125;
+      &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>Custom animations require handling relevant logic when implementing <code>customContentTransition</code>. Please refer to Example 4:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-swiper-V5#swipercontentanimatedtransition12%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-swiper-V5#swipercontentanimatedtransition12%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E</a>  </p>
+<h4 id="3-How-to-prevent-screenshot-for-a-specific-page-in-an-HSP-app-on-HarmonyOS"><a href="#3-How-to-prevent-screenshot-for-a-specific-page-in-an-HSP-app-on-HarmonyOS" class="headerlink" title="3. How to prevent screenshot for a specific page in an HSP app on HarmonyOS?"></a>3. How to prevent screenshot for a specific page in an HSP app on HarmonyOS?</h4><p>Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5</a>  </p>
+<p>Implementation steps: Some pages require screenshot prevention. First, apply for privacy window permissions in <code>module.json5</code>. Then, obtain the current window object and set privacy mode in <code>onPageShow()</code>. Cancel privacy mode in the <code>onPageHide()</code> lifecycle when exiting the page.  </p>
+<h4 id="4-How-to-listen-for-component-show-hide-when-switching-components-in-HarmonyOS-Tabs"><a href="#4-How-to-listen-for-component-show-hide-when-switching-components-in-HarmonyOS-Tabs" class="headerlink" title="4. How to listen for component show&#x2F;hide when switching components in HarmonyOS Tabs?"></a>4. How to listen for component show&#x2F;hide when switching components in HarmonyOS Tabs?</h4><p>Want to perform operations when components are displayed, but find that the <code>aboutToAppear</code> method is not triggered.  </p>
+<p>Use <code>visibility</code> for show&#x2F;hide control:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct VisibilityExample &#123;
+  build() &#123;
+    Column() &#123;
+      Column() &#123;
+        // Hidden without occupying space
+        Text(&#39;None&#39;).fontSize(9).width(&#39;90%&#39;).fontColor(0xCCCCCC)
+        Row().visibility(Visibility.None).width(&#39;90%&#39;).height(80).backgroundColor(0xAFEEEE)
+
+        // Hidden but occupying space
+        Text(&#39;Hidden&#39;).fontSize(9).width(&#39;90%&#39;).fontColor(0xCCCCCC)
+        Row().visibility(Visibility.Hidden).width(&#39;90%&#39;).height(80).backgroundColor(0xAFEEEE)
+
+        // Normally displayed, the default display mode for components
+        Text(&#39;Visible&#39;).fontSize(9).width(&#39;90%&#39;).fontColor(0xCCCCCC)
+        Row().visibility(Visibility.Visible).width(&#39;90%&#39;).height(80).backgroundColor(0xAFEEEE)
+      &#125;.width(&#39;90%&#39;).border(&#123; width: 1 &#125;)
+    &#125;.width(&#39;100%&#39;).margin(&#123; top: 5 &#125;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-Can-HarmonyOS-PDF-Kit-support-PDF-page-turning-callbacks"><a href="#5-Can-HarmonyOS-PDF-Kit-support-PDF-page-turning-callbacks" class="headerlink" title="5. Can HarmonyOS PDF Kit support PDF page turning callbacks?"></a>5. Can HarmonyOS PDF Kit support PDF page turning callbacks?</h4><p>PDF Kit currently does not support PDF page turning callbacks. It mainly provides functions such as opening PDF files, adding annotations to pages, headers&#x2F;footers, watermarks, backgrounds, and bookmarks.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4125-Daily-HarmonyOS-Next-Knowledge-Gradient-Effects-Web-Component-Object-Registration-Errors-Deep-Copying-Lists-loadContent-Data-Sharing-and-Half-Screen-Popups/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4125-Daily-HarmonyOS-Next-Knowledge-Gradient-Effects-Web-Component-Object-Registration-Errors-Deep-Copying-Lists-loadContent-Data-Sharing-and-Half-Screen-Popups/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Gradient Effects, Web Component Object Registration Errors, Deep Copying Lists, loadContent Data Sharing, and Half-Screen Popups</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 00:07:03 / Modified: 00:07:23" itemprop="dateCreated datePublished" datetime="2025-06-29T00:07:03+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Gradient-Effects-Web-Component-Object-Registration-Errors-Deep-Copying-Lists-loadContent-Data-Sharing-and-Half-Screen-Popups"><a href="#Daily-HarmonyOS-Next-Knowledge-Gradient-Effects-Web-Component-Object-Registration-Errors-Deep-Copying-Lists-loadContent-Data-Sharing-and-Half-Screen-Popups" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Gradient Effects, Web Component Object Registration Errors, Deep Copying Lists, loadContent Data Sharing, and Half-Screen Popups"></a>[Daily HarmonyOS Next Knowledge] Gradient Effects, Web Component Object Registration Errors, Deep Copying Lists, loadContent Data Sharing, and Half-Screen Popups</h1><h4 id="1-Does-HarmonyOS-have-gradient-effects-similar-to-other-platforms"><a href="#1-Does-HarmonyOS-have-gradient-effects-similar-to-other-platforms" class="headerlink" title="1. Does HarmonyOS have gradient effects similar to other platforms?"></a>1. Does HarmonyOS have gradient effects similar to other platforms?</h4><p>To achieve gradient effects, refer to the following code:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Page240126155113078</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello World&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Row</span>() &#123;</span><br><span class="line">          <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">            .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">            .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">            .<span class="title function_">blendMode</span>(<span class="title class_">BlendMode</span>.<span class="property">DST_IN</span>, <span class="title class_">BlendApplyType</span>.<span class="property">OFFSCREEN</span>)</span><br><span class="line">        &#125;.<span class="title function_">linearGradient</span>(&#123;</span><br><span class="line">          <span class="attr">direction</span>: <span class="title class_">GradientDirection</span>.<span class="property">Right</span>,</span><br><span class="line">          <span class="attr">colors</span>: [[<span class="number">0x000000</span>, <span class="number">0.0</span>], [<span class="number">0xffffff</span>, <span class="number">1.0</span>]]</span><br><span class="line">        &#125;).<span class="title function_">blendMode</span>(<span class="title class_">BlendMode</span>.<span class="property">SRC_OVER</span>, <span class="title class_">BlendApplyType</span>.<span class="property">OFFSCREEN</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>After testing, the following code produces a similar effect to the provided screenshot. Here’s the example code with minor adjustments:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Page240126155113078</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;文化莞&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Row</span>() &#123;</span><br><span class="line">          <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">            .<span class="title function_">fontSize</span>(<span class="number">20</span>)</span><br><span class="line">            .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">            .<span class="title function_">blendMode</span>(<span class="title class_">BlendMode</span>.<span class="property">DST_IN</span>, <span class="title class_">BlendApplyType</span>.<span class="property">OFFSCREEN</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">linearGradient</span>(&#123;</span><br><span class="line">          <span class="attr">direction</span>: <span class="title class_">GradientDirection</span>.<span class="property">Right</span>,</span><br><span class="line">          <span class="attr">colors</span>: [[<span class="number">0x000000</span>, <span class="number">0.0</span>], [<span class="number">0xffffff</span>, <span class="number">0.8</span>]]</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">blendMode</span>(<span class="title class_">BlendMode</span>.<span class="property">SRC_OVER</span>, <span class="title class_">BlendApplyType</span>.<span class="property">OFFSCREEN</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// .backgroundColor(Color.Blue)</span></span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Based on your description, here’s a reference implementation for a horizontal list with gradient effects:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">ListExample</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">arr</span>: <span class="built_in">string</span>[] = [<span class="string">&#x27;Film&#x27;</span>, <span class="string">&#x27;Life&#x27;</span>, <span class="string">&#x27;Military&#x27;</span>, <span class="string">&#x27;History&#x27;</span>, <span class="string">&#x27;Novel&#x27;</span>, <span class="string">&#x27;Movie&#x27;</span>, <span class="string">&#x27;Reveal&#x27;</span>, <span class="string">&#x27;Star&#x27;</span>, <span class="string">&#x27;Society&#x27;</span>, <span class="string">&#x27;Explosion&#x27;</span>, <span class="string">&#x27;Good&#x27;</span>, <span class="string">&#x27;Featured&#x27;</span>];</span><br><span class="line">  <span class="keyword">private</span> <span class="attr">scroller</span>: <span class="title class_">Scroller</span> = <span class="keyword">new</span> <span class="title class_">Scroller</span>();</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Stack</span>() &#123;</span><br><span class="line">      <span class="title class_">List</span>(&#123; <span class="attr">space</span>: <span class="number">10</span> &#125;) &#123;</span><br><span class="line">        <span class="title class_">ForEach</span>(<span class="variable language_">this</span>.<span class="property">arr</span>, <span class="function">(<span class="params"><span class="attr">item</span>: <span class="built_in">string</span></span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="title class_">ListItem</span>() &#123;</span><br><span class="line">            <span class="title class_">Text</span>(item)</span><br><span class="line">              .<span class="title function_">width</span>(<span class="number">50</span>)</span><br><span class="line">              .<span class="title function_">height</span>(<span class="number">64</span>)</span><br><span class="line">              .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">              .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">              .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;, <span class="function">(<span class="params"><span class="attr">item</span>: <span class="built_in">string</span></span>) =&gt;</span> item);</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">listDirection</span>(<span class="title class_">Axis</span>.<span class="property">Horizontal</span>)</span><br><span class="line">      .<span class="title function_">scrollBar</span>(<span class="title class_">BarState</span>.<span class="property">Off</span>)</span><br><span class="line">      .<span class="title function_">padding</span>(&#123; <span class="attr">top</span>: <span class="number">20</span>, <span class="attr">bottom</span>: <span class="number">20</span> &#125;)</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&quot;80%&quot;</span>)</span><br><span class="line">      .<span class="title function_">height</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line"></span><br><span class="line">      <span class="title class_">Stack</span>() &#123;&#125;</span><br><span class="line">      .<span class="title function_">linearGradient</span>(&#123;</span><br><span class="line">        <span class="attr">angle</span>: <span class="number">90</span>,</span><br><span class="line">        <span class="attr">colors</span>: [ [<span class="string">&#x27;rgba(255,255,255,0)&#x27;</span>, <span class="number">0.9</span>], [<span class="number">0xffffff</span>, <span class="number">1.0</span>]]</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&quot;80%&quot;</span>)</span><br><span class="line">      .<span class="title function_">height</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">      .<span class="title function_">hitTestBehavior</span>(<span class="title class_">HitTestMode</span>.<span class="property">None</span>)</span><br><span class="line">    &#125;.<span class="title function_">height</span>(<span class="number">100</span>).<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>).<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="2-When-registering-an-object-in-the-HarmonyOS-Web-component-the-object-declaration-reports-an-“ArkTS-no-untyped-obj-literals”-error"><a href="#2-When-registering-an-object-in-the-HarmonyOS-Web-component-the-object-declaration-reports-an-“ArkTS-no-untyped-obj-literals”-error" class="headerlink" title="2. When registering an object in the HarmonyOS Web component, the object declaration reports an “ArkTS-no-untyped-obj-literals” error?"></a>2. When registering an object in the HarmonyOS Web component, the object declaration reports an “ArkTS-no-untyped-obj-literals” error?</h4><p>To resolve the “ArkTS-no-untyped-obj-literals” error, refer to:<br><a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/arkts-more-cases.md#arkts-no-untyped-obj-literals">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/arkts-more-cases.md#arkts-no-untyped-obj-literals</a>  </p>
+<p>Import the type from the SDK and annotate the object literal:  </p>
+<p><strong>Original Code</strong>  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> area = &#123;</span><br><span class="line">  <span class="attr">pixels</span>: <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>(<span class="number">8</span>),</span><br><span class="line">  <span class="attr">offset</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">stride</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="attr">region</span>: &#123; <span class="attr">size</span>: &#123; <span class="attr">height</span>: <span class="number">1</span>, <span class="attr">width</span>: <span class="number">2</span> &#125;, <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Recommended Fix</strong>  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; image &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.ImageKit&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">area</span>: image.<span class="property">PositionArea</span> = &#123;</span><br><span class="line">  <span class="attr">pixels</span>: <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>(<span class="number">8</span>),</span><br><span class="line">  <span class="attr">offset</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">stride</span>: <span class="number">8</span>,</span><br><span class="line">  <span class="attr">region</span>: &#123; <span class="attr">size</span>: &#123; <span class="attr">height</span>: <span class="number">1</span>, <span class="attr">width</span>: <span class="number">2</span> &#125;, <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-How-to-perform-a-deep-copy-of-a-list-in-HarmonyOS"><a href="#3-How-to-perform-a-deep-copy-of-a-list-in-HarmonyOS" class="headerlink" title="3. How to perform a deep copy of a list in HarmonyOS?"></a>3. How to perform a deep copy of a list in HarmonyOS?</h4><p>Currently, ArkTS does not support the <code>any</code> type, making it challenging to write deep copy logic directly in .ets files. When implementing deep copy in .ts files, list data types may not be fully supported. Here’s a workaround:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">deepCopy</span>(<span class="params"><span class="attr">obj</span>: <span class="title class_">ESObject</span></span>): <span class="title class_">ESObject</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&quot;object&quot;</span> || obj === <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> <span class="attr">copy</span>: <span class="title class_">ESObject</span>;</span><br><span class="line">  <span class="keyword">if</span> (<span class="title class_">Array</span>.<span class="title function_">isArray</span>(obj)) &#123;</span><br><span class="line">    copy = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; obj.<span class="property">length</span>; i++) &#123;</span><br><span class="line">      copy[i] = <span class="title function_">deepCopy</span>(obj[i]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    copy = &#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">      <span class="keyword">if</span> (obj.<span class="title function_">hasOwnProperty</span>(key)) &#123;</span><br><span class="line">        copy[key] = <span class="title function_">deepCopy</span>(obj[key]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">arr1</span>: <span class="title class_">Array</span>&lt;<span class="built_in">number</span>&gt; = <span class="keyword">new</span> <span class="title class_">Array</span>&lt;<span class="built_in">number</span>&gt;(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="attr">arr2</span>: <span class="title class_">Array</span>&lt;<span class="built_in">number</span>&gt; = <span class="title function_">deepCopy</span>(arr1);</span><br><span class="line">arr2[<span class="number">2</span>] = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;arr1: &#x27;</span> + <span class="title class_">String</span>(arr1)); <span class="comment">// Output: arr1: 1,2,3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;arr2: &#x27;</span> + <span class="title class_">String</span>(arr2)); <span class="comment">// Output: arr2: 1,2,4</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="4-How-to-share-data-between-the-EntryAbility-and-its-loaded-content-page-in-HarmonyOS"><a href="#4-How-to-share-data-between-the-EntryAbility-and-its-loaded-content-page-in-HarmonyOS" class="headerlink" title="4. How to share data between the EntryAbility and its loaded content page in HarmonyOS?"></a>4. How to share data between the EntryAbility and its loaded content page in HarmonyOS?</h4><p>Use <code>LocalStorage</code> to share data between EntryAbility and loaded pages. Refer to the <code>loadContent</code> documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#loadcontent9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#loadcontent9</a>  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">loadContent</span>(<span class="attr">path</span>: <span class="built_in">string</span>, <span class="attr">storage</span>: <span class="title class_">LocalStorage</span>, <span class="attr">callback</span>: <span class="title class_">AsyncCallback</span>&lt;<span class="built_in">void</span>&gt;): <span class="built_in">void</span></span><br></pre></td></tr></table></figure>
+
+<p>Loads a specific page into the window and passes state properties via <code>LocalStorage</code> with an asynchronous callback.  </p>
+<p><strong>Parameters</strong>:  </p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>path</td>
+<td>string</td>
+<td>Yes</td>
+<td>Path to the page content to load (must be listed in <code>main_pages.json</code>).</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>LocalStorage</td>
+<td>Yes</td>
+<td>Page-level UI state storage for passing properties to the loaded page.</td>
+</tr>
+<tr>
+<td>callback</td>
+<td><code>AsyncCallback&lt;void&gt;</code></td>
+<td>Yes</td>
+<td>Callback function.</td>
+</tr>
+</tbody></table>
+<h4 id="5-How-to-create-a-half-screen-popup-with-CustomDialogController-in-HarmonyOS-allowing-interaction-outside-the-popup"><a href="#5-How-to-create-a-half-screen-popup-with-CustomDialogController-in-HarmonyOS-allowing-interaction-outside-the-popup" class="headerlink" title="5. How to create a half-screen popup with CustomDialogController in HarmonyOS, allowing interaction outside the popup?"></a>5. How to create a half-screen popup with CustomDialogController in HarmonyOS, allowing interaction outside the popup?</h4><ol>
+<li><strong>Set the popup’s masking area</strong> to prevent event propagation within the mask but allow it outside.  </li>
+<li><strong>Set <code>isModal</code> to <code>false</code></strong> and manually control the overlay’s visibility using <code>hitTestBehavior(HitTestMode.None)</code> to make the overlay non-interactive.</li>
+</ol>
+<p><strong>Sample Code</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CustomDialog</span></span><br><span class="line">struct <span class="title class_">MyDialog</span> &#123;</span><br><span class="line">  <span class="meta">@Link</span> <span class="attr">visible</span>: <span class="title class_">Visibility</span>;</span><br><span class="line">  <span class="attr">controller1</span>: <span class="title class_">CustomDialogController</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">10</span> &#125;) &#123;</span><br><span class="line">        <span class="title class_">Text</span>(<span class="string">&#x27;Custom Popup&#x27;</span>).<span class="title function_">fontSize</span>(<span class="number">25</span>).<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Blue</span>);</span><br><span class="line">        <span class="title class_">Flex</span>(&#123; <span class="attr">justifyContent</span>: <span class="title class_">FlexAlign</span>.<span class="property">SpaceAround</span> &#125;) &#123;</span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;Cancel&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">controller1</span>.<span class="title function_">close</span>();</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">None</span>;</span><br><span class="line">          &#125;).<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>).<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>);</span><br><span class="line">          </span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;Confirm&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">controller1</span>.<span class="title function_">close</span>();</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">None</span>;</span><br><span class="line">          &#125;).<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>).<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>);</span><br><span class="line">        &#125;.<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>);</span><br><span class="line">      &#125;.<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>);</span><br><span class="line">    &#125;.<span class="title function_">height</span>(<span class="number">100</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">visible</span>: <span class="title class_">Visibility</span> = <span class="title class_">Visibility</span>.<span class="property">None</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="attr">arr</span>: <span class="built_in">number</span>[] = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>];</span><br><span class="line">  </span><br><span class="line">  <span class="attr">dialogController1</span>: <span class="title class_">CustomDialogController</span> = <span class="keyword">new</span> <span class="title class_">CustomDialogController</span>(&#123;</span><br><span class="line">    <span class="attr">builder</span>: <span class="title class_">MyDialog</span>(&#123; <span class="attr">visible</span>: <span class="variable language_">this</span>.<span class="property">visible</span> &#125;),</span><br><span class="line">    <span class="attr">offset</span>: &#123; <span class="attr">dx</span>: <span class="number">0</span>, <span class="attr">dy</span>: <span class="number">0</span> &#125;,</span><br><span class="line">    <span class="attr">autoCancel</span>: <span class="literal">false</span>,  <span class="comment">// Prevent closing when clicking outside</span></span><br><span class="line">    <span class="attr">isModal</span>: <span class="literal">false</span>,     <span class="comment">// Disable default modal behavior</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">10</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Open Popup&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">dialogController1</span>.<span class="title function_">open</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">Visible</span>;</span><br><span class="line">      &#125;);</span><br><span class="line">      </span><br><span class="line">      <span class="title class_">List</span>() &#123;</span><br><span class="line">        <span class="title class_">ForEach</span>(<span class="variable language_">this</span>.<span class="property">arr</span>, <span class="function">(<span class="params"><span class="attr">item</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="title class_">ListItem</span>() &#123;</span><br><span class="line">            <span class="title class_">Row</span>() &#123;</span><br><span class="line">              <span class="title class_">Text</span>(<span class="string">&#x27;Text&#x27;</span>)</span><br><span class="line">            &#125;.<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">Center</span>).<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>).<span class="title function_">backgroundColor</span>(<span class="number">0xFFFFFF</span>).<span class="title function_">height</span>(<span class="number">100</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;.<span class="title function_">divider</span>(&#123; <span class="attr">strokeWidth</span>: <span class="number">2</span>, <span class="attr">color</span>: <span class="string">&#x27;#F1F3F5&#x27;</span> &#125;).<span class="title function_">height</span>(<span class="string">&#x27;90%&#x27;</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="title class_">Column</span>()</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">        .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">        .<span class="title function_">position</span>(&#123; <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;)</span><br><span class="line">        .<span class="title function_">zIndex</span>(<span class="number">10</span>)</span><br><span class="line">        .<span class="title function_">backgroundColor</span>(<span class="number">0x33000000</span>)</span><br><span class="line">        .<span class="title function_">visibility</span>(<span class="variable language_">this</span>.<span class="property">visible</span>)</span><br><span class="line">        .<span class="title function_">hitTestBehavior</span>(<span class="title class_">HitTestMode</span>.<span class="property">None</span>);</span><br><span class="line">    &#125;.<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4124-Daily-HarmonyOS-Next-Knowledge-App-Icon-Errors-ObservedV2-Best-Practices-Web-SSL-Errors-Taskpool-Issues-and-Network-Image-Downloading/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1346,305 +1640,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/A-Understanding-Abilities-in-HarmonyOS-Next/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/A-Understanding-Abilities-in-HarmonyOS-Next/" class="post-title-link" itemprop="url">Understanding Abilities in HarmonyOS Next</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 12:23:18 / Modified: 12:25:21" itemprop="dateCreated datePublished" datetime="2025-06-27T12:23:18+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Understanding-Abilities-in-HarmonyOS-Next"><a href="#Understanding-Abilities-in-HarmonyOS-Next" class="headerlink" title="Understanding Abilities in HarmonyOS Next"></a>Understanding Abilities in HarmonyOS Next</h1><p>When developing for Android, we’re familiar with the four main components. In HarmonyOS Next development, the first concept we encounter is the “Ability.” But what exactly is an Ability? This article aims to thoroughly explore and clarify this concept.</p>
-<p>In HarmonyOS, the basic page element is a Page annotated with <code>@Entry</code>. So, what’s the relationship between Pages and Abilities? The following Stage model conceptual diagram provides an overview:</p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability.png" alt="Understanding Abilities in HarmonyOS Next"></p>
-<ul>
-<li>Applications submitted to app stores are packaged as Apps, which can contain one or multiple HAPs (Harmony Ability Packages).</li>
-<li>During runtime, an App corresponds to an Application instance, which holds an ApplicationContext.</li>
-<li>A HAP corresponds to an AbilityStage during runtime, which maintains an AbilityStageContext and can manage multiple UIAbilities and ExtensionAbilities.</li>
-<li>A UIAbility manages a WindowStage, which contains a Window, and a Window can host multiple ArkUI Pages.</li>
-<li>Each UIAbility holds a UIAbilityContext.</li>
-</ul>
-<h2 id="Fundamental-Concepts"><a href="#Fundamental-Concepts" class="headerlink" title="Fundamental Concepts"></a>Fundamental Concepts</h2><h3 id="AbilityStage"><a href="#AbilityStage" class="headerlink" title="AbilityStage"></a>AbilityStage</h3><p>AbilityStage is the runtime class for HAPs. It provides developers with notifications when a HAP is loaded, allowing for initialization tasks such as resource preloading and thread creation.</p>
-<p>AbilityStage serves as a module-level component container. When a HAP is first loaded, an AbilityStage instance is created for that module, enabling initialization operations. AbilityStage and Module have a one-to-one correspondence - each Module has exactly one AbilityStage.</p>
-<p>In DevEco Studio’s default project template, AbilityStage isn’t automatically generated. To utilize AbilityStage’s capabilities, you need to manually create an AbilityStage file. Here’s the step-by-step process:</p>
-<ol>
-<li>In the ets directory of your project module, right-click and select “New &gt; Directory” to create a new directory named “myabilitystage.”</li>
-<li>Within the myabilitystage directory, right-click and select “New &gt; ArkTS File” to create a file named “MyAbilityStage.ets.”</li>
-<li>Open MyAbilityStage.ets and import the AbilityStage dependency package. Create a custom class that extends AbilityStage and implement the required lifecycle callbacks. The example below includes an <code>onCreate()</code> lifecycle callback:</li>
-</ol>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AbilityStage</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.AbilityKit&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyAbilityStage</span> <span class="keyword">extends</span> <span class="title class_ inherited__">AbilityStage</span> &#123;</span><br><span class="line">    <span class="comment">// Called when the application is created.</span></span><br><span class="line">    <span class="title function_">onCreate</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onCreate is called&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Event triggered when starting a specified ability</span></span><br><span class="line">    <span class="title function_">onAcceptWant</span>(<span class="params"><span class="attr">want</span>: <span class="title class_">Want</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onAcceptWant called&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;com.example.test&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Callback when starting a UIAbility in a specified process</span></span><br><span class="line">    <span class="title function_">onNewProcessRequest</span>(<span class="params"><span class="attr">want</span>: <span class="title class_">Want</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onNewProcessRequest called&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;com.example.test&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Environment change notification interface, called when global configuration changes occur</span></span><br><span class="line">    <span class="title function_">onConfigurationUpdate</span>(<span class="params"><span class="attr">config</span>: <span class="title class_">Configuration</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`onConfigurationUpdate, language: <span class="subst">$&#123;config.language&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Called when the system decides to adjust memory usage. For example, when there&#x27;s insufficient memory to run background processes.</span></span><br><span class="line">    <span class="title function_">onMemoryLevel</span>(<span class="params"><span class="attr">level</span>: <span class="title class_">AbilityConstant</span>.<span class="title class_">MemoryLevel</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`onMemoryLevel, level: <span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(level)&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Called when the application is being destroyed. This method is invoked during normal lifecycle scheduling.</span></span><br><span class="line">    <span class="comment">// It won&#x27;t be called if the application exits abnormally or is terminated.</span></span><br><span class="line">    <span class="title function_">onDestroy</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onDestroy is called&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>In the module.json5 configuration file, specify the srcEntry parameter to define the code path corresponding to the module, serving as the entry point for HAP loading:</li>
-</ol>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;module&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;entry&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;entry&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;srcEntry&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./ets/myabilitystage/MyAbilityStage.ets&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="UIAbility"><a href="#UIAbility" class="headerlink" title="UIAbility"></a>UIAbility</h3><p>UIAbility is an application component that contains a UI interface, inheriting from Ability. It provides lifecycle callbacks for component creation, destruction, and foreground&#x2F;background transitions, as well as component collaboration capabilities. The main collaboration features include:</p>
-<ul>
-<li><strong>Caller</strong>: Returned by the <code>startAbilityByCall</code> interface, the CallerAbility (calling component) can communicate with the CalleeAbility (called component) using the Caller.</li>
-<li><strong>Callee</strong>: An internal object of UIAbility, through which the CalleeAbility (called component) can communicate with the Caller.</li>
-</ul>
-<p>The inheritance relationships among various Abilities are illustrated in the following diagram:</p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-3.png" alt="Understanding Abilities in HarmonyOS Next - Ability Relationships"></p>
-<p>UIAbility is an application component that incorporates a UI, primarily designed for user interaction.</p>
-<p><strong>Design Philosophy of UIAbility:</strong></p>
-<ol>
-<li>Natively supports cross-end migration and multi-end collaboration at the application component level.</li>
-<li>Supports multiple devices and various window forms.</li>
-</ol>
-<p><strong>Division Principles and Recommendations for UIAbility:</strong><br>UIAbility is the basic unit of system scheduling, providing windows for application interface rendering. An application can contain one or multiple UIAbility components. For example, in a payment application, the entry functionality and payment&#x2F;receipt functions can be configured as separate UIAbilities.</p>
-<p>Each instance of a UIAbility component displays a corresponding task in the recent tasks list.</p>
-<p>For developers, the choice between using a single or multiple UIAbilities depends on specific scenarios:</p>
-<ul>
-<li>If you want to see only one task in the task view, it’s recommended to use a “single UIAbility + multiple pages” approach to avoid unnecessary resource loading.</li>
-<li>If you need to display multiple tasks in the task view or require simultaneous multi-window support, it’s advisable to use multiple UIAbilities to implement different functions.</li>
-</ul>
-<p>For instance, in an instant messaging application, using separate UIAbilities for the message list and audio&#x2F;video calls enables easy task window switching and allows the application’s two task windows to be displayed side-by-side on a single screen.</p>
-<p>To enable proper functionality of UIAbility in your application, you need to declare the UIAbility’s name, entry point, label, and other relevant information in the abilities tag of the module.json5 configuration file:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;module&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="attr">&quot;abilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;EntryAbility&quot;</span><span class="punctuation">,</span> <span class="comment">// Name of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;srcEntry&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./ets/entryability/EntryAbility.ets&quot;</span><span class="punctuation">,</span> <span class="comment">// Code path of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$string:EntryAbility_desc&quot;</span><span class="punctuation">,</span> <span class="comment">// Description information of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;icon&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$media:icon&quot;</span><span class="punctuation">,</span> <span class="comment">// Icon of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;label&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$string:EntryAbility_label&quot;</span><span class="punctuation">,</span> <span class="comment">// Label of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;startWindowIcon&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$media:icon&quot;</span><span class="punctuation">,</span> <span class="comment">// Index of the resource file for the startup page icon of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;startWindowBackground&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$color:start_window_background&quot;</span><span class="punctuation">,</span> <span class="comment">// Index of the resource file for the startup page background color of the UIAbility component</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="WindowStage"><a href="#WindowStage" class="headerlink" title="WindowStage"></a>WindowStage</h3><p>The WindowStage serves as a window manager, overseeing various basic window units. It supports the following methods:</p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-4.png" alt="Understanding Abilities in HarmonyOS Next - WindowStage Methods"></p>
-<h3 id="Window"><a href="#Window" class="headerlink" title="Window"></a>Window</h3><p>The current window instance, which is the basic unit managed by the window manager.</p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-5.png" alt="Understanding Abilities in HarmonyOS Next - Window"></p>
-<h3 id="HAP-Harmony-Ability-Package"><a href="#HAP-Harmony-Ability-Package" class="headerlink" title="HAP (Harmony Ability Package)"></a>HAP (Harmony Ability Package)</h3><p>A HAP (Harmony Ability Package) is the basic unit for application installation and execution. A HAP package is a module package generated by bundling code, resources, third-party libraries, configuration files, etc. It primarily comes in two types:</p>
-<ul>
-<li><strong>entry</strong>: The main module of the application, serving as the entry point and providing the application’s basic functionalities.</li>
-<li><strong>feature</strong>: A dynamic feature module of the application, acting as an extension of the application’s capabilities, which can be selectively installed based on user needs and device type.</li>
-</ul>
-<p>An application package can contain just a basic entry package or a combination of a basic entry package and multiple functional feature packages.</p>
-<p>There are two usage scenarios for HAPs:</p>
-<ul>
-<li><p><strong>Single HAP Scenario</strong>: If the application only contains UIAbility components and doesn’t require ExtensionAbility components, it’s preferable to use a single HAP (i.e., one entry package) for development. Although a single HAP can contain one or multiple UIAbility components, to avoid unnecessary resource loading, the “single UIAbility + multiple pages” approach is recommended.</p>
-</li>
-<li><p><strong>Multiple HAP Scenario</strong>: For applications with more complex functionalities requiring ExtensionAbility components, a multiple HAP approach (i.e., one entry package + multiple feature packages) is suitable. Each HAP contains either a UIAbility component or an ExtensionAbility component. In this scenario, multiple HAPs might reference the same library files, potentially leading to duplicate packaging issues.</p>
-</li>
-</ul>
-<p><strong>Development and Compilation State Project Structure Views:</strong></p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-1.png" alt="Understanding Abilities in HarmonyOS Next - Project Structure"></p>
-<p>Each application must include at least one <code>.hap</code> file and may include several <code>.hsp</code> files (or none). All <code>.hap</code> and <code>.hsp</code> files within an application collectively form a Bundle, with the corresponding <code>bundleName</code> serving as the application’s unique identifier (refer to the <code>bundleName</code> tag in the app.json5 configuration file).</p>
-<p>When publishing an application to an app store, the Bundle needs to be packaged into an <code>.app</code> file (referred to as an App Pack or Application Package). Simultaneously, DevEco Studio automatically generates a <code>pack.info</code> file. This <code>pack.info</code> file describes the attributes of each HAP and HSP in the App Pack, including the <code>bundleName</code> and <code>versionCode</code> information of the APP, as well as details such as the <code>name</code>, <code>type</code>, and <code>abilities</code> within each Module.</p>
-<p><strong>Compilation, Publishing, and Deployment Workflow:</strong></p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-2.png" alt="Understanding Abilities in HarmonyOS Next - Compilation and Deployment Workflow"></p>
-<p>In essence, a HAP is the basic unit installed on a device, while an App is merely a package collection for store distribution. The actual installation still occurs on a per-HAP basis.</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/stage-model-development-overview-V5">Stage Model Development Overview</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/abilitystage-V5">AbilityStage Component Container</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-app-ability-abilitystage-V5">@ohos.app.ability.AbilityStage (AbilityStage)</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/application-package-structure-stage-V5">Stage Model Application Package Structure</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/hap-package-V5">HAP</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-app-ability-uiability-V5">@ohos.app.ability.UIAbility (UIAbility)</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-app-ability-ability-V5">@ohos.app.ability.Ability (Ability Base Class)</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/application-window-stage-V5">Managing Application Windows (Stage Model)</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#windowstage9">@ohos.window (Window)</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/uiability-overview-V5">UIAbility Component Overview</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/extensionability-overview-V5">ExtensionAbility Component</a></li>
-</ol>
-<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Abilities in HarmonyOS Next provide system configuration update callbacks and system memory adjustment callbacks. Among these, UIAbility is an application component that incorporates a UI, primarily designed for user interaction. Each UIAbility corresponds to a Window and can contain multiple Pages. Furthermore, each UIAbility corresponds to a single task in the recent tasks list.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/A-A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/A-A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next/" class="post-title-link" itemprop="url">A Comprehensive Guide to Resources and Access in HarmonyOS Next</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 12:18:54 / Modified: 12:20:42" itemprop="dateCreated datePublished" datetime="2025-06-27T12:18:54+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next"><a href="#A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next" class="headerlink" title="A Comprehensive Guide to Resources and Access in HarmonyOS Next"></a>A Comprehensive Guide to Resources and Access in HarmonyOS Next</h1><h3 id="1-Background-Introduction"><a href="#1-Background-Introduction" class="headerlink" title="1. Background Introduction"></a>1. Background Introduction</h3><p>In application development, we utilize various types of resource files, including strings, images, audio&#x2F;video media, color values, themes, etc. Strings may involve internationalization requirements, while colors and images might need to support theme switching.</p>
-<p>Developers familiar with Android know that Android has three types of resources:</p>
-<ol>
-<li><strong>Compiled Resources</strong>: Stored under the <code>res</code> directory, these resources participate in compilation and are accessed through the R file. They include application resources such as icons and GUI layouts. During packaging, these resources are processed by the aapt (Android Asset Packaging Tool) and mapped to IDs in the Android project’s R file, typically accessed via resource IDs.</li>
-<li><strong>Raw Resources</strong>: Located under <code>res/raw</code>, these store original, unprocessed resource files like audio, video, and plain text files. These files remain unchanged during compilation.</li>
-<li><strong>Assets</strong>: Stored in the <code>assets</code> directory, these are static files packaged into the application for deployment to devices. Files in the <code>assets</code> folder are not compiled into binary format but are copied directly to the device.</li>
-</ol>
-<p>HarmonyOS Next provides a similar resource directory structure for storing resources such as colors, fonts, spacing, and icons. The values of these resources may vary across different devices or configurations. Let’s first explore the resource directory structure in HarmonyOS Next.</p>
-<h3 id="2-Resource-Directory-Structure"><a href="#2-Resource-Directory-Structure" class="headerlink" title="2. Resource Directory Structure"></a>2. Resource Directory Structure</h3><p>HarmonyOS Next’s directories are divided into two categories:</p>
-<ul>
-<li><strong>Resource Directories</strong>: Include base directory, qualifier directories, rawfile directory, and resfile directory</li>
-<li><strong>Resource Group Directories</strong>: Include element, media, profile</li>
-</ul>
-<p>The resource structure in a project is shown in the following diagram:</p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE.png" alt="Resource Directory Structure"></p>
-<p>Now, let’s detail the purpose of each directory:</p>
-<h4 id="Base-Directory"><a href="#Base-Directory" class="headerlink" title="Base Directory"></a>Base Directory</h4><ul>
-<li>The base directory is a default directory that exists by default.</li>
-<li>Its secondary subdirectory <code>element</code> stores basic elements such as strings, colors, and boolean values.</li>
-<li>The <code>media</code> and <code>profile</code> subdirectories store resource files like media, animations, and layouts.</li>
-<li>Resource files in this directory are compiled into binary files and assigned resource IDs.</li>
-<li>Access is provided by specifying the resource type (type) and resource name (name).</li>
-<li>This is similar to Android’s res directory.</li>
-</ul>
-<h4 id="Qualifier-Directories"><a href="#Qualifier-Directories" class="headerlink" title="Qualifier Directories"></a>Qualifier Directories</h4><ul>
-<li>Two default qualifier directories are provided: <code>en_US</code> (American English) and <code>zh_CN</code> (Simplified Chinese).</li>
-<li>Developers can create additional qualifier directories as needed for their development.</li>
-<li>The secondary subdirectories <code>element</code>, <code>media</code>, and <code>profile</code> store basic elements like strings, colors, and boolean values, as well as resource files like media, animations, and layouts.</li>
-<li>Resource files in these directories are compiled into binary files and assigned resource IDs.</li>
-<li>Access is provided by specifying the resource type (type) and resource name (name).</li>
-<li>Available qualifiers include:<ul>
-<li>Mobile country code and mobile network code</li>
-<li>Language</li>
-<li>Text</li>
-<li>Country or region</li>
-<li>Screen orientation (portrait&#x2F;landscape)</li>
-<li>Device type</li>
-<li>Color mode</li>
-<li>Screen density</li>
-</ul>
-</li>
-</ul>
-<h4 id="Rawfile-Directory"><a href="#Rawfile-Directory" class="headerlink" title="Rawfile Directory"></a>Rawfile Directory</h4><ul>
-<li>Supports creating multiple levels of subdirectories with customizable names.</li>
-<li>Allows flexible placement of various resource files within the folders.</li>
-<li>Resource files in this directory are directly packaged into the application without compilation and without being assigned resource IDs.</li>
-<li>Access is provided by specifying the file path and filename.</li>
-</ul>
-<h4 id="Resfile-Directory"><a href="#Resfile-Directory" class="headerlink" title="Resfile Directory"></a>Resfile Directory</h4><ul>
-<li>Supports creating multiple levels of subdirectories with customizable names.</li>
-<li>Allows flexible placement of various resource files within the folders.</li>
-<li>Resource files in this directory are directly packaged into the application without compilation and without being assigned resource IDs.</li>
-<li>After application installation, resfile resources are extracted to the application’s sandbox path.</li>
-<li>The resource directory can be accessed via the <code>resourceDir</code> property of the Context object, and files can then be accessed through file paths.</li>
-</ul>
-<h3 id="3-Resource-Access"><a href="#3-Resource-Access" class="headerlink" title="3. Resource Access"></a>3. Resource Access</h3><p>Within a har package, resources can generally be accessed using <code>$r</code> or <code>$rawfile</code>:</p>
-<ul>
-<li>For resource types such as “color”, “float”, “string”, “plural”, “media”, and “profile”, access is provided through the form <code>$r(&#39;app.type.name&#39;)</code>. Here, <code>app</code> refers to resources defined in the resources directory; <code>type</code> indicates the resource type or storage location; and <code>name</code> is the resource name, determined when defining the resource.</li>
-<li>For resources in the rawfile directory, access is provided through the form <code>$rawfile(&#39;filename&#39;)</code>. Here, <code>filename</code> is the relative path of the file under the rawfile directory, including the file extension, and the path must not start with “&#x2F;“.</li>
-<li>By obtaining the ResourceManager through the application context, different resource management interfaces can be called to access various resources. For example:<ul>
-<li><code>getContext().resourceManager.getStringByNameSync(&#39;test&#39;)</code> can retrieve string resources.</li>
-<li><code>getContext().resourceManager.getRawFd(&#39;rawfilepath&#39;)</code> can obtain the descriptor information of the hap package where the Rawfile is located. When accessing rawfile files, the combination of <code>&#123;fd, offset, length&#125;</code> is required.</li>
-</ul>
-</li>
-</ul>
-<p>Here are two important notes:</p>
-<ul>
-<li>For cases where multiple placeholders are used in string.json, access is provided through the form <code>$r(&#39;app.string.label&#39;,&#39;aaa&#39;,&#39;bbb&#39;,444)</code>.</li>
-<li>Accessing resources via resource IDs is more performant than direct resource access.</li>
-</ul>
-<p>For accessing application resources across HAP&#x2F;HSP packages, the <code>createModuleContext(context, moduleName)</code> interface is used to create contexts for different modules within the same application. After obtaining the ResourceManager object, different resource management interfaces can be called to access various resources. Resources can be accessed through <code>$r</code> or <code>$rawfile</code>.</p>
-<h3 id="4-API-Introduction"><a href="#4-API-Introduction" class="headerlink" title="4. API Introduction"></a>4. API Introduction</h3><p>The system provides the <code>@ohos.resourceManager</code> interface for resource access.<br>First, obtain the ResourceManager through <code>resourceManager.getResourceManager</code>, and then access various interfaces such as <code>getStringSync</code> and <code>getMediaContent</code>. The provided interfaces are shown in the following diagrams:</p>
-<p><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE-1.png" alt="Resource Access API 1"><br><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE-2.png" alt="Resource Access API 2"><br><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE-3.png" alt="Resource Access API 3"></p>
-<h3 id="5-Reference-Materials"><a href="#5-Reference-Materials" class="headerlink" title="5. Reference Materials"></a>5. Reference Materials</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/resource-categories-and-access-V5#%E8%B5%84%E6%BA%90%E7%9B%AE%E5%BD%95">Resource Classification and Access</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5">@ohos.resourceManager (Resource Management)</a></li>
-</ul>
-<h3 id="6-Summary"><a href="#6-Summary" class="headerlink" title="6. Summary"></a>6. Summary</h3><p>HarmonyOS Next provides resource directories similar to Android, including base, qualifier, and rawfile directories. The base directory contains compiled binary files, while qualifier directories store corresponding resources based on different languages or device types. The rawfile directory directly packages original files without compilation. Resources can be accessed through <code>$r</code> or <code>$rawfile</code>, or by using the ResourceManager interface.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1714,7 +1709,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-count">317</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

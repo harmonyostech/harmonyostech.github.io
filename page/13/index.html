@@ -149,6 +149,305 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/A-Understanding-Abilities-in-HarmonyOS-Next/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/A-Understanding-Abilities-in-HarmonyOS-Next/" class="post-title-link" itemprop="url">Understanding Abilities in HarmonyOS Next</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 12:23:18 / Modified: 12:25:21" itemprop="dateCreated datePublished" datetime="2025-06-27T12:23:18+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Understanding-Abilities-in-HarmonyOS-Next"><a href="#Understanding-Abilities-in-HarmonyOS-Next" class="headerlink" title="Understanding Abilities in HarmonyOS Next"></a>Understanding Abilities in HarmonyOS Next</h1><p>When developing for Android, we’re familiar with the four main components. In HarmonyOS Next development, the first concept we encounter is the “Ability.” But what exactly is an Ability? This article aims to thoroughly explore and clarify this concept.</p>
+<p>In HarmonyOS, the basic page element is a Page annotated with <code>@Entry</code>. So, what’s the relationship between Pages and Abilities? The following Stage model conceptual diagram provides an overview:</p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability.png" alt="Understanding Abilities in HarmonyOS Next"></p>
+<ul>
+<li>Applications submitted to app stores are packaged as Apps, which can contain one or multiple HAPs (Harmony Ability Packages).</li>
+<li>During runtime, an App corresponds to an Application instance, which holds an ApplicationContext.</li>
+<li>A HAP corresponds to an AbilityStage during runtime, which maintains an AbilityStageContext and can manage multiple UIAbilities and ExtensionAbilities.</li>
+<li>A UIAbility manages a WindowStage, which contains a Window, and a Window can host multiple ArkUI Pages.</li>
+<li>Each UIAbility holds a UIAbilityContext.</li>
+</ul>
+<h2 id="Fundamental-Concepts"><a href="#Fundamental-Concepts" class="headerlink" title="Fundamental Concepts"></a>Fundamental Concepts</h2><h3 id="AbilityStage"><a href="#AbilityStage" class="headerlink" title="AbilityStage"></a>AbilityStage</h3><p>AbilityStage is the runtime class for HAPs. It provides developers with notifications when a HAP is loaded, allowing for initialization tasks such as resource preloading and thread creation.</p>
+<p>AbilityStage serves as a module-level component container. When a HAP is first loaded, an AbilityStage instance is created for that module, enabling initialization operations. AbilityStage and Module have a one-to-one correspondence - each Module has exactly one AbilityStage.</p>
+<p>In DevEco Studio’s default project template, AbilityStage isn’t automatically generated. To utilize AbilityStage’s capabilities, you need to manually create an AbilityStage file. Here’s the step-by-step process:</p>
+<ol>
+<li>In the ets directory of your project module, right-click and select “New &gt; Directory” to create a new directory named “myabilitystage.”</li>
+<li>Within the myabilitystage directory, right-click and select “New &gt; ArkTS File” to create a file named “MyAbilityStage.ets.”</li>
+<li>Open MyAbilityStage.ets and import the AbilityStage dependency package. Create a custom class that extends AbilityStage and implement the required lifecycle callbacks. The example below includes an <code>onCreate()</code> lifecycle callback:</li>
+</ol>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AbilityStage</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.AbilityKit&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyAbilityStage</span> <span class="keyword">extends</span> <span class="title class_ inherited__">AbilityStage</span> &#123;</span><br><span class="line">    <span class="comment">// Called when the application is created.</span></span><br><span class="line">    <span class="title function_">onCreate</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onCreate is called&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Event triggered when starting a specified ability</span></span><br><span class="line">    <span class="title function_">onAcceptWant</span>(<span class="params"><span class="attr">want</span>: <span class="title class_">Want</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onAcceptWant called&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;com.example.test&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Callback when starting a UIAbility in a specified process</span></span><br><span class="line">    <span class="title function_">onNewProcessRequest</span>(<span class="params"><span class="attr">want</span>: <span class="title class_">Want</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onNewProcessRequest called&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;com.example.test&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Environment change notification interface, called when global configuration changes occur</span></span><br><span class="line">    <span class="title function_">onConfigurationUpdate</span>(<span class="params"><span class="attr">config</span>: <span class="title class_">Configuration</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`onConfigurationUpdate, language: <span class="subst">$&#123;config.language&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Called when the system decides to adjust memory usage. For example, when there&#x27;s insufficient memory to run background processes.</span></span><br><span class="line">    <span class="title function_">onMemoryLevel</span>(<span class="params"><span class="attr">level</span>: <span class="title class_">AbilityConstant</span>.<span class="title class_">MemoryLevel</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`onMemoryLevel, level: <span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(level)&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Called when the application is being destroyed. This method is invoked during normal lifecycle scheduling.</span></span><br><span class="line">    <span class="comment">// It won&#x27;t be called if the application exits abnormally or is terminated.</span></span><br><span class="line">    <span class="title function_">onDestroy</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;MyAbilityStage.onDestroy is called&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>In the module.json5 configuration file, specify the srcEntry parameter to define the code path corresponding to the module, serving as the entry point for HAP loading:</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;module&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;entry&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;entry&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;srcEntry&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./ets/myabilitystage/MyAbilityStage.ets&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="UIAbility"><a href="#UIAbility" class="headerlink" title="UIAbility"></a>UIAbility</h3><p>UIAbility is an application component that contains a UI interface, inheriting from Ability. It provides lifecycle callbacks for component creation, destruction, and foreground&#x2F;background transitions, as well as component collaboration capabilities. The main collaboration features include:</p>
+<ul>
+<li><strong>Caller</strong>: Returned by the <code>startAbilityByCall</code> interface, the CallerAbility (calling component) can communicate with the CalleeAbility (called component) using the Caller.</li>
+<li><strong>Callee</strong>: An internal object of UIAbility, through which the CalleeAbility (called component) can communicate with the Caller.</li>
+</ul>
+<p>The inheritance relationships among various Abilities are illustrated in the following diagram:</p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-3.png" alt="Understanding Abilities in HarmonyOS Next - Ability Relationships"></p>
+<p>UIAbility is an application component that incorporates a UI, primarily designed for user interaction.</p>
+<p><strong>Design Philosophy of UIAbility:</strong></p>
+<ol>
+<li>Natively supports cross-end migration and multi-end collaboration at the application component level.</li>
+<li>Supports multiple devices and various window forms.</li>
+</ol>
+<p><strong>Division Principles and Recommendations for UIAbility:</strong><br>UIAbility is the basic unit of system scheduling, providing windows for application interface rendering. An application can contain one or multiple UIAbility components. For example, in a payment application, the entry functionality and payment&#x2F;receipt functions can be configured as separate UIAbilities.</p>
+<p>Each instance of a UIAbility component displays a corresponding task in the recent tasks list.</p>
+<p>For developers, the choice between using a single or multiple UIAbilities depends on specific scenarios:</p>
+<ul>
+<li>If you want to see only one task in the task view, it’s recommended to use a “single UIAbility + multiple pages” approach to avoid unnecessary resource loading.</li>
+<li>If you need to display multiple tasks in the task view or require simultaneous multi-window support, it’s advisable to use multiple UIAbilities to implement different functions.</li>
+</ul>
+<p>For instance, in an instant messaging application, using separate UIAbilities for the message list and audio&#x2F;video calls enables easy task window switching and allows the application’s two task windows to be displayed side-by-side on a single screen.</p>
+<p>To enable proper functionality of UIAbility in your application, you need to declare the UIAbility’s name, entry point, label, and other relevant information in the abilities tag of the module.json5 configuration file:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;module&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="attr">&quot;abilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;EntryAbility&quot;</span><span class="punctuation">,</span> <span class="comment">// Name of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;srcEntry&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./ets/entryability/EntryAbility.ets&quot;</span><span class="punctuation">,</span> <span class="comment">// Code path of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$string:EntryAbility_desc&quot;</span><span class="punctuation">,</span> <span class="comment">// Description information of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;icon&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$media:icon&quot;</span><span class="punctuation">,</span> <span class="comment">// Icon of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;label&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$string:EntryAbility_label&quot;</span><span class="punctuation">,</span> <span class="comment">// Label of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;startWindowIcon&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$media:icon&quot;</span><span class="punctuation">,</span> <span class="comment">// Index of the resource file for the startup page icon of the UIAbility component</span></span><br><span class="line">        <span class="attr">&quot;startWindowBackground&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$color:start_window_background&quot;</span><span class="punctuation">,</span> <span class="comment">// Index of the resource file for the startup page background color of the UIAbility component</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="WindowStage"><a href="#WindowStage" class="headerlink" title="WindowStage"></a>WindowStage</h3><p>The WindowStage serves as a window manager, overseeing various basic window units. It supports the following methods:</p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-4.png" alt="Understanding Abilities in HarmonyOS Next - WindowStage Methods"></p>
+<h3 id="Window"><a href="#Window" class="headerlink" title="Window"></a>Window</h3><p>The current window instance, which is the basic unit managed by the window manager.</p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-5.png" alt="Understanding Abilities in HarmonyOS Next - Window"></p>
+<h3 id="HAP-Harmony-Ability-Package"><a href="#HAP-Harmony-Ability-Package" class="headerlink" title="HAP (Harmony Ability Package)"></a>HAP (Harmony Ability Package)</h3><p>A HAP (Harmony Ability Package) is the basic unit for application installation and execution. A HAP package is a module package generated by bundling code, resources, third-party libraries, configuration files, etc. It primarily comes in two types:</p>
+<ul>
+<li><strong>entry</strong>: The main module of the application, serving as the entry point and providing the application’s basic functionalities.</li>
+<li><strong>feature</strong>: A dynamic feature module of the application, acting as an extension of the application’s capabilities, which can be selectively installed based on user needs and device type.</li>
+</ul>
+<p>An application package can contain just a basic entry package or a combination of a basic entry package and multiple functional feature packages.</p>
+<p>There are two usage scenarios for HAPs:</p>
+<ul>
+<li><p><strong>Single HAP Scenario</strong>: If the application only contains UIAbility components and doesn’t require ExtensionAbility components, it’s preferable to use a single HAP (i.e., one entry package) for development. Although a single HAP can contain one or multiple UIAbility components, to avoid unnecessary resource loading, the “single UIAbility + multiple pages” approach is recommended.</p>
+</li>
+<li><p><strong>Multiple HAP Scenario</strong>: For applications with more complex functionalities requiring ExtensionAbility components, a multiple HAP approach (i.e., one entry package + multiple feature packages) is suitable. Each HAP contains either a UIAbility component or an ExtensionAbility component. In this scenario, multiple HAPs might reference the same library files, potentially leading to duplicate packaging issues.</p>
+</li>
+</ul>
+<p><strong>Development and Compilation State Project Structure Views:</strong></p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-1.png" alt="Understanding Abilities in HarmonyOS Next - Project Structure"></p>
+<p>Each application must include at least one <code>.hap</code> file and may include several <code>.hsp</code> files (or none). All <code>.hap</code> and <code>.hsp</code> files within an application collectively form a Bundle, with the corresponding <code>bundleName</code> serving as the application’s unique identifier (refer to the <code>bundleName</code> tag in the app.json5 configuration file).</p>
+<p>When publishing an application to an app store, the Bundle needs to be packaged into an <code>.app</code> file (referred to as an App Pack or Application Package). Simultaneously, DevEco Studio automatically generates a <code>pack.info</code> file. This <code>pack.info</code> file describes the attributes of each HAP and HSP in the App Pack, including the <code>bundleName</code> and <code>versionCode</code> information of the APP, as well as details such as the <code>name</code>, <code>type</code>, and <code>abilities</code> within each Module.</p>
+<p><strong>Compilation, Publishing, and Deployment Workflow:</strong></p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82HarmonyOS%20Next%E4%B8%AD%E7%9A%84Ability-2.png" alt="Understanding Abilities in HarmonyOS Next - Compilation and Deployment Workflow"></p>
+<p>In essence, a HAP is the basic unit installed on a device, while an App is merely a package collection for store distribution. The actual installation still occurs on a per-HAP basis.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/stage-model-development-overview-V5">Stage Model Development Overview</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/abilitystage-V5">AbilityStage Component Container</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-app-ability-abilitystage-V5">@ohos.app.ability.AbilityStage (AbilityStage)</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/application-package-structure-stage-V5">Stage Model Application Package Structure</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/hap-package-V5">HAP</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-app-ability-uiability-V5">@ohos.app.ability.UIAbility (UIAbility)</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-app-ability-ability-V5">@ohos.app.ability.Ability (Ability Base Class)</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/application-window-stage-V5">Managing Application Windows (Stage Model)</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#windowstage9">@ohos.window (Window)</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/uiability-overview-V5">UIAbility Component Overview</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/extensionability-overview-V5">ExtensionAbility Component</a></li>
+</ol>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>Abilities in HarmonyOS Next provide system configuration update callbacks and system memory adjustment callbacks. Among these, UIAbility is an application component that incorporates a UI, primarily designed for user interaction. Each UIAbility corresponds to a Window and can contain multiple Pages. Furthermore, each UIAbility corresponds to a single task in the recent tasks list.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/A-A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/A-A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next/" class="post-title-link" itemprop="url">A Comprehensive Guide to Resources and Access in HarmonyOS Next</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 12:18:54 / Modified: 12:20:42" itemprop="dateCreated datePublished" datetime="2025-06-27T12:18:54+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next"><a href="#A-Comprehensive-Guide-to-Resources-and-Access-in-HarmonyOS-Next" class="headerlink" title="A Comprehensive Guide to Resources and Access in HarmonyOS Next"></a>A Comprehensive Guide to Resources and Access in HarmonyOS Next</h1><h3 id="1-Background-Introduction"><a href="#1-Background-Introduction" class="headerlink" title="1. Background Introduction"></a>1. Background Introduction</h3><p>In application development, we utilize various types of resource files, including strings, images, audio&#x2F;video media, color values, themes, etc. Strings may involve internationalization requirements, while colors and images might need to support theme switching.</p>
+<p>Developers familiar with Android know that Android has three types of resources:</p>
+<ol>
+<li><strong>Compiled Resources</strong>: Stored under the <code>res</code> directory, these resources participate in compilation and are accessed through the R file. They include application resources such as icons and GUI layouts. During packaging, these resources are processed by the aapt (Android Asset Packaging Tool) and mapped to IDs in the Android project’s R file, typically accessed via resource IDs.</li>
+<li><strong>Raw Resources</strong>: Located under <code>res/raw</code>, these store original, unprocessed resource files like audio, video, and plain text files. These files remain unchanged during compilation.</li>
+<li><strong>Assets</strong>: Stored in the <code>assets</code> directory, these are static files packaged into the application for deployment to devices. Files in the <code>assets</code> folder are not compiled into binary format but are copied directly to the device.</li>
+</ol>
+<p>HarmonyOS Next provides a similar resource directory structure for storing resources such as colors, fonts, spacing, and icons. The values of these resources may vary across different devices or configurations. Let’s first explore the resource directory structure in HarmonyOS Next.</p>
+<h3 id="2-Resource-Directory-Structure"><a href="#2-Resource-Directory-Structure" class="headerlink" title="2. Resource Directory Structure"></a>2. Resource Directory Structure</h3><p>HarmonyOS Next’s directories are divided into two categories:</p>
+<ul>
+<li><strong>Resource Directories</strong>: Include base directory, qualifier directories, rawfile directory, and resfile directory</li>
+<li><strong>Resource Group Directories</strong>: Include element, media, profile</li>
+</ul>
+<p>The resource structure in a project is shown in the following diagram:</p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE.png" alt="Resource Directory Structure"></p>
+<p>Now, let’s detail the purpose of each directory:</p>
+<h4 id="Base-Directory"><a href="#Base-Directory" class="headerlink" title="Base Directory"></a>Base Directory</h4><ul>
+<li>The base directory is a default directory that exists by default.</li>
+<li>Its secondary subdirectory <code>element</code> stores basic elements such as strings, colors, and boolean values.</li>
+<li>The <code>media</code> and <code>profile</code> subdirectories store resource files like media, animations, and layouts.</li>
+<li>Resource files in this directory are compiled into binary files and assigned resource IDs.</li>
+<li>Access is provided by specifying the resource type (type) and resource name (name).</li>
+<li>This is similar to Android’s res directory.</li>
+</ul>
+<h4 id="Qualifier-Directories"><a href="#Qualifier-Directories" class="headerlink" title="Qualifier Directories"></a>Qualifier Directories</h4><ul>
+<li>Two default qualifier directories are provided: <code>en_US</code> (American English) and <code>zh_CN</code> (Simplified Chinese).</li>
+<li>Developers can create additional qualifier directories as needed for their development.</li>
+<li>The secondary subdirectories <code>element</code>, <code>media</code>, and <code>profile</code> store basic elements like strings, colors, and boolean values, as well as resource files like media, animations, and layouts.</li>
+<li>Resource files in these directories are compiled into binary files and assigned resource IDs.</li>
+<li>Access is provided by specifying the resource type (type) and resource name (name).</li>
+<li>Available qualifiers include:<ul>
+<li>Mobile country code and mobile network code</li>
+<li>Language</li>
+<li>Text</li>
+<li>Country or region</li>
+<li>Screen orientation (portrait&#x2F;landscape)</li>
+<li>Device type</li>
+<li>Color mode</li>
+<li>Screen density</li>
+</ul>
+</li>
+</ul>
+<h4 id="Rawfile-Directory"><a href="#Rawfile-Directory" class="headerlink" title="Rawfile Directory"></a>Rawfile Directory</h4><ul>
+<li>Supports creating multiple levels of subdirectories with customizable names.</li>
+<li>Allows flexible placement of various resource files within the folders.</li>
+<li>Resource files in this directory are directly packaged into the application without compilation and without being assigned resource IDs.</li>
+<li>Access is provided by specifying the file path and filename.</li>
+</ul>
+<h4 id="Resfile-Directory"><a href="#Resfile-Directory" class="headerlink" title="Resfile Directory"></a>Resfile Directory</h4><ul>
+<li>Supports creating multiple levels of subdirectories with customizable names.</li>
+<li>Allows flexible placement of various resource files within the folders.</li>
+<li>Resource files in this directory are directly packaged into the application without compilation and without being assigned resource IDs.</li>
+<li>After application installation, resfile resources are extracted to the application’s sandbox path.</li>
+<li>The resource directory can be accessed via the <code>resourceDir</code> property of the Context object, and files can then be accessed through file paths.</li>
+</ul>
+<h3 id="3-Resource-Access"><a href="#3-Resource-Access" class="headerlink" title="3. Resource Access"></a>3. Resource Access</h3><p>Within a har package, resources can generally be accessed using <code>$r</code> or <code>$rawfile</code>:</p>
+<ul>
+<li>For resource types such as “color”, “float”, “string”, “plural”, “media”, and “profile”, access is provided through the form <code>$r(&#39;app.type.name&#39;)</code>. Here, <code>app</code> refers to resources defined in the resources directory; <code>type</code> indicates the resource type or storage location; and <code>name</code> is the resource name, determined when defining the resource.</li>
+<li>For resources in the rawfile directory, access is provided through the form <code>$rawfile(&#39;filename&#39;)</code>. Here, <code>filename</code> is the relative path of the file under the rawfile directory, including the file extension, and the path must not start with “&#x2F;“.</li>
+<li>By obtaining the ResourceManager through the application context, different resource management interfaces can be called to access various resources. For example:<ul>
+<li><code>getContext().resourceManager.getStringByNameSync(&#39;test&#39;)</code> can retrieve string resources.</li>
+<li><code>getContext().resourceManager.getRawFd(&#39;rawfilepath&#39;)</code> can obtain the descriptor information of the hap package where the Rawfile is located. When accessing rawfile files, the combination of <code>&#123;fd, offset, length&#125;</code> is required.</li>
+</ul>
+</li>
+</ul>
+<p>Here are two important notes:</p>
+<ul>
+<li>For cases where multiple placeholders are used in string.json, access is provided through the form <code>$r(&#39;app.string.label&#39;,&#39;aaa&#39;,&#39;bbb&#39;,444)</code>.</li>
+<li>Accessing resources via resource IDs is more performant than direct resource access.</li>
+</ul>
+<p>For accessing application resources across HAP&#x2F;HSP packages, the <code>createModuleContext(context, moduleName)</code> interface is used to create contexts for different modules within the same application. After obtaining the ResourceManager object, different resource management interfaces can be called to access various resources. Resources can be accessed through <code>$r</code> or <code>$rawfile</code>.</p>
+<h3 id="4-API-Introduction"><a href="#4-API-Introduction" class="headerlink" title="4. API Introduction"></a>4. API Introduction</h3><p>The system provides the <code>@ohos.resourceManager</code> interface for resource access.<br>First, obtain the ResourceManager through <code>resourceManager.getResourceManager</code>, and then access various interfaces such as <code>getStringSync</code> and <code>getMediaContent</code>. The provided interfaces are shown in the following diagrams:</p>
+<p><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE-1.png" alt="Resource Access API 1"><br><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE-2.png" alt="Resource Access API 2"><br><img src="/../images/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3HarmonyOS%20Next%E8%B5%84%E6%BA%90%E5%8F%8A%E8%AE%BF%E9%97%AE-3.png" alt="Resource Access API 3"></p>
+<h3 id="5-Reference-Materials"><a href="#5-Reference-Materials" class="headerlink" title="5. Reference Materials"></a>5. Reference Materials</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/resource-categories-and-access-V5#%E8%B5%84%E6%BA%90%E7%9B%AE%E5%BD%95">Resource Classification and Access</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5">@ohos.resourceManager (Resource Management)</a></li>
+</ul>
+<h3 id="6-Summary"><a href="#6-Summary" class="headerlink" title="6. Summary"></a>6. Summary</h3><p>HarmonyOS Next provides resource directories similar to Android, including base, qualifier, and rawfile directories. The base directory contains compiled binary files, while qualifier directories store corresponding resources based on different languages or device types. The rawfile directory directly packages original files without compilation. Resources can be accessed through <code>$r</code> or <code>$rawfile</code>, or by using the ResourceManager interface.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-HarmonyOS-Next-ArkTS-Memory-Leak-Analysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1468,388 +1767,6 @@ If developing for HarmonyOS and needing to record and analyze logs, understandin
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/" class="post-title-link" itemprop="url">Detailed Explanation of HarmonyOS Next Timer Component</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:35:56 / Modified: 10:37:22" itemprop="dateCreated datePublished" datetime="2025-06-27T10:35:56+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Detailed-Explanation-of-HarmonyOS-Next-Timer-Component"><a href="#Detailed-Explanation-of-HarmonyOS-Next-Timer-Component" class="headerlink" title="Detailed Explanation of HarmonyOS Next Timer Component"></a>Detailed Explanation of HarmonyOS Next Timer Component</h2><h3 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h3><p>In daily UI development, timer controls are frequently used. For example, time progress display during video playback and call duration display in audio&#x2F;video calls require forward-counting timer controls. In some scenarios, countdown timer controls are needed, where a maximum time is set to start the countdown. In Android, we typically use <code>TextView</code> combined with <code>Handler</code> to update the <code>TextView</code> for timing effects. HarmonyOS Next provides the <code>TextTimer</code> component to achieve timing effects. Below is an introduction to the capabilities of <code>TextTimer</code>.  </p>
-<h3 id="Introduction-to-TextTimer"><a href="#Introduction-to-TextTimer" class="headerlink" title="Introduction to TextTimer"></a>Introduction to TextTimer</h3><p><code>TextTimer</code> is a component that displays timing information through text and controls its timer state. When the component is invisible, time changes will stop. The visibility state of the component is handled based on <code>onVisibleAreaChange</code>, and a visibility threshold ratio greater than 0 is considered visible.  </p>
-<h4 id="Attribute-Introduction"><a href="#Attribute-Introduction" class="headerlink" title="Attribute Introduction"></a>Attribute Introduction</h4><ul>
-<li><code>format(value: string)</code>: Sets a custom format, which must include at least one keyword from HH, mm, ss, or SS. If date formats like yy, MM, or dd are used, default values will apply.  </li>
-<li><code>fontColor(value: ResourceColor)</code>: Sets the font color.  </li>
-<li><code>fontWeight(value: number | FontWeight | string)</code>: Sets the font weight of the text. Excessively large values may cause truncation in different fonts. For the number type, values range from <code>[100, 900]</code> with an interval of 100 (default is 400); larger values make the font bolder. The string type supports numeric string forms (e.g., “400”) and keywords like “bold”, “bolder”, “lighter”, “regular”, and “medium”, corresponding to the respective enumeration values in <code>FontWeight</code>.  </li>
-<li><code>fontFamily(value: ResourceStr)</code>: Sets the font list, with the default font being ‘HarmonyOS Sans’. Applications currently support ‘HarmonyOS Sans’ and registered custom fonts, while cards only support ‘HarmonyOS Sans’.  </li>
-<li><code>textShadow(value: ShadowOptions | Array&lt;ShadowOptions&gt;)</code>: Sets text shadow effects. This interface supports array parameters for multiple shadows, but does not support the <code>fill</code> field or intelligent color pickup mode.  </li>
-<li><code>contentModifier(modifier: ContentModifier&lt;TextTimerConfiguration&gt;)</code>: A method to customize the content area of <code>TextTimer</code>, where <code>modifier</code> is a content modifier that developers need to implement by defining a class that adheres to the <code>ContentModifier</code> interface.</li>
-</ul>
-<p>The <code>TextTimer</code> constructor requires a <code>TextTimerOptions</code> object, which includes the following attributes:  </p>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Required</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">isCountDown</td>
-<td align="left">boolean</td>
-<td align="left">No</td>
-<td align="left">Indicates whether to use countdown. When <code>true</code>, the timer starts counting down; when <code>false</code>, it starts counting up.<br><br>Default: <code>false</code></td>
-</tr>
-<tr>
-<td align="left">count</td>
-<td align="left">number</td>
-<td align="left">No</td>
-<td align="left">Timer duration (effective when <code>isCountDown</code> is <code>true</code>), in milliseconds. The maximum duration is 86,400,000 milliseconds (24 hours). When <code>0 &lt; count &lt; 86,400,000</code>, <code>count</code> is the initial timer value; otherwise, the default value is used.<br><br>Default: <code>60000</code></td>
-</tr>
-<tr>
-<td align="left">controller</td>
-<td align="left">TextTimerController</td>
-<td align="left">No</td>
-<td align="left">The <code>TextTimer</code> controller, used to start, pause, etc.</td>
-</tr>
-</tbody></table>
-<p>The <code>TextTimerController</code> mainly controls the timer:  </p>
-<ul>
-<li><code>start()</code>: Starts the timer.  </li>
-<li><code>pause()</code>: Pauses the timer.  </li>
-<li><code>reset()</code>: Resets the timer.</li>
-</ul>
-<h4 id="Event-Introduction"><a href="#Event-Introduction" class="headerlink" title="Event Introduction"></a>Event Introduction</h4><p>The main event is <code>onTimer</code>:  </p>
-<ul>
-<li><code>onTimer(event: (utc: number, elapsedTime: number) =&gt; void)</code>: Triggered when the time text changes. This event is not triggered when the screen is locked or the app is in the background. When setting high-precision formats (SSS, SS), the callback interval may fluctuate. The parameter <code>utc</code> is a Linux timestamp (time elapsed since January 1, 1970) in the minimum unit of the set format; <code>elapsedTime</code> is the elapsed time of the timer, also in the minimum unit of the set format.</li>
-</ul>
-<h3 id="Usage-Examples"><a href="#Usage-Examples" class="headerlink" title="Usage Examples"></a>Usage Examples</h3><h4 id="Example-1-Button-Controlled-Timer"><a href="#Example-1-Button-Controlled-Timer" class="headerlink" title="Example 1: Button-Controlled Timer"></a>Example 1: Button-Controlled Timer</h4><pre><code class="language-typescript">@Entry
-@Component
-struct TextTimerExample &#123;
-  textTimerController: TextTimerController = new TextTimerController()
-  @State format: string = &#39;mm:ss.SS&#39;
-
-  build() &#123;
-    Column() &#123;
-      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
-        .format(this.format)
-        .fontColor(Color.Black)
-        .fontSize(50)
-        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
-          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
-        &#125;)
-      Row() &#123;
-        Button(&quot;start&quot;).onClick(() =&gt; &#123;
-          this.textTimerController.start()
-        &#125;)
-        Button(&quot;pause&quot;).onClick(() =&gt; &#123;
-          this.textTimerController.pause()
-        &#125;)
-        Button(&quot;reset&quot;).onClick(() =&gt; &#123;
-          this.textTimerController.reset()
-        &#125;)
-      &#125;
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p>Effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3.gif"></p>
-<h4 id="Example-2-Automatic-Timing"><a href="#Example-2-Automatic-Timing" class="headerlink" title="Example 2: Automatic Timing"></a>Example 2: Automatic Timing</h4><pre><code class="language-typescript">@Entry
-@Component
-struct TextTimerStart &#123;
-  textTimerController: TextTimerController = new TextTimerController()
-  @State format: string = &#39;mm:ss.SS&#39;
-
-  build() &#123;
-    Column() &#123;
-      Scroll()
-        .height(&#39;20%&#39;)
-      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
-        .format(this.format)
-        .fontColor(Color.Black)
-        .fontSize(50)
-        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
-          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
-        &#125;)
-        .onAppear(() =&gt; &#123;
-          this.textTimerController.start()
-        &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-1.gif"></p>
-<h3 id="Usage-Limitations"><a href="#Usage-Limitations" class="headerlink" title="Usage Limitations"></a>Usage Limitations</h3><p>For forward-counting scenarios, the timer always starts from 0, but some scenarios require starting from a specific time. For example, in page switching during a video call, the full-screen and floating-window pages should have continuous timing instead of restarting from 0. How to achieve this?  </p>
-<p><code>TextTimer</code> provides a content area customization method <code>contentModifier</code>, which requires implementing <code>ContentModifier&lt;TextTimerConfiguration&gt;</code>:  </p>
-<ol>
-<li>First, implement <code>MyTextTimerModifier</code> and encapsulate the <code>Builder</code> method in the <code>applyContent</code> method.  </li>
-<li>Customize the UI in the custom <code>Builder</code> method.  </li>
-<li>Configure the custom <code>MyTextTimerModifier</code> to <code>TextTimer</code> using <code>contentModifier</code>.  </li>
-<li>Remove color and font configurations from <code>TextTimer</code> and configure them in the custom UI.  </li>
-<li>The <code>format</code> setting affects the unit of <code>elapsedTime</code>.  </li>
-<li>Adding an initial value to <code>config.elapsedTime</code> starts timing from a specific time.  </li>
-<li>Convert seconds to the <code>mm:ss</code> format.</li>
-</ol>
-<p><strong>Code example</strong>:  </p>
-<pre><code class="language-typescript">let startTime: number = 100;  
-
-function formatData(diffTimeBySecond: number): string &#123;  
-  const hours = Math.floor(diffTimeBySecond / 3600);  
-  const minutes = Math.floor((diffTimeBySecond % 3600) / 60);  
-  const remainingSeconds = Math.floor(diffTimeBySecond % 60);  
-  
-  // Zero-padding function  
-  const pad = (num: number) =&gt; num.toString().padStart(2, &#39;0&#39;);  
-  
-  return hours &gt; 0  
-    ? `$&#123;pad(hours)&#125;:$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`  
-    : `$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`;  
-&#125;  
-class MyTextTimerModifier implements ContentModifier&lt;TextTimerConfiguration&gt; &#123;  
-  constructor() &#123;  
-  &#125;  
-  applyContent(): WrappedBuilder&lt;[TextTimerConfiguration]&gt; &#123;  
-    return wrapBuilder(buildTextTimer)  
-  &#125;  
-&#125;  
-  
-@Builder  
-function buildTextTimer(config: TextTimerConfiguration) &#123;  
-  Column() &#123;  
-      Column() &#123;  
-        Text(formatData(config.elapsedTime + startTime)).fontColor(Color.Red)  
-    &#125;  
-  &#125;&#125;  
-  
-@Entry  
-@Component  
-struct Index &#123;  
-  @State count: number = 10000  
-  @State myTimerModifier: MyTextTimerModifier = new MyTextTimerModifier()  
-  countUpTextTimerController: TextTimerController = new TextTimerController()  
-  
-  build() &#123;  
-    Row() &#123;  
-      Column() &#123;  
-        TextTimer(&#123; isCountDown: false, controller: this.countUpTextTimerController &#125;)  
-          .contentModifier(this.myTimerModifier)  
-          .onTimer((utc: number, elapsedTime: number) =&gt; &#123;  
-            console.info(&#39;textTimer onTimer utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)  
-          &#125;)  
-        Row() &#123;  
-          Button(&quot;start&quot;).onClick(() =&gt; &#123;  
-            this.countUpTextTimerController.start()  
-          &#125;).margin(10)  
-          Button(&quot;pause&quot;).onClick(() =&gt; &#123;  
-            this.countUpTextTimerController.pause()  
-          &#125;).margin(10)  
-          Button(&quot;reset&quot;).onClick(() =&gt; &#123;  
-            this.countUpTextTimerController.reset()  
-          &#125;).margin(10)  
-        &#125;.margin(20)  
-      &#125;.width(&#39;100%&#39;)  
-    &#125;.height(&#39;100%&#39;)  
-  &#125;  
-&#125;
-</code></pre>
-<p>Final effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-2.gif"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/" class="post-title-link" itemprop="url">In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:33:47 / Modified: 10:34:06" itemprop="dateCreated datePublished" datetime="2025-06-27T10:33:47+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications"><a href="#In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications" class="headerlink" title="In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications"></a>In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications</h1><h2 id="I-Introduction"><a href="#I-Introduction" class="headerlink" title="I. Introduction"></a>I. Introduction</h2><p>In the context of the rapid development of the software industry, the performance, development efficiency, and cross-platform compatibility of applications have become core concerns for developers. As a key tool in the software development process, the performance and features of a compiler directly affect software quality and development cycles. Huawei’s Ark Compiler is an innovative solution designed to meet these needs. Ark Bytecode, as the core product of the Ark Compiler, plays a crucial role in the entire compilation and runtime process. It serves not only as an intermediate bridge for code transformation from high-level languages to machine-executable forms but also embodies numerous optimized and innovative design concepts. Based on Huawei Developer Documentation (<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5</a>), this article provides a comprehensive and in-depth exploration of Ark Bytecode principles, analyzing its architecture, features, and practical application scenarios through rich examples to help developers better understand and leverage this advanced technology.  </p>
-<h2 id="II-Fundamental-Architecture-of-Ark-Bytecode"><a href="#II-Fundamental-Architecture-of-Ark-Bytecode" class="headerlink" title="II. Fundamental Architecture of Ark Bytecode"></a>II. Fundamental Architecture of Ark Bytecode</h2><h3 id="2-1-Nature-and-Role-of-Bytecode"><a href="#2-1-Nature-and-Role-of-Bytecode" class="headerlink" title="2.1 Nature and Role of Bytecode"></a>2.1 Nature and Role of Bytecode</h3><p>Ark Bytecode is a binary file generated by the Ark Compiler after compiling ArkTS&#x2F;TS&#x2F;JS code. Macroscopically, it serves as an intermediate representation (IR) between high-level programming languages and low-level machine code. High-level language code features rich syntax structures and human-readable expressions but cannot be directly executed by computers. Machine code, conversely, is binary instructions directly recognizable by computers, yet writing and maintaining it is extremely challenging for developers. Ark Bytecode resolves this contradiction by transforming high-level language logic into a unified, processable intermediate form that preserves code semantics while facilitating subsequent optimization and execution. The Ark runtime can interpret and execute bytecode, enabling programs to run on different hardware platforms and operating systems, thus achieving cross-platform compatibility.  </p>
-<h3 id="2-2-Detailed-Explanation-of-Instruction-Composition"><a href="#2-2-Detailed-Explanation-of-Instruction-Composition" class="headerlink" title="2.2 Detailed Explanation of Instruction Composition"></a>2.2 Detailed Explanation of Instruction Composition</h3><p>An Ark Bytecode instruction consists of an opcode (instruction name) and an argument list. The opcode is the core identifier of an instruction, determining the specific operation it performs. Opcodes are categorized into prefix-free and prefixed types:  </p>
-<ul>
-<li><strong>Prefix-free opcodes</strong> are typically encoded as 8-bit values. This design prioritizes frequently used instructions, reducing instruction encoding length to save storage and improve execution efficiency.  </li>
-<li><strong>Prefixed opcodes</strong> (16-bit) address the limitation of 256 8-bit opcodes as compiler functionality expands. Stored in little-endian format, they combine an 8-bit prefix with an 8-bit opcode (encoded as <code>opcode &lt;&lt; 8 | prefix</code>). Specific prefixes serve distinct purposes:  <ul>
-<li><strong>0xfe (throw)</strong>: Conditional&#x2F;unconditional throw instructions for exception handling.  </li>
-<li><strong>0xfd (wide)</strong>: Instructions with wider immediate values, IDs, or register indices.  </li>
-<li><strong>0xfc (deprecated)</strong>: Instructions no longer generated by the compiler but maintained for runtime compatibility.  </li>
-<li><strong>0xfb (callruntime)</strong>: Instructions for invoking runtime methods.</li>
-</ul>
-</li>
-</ul>
-<p><strong>Example of a complex ArkTS function</strong>:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">calculate</span>(<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">operation</span>: <span class="built_in">string</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (operation === <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operation === <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> a - b;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string">**Corresponding Ark Bytecode instructions**:  </span></span><br></pre></td></tr></table></figure>
-<p>.function any .calculate(any a0, any a1, any a2) {<br>    lda a2<br>    ldstr 0x0  ; Load string ‘+’<br>    cmp_eq<br>    bz 0x8    ; Jump if not equal<br>    lda a0<br>    sta v0<br>    lda a1<br>    add2 0x1, v0<br>    return<br>.label 0x8<br>    lda a2<br>    ldstr 0x1  ; Load string ‘-‘<br>    cmp_eq<br>    bz 0x14   ; Jump if not equal<br>    lda a0<br>    sta v0<br>    lda a1<br>    sub2 0x1, v0<br>    return<br>.label 0x14<br>    ldai 0x0<br>    return<br>}</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">In this example, `lda` loads parameters/constants into registers; `ldstr` loads strings; `cmp_eq` compares values; `bz` enables conditional jumps; `add2` and `sub2` perform arithmetic operations. These opcodes and arguments implement the function&#x27;s logic and calculations.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 2.3 In-depth Understanding of Registers and Accumulators  </span><br><span class="line">The Ark Virtual Machine (VM) model is register-based, with all registers being virtual. Registers temporarily store data during program execution:  </span><br><span class="line">- For primitive types (e.g., integers, floats), registers are 64-bit wide.  </span><br><span class="line">- For object types, registers are wide enough to hold object references.  </span><br><span class="line"></span><br><span class="line">The **accumulator (acc)** is a special invisible register serving as the default target and parameter for many instructions. Its use simplifies instruction encoding (e.g., `lda` loads values into `acc` for subsequent operations), reduces encoding width, and improves execution efficiency by minimizing register data transfers and memory accesses.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## III. Value Storage Methods of Ark Bytecode  </span><br><span class="line"></span><br><span class="line">### 3.1 Global Variables  </span><br><span class="line">In Script compilation mode, global variables are stored in a global unique map (key-value pairs, where keys are variable names and values are variable values). Global variables exist throughout the program lifecycle and can be accessed by any function, with access/operations enabled via global-related instructions.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS code**:  </span><br><span class="line">```typescript</span><br><span class="line">let globalCounter = 0;</span><br><span class="line">function incrementGlobal() &#123;</span><br><span class="line">    globalCounter++;</span><br><span class="line">&#125;</span><br><span class="line">function getGlobalCounter() &#123;</span><br><span class="line">    return globalCounter;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Corresponding bytecode instructions** (simplified):  </span><br></pre></td></tr></table></figure>
-<p>tryldglobalbyname 0x0, globalCounter<br>sta v0<br>ldai 0x1<br>add2 0x1, v0<br>trystglobalbyname 0x2, globalCounter</p>
-<p>.function any .getGlobalCounter(any a0, any a1, any a2) {<br>    tryldglobalbyname 0x0, globalCounter<br>    return<br>}</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- `tryldglobalbyname` attempts to load `globalCounter` into `acc` (throws an exception if not found).  </span><br><span class="line">- `trystglobalbyname` stores `acc` value into `globalCounter`.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.2 Module Namespaces and Module Variables  </span><br><span class="line">In modern software development, modularization improves code maintainability and reusability. Module namespaces and variables used in source files are compiled into arrays, with instructions referencing them via indices. Module variables include local and external types, loaded by different instructions.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS code**:  </span><br><span class="line">```typescript</span><br><span class="line">// module.ts</span><br><span class="line">export let moduleVar = 100;</span><br><span class="line"></span><br><span class="line">// main.ts</span><br><span class="line">import &#123; moduleVar &#125; from &#x27;./module&#x27;;</span><br><span class="line">function useModuleVar() &#123;</span><br><span class="line">    return moduleVar * 2;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Corresponding bytecode instructions**:  </span><br></pre></td></tr></table></figure>
-<p>ldexternalmodulevar 0x0<br>sta v0<br>ldai 0x2<br>mul2 0x1, v0<br>return</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">`ldexternalmodulevar` loads `moduleVar` from the external module into register `v0`, followed by multiplication and return via `mul2`.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.3 Lexical Environments and Lexical Variables  </span><br><span class="line">Lexical environments and variables are crucial for functional programming and closure implementation. A lexical environment is an array of slots, each corresponding to a lexical variable. A method may associate with multiple lexical environments, with instructions specifying variables via relative hierarchy numbers and slot indices.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS closure code**:  </span><br><span class="line">```typescript</span><br><span class="line">function outerFunction() &#123;</span><br><span class="line">    let outerVariable = 10;</span><br><span class="line">    function innerFunction() &#123;</span><br><span class="line">        let innerVariable = 5;</span><br><span class="line">        return outerVariable + innerVariable;</span><br><span class="line">    &#125;</span><br><span class="line">    return innerFunction;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let closure = outerFunction();</span><br><span class="line">let result = closure();</span><br><span class="line">```  </span><br><span class="line">**Bytecode instruction analysis**:  </span><br></pre></td></tr></table></figure>
-<p>.function any .outerFunction(any a0, any a1, any a2) {<br>    newlexenv 0x1<br>    ldai 0xa<br>    stlexvar 0x0, 0x0<br>    definefunc 0x0, .innerFunction, 0x0<br>    sta v0<br>    return<br>}</p>
-<p>.function any .innerFunction(any a0, any a1, any a2) {<br>    ldai 0x5<br>    sta v1<br>    ldlexvar 0x0, 0x0<br>    sta v0<br>    lda v1<br>    add2 0x1, v0<br>    return<br>}</p>
-<pre><code>- `newlexenv 0x1`: Creates a lexical environment with 1 slot, enters it, and stores it in `acc`.  
-- `stlexvar 0x0, 0x0`: Stores `outerVariable` (10) into slot 0 of the lexical environment 0 levels away.  
-- `ldlexvar 0x0, 0x0`: Loads `outerVariable` from slot 0 of the lexical environment 0 levels away into `acc` within `innerFunction`.  
-
-This mechanism ensures closures can correctly access outer scope variables even after the outer function has executed.  
-
-
-### 3.4 Shared Lexical Environments  
-A shared lexical environment is a special type where each lexical variable has a `sendable` attribute, enabling safe cross-execution-context sharing. This is critical for multithreading or distributed computing.  
-
-**Example in a multithreaded scenario**:  
-```typescript
-function createSharedEnv() &#123;
-    let sharedVariable = 0;
-    function increment() &#123;
-        sharedVariable++;
-    &#125;
-    function getValue() &#123;
-        return sharedVariable;
-    &#125;
-    return &#123; increment, getValue &#125;;
-&#125;
-
-let shared = createSharedEnv();
-// Multiple threads/contexts can call shared.increment() and shared.getValue()
-</code></pre>
-<p>Bytecode for shared lexical environments uses special instructions (e.g., synchronization) to ensure thread-safe access to shared variables, preventing data races.  </p>
-<h2 id="IV-Advantages-and-Application-Scenarios-of-Ark-Bytecode"><a href="#IV-Advantages-and-Application-Scenarios-of-Ark-Bytecode" class="headerlink" title="IV. Advantages and Application Scenarios of Ark Bytecode"></a>IV. Advantages and Application Scenarios of Ark Bytecode</h2><h3 id="4-1-Advantages"><a href="#4-1-Advantages" class="headerlink" title="4.1 Advantages"></a>4.1 Advantages</h3><h4 id="4-1-1-Performance-Optimization"><a href="#4-1-1-Performance-Optimization" class="headerlink" title="4.1.1 Performance Optimization"></a>4.1.1 Performance Optimization</h4><p>Ark Bytecode excels in performance optimization through its well-designed instruction set and value storage:  </p>
-<ul>
-<li>The accumulator reduces memory accesses and instruction length.  </li>
-<li>Compile-time optimizations include constant folding, dead code elimination, and inlining of frequently executed code blocks.</li>
-</ul>
-<p><strong>Example of inlining optimization</strong>:  </p>
-<pre><code class="language-typescript">function square(x: number) &#123;
-    return x * x;
-&#125;
-
-let result = square(5);
-</code></pre>
-<p>The compiler may inline <code>square(5)</code> as <code>5 * 5</code>, calculating the constant 25 at compile time for direct return, enhancing efficiency.  </p>
-<h4 id="4-1-2-Cross-Platform-Compatibility"><a href="#4-1-2-Cross-Platform-Compatibility" class="headerlink" title="4.1.2 Cross-Platform Compatibility"></a>4.1.2 Cross-Platform Compatibility</h4><p>As an intermediate representation, Ark Bytecode ensures cross-platform compatibility. It can be interpreted by the Ark runtime across hardware platforms and OSes, allowing “write once, run anywhere” development. For example, an ArkTS app compiled into bytecode runs on HarmonyOS-powered phones, tablets, and smartwatches, reducing development and maintenance costs.  </p>
-<h4 id="4-1-3-Improved-Development-Efficiency"><a href="#4-1-3-Improved-Development-Efficiency" class="headerlink" title="4.1.3 Improved Development Efficiency"></a>4.1.3 Improved Development Efficiency</h4><p>The Ark Compiler quickly compiles high-level code into bytecode, reducing development and debugging time. The intermediate representation also facilitates debugging and optimization through specialized tools. The concise, unified instruction set helps developers understand execution logic, further boosting efficiency.  </p>
-<h2 id="V-Conclusion"><a href="#V-Conclusion" class="headerlink" title="V. Conclusion"></a>V. Conclusion</h2><p>Ark Bytecode, as the core product of the Ark Compiler, holds a pivotal position in modern software development. By deeply understanding its fundamental architecture, value storage methods, advantages, and application scenarios, developers can fully leverage its capabilities to significantly enhance program performance and development efficiency. Its unique instruction design, diverse value storage mechanisms, and outstanding performance in optimization and cross-platform compatibility enable broad applications across multiple domains.  </p>
-<p>The architecture—with opcodes and prefixes balancing efficiency and extensibility, and registers&#x2F;accumulators optimizing execution—forms a robust foundation. Value storage designs (global variables, module systems, lexical environments, and shared environments) provide flexible support for variable management, especially in closures and multithreading.  </p>
-<p>Huawei Developer Documentation (<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5</a>) serves as a comprehensive resource for in-depth learning. By exploring Ark Bytecode’s potential through this documentation, developers can contribute innovative solutions to the software industry. As technology advances, Ark Bytecode is poised to showcase its unique strengths in broader fields, driving progress in the software industry.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1919,7 +1836,7 @@ let result = square(5);
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-count">317</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

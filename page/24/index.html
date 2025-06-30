@@ -149,6 +149,285 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/619-Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/619-Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Page Lifecycle Monitoring, Scroll Usage, Disabling List Scrolling, Single Page Full Screen Setting, Reference Counting Issues</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 11:29:51 / Modified: 11:30:46" itemprop="dateCreated datePublished" datetime="2025-06-25T11:29:51+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues"><a href="#Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Page Lifecycle Monitoring, Scroll Usage, Disabling List Scrolling, Single Page Full Screen Setting, Reference Counting Issues"></a>[Daily HarmonyOS Next Knowledge] Page Lifecycle Monitoring, Scroll Usage, Disabling List Scrolling, Single Page Full Screen Setting, Reference Counting Issues</h3><h4 id="1-How-to-monitor-the-lifecycle-of-a-specific-page-in-HarmonyOS"><a href="#1-How-to-monitor-the-lifecycle-of-a-specific-page-in-HarmonyOS" class="headerlink" title="1. How to monitor the lifecycle of a specific page in HarmonyOS?"></a>1. How to monitor the lifecycle of a specific page in HarmonyOS?</h4><ol>
+<li>Refer to invisible monitoring: NavDestinationInfo: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-observer-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-observer-V5</a>  </li>
+<li>For lifecycle monitoring of a single page, refer to the page lifecycle methods: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5</a></li>
+</ol>
+<p><strong>Page Lifecycle</strong> (for components decorated with @Entry):  </p>
+<ul>
+<li><strong>onPageShow</strong>: Triggered once every time the page is displayed, including routing and app foreground scenarios.  </li>
+<li><strong>onPageHide</strong>: Triggered once every time the page is hidden, including routing and app background scenarios.  </li>
+<li><strong>onBackPress</strong>: Triggered when the user clicks the back button.</li>
+</ul>
+<p><strong>Component Lifecycle</strong> (for custom components decorated with @Component):  </p>
+<ul>
+<li><strong>aboutToAppear</strong>: Called before the component appears, after creating a new instance and before executing <code>build()</code>.  </li>
+<li><strong>onDidBuild</strong>: Called after the component’s <code>build()</code> completes. Use for non-UI operations like data reporting. Avoid state changes or animations here to prevent unstable UI behavior.  </li>
+<li><strong>aboutToDisappear</strong>: Called before the component is destroyed. Do not modify state variables, especially @Link variables, to avoid instability.</li>
+</ul>
+<p>The lifecycle flow for @Entry-decorated components (pages) is shown below:<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.06.19.png"></p>
+<h4 id="2-Why-doesn’t-scrollToIndex-trigger-the-onScroll-callback-in-HarmonyOS-Scroller"><a href="#2-Why-doesn’t-scrollToIndex-trigger-the-onScroll-callback-in-HarmonyOS-Scroller" class="headerlink" title="2. Why doesn’t scrollToIndex trigger the onScroll callback in HarmonyOS Scroller?"></a>2. Why doesn’t <code>scrollToIndex</code> trigger the <code>onScroll</code> callback in HarmonyOS Scroller?</h4><p>In a List, <code>scrollToIndex</code> does not trigger the <code>onScroll</code> callback, while <code>scrollTo</code> does. <code>scrollToIndex</code> jumps directly to the target element without animation by default, thus not triggering the callback.  </p>
+<p><strong>Solution</strong>: Add animation by setting the second parameter of <code>scrollToIndex</code> to <code>true</code>:  </p>
+<pre><code class="language-typescript">List(&#123;
+  space: 3,
+  scroller: this.scroller,
+&#125;) &#123;
+  LazyForEach(this.data, (item: string, index: number) =&gt; &#123;
+    ListItem() &#123;
+      MyListItem(&#123; item &#125;)
+        .onClick(() =&gt; &#123;
+          this.scroller.scrollToIndex(index, true) // Add animation to trigger callbacks
+        &#125;)
+    &#125;
+  &#125;, (item: string) =&gt; item)
+&#125;
+.onScroll((xOffset: number, yOffset: number) =&gt; &#123;
+  console.info(&#39;onScroll&#39;, yOffset)
+&#125;)
+.onDidScroll((xOffset: number, yOffset: number) =&gt; &#123;
+  console.info(&#39;onDidScroll&#39;, yOffset)
+&#125;)
+</code></pre>
+<h4 id="3-How-to-dynamically-disable-scrolling-for-a-List-in-HarmonyOS"><a href="#3-How-to-dynamically-disable-scrolling-for-a-List-in-HarmonyOS" class="headerlink" title="3. How to dynamically disable scrolling for a List in HarmonyOS?"></a>3. How to dynamically disable scrolling for a List in HarmonyOS?</h4><p>When the finger slides down, the page follows. When sliding up, both the page and List scroll. To dynamically control List scrolling:  </p>
+<p>Use the <code>enableScrollInteraction</code> method: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5</a>  </p>
+<h4 id="4-Is-there-a-way-to-set-full-screen-non-full-screen-for-a-single-page-without-affecting-others-in-HarmonyOS"><a href="#4-Is-there-a-way-to-set-full-screen-non-full-screen-for-a-single-page-without-affecting-others-in-HarmonyOS" class="headerlink" title="4. Is there a way to set full screen&#x2F;non-full screen for a single page without affecting others in HarmonyOS?"></a>4. Is there a way to set full screen&#x2F;non-full screen for a single page without affecting others in HarmonyOS?</h4><p><strong>Solution</strong>: Set full screen in <code>onPageShow</code> and reset in <code>onPageHide</code>:  </p>
+<pre><code class="language-typescript">import &#123; window &#125; from &#39;@kit.ArkUI&#39;
+
+@Entry
+@Component
+struct Page2 &#123;
+  onPageShow(): void &#123;
+    window.getLastWindow(getContext(this), (err, win) =&gt; &#123;
+      win.setWindowLayoutFullScreen(true)
+    &#125;)
+  &#125;
+
+  onPageHide(): void &#123;
+    window.getLastWindow(getContext(this), (err, win) =&gt; &#123;
+      win.setWindowLayoutFullScreen(false)
+    &#125;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Text(&#39;Full screen page....&#39;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+    .backgroundColor(Color.Green)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-Does-the-HarmonyOS-API-OH-NativerWindow-CreateNativeWindowFromSurfaceId-increment-the-reference-count"><a href="#5-Does-the-HarmonyOS-API-OH-NativerWindow-CreateNativeWindowFromSurfaceId-increment-the-reference-count" class="headerlink" title="5. Does the HarmonyOS API OH_NativerWindow_CreateNativeWindowFromSurfaceId() increment the reference count?"></a>5. Does the HarmonyOS API <code>OH_NativerWindow_CreateNativeWindowFromSurfaceId()</code> increment the reference count?</h4><p><strong>Yes</strong>, it increments the reference count by 1.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/618-Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/618-Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 11:27:28 / Modified: 11:28:06" itemprop="dateCreated datePublished" datetime="2025-06-25T11:27:28+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse"><a href="#Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse"></a>[Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse</h3><h4 id="1-Does-HarmonyOS-Scroll-support-onendreachedthreshold-with-the-endreached-event-How-to-trigger-the-endreached-event-based-on-the-distance-from-the-bottom"><a href="#1-Does-HarmonyOS-Scroll-support-onendreachedthreshold-with-the-endreached-event-How-to-trigger-the-endreached-event-based-on-the-distance-from-the-bottom" class="headerlink" title="1. Does HarmonyOS Scroll support onendreachedthreshold with the endreached event? How to trigger the endreached event based on the distance from the bottom?"></a>1. Does HarmonyOS Scroll support onendreachedthreshold with the endreached event? How to trigger the endreached event based on the distance from the bottom?</h4><p>The component can be implemented by judging the offset. Refer to the demo below:  </p>
+<pre><code class="language-typescript">import display from &#39;@ohos.display&#39;;
+
+@Entry
+@Component
+struct page240510141709017 &#123;
+  scroller: Scroller = new Scroller()
+  @State yOffset: number = 0
+  @State yPosition: number = 150
+  private arr: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  private childH: number = 0
+  private screenH: number = 0
+
+  build() &#123;
+    Column() &#123;
+      Scroll(this.scroller) &#123;
+        Column() &#123;
+          ForEach(this.arr, (item: number) =&gt; &#123;
+            Text(item.toString())
+              .width(&#39;90%&#39;)
+              .height(150)
+              .backgroundColor(0xFFFFFF)
+              .borderRadius(15)
+              .fontSize(16)
+              .textAlign(TextAlign.Center)
+              .margin(&#123; top: 10 &#125;)
+          &#125;, (item: string) =&gt; item)
+        &#125;
+        .width(&#39;100%&#39;)
+        .onAppear(() =&gt; &#123;
+          this.childH = this.scroller.getItemRect(0).height
+          console.log(&#39;this.childH&#39;, this.childH)
+        &#125;)
+      &#125;
+      .scrollable(ScrollDirection.Vertical) // Vertical scrolling direction
+      .scrollBar(BarState.On) // Scrollbar always visible
+      .scrollBarColor(Color.Gray) // Scrollbar color
+      .scrollBarWidth(10) // Scrollbar width
+      .friction(0.6)
+      .edgeEffect(EdgeEffect.None)
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+      .onDidScroll(() =&gt; &#123;
+        if (!this.screenH) &#123;
+          let displayClass: display.Display | null = null;
+          displayClass = display.getDefaultDisplaySync()
+          this.screenH = px2vp(displayClass.height)
+          console.log(&#39;this.screenH&#39;, this.screenH)
+        &#125;
+        const yCurrentOffset = this.scroller.currentOffset().yOffset
+        console.log(&#39;yCurrentOffset&#39;, yCurrentOffset)
+        if (yCurrentOffset &lt; 100) &#123;
+          console.log(&#39;is &lt; top 100&#39;)
+        &#125; else if (yCurrentOffset &gt; this.childH - this.screenH - 100) &#123;
+          console.log(&#39;is &gt; bottom 100&#39;)
+        &#125;
+      &#125;)
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-Conversion-and-verification-of-pixel-units-in-HarmonyOS"><a href="#2-Conversion-and-verification-of-pixel-units-in-HarmonyOS" class="headerlink" title="2. Conversion and verification of pixel units in HarmonyOS"></a>2. Conversion and verification of pixel units in HarmonyOS</h4><p>Conversion between vp and px, and how to verify the correctness of the conversion.  </p>
+<ul>
+<li>Introduction to pixel units: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/design/ux-design/visual-basis.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/design/ux-design/visual-basis.md</a>  </li>
+<li>Pixel unit conversion: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-pixel-units.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-pixel-units.md</a>  </li>
+<li>Pixel unit conversion verification reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/typical-layout-scenario.md#%E4%B8%89%E5%88%86%E6%A0%8F">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/typical-layout-scenario.md#%E4%B8%89%E5%88%86%E6%A0%8F</a></li>
+</ul>
+<p>Convert length units from px to vp:<br><code>let windowWidthVp = windowWidth / (display.getDefaultDisplaySync().densityDPI / 160)</code>  </p>
+<h4 id="3-How-to-remove-rounded-corners-from-bindPopup-in-HarmonyOS"><a href="#3-How-to-remove-rounded-corners-from-bindPopup-in-HarmonyOS" class="headerlink" title="3. How to remove rounded corners from bindPopup in HarmonyOS?"></a>3. How to remove rounded corners from bindPopup in HarmonyOS?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-popup.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-popup.md</a>  </p>
+<p>Set the bubble corner radius through the <code>radius</code> attribute.  </p>
+<h4 id="4-Does-HarmonyOS-xcomponent-have-an-API-to-capture-a-specific-frame-within-the-xcomponent"><a href="#4-Does-HarmonyOS-xcomponent-have-an-API-to-capture-a-specific-frame-within-the-xcomponent" class="headerlink" title="4. Does HarmonyOS xcomponent have an API to capture a specific frame within the xcomponent?"></a>4. Does HarmonyOS xcomponent have an API to capture a specific frame within the xcomponent?</h4><p>The XComponent itself does not have a related interface. Please refer to whether the <code>image.createPixelMapFromSurface</code> interface meets your needs:  </p>
+<p>Documentation link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-image-V5#imagecreatepixelmapfromsurface11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-image-V5#imagecreatepixelmapfromsurface11</a>  </p>
+<p><code>createPixelMapFromSurface(surfaceId: string, region: Region): Promise&lt;PixelMap&gt;</code>  </p>
+<p>Creates a PixelMap object based on the Surface ID and region information. The region size is specified by <code>Region.size</code>, returned as a Promise.  </p>
+<h4 id="5-How-to-avoid-attribute-value-conflicts-when-reusing-HarmonyOS-components"><a href="#5-How-to-avoid-attribute-value-conflicts-when-reusing-HarmonyOS-components" class="headerlink" title="5. How to avoid attribute value conflicts when reusing HarmonyOS components?"></a>5. How to avoid attribute value conflicts when reusing HarmonyOS components?</h4><p>Dynamic attributes can be used to set component properties to avoid conflicts: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-attribute-modifier.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-attribute-modifier.md</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/617%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91CAPI-Image-Component-Support-Formats-Hybrid-Development-Listening-to-Animation-Status-and-Context-Acquisition-Issues/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1486,403 +1765,6 @@ struct Index &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/609-Daily-HarmonyOS-Next-Knowledge-Component-Rotation-Notification-Management-Issues-Window-Status-Acquisition-Foreground-Background-Switch-Monitoring-Differences-Between-Conditional-Judgment-and-Visibility-Control/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/609-Daily-HarmonyOS-Next-Knowledge-Component-Rotation-Notification-Management-Issues-Window-Status-Acquisition-Foreground-Background-Switch-Monitoring-Differences-Between-Conditional-Judgment-and-Visibility-Control/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Component Rotation, Notification Management Issues, Window Status Acquisition, Foreground/Background Switch Monitoring, Differences Between Conditional Judgment and Visibility Control</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 11:13:21 / Modified: 11:13:35" itemprop="dateCreated datePublished" datetime="2025-06-25T11:13:21+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Component-Rotation-Notification-Management-Issues-Window-Status-Acquisition-Foreground-Background-Switch-Monitoring-Differences-Between-Conditional-Judgment-and-Visibility-Control"><a href="#Daily-HarmonyOS-Next-Knowledge-Component-Rotation-Notification-Management-Issues-Window-Status-Acquisition-Foreground-Background-Switch-Monitoring-Differences-Between-Conditional-Judgment-and-Visibility-Control" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Component Rotation, Notification Management Issues, Window Status Acquisition, Foreground&#x2F;Background Switch Monitoring, Differences Between Conditional Judgment and Visibility Control"></a>[Daily HarmonyOS Next Knowledge] Component Rotation, Notification Management Issues, Window Status Acquisition, Foreground&#x2F;Background Switch Monitoring, Differences Between Conditional Judgment and Visibility Control</h3><h4 id="1-HarmonyOS-component-translation-direction-error-after-rotation"><a href="#1-HarmonyOS-component-translation-direction-error-after-rotation" class="headerlink" title="1. HarmonyOS component translation direction error after rotation?"></a>1. HarmonyOS component translation direction error after rotation?</h4><p>After component rotation, the x and y axes of the component remain in their original directions.  </p>
-<pre><code class="language-typescript">import json from &#39;@ohos.util.json&#39;
-
-@Entry
-@Component
-struct Index &#123;
-  @State imageWidth: number = 0
-  @State imageHeight: number = 0
-  @State offsetX: number = 0
-  @State offsetY: number = 0
-  @State positionX: number = 0
-  @State positionY: number = 0
-  @State angle: number = 0
-  @State rotateValue: number = 0
-  @State scaleValue: number = 1
-  @State pinchValue: number = 1
-  @State pinchX: number = 0
-  @State pinchY: number = 0
-  @State centerX: number = 0
-  @State centerY: number = 0
-
-  aboutToAppear(): void &#123;
-
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      Text(&#39;Title Bar&#39;)
-        .width(&#39;100%&#39;)
-        .height(50)
-        .textAlign(TextAlign.Center)
-
-      Column() &#123;
-        Image($r(&#39;app.media.img&#39;))
-          .width(200)
-          .height(200)
-          .scale(&#123; x: this.scaleValue, y: this.scaleValue, z: 1 &#125;)
-          .translate(&#123; x: this.offsetX, y: this.offsetY, z: 0 &#125;)
-          .rotate(&#123;
-            angle: this.angle,
-          &#125;)
-          .gesture(GestureGroup(GestureMode.Parallel,
-            PanGesture()
-              .onActionUpdate((event: GestureEvent) =&gt; &#123;
-                if (event) &#123;
-                  this.offsetX = this.positionX + event.offsetX
-                  this.offsetY = this.positionY + event.offsetY
-                &#125;
-              &#125;)
-              .onActionEnd(() =&gt; &#123;
-                this.positionX = this.offsetX
-                this.positionY = this.offsetY
-                console.info(&#39;Pan end&#39;)
-              &#125;),
-
-            RotationGesture()
-              .onActionUpdate((event: GestureEvent) =&gt; &#123;
-                if (event) &#123;
-                  this.angle = this.rotateValue + event.angle
-
-                &#125;
-              &#125;)
-              .onActionEnd((event: GestureEvent) =&gt; &#123;
-                this.rotateValue = this.angle
-                console.error(`$&#123;json.stringify(event)&#125;`)
-                console.error(`$&#123;this.rotateValue&#125;`)
-                console.info(&#39;Rotation end&#39;)
-              &#125;)
-          )
-          )
-      &#125;.width(500).height(500)
-
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p>To avoid this, place the combined gesture in the parent component:  </p>
-<pre><code class="language-typescript">import json from &#39;@ohos.util.json&#39;
-
-@Entry
-@Component
-struct Index &#123;
-  @State imageWidth: number = 0
-  @State imageHeight: number = 0
-  @State offsetX: number = 0
-  @State offsetY: number = 0
-  @State positionX: number = 0
-  @State positionY: number = 0
-  @State angle: number = 0
-  @State rotateValue: number = 0
-  @State scaleValue: number = 1
-  @State pinchValue: number = 1
-  @State pinchX: number = 0
-  @State pinchY: number = 0
-  @State centerX: number = 0
-  @State centerY: number = 0
-
-  aboutToAppear(): void &#123;
-
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      Text(&#39;Title Bar&#39;)
-        .width(&#39;100%&#39;)
-        .height(50)
-        .textAlign(TextAlign.Center)
-
-      Column() &#123;
-        Image($r(&#39;app.media.app_icon&#39;))
-          .width(200)
-          .height(200)
-          .scale(&#123; x: this.scaleValue, y: this.scaleValue, z: 1 &#125;)
-          .translate(&#123; x: this.offsetX, y: this.offsetY &#125;)
-          .rotate(&#123;
-            angle: this.angle,
-          &#125;)
-
-      &#125;.width(500).height(500)
-      .gesture(GestureGroup(GestureMode.Parallel,
-        PanGesture()
-          .onActionUpdate((event: GestureEvent) =&gt; &#123;
-            if (event) &#123;
-              this.offsetX = this.positionX + event.offsetX
-              this.offsetY = this.positionY + event.offsetY
-            &#125;
-          &#125;)
-          .onActionEnd(() =&gt; &#123;
-            this.positionX = this.offsetX
-            this.positionY = this.offsetY
-            console.info(&#39;Pan end&#39;)
-          &#125;),
-
-        RotationGesture()
-          .onActionUpdate((event: GestureEvent) =&gt; &#123;
-            if (event) &#123;
-              this.angle = this.rotateValue + event.angle
-
-            &#125;
-          &#125;)
-          .onActionEnd((event: GestureEvent) =&gt; &#123;
-            this.rotateValue = this.angle
-            console.error(`$&#123;json.stringify(event)&#125;`)
-            console.error(`$&#123;this.rotateValue&#125;`)
-            console.info(&#39;Rotation end&#39;)
-          &#125;)
-      )
-      )
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<h4 id="2-HarmonyOS-notificationManager-issues"><a href="#2-HarmonyOS-notificationManager-issues" class="headerlink" title="2. HarmonyOS notificationManager issues?"></a>2. HarmonyOS notificationManager issues?</h4><p>When a user clicks a notification in the notification bar, they can jump to other pages or publish public events via wantagent. How to implement calling an interface upon notification click?  </p>
-<p>Trigger a public event on notification click and call the interface in the public event callback.  </p>
-<h4 id="3-How-to-obtain-windowStage-in-Ability-test-ets-for-HarmonyOS"><a href="#3-How-to-obtain-windowStage-in-Ability-test-ets-for-HarmonyOS" class="headerlink" title="3. How to obtain windowStage in Ability.test.ets for HarmonyOS?"></a>3. How to obtain windowStage in Ability.test.ets for HarmonyOS?</h4><p>After updating DevEco Studio to 5.0, the testability testrunner in the ohosTest directory of the project was removed. How to obtain windowStage in Ability.test.ets?  </p>
-<p>Refer to the following document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#windowstage9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#windowstage9</a>  </p>
-<p><strong>WindowStage</strong><br>Manages window instances as the window manager. The following API examples require calling corresponding methods using a WindowStage instance within the onWindowStageCreate() function.  </p>
-<p><strong>getMainWindow</strong><br><code>getMainWindow(callback: AsyncCallback&lt;Window&gt;): void</code><br>Asynchronously obtains the main window under the WindowStage instance via callback.  </p>
-<h4 id="4-How-to-monitor-foreground-application-switching-in-HarmonyOS"><a href="#4-How-to-monitor-foreground-application-switching-in-HarmonyOS" class="headerlink" title="4. How to monitor foreground application switching in HarmonyOS?"></a>4. How to monitor foreground application switching in HarmonyOS?</h4><p>Refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-applicationcontext-V5#applicationcontextontype-applicationstatechange-callback-applicationstatechangecallback10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-applicationcontext-V5#applicationcontextontype-applicationstatechange-callback-applicationstatechangecallback10</a>  </p>
-<p><strong>ApplicationContext.on(‘abilityLifecycle’)</strong><br><code>on(type: &#39;abilityLifecycle&#39;, callback: AbilityLifecycleCallback): number</code><br>Registers to listen for in-application lifecycles with an asynchronous callback. Only callable from the main thread.  </p>
-<p><strong>Example</strong>:  </p>
-<pre><code class="language-typescript">import &#123; UIAbility, AbilityLifecycleCallback &#125; from &#39;@kit.AbilityKit&#39;;
-import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
-
-
-let lifecycleId: number;
-
-
-export default class EntryAbility extends UIAbility &#123;
-  onCreate() &#123;
-    console.log(&#39;MyAbility onCreate&#39;);
-    const abilityLifecycleCallback: AbilityLifecycleCallback = &#123;
-      onAbilityCreate(ability) &#123;
-        console.log(`AbilityLifecycleCallback onAbilityCreate ability: $&#123;ability&#125;`);
-      &#125;,
-      onWindowStageCreate(ability, windowStage) &#123;
-        console.log(`AbilityLifecycleCallback onWindowStageCreate ability: $&#123;ability&#125;`);
-        console.log(`AbilityLifecycleCallback onWindowStageCreate windowStage: $&#123;windowStage&#125;`);
-      &#125;,
-      onWindowStageActive(ability, windowStage) &#123;
-        console.log(`AbilityLifecycleCallback onWindowStageActive ability: $&#123;ability&#125;`);
-        console.log(`AbilityLifecycleCallback onWindowStageActive windowStage: $&#123;windowStage&#125;`);
-      &#125;,
-      onWindowStageInactive(ability, windowStage) &#123;
-        console.log(`AbilityLifecycleCallback onWindowStageInactive ability: $&#123;ability&#125;`);
-        console.log(`AbilityLifecycleCallback onWindowStageInactive windowStage: $&#123;windowStage&#125;`);
-      &#125;,
-      onWindowStageDestroy(ability, windowStage) &#123;
-        console.log(`AbilityLifecycleCallback onWindowStageDestroy ability: $&#123;ability&#125;`);
-        console.log(`AbilityLifecycleCallback onWindowStageDestroy windowStage: $&#123;windowStage&#125;`);
-      &#125;,
-      onAbilityDestroy(ability) &#123;
-        console.log(`AbilityLifecycleCallback onAbilityDestroy ability: $&#123;ability&#125;`);
-      &#125;,
-      onAbilityForeground(ability) &#123;
-        console.log(`AbilityLifecycleCallback onAbilityForeground ability: $&#123;ability&#125;`);
-      &#125;,
-      onAbilityBackground(ability) &#123;
-        console.log(`AbilityLifecycleCallback onAbilityBackground ability: $&#123;ability&#125;`);
-      &#125;,
-      onAbilityContinue(ability) &#123;
-        console.log(`AbilityLifecycleCallback onAbilityContinue ability: $&#123;ability&#125;`);
-      &#125;
-    &#125;
-    // 1. Get applicationContext via the context property
-    const applicationContext = this.context.getApplicationContext();
-    try &#123;
-      // 2. Register to listen for in-application lifecycles via applicationContext
-      lifecycleId = applicationContext.on(&#39;abilityLifecycle&#39;, abilityLifecycleCallback);
-    &#125; catch (paramError) &#123;
-      console.error(`error: $&#123;(paramError as BusinessError).code&#125;, $&#123;(paramError as BusinessError).message&#125;`);
-    &#125;
-    console.log(`registerAbilityLifecycleCallback lifecycleId: $&#123;lifecycleId&#125;`);
-  &#125;
-&#125;
-</code></pre>
-<p><strong>AbilityLifecycleCallback.onAbilityForeground</strong><br><code>onAbilityForeground(ability: UIAbility): void</code><br>Triggers when the ability transitions from background to foreground after registering for lifecycle listening.  </p>
-<p><strong>AbilityLifecycleCallback.onAbilityBackground</strong><br><code>onAbilityBackground(ability: UIAbility): void</code><br>Triggers when the ability transitions from foreground to background after registering for lifecycle listening.  </p>
-<h4 id="5-How-to-choose-between-performance-when-controlling-component-rendering-via-if-condition-or-visibility-in-HarmonyOS"><a href="#5-How-to-choose-between-performance-when-controlling-component-rendering-via-if-condition-or-visibility-in-HarmonyOS" class="headerlink" title="5. How to choose between performance when controlling component rendering via if condition or visibility in HarmonyOS?"></a>5. How to choose between performance when controlling component rendering via if condition or visibility in HarmonyOS?</h4><p><strong>Action Modes</strong>:<br>Developers can switch between component display and hiding states through if conditional rendering or visibility control. The difference in their action modes is as follows:  </p>
-<ul>
-<li><strong>Conditional rendering via if</strong>: Creates the component when the condition is met and destroys it when not met.  <ul>
-<li>The component is only created when the condition is satisfied.  </li>
-<li>When the condition is not met, the component is destroyed and not mounted in the component tree.</li>
-</ul>
-</li>
-<li><strong>Visibility control</strong>: Controls component display or hiding based on parameter values.  <ol>
-<li>The component is created initially regardless of display status.  </li>
-<li>When hidden, the component remains mounted in the component tree but is in an invisible state.</li>
-</ol>
-</li>
-</ul>
-<p><strong>Scenario Selection</strong>:  </p>
-<ul>
-<li><strong>Advantageous scenarios for visibility control</strong>:  <ul>
-<li>When components have complex animations and need to switch frequently between display and hiding, use visibility control to avoid frequent creation and destruction, improving performance.</li>
-</ul>
-</li>
-<li><strong>Advantageous scenarios for conditional rendering</strong>:  <ul>
-<li>During cold start, if components do not need to be displayed initially, use conditional rendering to reduce rendering time and speed up startup.  </li>
-<li>If components have simple or no animations, do not switch frequently, or are mostly hidden, use conditional rendering to reduce interface complexity and nesting levels, improving performance.  </li>
-<li>If controlled components occupy large memory, prioritize conditional rendering to destroy unused components immediately and save memory.</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/608-Daily-HarmonyOS-Next-Knowledge-Semi-modal-Page-Margins-Mouse-Hover-on-List-Items-Default-Options-for-Select-Components-Different-Text-Sizes-String-Encoding/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/608-Daily-HarmonyOS-Next-Knowledge-Semi-modal-Page-Margins-Mouse-Hover-on-List-Items-Default-Options-for-Select-Components-Different-Text-Sizes-String-Encoding/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Semi-modal Page Margins, Mouse Hover on List Items, Default Options for Select Components, Different Text Sizes, String Encoding</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 11:10:49 / Modified: 11:12:11" itemprop="dateCreated datePublished" datetime="2025-06-25T11:10:49+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Semi-modal-Page-Margins-Mouse-Hover-on-List-Items-Default-Options-for-Select-Components-Different-Text-Sizes-String-Encoding"><a href="#Daily-HarmonyOS-Next-Knowledge-Semi-modal-Page-Margins-Mouse-Hover-on-List-Items-Default-Options-for-Select-Components-Different-Text-Sizes-String-Encoding" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Semi-modal Page Margins, Mouse Hover on List Items, Default Options for Select Components, Different Text Sizes, String Encoding"></a>[Daily HarmonyOS Next Knowledge] Semi-modal Page Margins, Mouse Hover on List Items, Default Options for Select Components, Different Text Sizes, String Encoding</h3><h4 id="1-Can-HarmonyOS-ArkTS-semi-modal-pages-set-left-and-right-margins-for-mobile-phones"><a href="#1-Can-HarmonyOS-ArkTS-semi-modal-pages-set-left-and-right-margins-for-mobile-phones" class="headerlink" title="1. Can HarmonyOS ArkTS semi-modal pages set left and right margins for mobile phones?"></a>1. Can HarmonyOS ArkTS semi-modal pages set left and right margins for mobile phones?</h4><p>Since API 12, the width of semi-modals can be set.<br>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-sheet-transition-V5#bindsheet">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-sheet-transition-V5#bindsheet</a>  </p>
-<h4 id="2-For-Image-components-traversed-by-HarmonyOS-LazyForEach-how-to-handle-mouse-hover-scenarios-to-target-the-selected-Image-rather-than-the-entire-outer-component"><a href="#2-For-Image-components-traversed-by-HarmonyOS-LazyForEach-how-to-handle-mouse-hover-scenarios-to-target-the-selected-Image-rather-than-the-entire-outer-component" class="headerlink" title="2. For Image components traversed by HarmonyOS LazyForEach, how to handle mouse hover scenarios to target the selected Image rather than the entire outer component?"></a>2. For Image components traversed by HarmonyOS LazyForEach, how to handle mouse hover scenarios to target the selected Image rather than the entire outer component?</h4><p>Assign the index to a variable in <code>onHover</code>, then judge whether the variable matches the current index in the specific Image attribute and change the attribute value if they match.  </p>
-<pre><code class="language-typescript">.onHover((isHover?: boolean) =&gt; &#123;
-  if (isHover) &#123;
-    this.hoverIndex = index;
-  &#125;
-&#125;)
-</code></pre>
-<h4 id="3-How-to-set-a-default-value-for-the-HarmonyOS-ArkTS-select-component"><a href="#3-How-to-set-a-default-value-for-the-HarmonyOS-ArkTS-select-component" class="headerlink" title="3. How to set a default value for the HarmonyOS ArkTS select component?"></a>3. How to set a default value for the HarmonyOS ArkTS select component?</h4><p>Can the select component set a default value to automatically select an option when the program starts without manual selection?  </p>
-<p>Use the <code>selected</code> attribute to set the index of the initial option in the drop-down menu.<br>Documentation link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-select-V5#selected">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-select-V5#selected</a>  </p>
-<p><code>selected(value: number | Resource)</code>  </p>
-<p>Sets the index of the initial option in the drop-down menu (index 0 for the first item). If <code>selected</code> is not set or an invalid value is provided, the default selection is -1 (no item selected). If set to <code>undefined</code> or <code>null</code>, the first item is selected.  </p>
-<h4 id="4-How-to-use-different-font-sizes-for-a-single-line-of-text-in-HarmonyOS"><a href="#4-How-to-use-different-font-sizes-for-a-single-line-of-text-in-HarmonyOS" class="headerlink" title="4. How to use different font sizes for a single line of text in HarmonyOS?"></a>4. How to use different font sizes for a single line of text in HarmonyOS?</h4><p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.06.08.png"></p>
-<p>How to implement different font sizes for a single line of text while considering internationalization and left-right position changes?  </p>
-<p>Use <code>Span</code> to fill partial content and configure the <code>direction</code> attribute for left-right position changes.  </p>
-<h4 id="5-HarmonyOS-string-encoding-issues"><a href="#5-HarmonyOS-string-encoding-issues" class="headerlink" title="5. HarmonyOS string encoding issues?"></a>5. HarmonyOS string encoding issues?</h4><p>Which encoding in <code>BufferEncoding</code> is equivalent to Java’s GB18030 encoding, used in the SM3 digest algorithm?  </p>
-<p>API 12 supports this.<br>Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-util-V5#textencoder">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-util-V5#textencoder</a>  </p>
-<p><code>TextEncoder</code> encodes strings into byte arrays and supports multiple encoding formats.  </p>
-<p>Note: The number of bytes per character varies by encoding format. Specify the encoding format explicitly when using <code>TextEncoder</code> to ensure correct encoding results.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.06.08-1.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1952,7 +1834,7 @@ export default class EntryAbility extends UIAbility &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-count">317</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

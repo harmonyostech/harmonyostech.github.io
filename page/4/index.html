@@ -149,6 +149,424 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4929-Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4929-Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:40:49 / Modified: 10:42:06" itemprop="dateCreated datePublished" datetime="2025-06-29T10:40:49+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations"><a href="#Daily-HarmonyOS-Next-Knowledge-Bluetooth-Low-Energy-Fingerprint-Authentication-Raw-File-Reading-Examples-Cross-Thread-CommonEvents-Location-Parameter-Explanations" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations"></a>[Daily HarmonyOS Next Knowledge] Bluetooth Low Energy, Fingerprint Authentication, Raw File Reading Examples, Cross-Thread CommonEvents, Location Parameter Explanations</h1><h2 id="1-How-to-determine-if-a-device-supports-Bluetooth-Low-Energy-in-HarmonyOS-next"><a href="#1-How-to-determine-if-a-device-supports-Bluetooth-Low-Energy-in-HarmonyOS-next" class="headerlink" title="1. How to determine if a device supports Bluetooth Low Energy in HarmonyOS next?"></a>1. How to determine if a device supports Bluetooth Low Energy in HarmonyOS next?</h2><p>You can use <code>canIUse(&quot;SystemCapability.Communication.Bluetooth.Core&quot;)</code> to check support. For usage of <code>canIUse</code>, refer to the official documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-syscap-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-syscap-V5</a>  </p>
+<p>System Capability (SysCap) refers to each relatively independent feature in the operating system. Different devices correspond to different system capability sets, and each system capability maps to one or more APIs. Developers can judge whether an interface can be used based on system capabilities.  </p>
+<p><strong>canIUse(syscap: string): boolean</strong><br><strong>Parameters:</strong>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">syscap</td>
+<td align="left">string</td>
+<td align="left">Yes</td>
+<td align="left">Name of the system capability to query.</td>
+</tr>
+</tbody></table>
+<p><strong>Return Value:</strong>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">boolean</td>
+<td align="left">Query result of system capability. <code>true</code> indicates support; <code>false</code> indicates no support.</td>
+</tr>
+</tbody></table>
+<p><strong>Example</strong>  </p>
+<pre><code class="language-typescript">import &#123; geoLocationManager &#125; from &#39;@kit.LocationKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+const isLocationAvailable = canIUse(&#39;SystemCapability.Location.Location.Core&#39;);
+if (isLocationAvailable) &#123;
+  geoLocationManager.getCurrentLocation((err: BusinessError, location: geoLocationManager.Location) =&gt; &#123;
+      if (err) &#123;
+          console.error(&#39;err=&#39; + JSON.stringify(err));
+      &#125;
+      if (location) &#123;
+          console.log(&#39;location=&#39; + JSON.stringify(location));
+      &#125;
+  &#125;);
+&#125; else &#123;
+  console.log(&#39;Location not supported by this device.&#39;);
+&#125;
+</code></pre>
+<h2 id="2-Does-HarmonyOS-currently-support-fingerprint-authentication"><a href="#2-Does-HarmonyOS-currently-support-fingerprint-authentication" class="headerlink" title="2. Does HarmonyOS currently support fingerprint authentication?"></a>2. Does HarmonyOS currently support fingerprint authentication?</h2><p>Is there a corresponding capability to add fingerprint login based on account-password login?  </p>
+<p>Refer to the development guide for switching to custom authentication in User Authentication Kit: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/apply-custom-authentication-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/apply-custom-authentication-V5</a>  </p>
+<p>The unified user authentication framework provides a mechanism to switch to business-customized authentication. If device manufacturers have customized other authentication capabilities and connected them to the unified user authentication framework, application developers can switch to custom authentication methods.  </p>
+<p>For example, in payment scenarios, if a manufacturer has customized a payment password authentication method, users can choose to switch to payment password authentication after system face or fingerprint authentication fails.  </p>
+<p>Payment password authentication does not belong to system authentication capabilities. Therefore, when initiating authentication, the business needs to pass explicit information about navigation keys, such as “Use Payment Password”, so that the authentication interface shown to users includes a “Use Payment Password” button.  </p>
+<p>When the user clicks this button, the business application that initiated the authentication will receive a special authentication result from the unified user authentication framework, indicating that system authentication has ended, and the business needs to launch its custom authentication interface. Thus, after clicking “Use Payment Password”, the user will see the system authentication control disappear and the business-customized payment password authentication interface displayed.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29-1.png"> </p>
+<p>The Kit supports biometric authentication + business-customized authentication methods, with fingerprint + account-password authentication being one of them. Applications can also integrate embedded fingerprint authentication controls on the account authentication interface. See: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/user-auth-icon-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/user-auth-icon-V5</a><br>Mainly used to provide face and fingerprint authentication icons displayed in the application interface, with specific functions as follows:  </p>
+<ol>
+<li>Provides embedded face and fingerprint authentication control icons for application integration.  </li>
+<li>Supports customizing icon color and size, but the icon style cannot be changed.  </li>
+<li>Clicking the control icon can launch the system pop-up face or fingerprint authentication control.</li>
+</ol>
+<p>Currently supported authentication types for using authentication controls include:  </p>
+<ul>
+<li>Face authentication  </li>
+<li>Fingerprint authentication  </li>
+<li>Face + lock screen password authentication  </li>
+<li>Fingerprint + lock screen password authentication  </li>
+<li>Face + fingerprint + lock screen password authentication<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29.png"></li>
+</ul>
+<h2 id="3-HarmonyOS-raw-file-reading-reference-examples"><a href="#3-HarmonyOS-raw-file-reading-reference-examples" class="headerlink" title="3. HarmonyOS raw file reading reference examples?"></a>3. HarmonyOS raw file reading reference examples?</h2><pre><code class="language-typescript">// Read test text using getRawFileContent and print the content
+async loadFromRawFile(context: Context, rawFileName: string): void &#123;
+  let rawFileRes: Uint8Array = await context.resourceManager.getRawFileContent(rawFileName);
+  let bufferLike: ArrayBufferLike = rawFileRes.buffer;
+  let rawFileBuffer: ArrayBuffer = bufferLike.slice(0, bufferLike.byteLength);
+  log.info(&#39;loadFromRawFile: &#39; + rawFileBuffer.byteLength);
+  const decoder = util.TextDecoder.create(&#39;utf-8&#39;);
+  const str = decoder.decodeWithStream(new Uint8Array(rawFileBuffer));
+  log.info(&#39;loadFromRawFile &#39; + str);
+&#125;
+</code></pre>
+<pre><code class="language-typescript">loadRawFd(context: Context, rawFileName: string) &#123;
+  context.resourceManager.getRawFd(rawFileName, (err: BusinessError, value: resourceManager.RawFileDescriptor) =&gt; &#123;
+    let fd = value.fd;
+    let offset = value.offset;
+    let fdLength = value.length;
+    log.info(&#39;fd: &#39; + value.fd + &#39;, offset: &#39; + offset + &#39;, length: &#39; + fdLength);
+    let stream: fs.Stream = fs.fdopenStreamSync(fd, &#39;r&#39;);
+
+    let stringBuffer = new ArrayBuffer(128); // Default capacity of 128 bytes per read
+    let currentLength = 0; // Current read length
+    let readLength = 128; // Default read length of 128 bytes
+    while (currentLength &lt; fdLength) &#123;
+      readLength = (fdLength - currentLength &gt; 128) ? 128 : (fdLength - currentLength);
+      stringBuffer = new ArrayBuffer(readLength);
+      stream.readSync(stringBuffer, &#123; offset: offset + currentLength, length: readLength &#125;);
+      let decoder = util.TextDecoder.create(&#39;utf-8&#39;);
+      let str = decoder.decodeWithStream(new Uint8Array(stringBuffer));
+      log.info(str); // Parse to string and print log
+      currentLength += readLength; // Update read start position
+    &#125;
+
+    context.resourceManager.closeRawFdSync(rawFileName); // Close FD after reading
+    // fs.closeSync(fd); // Do not use this API; optimization guidance has been provided to R&amp;D.
+    stream.closeSync();
+  &#125;);
+&#125;
+</code></pre>
+<h2 id="4-Can-HarmonyOS-CommonEvents-work-across-threads"><a href="#4-Can-HarmonyOS-CommonEvents-work-across-threads" class="headerlink" title="4. Can HarmonyOS CommonEvents work across threads?"></a>4. Can HarmonyOS CommonEvents work across threads?</h2><p>For example, an SDK performs CPU-intensive operations and continuously sends events to the host module during execution to notify progress or other statuses. Essentially, the SDK is unaware of the external environment and executes tasks in a thread, needing to synchronize status to the outside during the process.  </p>
+<p>Common events support cross-thread operations. Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/common-event-overview-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/common-event-overview-V5</a>  </p>
+<p>Common Event Schematic:<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.29-2.png"></p>
+<h2 id="5-Explanation-of-HarmonyOS-location-parameters"><a href="#5-Explanation-of-HarmonyOS-location-parameters" class="headerlink" title="5. Explanation of HarmonyOS location parameters?"></a>5. Explanation of HarmonyOS location parameters?</h2><ol>
+<li>When calling <code>geoLocationManager.getCurrentLocation(request?: CurrentLocationRequest)</code> to obtain location, the optional parameter <code>request</code> can configure <code>priority</code>, <code>scenario</code>, <code>maxAccuracy</code>, and <code>timeoutMs</code>. If <code>request</code> is not passed (i.e., directly calling <code>geoLocationManager.getCurrentLocation()</code>), what are the default values for these configurations?  </li>
+<li>Consult the meanings of parameters in the location change listening API:</li>
+</ol>
+<pre><code class="language-typescript">let requestInfo: geoLocationManager.LocationRequest = &#123;&#39;priority&#39;: geoLocationManager.LocationRequestPriority.FIRST_FIX, &#39;timeInterval&#39;: 0, &#39;distanceInterval&#39;: 0, &#39;maxAccuracy&#39;: 0&#125;;
+geoLocationManager.on(&#39;locationChange&#39;, requestInfo, locationChange);
+</code></pre>
+<ul>
+<li>What does <code>distanceInterval</code> mean? Does it trigger a callback when the position deviation between two updates exceeds <code>distanceInterval</code> meters?  </li>
+<li>What is the specific meaning of <code>maxAccuracy</code> as accuracy information?<br>The <code>provider</code> in the location callback information <code>additions</code> appears to be the location source. What values can <code>provider</code> have, and what do they mean?</li>
+</ul>
+<h3 id="Question-1"><a href="#Question-1" class="headerlink" title="Question 1:"></a>Question 1:</h3><p>For <code>priority</code>, <code>scenario</code>, <code>maxAccuracy</code>, etc., refer to:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-geolocationmanager-V5</a></li>
+</ul>
+<p>The default value for <code>timeoutMs</code> is currently 30 seconds.<br>If <code>request</code> is not passed, calling <code>geoLocationManager.getCurrentLocation()</code> uses default configurations, with <code>priority</code> set to <code>First_Fix</code>.  </p>
+<h3 id="Question-2"><a href="#Question-2" class="headerlink" title="Question 2:"></a>Question 2:</h3><ul>
+<li><code>distanceInterval</code>: Distance interval. A callback is triggered when the position deviation between two updates exceeds <code>distanceInterval</code> meters.  </li>
+<li><code>maxAccuracy</code>: Accuracy information, filtering and displaying coordinates within <code>maxAccuracy</code> meters from the center point.<br>The <code>provider</code> in the location callback information <code>additions</code> currently only provides the <code>network</code> type.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4930-Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4930-Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:39:22 / Modified: 10:40:03" itemprop="dateCreated datePublished" datetime="2025-06-29T10:39:22+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive"><a href="#Daily-HarmonyOS-Next-Knowledge-Long-Term-Tasks-HarmonyAppProvision-Application-Preferences-Testing-Tools-Application-Keep-Alive" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive"></a>[Daily HarmonyOS Next Knowledge] Long-Term Tasks, HarmonyAppProvision Application, Preferences, Testing Tools, Application Keep-Alive</h1><h2 id="1-How-does-HarmonyOS-solve-the-issue-where-voice-chat-and-communication-apps-stop-system-collection-and-playback-callbacks-when-moved-to-the-background-and-fail-to-resume-when-returning-to-the-foreground"><a href="#1-How-does-HarmonyOS-solve-the-issue-where-voice-chat-and-communication-apps-stop-system-collection-and-playback-callbacks-when-moved-to-the-background-and-fail-to-resume-when-returning-to-the-foreground" class="headerlink" title="1. How does HarmonyOS solve the issue where voice chat and communication apps stop system collection and playback callbacks when moved to the background, and fail to resume when returning to the foreground?"></a>1. How does HarmonyOS solve the issue where voice chat and communication apps stop system collection and playback callbacks when moved to the background, and fail to resume when returning to the foreground?</h2><p>The reason why app callbacks for system collection and playback stop when the app is moved to the background is as follows: To reduce device power consumption and ensure smooth user experience, the system manages background apps by suspending processes (i.e., the system no longer allocates CPU resources to the app process, and corresponding public events are no longer sent to the app process) or terminating processes.  </p>
+<p>It is recommended to use <strong>long-term tasks</strong> in background task development services. Apply for a long-term task in the <code>onPageHide</code> lifecycle of the page and cancel it in <code>onPageShow</code>. You can use the <code>backgroundTaskManager.startBackgroundRunning</code> API to apply for a long-term task.  </p>
+<ul>
+<li>Refer to the demo in the guide, preferably the Stage model demo, which includes development instructions and precautions. Link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5</a>  </li>
+<li>API documentation for task application. Link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resourceschedule-backgroundtaskmanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resourceschedule-backgroundtaskmanager-V5</a></li>
+</ul>
+<h3 id="Stage-Model-Example-Code"><a href="#Stage-Model-Example-Code" class="headerlink" title="Stage Model Example Code:"></a>Stage Model Example Code:</h3><ol>
+<li><strong>Permission Application</strong>: Apply for the <code>ohos.permission.KEEP_BACKGROUND_RUNNING</code> permission. For configuration, refer to declaring permissions.  </li>
+<li><strong>Declare Background Mode Type</strong>: In the <code>module.json5</code> configuration file, declare the corresponding long-term task type for the UIAbility that needs to use long-term tasks (fill in the configuration item for the long-term task type in the configuration file).</li>
+</ol>
+<pre><code class="language-json">&quot;module&quot;: &#123;
+    &quot;abilities&quot;: [
+        &#123;
+            &quot;backgroundModes&quot;: [
+                // Configuration item for the long-term task type
+                &quot;audioRecording&quot;
+            ], 
+        &#125;
+    ],
+    ...
+&#125;
+</code></pre>
+<ol start="3">
+<li><strong>Import Modules</strong>: The modules related to long-term tasks are <code>@ohos.resourceschedule.backgroundTaskManager</code> and <code>@ohos.app.ability.wantAgent</code>, with other modules imported as needed.</li>
+</ol>
+<pre><code class="language-typescript">import backgroundTaskManager from &#39;@ohos.resourceschedule.backgroundTaskManager&#39;;
+import UIAbility from &#39;@ohos.app.ability.UIAbility&#39;;
+import window from &#39;@ohos.window&#39;;
+import AbilityConstant from &#39;@ohos.app.ability.AbilityConstant&#39;;
+import Want from &#39;@ohos.app.ability.Want&#39;;
+import rpc from &#39;@ohos.rpc&#39;;
+import &#123; BusinessError &#125; from &#39;@ohos.base&#39;;
+import wantAgent, &#123; WantAgent &#125; from &#39;@ohos.app.ability.wantAgent&#39;;
+</code></pre>
+<ol start="4">
+<li><strong>Apply and Cancel Long-Term Tasks</strong>:  <ul>
+<li>In the Stage model, long-term tasks support applications from the same device and app. Cross-device or cross-app applications are only open to system apps. Example code for applying for a long-term task from the <strong>same device and app</strong> is as follows:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;ContinuousTask&#39;;
+  // Get the UIAbility context of the page through the getContext method.
+  private context: Context = getContext(this);
+
+  startContinuousTask() &#123;
+    let wantAgentInfo: wantAgent.WantAgentInfo = &#123;
+      // List of actions to be executed after clicking the notification
+      // Add the bundleName and abilityName of the app to be launched
+      wants: [
+        &#123;
+          bundleName: &quot;com.example.myapplication&quot;,
+          abilityName: &quot;com.example.myapplication.MainAbility&quot;
+        &#125;
+      ],
+      // Specify that the action after clicking the notification is to launch the ability
+      actionType: wantAgent.OperationType.START_ABILITY,
+      // A private value defined by the user
+      requestCode: 0,
+      // Action execution attributes after clicking the notification
+      wantAgentFlags: [wantAgent.WantAgentFlags.UPDATE_PRESENT_FLAG]
+    &#125;;
+
+    // Get the WantAgent object through the getWantAgent method in the wantAgent module
+    wantAgent.getWantAgent(wantAgentInfo).then((wantAgentObj: WantAgent) =&gt; &#123;
+        backgroundTaskManager.startBackgroundRunning(this.context,
+          backgroundTaskManager.BackgroundMode.AUDIO_RECORDING, wantAgentObj).then(() =&gt; &#123;
+          console.info(`Succeeded in operationing startBackgroundRunning.`);
+        &#125;).catch((err: BusinessError) =&gt; &#123;
+          console.error(`Failed to operation startBackgroundRunning. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+        &#125;);
+     &#125;);
+   &#125;
+
+   stopContinuousTask() &#123;
+      backgroundTaskManager.stopBackgroundRunning(this.context).then(() =&gt; &#123;
+        console.info(`Succeeded in operationing stopBackgroundRunning.`);
+      &#125;).catch((err: BusinessError) =&gt; &#123;
+        console.error(`Failed to operation stopBackgroundRunning. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+      &#125;);
+   &#125;
+
+   build() &#123;
+     Row() &#123;
+       Column() &#123;
+         Text(&quot;Index&quot;)
+           .fontSize(50)
+           .fontWeight(FontWeight.Bold)
+
+        Button() &#123;
+           Text(&#39;Apply for Long-Term Task&#39;).fontSize(25).fontWeight(FontWeight.Bold)
+         &#125;
+         .type(ButtonType.Capsule)
+         .margin(&#123; top: 10 &#125;)
+         .backgroundColor(&#39;#0D9FFB&#39;)
+         .width(250)
+         .height(40)
+         .onClick(() =&gt; &#123;
+           // Apply for a long-term task via the button
+           this.startContinuousTask();
+
+           // Execute specific long-term task logic here, such as audio playback.
+         &#125;)
+
+         Button() &#123;
+           Text(&#39;Cancel Long-Term Task&#39;).fontSize(25).fontWeight(FontWeight.Bold)
+         &#125;
+         .type(ButtonType.Capsule)
+         .margin(&#123; top: 10 &#125;)
+         .backgroundColor(&#39;#0D9FFB&#39;)
+         .width(250)
+         .height(40)
+         .onClick(() =&gt; &#123;
+           // End the execution of the specific long-term task here
+
+           // Cancel the long-term task via the button
+           this.stopContinuousTask();
+         &#125;)
+       &#125;
+       .width(&#39;100%&#39;)
+     &#125;
+     .height(&#39;100%&#39;)
+   &#125;
+ &#125;    
+</code></pre>
+<h2 id="2-Why-does-applying-for-HarmonyAppProvision-information-still-result-in-permission-denial"><a href="#2-Why-does-applying-for-HarmonyAppProvision-information-still-result-in-permission-denial" class="headerlink" title="2. Why does applying for HarmonyAppProvision information still result in permission denial?"></a>2. Why does applying for HarmonyAppProvision information still result in permission denial?</h2><ul>
+<li>For steps to apply for restricted ACL permissions, refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-signing-0000001587684945#section157591551175916">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/ide-signing-0000001587684945#section157591551175916</a>  </li>
+<li>Currently, some permissions support quick application through automatic signing: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-signing-V5#section9786111152213">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-signing-V5#section9786111152213</a>  </li>
+<li>Permissions marked with <code>ACL enabled: true</code> in the app permission list can be applied for through AppGallery Connect (AGC): <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/permissions-for-all-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/permissions-for-all-V5</a></li>
+</ul>
+<h2 id="3-What-storage-solution-is-recommended-when-the-data-stored-in-HarmonyOS-preferences-exceeds-the-maximum-length"><a href="#3-What-storage-solution-is-recommended-when-the-data-stored-in-HarmonyOS-preferences-exceeds-the-maximum-length" class="headerlink" title="3. What storage solution is recommended when the data stored in HarmonyOS preferences exceeds the maximum length?"></a>3. What storage solution is recommended when the data stored in HarmonyOS preferences exceeds the maximum length?</h2><p>Use a key-value database—<strong>single-version database</strong>—where the key length ≤ 1 KB and the value length &lt; 4 MB per record.<br>Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/data-persistence-by-kv-store-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/data-persistence-by-kv-store-V5</a>  </p>
+<h2 id="4-When-using-the-Deveco-Testing-tool-how-to-detect-the-power-consumption-status-of-APP-CPU-and-GPU-while-performing-APP-performance-testing"><a href="#4-When-using-the-Deveco-Testing-tool-how-to-detect-the-power-consumption-status-of-APP-CPU-and-GPU-while-performing-APP-performance-testing" class="headerlink" title="4. When using the Deveco Testing tool, how to detect the power consumption status of APP CPU and GPU while performing APP performance testing?"></a>4. When using the Deveco Testing tool, how to detect the power consumption status of APP CPU and GPU while performing APP performance testing?</h2><p>Currently, this can be detected through <strong>“Performance Power Consumption Testing&#x2F;Scenario-based Performance Testing”</strong>.  </p>
+<h2 id="5-Questions-about-HarmonyOS-application-keep-alive"><a href="#5-Questions-about-HarmonyOS-application-keep-alive" class="headerlink" title="5. Questions about HarmonyOS application keep-alive:"></a>5. Questions about HarmonyOS application keep-alive:</h2><ol>
+<li>Does an app need to apply for only one background task? For example, when an app is in the background on certain pages, does it need one background task for keep-alive, or does each page need a separate application?  </li>
+<li>What is the API for background keep-alive?</li>
+</ol>
+<h3 id="Answers"><a href="#Answers" class="headerlink" title="Answers:"></a>Answers:</h3><ol>
+<li>You can apply for one or multiple types of long-term tasks at the same time. For multi-type services, only the main business type needs to be applied for. As long as the main task exists, the app will not be frozen.  </li>
+<li>For background long-term tasks, refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5</a></li>
+</ol>
+<h3 id="Constraints-and-Limitations-for-Long-Term-Task-Application"><a href="#Constraints-and-Limitations-for-Long-Term-Task-Application" class="headerlink" title="Constraints and Limitations for Long-Term Task Application:"></a>Constraints and Limitations for Long-Term Task Application:</h3><ul>
+<li><strong>Application Restrictions</strong>: In the Stage model, long-term tasks are only supported by UIAbility; in the FA model, they are only supported by ServiceAbility.  </li>
+<li><strong>Quantity Restrictions</strong>: A UIAbility (ServiceAbility in the FA model) can only apply for one long-term task at a time, meaning a new task can only be applied for after the previous one ends. If an app needs to apply for multiple long-term tasks, multiple UIAbilities must be created. Once a UIAbility in an app applies for a long-term task, all processes under the app will not be suspended.  </li>
+<li><strong>Operation Restrictions</strong>: On mobile devices, the system performs long-term task validation:  <ul>
+<li><strong>Scenario 1</strong>: If an app applies for a long-term task but does not actually execute the task of the applied type or the task has ended, the system will manage the app. For example, if the system detects that an app has applied for <code>AUDIO_PLAYBACK</code> (audio&#x2F;video playback) but is not playing music, the long-term task will be canceled.  </li>
+<li><strong>Scenario 2</strong>: If an app executes a long-term task of a type it has not applied for, the system will manage the app. For example, if the system detects that an app has only applied for <code>AUDIO_PLAYBACK</code> but is also recording (corresponding to <code>AUDIO_RECORDING</code>), the app will be managed.  </li>
+<li><strong>Scenario 3</strong>: If the background load of the process running the long-term task continuously exceeds the typical load of the applied type, the system will manage the app.</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4101-Daily-HarmonyOS-Next-Knowledge-Charles-Packet-Capture-Lock-File-Handling-WebView-Component-NFC-Related-Issues-CallMethod-Failures/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1005,303 +1423,6 @@ let resultBase64Str = &quot;data:image/png;base64,&quot; + base64Str
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4109-Daily-HarmonyOS-Next-Knowledge-Third-party-Database-Libraries-Bluetooth-Device-Broadcasting-Namespace-Merging-CPU-Architectures-and-Multi-Environment-Configuration-Building/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/4109-Daily-HarmonyOS-Next-Knowledge-Third-party-Database-Libraries-Bluetooth-Device-Broadcasting-Namespace-Merging-CPU-Architectures-and-Multi-Environment-Configuration-Building/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Third-party Database Libraries, Bluetooth Device Broadcasting, Namespace Merging, CPU Architectures, and Multi-Environment Configuration Building</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 10:28:36 / Modified: 11:19:35" itemprop="dateCreated datePublished" datetime="2025-06-29T10:28:36+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-Third-party-Database-Libraries-Bluetooth-Device-Broadcasting-Namespace-Merging-CPU-Architectures-and-Multi-Environment-Configuration-Building"><a href="#Daily-HarmonyOS-Next-Knowledge-Third-party-Database-Libraries-Bluetooth-Device-Broadcasting-Namespace-Merging-CPU-Architectures-and-Multi-Environment-Configuration-Building" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Third-party Database Libraries, Bluetooth Device Broadcasting, Namespace Merging, CPU Architectures, and Multi-Environment Configuration Building"></a>[Daily HarmonyOS Next Knowledge] Third-party Database Libraries, Bluetooth Device Broadcasting, Namespace Merging, CPU Architectures, and Multi-Environment Configuration Building</h1><h2 id="1-Are-there-any-third-party-database-libraries-for-HarmonyOS"><a href="#1-Are-there-any-third-party-database-libraries-for-HarmonyOS" class="headerlink" title="1. Are there any third-party database libraries for HarmonyOS?"></a>1. Are there any third-party database libraries for HarmonyOS?</h2><p>dataORM is a relational mapping database that supports database operations with one line of code or chain calls, along with features like backup, upgrade, and caching.<br><a target="_blank" rel="noopener" href="https://gitee.com/openharmony-sig/ohos_dataorm">https://gitee.com/openharmony-sig/ohos_dataorm</a>  </p>
-<h2 id="2-Does-HarmonyOS-provide-an-API-to-parse-the-broadcast-data-segment-of-Bluetooth-devices"><a href="#2-Does-HarmonyOS-provide-an-API-to-parse-the-broadcast-data-segment-of-Bluetooth-devices" class="headerlink" title="2. Does HarmonyOS provide an API to parse the broadcast data segment of Bluetooth devices?"></a>2. Does HarmonyOS provide an API to parse the broadcast data segment of Bluetooth devices?</h2><p>Similar to ScanRecord for Bluetooth broadcast data sources: Start BLE scanning via <code>startBLEScan</code>, and obtain the <code>data</code> information from the scanned <code>ScanResult</code>. The requirement is to parse the broadcast data segment information of Bluetooth devices, such as <code>advertisData</code>, <code>advertisServiceUUIDs</code>, <code>localName</code>, <code>serviceData</code>, etc. However, the official API documentation does not provide detailed explanations for these data fields.  </p>
-<h3 id="Broadcast-Packet-Data-Description"><a href="#Broadcast-Packet-Data-Description" class="headerlink" title="Broadcast Packet Data Description:"></a>Broadcast Packet Data Description:</h3><p><a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-connectivity-kit/js-apis-bluetooth-ble.md#advertisedata">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-connectivity-kit/js-apis-bluetooth-ble.md#advertisedata</a>  </p>
-<h4 id="AdvertiseData"><a href="#AdvertiseData" class="headerlink" title="AdvertiseData"></a>AdvertiseData</h4><p>Describes the content of a BLE broadcast packet, with a length of 31 bytes.  </p>
-<ul>
-<li><strong>Atomic Service API</strong>: This interface supports use in atomic services starting from API version 12.  </li>
-<li><strong>System Capability</strong>: SystemCapability.Communication.Bluetooth.Core.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Readable</th>
-<th>Writable</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>serviceUuids</td>
-<td>Array<string></td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Represents the list of service UUIDs to be broadcast.</td>
-</tr>
-<tr>
-<td>manufactureData</td>
-<td>Array&lt;<a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-connectivity-kit/js-apis-bluetooth-ble.md#manufacturedata">ManufactureData</a>&gt;</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Represents the list of manufacturer information to be broadcast.</td>
-</tr>
-<tr>
-<td>serviceData</td>
-<td>Array&lt;<a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-connectivity-kit/js-apis-bluetooth-ble.md#servicedata">ServiceData</a>&gt;</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Represents the list of service data to be broadcast.</td>
-</tr>
-<tr>
-<td>includeDeviceName</td>
-<td>boolean</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Indicates whether to include the device name (optional parameter). <code>true</code> means inclusion, <code>false</code> or unspecified means exclusion. Note that the broadcast packet length must not exceed 31 bytes when including the device name.</td>
-</tr>
-</tbody></table>
-<p>Currently, no interface is provided to parse broadcast packets, so developers need to parse them manually.  </p>
-<h2 id="3-Does-it-support-cross-file-namespace-merging"><a href="#3-Does-it-support-cross-file-namespace-merging" class="headerlink" title="3. Does it support cross-file namespace merging?"></a>3. Does it support cross-file namespace merging?</h2><p>In the shared package development scenario, the goal is to place all exported content (including functions, classes, interfaces, constants, enums) under a single namespace. Since the content is extensive, it is distributed across multiple .ets files.  </p>
-<h3 id="Attempted-solutions"><a href="#Attempted-solutions" class="headerlink" title="Attempted solutions:"></a>Attempted solutions:</h3><ol>
-<li>Adding namespaces to all .ets files: Cross-file namespaces are not automatically merged, so only content from a specific file can be exported.  </li>
-<li>Re-exporting content defined in other .ets files within a namespace: Results in an error indicating that type definitions cannot be exported within a namespace.  </li>
-<li>Defining all content under the current namespace in one file and referencing it from other files: Leads to circular dependencies, making unit tests unexecutable.</li>
-</ol>
-<p>Solutions 1 and 3 are currently unfeasible. For Solution 2, the implementation steps are as follows:  </p>
-<h4 id="test1-ets"><a href="#test1-ets" class="headerlink" title="test1.ets:"></a>test1.ets:</h4><pre><code class="language-typescript">// test1.ets  
-namespace mynamespace &#123;  
-  export function foo1() &#123;  
-    console.log(&quot;testTAG&quot;, &quot;File1&quot;)  
-  &#125;  
-&#125;  
-export default mynamespace  
-</code></pre>
-<h4 id="test2-ets"><a href="#test2-ets" class="headerlink" title="test2.ets:"></a>test2.ets:</h4><pre><code class="language-typescript">// test2.ets  
-namespace mynamespace &#123;  
-  export function foo2() &#123;  
-    console.log(&quot;testTAG&quot;, &quot;File2&quot;)  
-  &#125;  
-&#125;  
-export default mynamespace  
-</code></pre>
-<h4 id="test3-ets"><a href="#test3-ets" class="headerlink" title="test3.ets:"></a>test3.ets:</h4><pre><code class="language-typescript">// test3.ets  
-import mynamespace1 from &#39;./test1&#39;  
-import mynamespace2 from &#39;./test2&#39;  
-export namespace test1111 &#123;  
-  export let my1 = mynamespace1.foo1()  
-  export let my2 = mynamespace2.foo2()  
-&#125;  
-</code></pre>
-<h4 id="Index-ets"><a href="#Index-ets" class="headerlink" title="Index.ets:"></a>Index.ets:</h4><pre><code class="language-typescript">// Index.ets  
-import &#123; test1111 &#125; from &#39;./test3&#39;  
-test1111.my1  
-test1111.my2  
-</code></pre>
-<h2 id="4-What-are-the-CPU-architecture-related-issues-when-packaging-HarmonyOS-applications"><a href="#4-What-are-the-CPU-architecture-related-issues-when-packaging-HarmonyOS-applications" class="headerlink" title="4. What are the CPU architecture-related issues when packaging HarmonyOS applications?"></a>4. What are the CPU architecture-related issues when packaging HarmonyOS applications?</h2><p>Does packaging HarmonyOS applications require differentiation based on CPU architectures? If so, which CPU architectures should be distinguished?  </p>
-<p>Currently, only 64-bit architecture is supported, so no differentiation is needed during application packaging.  </p>
-<h2 id="5-How-to-build-multi-environment-configurations-for-HarmonyOS"><a href="#5-How-to-build-multi-environment-configurations-for-HarmonyOS" class="headerlink" title="5. How to build multi-environment configurations for HarmonyOS?"></a>5. How to build multi-environment configurations for HarmonyOS?</h2><p>How to add configuration items for different environments (e.g., prod, dev) with different backend API host parameters?  </p>
-<p>The BuildProfile provides a way to obtain build parameters at runtime. You can get the runtime mode via the default parameter <code>BuildProfile.BUILD_MODE_NAME</code>.<br>Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hvigor-get-build-profile-para-guide-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hvigor-get-build-profile-para-guide-V5</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41010-Daily-HarmonyOS-Next-Knowledge-KVStore-Synchronous-Reading-SDK-Upgrade-AES-Decryption-Code-Area-Not-Scrolling-with-Mouse-NAPI-Access-to-Resource-Directory-Issues/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/41010-Daily-HarmonyOS-Next-Knowledge-KVStore-Synchronous-Reading-SDK-Upgrade-AES-Decryption-Code-Area-Not-Scrolling-with-Mouse-NAPI-Access-to-Resource-Directory-Issues/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] KVStore Synchronous Reading, SDK Upgrade, AES Decryption, Code Area Not Scrolling with Mouse, NAPI Access to Resource Directory Issues</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 10:28:02 / Modified: 11:19:36" itemprop="dateCreated datePublished" datetime="2025-06-29T10:28:02+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-KVStore-Synchronous-Reading-SDK-Upgrade-AES-Decryption-Code-Area-Not-Scrolling-with-Mouse-NAPI-Access-to-Resource-Directory-Issues"><a href="#Daily-HarmonyOS-Next-Knowledge-KVStore-Synchronous-Reading-SDK-Upgrade-AES-Decryption-Code-Area-Not-Scrolling-with-Mouse-NAPI-Access-to-Resource-Directory-Issues" class="headerlink" title="[Daily HarmonyOS Next Knowledge] KVStore Synchronous Reading, SDK Upgrade, AES Decryption, Code Area Not Scrolling with Mouse, NAPI Access to Resource Directory Issues"></a>[Daily HarmonyOS Next Knowledge] KVStore Synchronous Reading, SDK Upgrade, AES Decryption, Code Area Not Scrolling with Mouse, NAPI Access to Resource Directory Issues</h1><h2 id="1-Are-user-preferences-and-KVStore-both-asynchronously-saved-and-read-Is-there-a-synchronous-reading-method"><a href="#1-Are-user-preferences-and-KVStore-both-asynchronously-saved-and-read-Is-there-a-synchronous-reading-method" class="headerlink" title="1. Are user preferences and KVStore both asynchronously saved and read? Is there a synchronous reading method?"></a>1. Are user preferences and KVStore both asynchronously saved and read? Is there a synchronous reading method?</h2><p>Are both user preferences and ohos.data.distributedKVStore (distributed key-value database) asynchronous for setting and getting values? The emulator feels quite slow (after setting, getting). Is there another KV data storage method that supports synchronization?  </p>
-<p>User preferences and KVStore are both asynchronously saved and read, and no synchronous operation APIs are provided. PersistentStorage supports synchronous KV data storage. Persistent variables should preferably be data smaller than 2KB, and large amounts of data should not be persisted because PersistentStorage’s disk writing operations are synchronous. Massive local reading and writing of data will be executed synchronously in the UI thread, affecting UI rendering performance. If developers need to store large amounts of data, it is recommended to use database APIs.  </p>
-<h2 id="2-How-to-upgrade-the-project’s-compileSdkVersion-to-API-12"><a href="#2-How-to-upgrade-the-project’s-compileSdkVersion-to-API-12" class="headerlink" title="2. How to upgrade the project’s compileSdkVersion to API 12?"></a>2. How to upgrade the project’s compileSdkVersion to API 12?</h2><p>The current build-profile.json5 is:  </p>
-<pre><code class="language-json">&quot;compileSdkVersion&quot;: &quot;4.1.0(11)&quot;,
-&quot;compatibleSdkVersion&quot;: &quot;4.1.0(11)&quot;,
-</code></pre>
-<p>The SDK, emulator, and development tools have been upgraded, but how to upgrade the project to API 12?  </p>
-<ol>
-<li>First, create a new project in the IDE to obtain the Compile SDK and Compatible SDK version numbers (e.g., “5.0.0(12)”).  </li>
-<li>Modify the corresponding parameters in the project’s build-profile.json5 file as follows:</li>
-</ol>
-<pre><code class="language-json">&quot;compileSdkVersion&quot;: &quot;5.0.0(12)&quot;,
-&quot;compatibleSdkVersion&quot;: &quot;5.0.0(12)&quot;,
-</code></pre>
-<ol start="3">
-<li>Finally, rebuild the project.<br><strong>Note</strong>: The content in the hvigor-config.json5 file may also need to be changed. If a compilation error occurs indicating an incorrect hvigor, modify it to the new version as prompted by the IDE, or manually adjust it.</li>
-</ol>
-<h2 id="3-HarmonyOS-AES-decryption-issues"><a href="#3-HarmonyOS-AES-decryption-issues" class="headerlink" title="3. HarmonyOS AES decryption issues?"></a>3. HarmonyOS AES decryption issues?</h2><p>AES encryption and decryption are required in the app, using the Crypto Architecture Kit. The encryption and decryption code differences are not significant, mostly copied from official documentation. Encryption works, but decryption errors occur at the decoder.doFinal() position.  </p>
-<p>Refer to the following demo:  </p>
-<pre><code class="language-typescript">import cryptoFramework from &#39;@ohos.security.cryptoFramework&#39;;
-import buffer from &#39;@ohos.buffer&#39;;
-
-function genIvParamsSpec() &#123;
-  let dataIv = convertStringToUint8Array(&#39;8NONwyJtHesysWpM&#39;)!; // new Uint8Array(arr);
-  let ivBlob: cryptoFramework.DataBlob = &#123; data: dataIv &#125;;
-  let ivParamsSpec: cryptoFramework.IvParamsSpec = &#123;
-    algName: &quot;IvParamsSpec&quot;,
-    iv: ivBlob
-  &#125;;
-  return ivParamsSpec;
-&#125;
-
-// Encrypt message
-async function encryptMessagePromise(symKey: cryptoFramework.SymKey, plainText: cryptoFramework.DataBlob) &#123;
-  let cipher = cryptoFramework.createCipher(&#39;AES128|CBC|PKCS7&#39;);
-  let iv = genIvParamsSpec();
-  await cipher.init(cryptoFramework.CryptoMode.ENCRYPT_MODE, symKey, iv);
-  let cipherData = await cipher.doFinal(plainText);
-  return cipherData;
-&#125;
-
-// Decrypt message
-async function decryptMessagePromise(symKey: cryptoFramework.SymKey, cipherText: cryptoFramework.DataBlob) &#123;
-  let decoder = cryptoFramework.createCipher(&#39;AES128|CBC|PKCS7&#39;);
-  let iv = genIvParamsSpec();
-  await decoder.init(cryptoFramework.CryptoMode.DECRYPT_MODE, symKey, iv);
-  let decryptData = await decoder.doFinal(cipherText);
-  return decryptData;
-&#125;
-
-async function genSymKeyByData(symKeyData: Uint8Array) &#123;
-  let symKeyBlob: cryptoFramework.DataBlob = &#123; data: symKeyData &#125;;
-  let aesGenerator = cryptoFramework.createSymKeyGenerator(&#39;AES128&#39;);
-  let symKey = await aesGenerator.convertKey(symKeyBlob);
-  console.info(&#39;convertKey success&#39;);
-  return symKey;
-&#125;
-
-async function aesCBC() &#123;
-  let keyData = convertStringToUint8Array(&#39;sgg45747ss223455&#39;)!;
-  let symKey = await genSymKeyByData(keyData);
-  let message = &quot;This is a test,just&quot;;
-  let plainText: cryptoFramework.DataBlob = &#123; 
-    data: new Uint8Array(buffer.from(message, &#39;utf-8&#39;).buffer) 
-  &#125;;
-  let encryptText = await encryptMessagePromise(symKey, plainText);
-  let decryptText = await decryptMessagePromise(symKey, encryptText);
-  if (plainText.data.toString() === decryptText.data.toString()) &#123;
-    console.info(&#39;decrypt ok&#39;);
-    console.info(&#39;decrypt plainText: &#39; + buffer.from(decryptText.data).toString());
-  &#125;
-&#125;
-</code></pre>
-<h2 id="4-How-to-set-the-code-area-font-to-not-zoom-with-mouse-scrolling"><a href="#4-How-to-set-the-code-area-font-to-not-zoom-with-mouse-scrolling" class="headerlink" title="4. How to set the code area font to not zoom with mouse scrolling?"></a>4. How to set the code area font to not zoom with mouse scrolling?</h2><p><strong>Settings method</strong>: Uncheck the first option “Change font size with Ctrl+Mouse Wheel in” under File -&gt; Settings -&gt; Editor -&gt; General in the upper left corner, then click Apply.  </p>
-<h2 id="5-Does-the-rawfile-NAPI-interface-provided-by-HarmonyOS-only-access-resources-in-the-resources-directory-and-cannot-access-the-lib-directory-at-the-same-level-as-resources"><a href="#5-Does-the-rawfile-NAPI-interface-provided-by-HarmonyOS-only-access-resources-in-the-resources-directory-and-cannot-access-the-lib-directory-at-the-same-level-as-resources" class="headerlink" title="5. Does the rawfile NAPI interface provided by HarmonyOS only access resources in the resources directory and cannot access the lib directory at the same level as resources?"></a>5. Does the rawfile NAPI interface provided by HarmonyOS only access resources in the resources directory and cannot access the lib directory at the same level as resources?</h2><p>rawfile can only access the rawfile directory. For other directories, data needs to be passed from the TS side or paths should be concatenated manually.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1371,7 +1492,7 @@ async function aesCBC() &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-count">317</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

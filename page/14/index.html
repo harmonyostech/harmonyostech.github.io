@@ -149,6 +149,388 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-Detailed-Explanation-of-HarmonyOS-Next-Timer-Component/" class="post-title-link" itemprop="url">Detailed Explanation of HarmonyOS Next Timer Component</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:35:56 / Modified: 10:37:22" itemprop="dateCreated datePublished" datetime="2025-06-27T10:35:56+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Detailed-Explanation-of-HarmonyOS-Next-Timer-Component"><a href="#Detailed-Explanation-of-HarmonyOS-Next-Timer-Component" class="headerlink" title="Detailed Explanation of HarmonyOS Next Timer Component"></a>Detailed Explanation of HarmonyOS Next Timer Component</h2><h3 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h3><p>In daily UI development, timer controls are frequently used. For example, time progress display during video playback and call duration display in audio&#x2F;video calls require forward-counting timer controls. In some scenarios, countdown timer controls are needed, where a maximum time is set to start the countdown. In Android, we typically use <code>TextView</code> combined with <code>Handler</code> to update the <code>TextView</code> for timing effects. HarmonyOS Next provides the <code>TextTimer</code> component to achieve timing effects. Below is an introduction to the capabilities of <code>TextTimer</code>.  </p>
+<h3 id="Introduction-to-TextTimer"><a href="#Introduction-to-TextTimer" class="headerlink" title="Introduction to TextTimer"></a>Introduction to TextTimer</h3><p><code>TextTimer</code> is a component that displays timing information through text and controls its timer state. When the component is invisible, time changes will stop. The visibility state of the component is handled based on <code>onVisibleAreaChange</code>, and a visibility threshold ratio greater than 0 is considered visible.  </p>
+<h4 id="Attribute-Introduction"><a href="#Attribute-Introduction" class="headerlink" title="Attribute Introduction"></a>Attribute Introduction</h4><ul>
+<li><code>format(value: string)</code>: Sets a custom format, which must include at least one keyword from HH, mm, ss, or SS. If date formats like yy, MM, or dd are used, default values will apply.  </li>
+<li><code>fontColor(value: ResourceColor)</code>: Sets the font color.  </li>
+<li><code>fontWeight(value: number | FontWeight | string)</code>: Sets the font weight of the text. Excessively large values may cause truncation in different fonts. For the number type, values range from <code>[100, 900]</code> with an interval of 100 (default is 400); larger values make the font bolder. The string type supports numeric string forms (e.g., “400”) and keywords like “bold”, “bolder”, “lighter”, “regular”, and “medium”, corresponding to the respective enumeration values in <code>FontWeight</code>.  </li>
+<li><code>fontFamily(value: ResourceStr)</code>: Sets the font list, with the default font being ‘HarmonyOS Sans’. Applications currently support ‘HarmonyOS Sans’ and registered custom fonts, while cards only support ‘HarmonyOS Sans’.  </li>
+<li><code>textShadow(value: ShadowOptions | Array&lt;ShadowOptions&gt;)</code>: Sets text shadow effects. This interface supports array parameters for multiple shadows, but does not support the <code>fill</code> field or intelligent color pickup mode.  </li>
+<li><code>contentModifier(modifier: ContentModifier&lt;TextTimerConfiguration&gt;)</code>: A method to customize the content area of <code>TextTimer</code>, where <code>modifier</code> is a content modifier that developers need to implement by defining a class that adheres to the <code>ContentModifier</code> interface.</li>
+</ul>
+<p>The <code>TextTimer</code> constructor requires a <code>TextTimerOptions</code> object, which includes the following attributes:  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">isCountDown</td>
+<td align="left">boolean</td>
+<td align="left">No</td>
+<td align="left">Indicates whether to use countdown. When <code>true</code>, the timer starts counting down; when <code>false</code>, it starts counting up.<br><br>Default: <code>false</code></td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">number</td>
+<td align="left">No</td>
+<td align="left">Timer duration (effective when <code>isCountDown</code> is <code>true</code>), in milliseconds. The maximum duration is 86,400,000 milliseconds (24 hours). When <code>0 &lt; count &lt; 86,400,000</code>, <code>count</code> is the initial timer value; otherwise, the default value is used.<br><br>Default: <code>60000</code></td>
+</tr>
+<tr>
+<td align="left">controller</td>
+<td align="left">TextTimerController</td>
+<td align="left">No</td>
+<td align="left">The <code>TextTimer</code> controller, used to start, pause, etc.</td>
+</tr>
+</tbody></table>
+<p>The <code>TextTimerController</code> mainly controls the timer:  </p>
+<ul>
+<li><code>start()</code>: Starts the timer.  </li>
+<li><code>pause()</code>: Pauses the timer.  </li>
+<li><code>reset()</code>: Resets the timer.</li>
+</ul>
+<h4 id="Event-Introduction"><a href="#Event-Introduction" class="headerlink" title="Event Introduction"></a>Event Introduction</h4><p>The main event is <code>onTimer</code>:  </p>
+<ul>
+<li><code>onTimer(event: (utc: number, elapsedTime: number) =&gt; void)</code>: Triggered when the time text changes. This event is not triggered when the screen is locked or the app is in the background. When setting high-precision formats (SSS, SS), the callback interval may fluctuate. The parameter <code>utc</code> is a Linux timestamp (time elapsed since January 1, 1970) in the minimum unit of the set format; <code>elapsedTime</code> is the elapsed time of the timer, also in the minimum unit of the set format.</li>
+</ul>
+<h3 id="Usage-Examples"><a href="#Usage-Examples" class="headerlink" title="Usage Examples"></a>Usage Examples</h3><h4 id="Example-1-Button-Controlled-Timer"><a href="#Example-1-Button-Controlled-Timer" class="headerlink" title="Example 1: Button-Controlled Timer"></a>Example 1: Button-Controlled Timer</h4><pre><code class="language-typescript">@Entry
+@Component
+struct TextTimerExample &#123;
+  textTimerController: TextTimerController = new TextTimerController()
+  @State format: string = &#39;mm:ss.SS&#39;
+
+  build() &#123;
+    Column() &#123;
+      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
+        .format(this.format)
+        .fontColor(Color.Black)
+        .fontSize(50)
+        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
+          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
+        &#125;)
+      Row() &#123;
+        Button(&quot;start&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.start()
+        &#125;)
+        Button(&quot;pause&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.pause()
+        &#125;)
+        Button(&quot;reset&quot;).onClick(() =&gt; &#123;
+          this.textTimerController.reset()
+        &#125;)
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>Effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3.gif"></p>
+<h4 id="Example-2-Automatic-Timing"><a href="#Example-2-Automatic-Timing" class="headerlink" title="Example 2: Automatic Timing"></a>Example 2: Automatic Timing</h4><pre><code class="language-typescript">@Entry
+@Component
+struct TextTimerStart &#123;
+  textTimerController: TextTimerController = new TextTimerController()
+  @State format: string = &#39;mm:ss.SS&#39;
+
+  build() &#123;
+    Column() &#123;
+      Scroll()
+        .height(&#39;20%&#39;)
+      TextTimer(&#123; isCountDown: true, count: 30000, controller: this.textTimerController &#125;)
+        .format(this.format)
+        .fontColor(Color.Black)
+        .fontSize(50)
+        .onTimer((utc: number, elapsedTime: number) =&gt; &#123;
+          console.info(&#39;textTimer notCountDown utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)
+        &#125;)
+        .onAppear(() =&gt; &#123;
+          this.textTimerController.start()
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-1.gif"></p>
+<h3 id="Usage-Limitations"><a href="#Usage-Limitations" class="headerlink" title="Usage Limitations"></a>Usage Limitations</h3><p>For forward-counting scenarios, the timer always starts from 0, but some scenarios require starting from a specific time. For example, in page switching during a video call, the full-screen and floating-window pages should have continuous timing instead of restarting from 0. How to achieve this?  </p>
+<p><code>TextTimer</code> provides a content area customization method <code>contentModifier</code>, which requires implementing <code>ContentModifier&lt;TextTimerConfiguration&gt;</code>:  </p>
+<ol>
+<li>First, implement <code>MyTextTimerModifier</code> and encapsulate the <code>Builder</code> method in the <code>applyContent</code> method.  </li>
+<li>Customize the UI in the custom <code>Builder</code> method.  </li>
+<li>Configure the custom <code>MyTextTimerModifier</code> to <code>TextTimer</code> using <code>contentModifier</code>.  </li>
+<li>Remove color and font configurations from <code>TextTimer</code> and configure them in the custom UI.  </li>
+<li>The <code>format</code> setting affects the unit of <code>elapsedTime</code>.  </li>
+<li>Adding an initial value to <code>config.elapsedTime</code> starts timing from a specific time.  </li>
+<li>Convert seconds to the <code>mm:ss</code> format.</li>
+</ol>
+<p><strong>Code example</strong>:  </p>
+<pre><code class="language-typescript">let startTime: number = 100;  
+
+function formatData(diffTimeBySecond: number): string &#123;  
+  const hours = Math.floor(diffTimeBySecond / 3600);  
+  const minutes = Math.floor((diffTimeBySecond % 3600) / 60);  
+  const remainingSeconds = Math.floor(diffTimeBySecond % 60);  
+  
+  // Zero-padding function  
+  const pad = (num: number) =&gt; num.toString().padStart(2, &#39;0&#39;);  
+  
+  return hours &gt; 0  
+    ? `$&#123;pad(hours)&#125;:$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`  
+    : `$&#123;pad(minutes)&#125;:$&#123;pad(remainingSeconds)&#125;`;  
+&#125;  
+class MyTextTimerModifier implements ContentModifier&lt;TextTimerConfiguration&gt; &#123;  
+  constructor() &#123;  
+  &#125;  
+  applyContent(): WrappedBuilder&lt;[TextTimerConfiguration]&gt; &#123;  
+    return wrapBuilder(buildTextTimer)  
+  &#125;  
+&#125;  
+  
+@Builder  
+function buildTextTimer(config: TextTimerConfiguration) &#123;  
+  Column() &#123;  
+      Column() &#123;  
+        Text(formatData(config.elapsedTime + startTime)).fontColor(Color.Red)  
+    &#125;  
+  &#125;&#125;  
+  
+@Entry  
+@Component  
+struct Index &#123;  
+  @State count: number = 10000  
+  @State myTimerModifier: MyTextTimerModifier = new MyTextTimerModifier()  
+  countUpTextTimerController: TextTimerController = new TextTimerController()  
+  
+  build() &#123;  
+    Row() &#123;  
+      Column() &#123;  
+        TextTimer(&#123; isCountDown: false, controller: this.countUpTextTimerController &#125;)  
+          .contentModifier(this.myTimerModifier)  
+          .onTimer((utc: number, elapsedTime: number) =&gt; &#123;  
+            console.info(&#39;textTimer onTimer utc is：&#39; + utc + &#39;, elapsedTime: &#39; + elapsedTime)  
+          &#125;)  
+        Row() &#123;  
+          Button(&quot;start&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.start()  
+          &#125;).margin(10)  
+          Button(&quot;pause&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.pause()  
+          &#125;).margin(10)  
+          Button(&quot;reset&quot;).onClick(() =&gt; &#123;  
+            this.countUpTextTimerController.reset()  
+          &#125;).margin(10)  
+        &#125;.margin(20)  
+      &#125;.width(&#39;100%&#39;)  
+    &#125;.height(&#39;100%&#39;)  
+  &#125;  
+&#125;
+</code></pre>
+<p>Final effect:<br><img src="/../images/HarmonyOS%20Next%20%E8%AE%A1%E6%97%B6%E5%99%A8%E7%BB%84%E4%BB%B6%E8%AF%A6%E8%A7%A3-2.gif"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/B-In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications/" class="post-title-link" itemprop="url">In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:33:47 / Modified: 10:34:06" itemprop="dateCreated datePublished" datetime="2025-06-27T10:33:47+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications"><a href="#In-depth-Analysis-of-HarmonyOS-Next-Ark-Bytecode-Principles-Architecture-Features-and-Practical-Applications" class="headerlink" title="In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications"></a>In-depth Analysis of HarmonyOS Next Ark Bytecode Principles: Architecture, Features and Practical Applications</h1><h2 id="I-Introduction"><a href="#I-Introduction" class="headerlink" title="I. Introduction"></a>I. Introduction</h2><p>In the context of the rapid development of the software industry, the performance, development efficiency, and cross-platform compatibility of applications have become core concerns for developers. As a key tool in the software development process, the performance and features of a compiler directly affect software quality and development cycles. Huawei’s Ark Compiler is an innovative solution designed to meet these needs. Ark Bytecode, as the core product of the Ark Compiler, plays a crucial role in the entire compilation and runtime process. It serves not only as an intermediate bridge for code transformation from high-level languages to machine-executable forms but also embodies numerous optimized and innovative design concepts. Based on Huawei Developer Documentation (<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5</a>), this article provides a comprehensive and in-depth exploration of Ark Bytecode principles, analyzing its architecture, features, and practical application scenarios through rich examples to help developers better understand and leverage this advanced technology.  </p>
+<h2 id="II-Fundamental-Architecture-of-Ark-Bytecode"><a href="#II-Fundamental-Architecture-of-Ark-Bytecode" class="headerlink" title="II. Fundamental Architecture of Ark Bytecode"></a>II. Fundamental Architecture of Ark Bytecode</h2><h3 id="2-1-Nature-and-Role-of-Bytecode"><a href="#2-1-Nature-and-Role-of-Bytecode" class="headerlink" title="2.1 Nature and Role of Bytecode"></a>2.1 Nature and Role of Bytecode</h3><p>Ark Bytecode is a binary file generated by the Ark Compiler after compiling ArkTS&#x2F;TS&#x2F;JS code. Macroscopically, it serves as an intermediate representation (IR) between high-level programming languages and low-level machine code. High-level language code features rich syntax structures and human-readable expressions but cannot be directly executed by computers. Machine code, conversely, is binary instructions directly recognizable by computers, yet writing and maintaining it is extremely challenging for developers. Ark Bytecode resolves this contradiction by transforming high-level language logic into a unified, processable intermediate form that preserves code semantics while facilitating subsequent optimization and execution. The Ark runtime can interpret and execute bytecode, enabling programs to run on different hardware platforms and operating systems, thus achieving cross-platform compatibility.  </p>
+<h3 id="2-2-Detailed-Explanation-of-Instruction-Composition"><a href="#2-2-Detailed-Explanation-of-Instruction-Composition" class="headerlink" title="2.2 Detailed Explanation of Instruction Composition"></a>2.2 Detailed Explanation of Instruction Composition</h3><p>An Ark Bytecode instruction consists of an opcode (instruction name) and an argument list. The opcode is the core identifier of an instruction, determining the specific operation it performs. Opcodes are categorized into prefix-free and prefixed types:  </p>
+<ul>
+<li><strong>Prefix-free opcodes</strong> are typically encoded as 8-bit values. This design prioritizes frequently used instructions, reducing instruction encoding length to save storage and improve execution efficiency.  </li>
+<li><strong>Prefixed opcodes</strong> (16-bit) address the limitation of 256 8-bit opcodes as compiler functionality expands. Stored in little-endian format, they combine an 8-bit prefix with an 8-bit opcode (encoded as <code>opcode &lt;&lt; 8 | prefix</code>). Specific prefixes serve distinct purposes:  <ul>
+<li><strong>0xfe (throw)</strong>: Conditional&#x2F;unconditional throw instructions for exception handling.  </li>
+<li><strong>0xfd (wide)</strong>: Instructions with wider immediate values, IDs, or register indices.  </li>
+<li><strong>0xfc (deprecated)</strong>: Instructions no longer generated by the compiler but maintained for runtime compatibility.  </li>
+<li><strong>0xfb (callruntime)</strong>: Instructions for invoking runtime methods.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Example of a complex ArkTS function</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">calculate</span>(<span class="params"><span class="attr">a</span>: <span class="built_in">number</span>, <span class="attr">b</span>: <span class="built_in">number</span>, <span class="attr">operation</span>: <span class="built_in">string</span></span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (operation === <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operation === <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> a - b;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string">**Corresponding Ark Bytecode instructions**:  </span></span><br></pre></td></tr></table></figure>
+<p>.function any .calculate(any a0, any a1, any a2) {<br>    lda a2<br>    ldstr 0x0  ; Load string ‘+’<br>    cmp_eq<br>    bz 0x8    ; Jump if not equal<br>    lda a0<br>    sta v0<br>    lda a1<br>    add2 0x1, v0<br>    return<br>.label 0x8<br>    lda a2<br>    ldstr 0x1  ; Load string ‘-‘<br>    cmp_eq<br>    bz 0x14   ; Jump if not equal<br>    lda a0<br>    sta v0<br>    lda a1<br>    sub2 0x1, v0<br>    return<br>.label 0x14<br>    ldai 0x0<br>    return<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">In this example, `lda` loads parameters/constants into registers; `ldstr` loads strings; `cmp_eq` compares values; `bz` enables conditional jumps; `add2` and `sub2` perform arithmetic operations. These opcodes and arguments implement the function&#x27;s logic and calculations.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 2.3 In-depth Understanding of Registers and Accumulators  </span><br><span class="line">The Ark Virtual Machine (VM) model is register-based, with all registers being virtual. Registers temporarily store data during program execution:  </span><br><span class="line">- For primitive types (e.g., integers, floats), registers are 64-bit wide.  </span><br><span class="line">- For object types, registers are wide enough to hold object references.  </span><br><span class="line"></span><br><span class="line">The **accumulator (acc)** is a special invisible register serving as the default target and parameter for many instructions. Its use simplifies instruction encoding (e.g., `lda` loads values into `acc` for subsequent operations), reduces encoding width, and improves execution efficiency by minimizing register data transfers and memory accesses.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## III. Value Storage Methods of Ark Bytecode  </span><br><span class="line"></span><br><span class="line">### 3.1 Global Variables  </span><br><span class="line">In Script compilation mode, global variables are stored in a global unique map (key-value pairs, where keys are variable names and values are variable values). Global variables exist throughout the program lifecycle and can be accessed by any function, with access/operations enabled via global-related instructions.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS code**:  </span><br><span class="line">```typescript</span><br><span class="line">let globalCounter = 0;</span><br><span class="line">function incrementGlobal() &#123;</span><br><span class="line">    globalCounter++;</span><br><span class="line">&#125;</span><br><span class="line">function getGlobalCounter() &#123;</span><br><span class="line">    return globalCounter;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Corresponding bytecode instructions** (simplified):  </span><br></pre></td></tr></table></figure>
+<p>tryldglobalbyname 0x0, globalCounter<br>sta v0<br>ldai 0x1<br>add2 0x1, v0<br>trystglobalbyname 0x2, globalCounter</p>
+<p>.function any .getGlobalCounter(any a0, any a1, any a2) {<br>    tryldglobalbyname 0x0, globalCounter<br>    return<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- `tryldglobalbyname` attempts to load `globalCounter` into `acc` (throws an exception if not found).  </span><br><span class="line">- `trystglobalbyname` stores `acc` value into `globalCounter`.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.2 Module Namespaces and Module Variables  </span><br><span class="line">In modern software development, modularization improves code maintainability and reusability. Module namespaces and variables used in source files are compiled into arrays, with instructions referencing them via indices. Module variables include local and external types, loaded by different instructions.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS code**:  </span><br><span class="line">```typescript</span><br><span class="line">// module.ts</span><br><span class="line">export let moduleVar = 100;</span><br><span class="line"></span><br><span class="line">// main.ts</span><br><span class="line">import &#123; moduleVar &#125; from &#x27;./module&#x27;;</span><br><span class="line">function useModuleVar() &#123;</span><br><span class="line">    return moduleVar * 2;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Corresponding bytecode instructions**:  </span><br></pre></td></tr></table></figure>
+<p>ldexternalmodulevar 0x0<br>sta v0<br>ldai 0x2<br>mul2 0x1, v0<br>return</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">`ldexternalmodulevar` loads `moduleVar` from the external module into register `v0`, followed by multiplication and return via `mul2`.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.3 Lexical Environments and Lexical Variables  </span><br><span class="line">Lexical environments and variables are crucial for functional programming and closure implementation. A lexical environment is an array of slots, each corresponding to a lexical variable. A method may associate with multiple lexical environments, with instructions specifying variables via relative hierarchy numbers and slot indices.  </span><br><span class="line"></span><br><span class="line">**Example ArkTS closure code**:  </span><br><span class="line">```typescript</span><br><span class="line">function outerFunction() &#123;</span><br><span class="line">    let outerVariable = 10;</span><br><span class="line">    function innerFunction() &#123;</span><br><span class="line">        let innerVariable = 5;</span><br><span class="line">        return outerVariable + innerVariable;</span><br><span class="line">    &#125;</span><br><span class="line">    return innerFunction;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let closure = outerFunction();</span><br><span class="line">let result = closure();</span><br><span class="line">```  </span><br><span class="line">**Bytecode instruction analysis**:  </span><br></pre></td></tr></table></figure>
+<p>.function any .outerFunction(any a0, any a1, any a2) {<br>    newlexenv 0x1<br>    ldai 0xa<br>    stlexvar 0x0, 0x0<br>    definefunc 0x0, .innerFunction, 0x0<br>    sta v0<br>    return<br>}</p>
+<p>.function any .innerFunction(any a0, any a1, any a2) {<br>    ldai 0x5<br>    sta v1<br>    ldlexvar 0x0, 0x0<br>    sta v0<br>    lda v1<br>    add2 0x1, v0<br>    return<br>}</p>
+<pre><code>- `newlexenv 0x1`: Creates a lexical environment with 1 slot, enters it, and stores it in `acc`.  
+- `stlexvar 0x0, 0x0`: Stores `outerVariable` (10) into slot 0 of the lexical environment 0 levels away.  
+- `ldlexvar 0x0, 0x0`: Loads `outerVariable` from slot 0 of the lexical environment 0 levels away into `acc` within `innerFunction`.  
+
+This mechanism ensures closures can correctly access outer scope variables even after the outer function has executed.  
+
+
+### 3.4 Shared Lexical Environments  
+A shared lexical environment is a special type where each lexical variable has a `sendable` attribute, enabling safe cross-execution-context sharing. This is critical for multithreading or distributed computing.  
+
+**Example in a multithreaded scenario**:  
+```typescript
+function createSharedEnv() &#123;
+    let sharedVariable = 0;
+    function increment() &#123;
+        sharedVariable++;
+    &#125;
+    function getValue() &#123;
+        return sharedVariable;
+    &#125;
+    return &#123; increment, getValue &#125;;
+&#125;
+
+let shared = createSharedEnv();
+// Multiple threads/contexts can call shared.increment() and shared.getValue()
+</code></pre>
+<p>Bytecode for shared lexical environments uses special instructions (e.g., synchronization) to ensure thread-safe access to shared variables, preventing data races.  </p>
+<h2 id="IV-Advantages-and-Application-Scenarios-of-Ark-Bytecode"><a href="#IV-Advantages-and-Application-Scenarios-of-Ark-Bytecode" class="headerlink" title="IV. Advantages and Application Scenarios of Ark Bytecode"></a>IV. Advantages and Application Scenarios of Ark Bytecode</h2><h3 id="4-1-Advantages"><a href="#4-1-Advantages" class="headerlink" title="4.1 Advantages"></a>4.1 Advantages</h3><h4 id="4-1-1-Performance-Optimization"><a href="#4-1-1-Performance-Optimization" class="headerlink" title="4.1.1 Performance Optimization"></a>4.1.1 Performance Optimization</h4><p>Ark Bytecode excels in performance optimization through its well-designed instruction set and value storage:  </p>
+<ul>
+<li>The accumulator reduces memory accesses and instruction length.  </li>
+<li>Compile-time optimizations include constant folding, dead code elimination, and inlining of frequently executed code blocks.</li>
+</ul>
+<p><strong>Example of inlining optimization</strong>:  </p>
+<pre><code class="language-typescript">function square(x: number) &#123;
+    return x * x;
+&#125;
+
+let result = square(5);
+</code></pre>
+<p>The compiler may inline <code>square(5)</code> as <code>5 * 5</code>, calculating the constant 25 at compile time for direct return, enhancing efficiency.  </p>
+<h4 id="4-1-2-Cross-Platform-Compatibility"><a href="#4-1-2-Cross-Platform-Compatibility" class="headerlink" title="4.1.2 Cross-Platform Compatibility"></a>4.1.2 Cross-Platform Compatibility</h4><p>As an intermediate representation, Ark Bytecode ensures cross-platform compatibility. It can be interpreted by the Ark runtime across hardware platforms and OSes, allowing “write once, run anywhere” development. For example, an ArkTS app compiled into bytecode runs on HarmonyOS-powered phones, tablets, and smartwatches, reducing development and maintenance costs.  </p>
+<h4 id="4-1-3-Improved-Development-Efficiency"><a href="#4-1-3-Improved-Development-Efficiency" class="headerlink" title="4.1.3 Improved Development Efficiency"></a>4.1.3 Improved Development Efficiency</h4><p>The Ark Compiler quickly compiles high-level code into bytecode, reducing development and debugging time. The intermediate representation also facilitates debugging and optimization through specialized tools. The concise, unified instruction set helps developers understand execution logic, further boosting efficiency.  </p>
+<h2 id="V-Conclusion"><a href="#V-Conclusion" class="headerlink" title="V. Conclusion"></a>V. Conclusion</h2><p>Ark Bytecode, as the core product of the Ark Compiler, holds a pivotal position in modern software development. By deeply understanding its fundamental architecture, value storage methods, advantages, and application scenarios, developers can fully leverage its capabilities to significantly enhance program performance and development efficiency. Its unique instruction design, diverse value storage mechanisms, and outstanding performance in optimization and cross-platform compatibility enable broad applications across multiple domains.  </p>
+<p>The architecture—with opcodes and prefixes balancing efficiency and extensibility, and registers&#x2F;accumulators optimizing execution—forms a robust foundation. Value storage designs (global variables, module systems, lexical environments, and shared environments) provide flexible support for variable management, especially in closures and multithreading.  </p>
+<p>Huawei Developer Documentation (<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-bytecode-fundamentals-V5</a>) serves as a comprehensive resource for in-depth learning. By exploring Ark Bytecode’s potential through this documentation, developers can contribute innovative solutions to the software industry. As technology advances, Ark Bytecode is poised to showcase its unique strengths in broader fields, driving progress in the software industry.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/B-Introduction-to-HarmonyOS-Next-Ark-Bytecode-File-Format/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1436,532 +1818,6 @@ export const showCaptchaEvent: emitter.InnerEvent = &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:04:39 / Modified: 10:05:14" itemprop="dateCreated datePublished" datetime="2025-06-27T10:04:39+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance"><a href="#Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance"></a>[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</h3><h4 id="1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS"><a href="#1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS" class="headerlink" title="1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?"></a>1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?</h4><p>The <code>onPageShow</code> lifecycle method does not execute when switching tabs because <code>onPageShow</code> is a page-level lifecycle callback. Tab switching triggers the component-level lifecycle method <code>aboutToAppear()</code> for child components. You can call <code>showPage()</code> within this lifecycle. If you need the <code>showPage</code> method in <code>TabContent</code> to execute every time a tab is switched, use <code>onTabBarClick(event: (index: number) =&gt; void)</code> to get the currently clicked tab index in the parent component.  </p>
-<p>Define a <code>currentTabIndex</code> variable in the parent component using <code>@State</code>, assign the clicked index to <code>currentTabIndex</code> in the <code>onTabBarClick</code> callback, and pass this value to child components wrapped by <code>TabContent</code>. In child components, use <code>@Props</code> and <code>@Watch</code> to listen for changes to the value passed from the parent component and execute the <code>showPage</code> method in each <code>TabContent</code>.  </p>
-<p><strong>Demo Reference</strong>:  </p>
-<pre><code class="language-typescript">// xxx.ets
-import &#123; FirstPage &#125; from &#39;./FirstPage&#39;
-
-@Entry
-@Component
-struct TabsExample &#123;
-  @State fontColor: string = &#39;#182431&#39;
-  @State selectedFontColor: string = &#39;#007DFF&#39;
-  @State currentIndex: number = 0
-  private controller: TabsController = new TabsController()
-  @State mainPageState: boolean = false
-  
-  @Builder tabBuilder(index: number, name: string) &#123;
-    Column() &#123;
-      Text(name)
-        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
-        .fontSize(16)
-        .fontWeight(this.currentIndex === index ? 500 : 400)
-        .lineHeight(22)
-        .margin(&#123; top: 17, bottom: 7 &#125;)
-      Divider()
-        .strokeWidth(2)
-        .color(&#39;#007DFF&#39;)
-        .opacity(this.currentIndex === index ? 1 : 0)
-    &#125;.width(&#39;100%&#39;)
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      Tabs(&#123; barPosition: BarPosition.Start, index: this.currentIndex, controller: this.controller &#125;) &#123;
-        TabContent() &#123;
-          FirstPage(&#123; mainPageState: this.mainPageState &#125;).width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#00CB87&#39;)
-        &#125;.tabBar(this.tabBuilder(0, &#39;green&#39;))
-
-        TabContent() &#123;
-          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#007DFF&#39;)
-        &#125;.tabBar(this.tabBuilder(1, &#39;blue&#39;))
-
-        TabContent() &#123;
-          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#FFBF00&#39;)
-        &#125;.tabBar(this.tabBuilder(2, &#39;yellow&#39;))
-
-        TabContent() &#123;
-          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#E67C92&#39;)
-        &#125;.tabBar(this.tabBuilder(3, &#39;pink&#39;))
-      &#125;
-      .vertical(false)
-      .barMode(BarMode.Fixed)
-      .barWidth(360)
-      .barHeight(56)
-      .animationDuration(400)
-      .onChange((index: number) =&gt; &#123;
-        this.currentIndex = index
-      &#125;)
-      .width(&#39;100%&#39;)
-      .height(&#39;100%&#39;)
-      .margin(&#123; top: 52 &#125;)
-      .backgroundColor(&#39;#F1F3F5&#39;)
-    &#125;.width(&#39;100%&#39;)
-  &#125;
-
-  onPageShow(): void &#123;
-    console.log(&#39;index--- onPageShow&#39;)
-    this.mainPageState = true
-  &#125;
-  
-  onPageHide(): void &#123;
-    console.log(&#39;index--- onPageHide&#39;)
-    this.mainPageState = false
-  &#125;
-&#125;
-</code></pre>
-<pre><code class="language-typescript">import &#123; router &#125; from &#39;@kit.ArkUI&#39;;
-import &#123; FaultLogger &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
-
-@Entry
-@Component
-export struct FirstPage &#123;
-  @State message: string = &#39;Hello World&#39;;
-  @Link @Watch(&#39;mainIsShow&#39;) mainPageState: boolean
-  
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-          .onClick(() =&gt; &#123;
-            router.pushUrl(&#123;
-              url: &#39;pages/DetailPage&#39;,
-            &#125;)
-          &#125;)
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-  
-  mainIsShow() &#123;
-    console.log(&#39;mainIsShow--&#39;, this.mainPageState)
-  &#125;
-  
-  aboutToAppear(): void &#123;
-    console.log(&#39;firstPAGE--- aboutToAppear&#39;)
-  &#125;
-
-  onPageShow(): void &#123;
-    console.log(&#39;firstPAGE--- onPageShow&#39;)
-  &#125;
-  
-  onPageHide(): void &#123;
-    console.log(&#39;firstPAGE--- onPageHide&#39;)
-  &#125;
-  
-  aboutToRecycle(): void &#123;
-    console.log(&#39;firstPAGE--- aboutToRecycle&#39;)
-  &#125;
-&#125;
-</code></pre>
-<pre><code class="language-typescript">import &#123; Notification &#125; from &#39;@kit.NotificationKit&#39;;
-
-@Entry
-@Component
-struct DetailPage &#123;
-  @State message: string = &#39;Detail&#39;;
-
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-  
-  onPageShow(): void &#123;
-  &#125;
-  
-  onPageHide(): void &#123;
-    console.log(&#39;firstPAGE--- onPageHide&#39;)
-  &#125;
-  
-  onBackPress(): boolean | void &#123;
-    console.log(&#39;firstPAGE--- onBackPress&#39;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="2-How-to-Assemble-Complex-JSON-Data"><a href="#2-How-to-Assemble-Complex-JSON-Data" class="headerlink" title="2. How to Assemble Complex JSON Data?"></a>2. How to Assemble Complex JSON Data?</h4><p><strong>Reference Demo</strong>:  </p>
-<pre><code class="language-typescript">jsonObject: Record&lt;string, Object&gt; = &#123;&#125;
-
-aboutToAppear(): void &#123;
-  this.jsonObject[&quot;k1&quot;] = &quot;v1&quot;
-  this.jsonObject[&quot;k2&quot;] = 20
-  let json: string = JSON.stringify(this.jsonObject)
-  console.log(json)
-&#125;
-</code></pre>
-<h4 id="3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS"><a href="#3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS" class="headerlink" title="3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?"></a>3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?</h4><p>When displaying text in the middle of a layout with other UI elements above and below, wrap the <code>Text</code> component with a <code>Scroll</code> component. To prevent other UI elements from being pushed off-screen when the text is too long, set a maximum height for the <code>Scroll</code> component.  </p>
-<p><strong>Reference Demo</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct NestedScroll &#123;
-  @State listPosition: number = 0; // 0: scroll to top, 1: middle, 2: scroll to bottom
-  private arr: number[] = [1]
-  private scrollerForList: Scroller = new Scroller()
-
-  build() &#123;
-    Flex() &#123;
-      Column() &#123;
-        Text(&quot;Header&quot;)
-          .width(&quot;100%&quot;)
-          .height(&quot;20%&quot;)
-          .backgroundColor(0X330000FF)
-          .fontSize(16)
-          .textAlign(TextAlign.Center)
-
-        List(&#123; space: 20, scroller: this.scrollerForList &#125;) &#123;
-          ForEach(this.arr, (item: number) =&gt; &#123;
-            ListItem() &#123;
-              Text(&quot;This is a very long text...&quot;) // Omitted for brevity
-                .borderRadius(15)
-                .fontSize(16)
-                .backgroundColor(Color.White)
-            &#125;.width(&quot;100%&quot;)
-          &#125;, (item: string) =&gt; item)
-        &#125;
-        .borderColor(Color.Green)
-        .borderWidth(2)
-        .width(&quot;100%&quot;)
-        .edgeEffect(EdgeEffect.None)
-        .friction(0.6)
-        .onReachStart(() =&gt; &#123;
-          this.listPosition = 0
-        &#125;)
-        .onReachEnd(() =&gt; &#123;
-          this.listPosition = 2
-        &#125;)
-        .onScrollFrameBegin((offset: number) =&gt; &#123;
-          if ((this.listPosition == 0 &amp;&amp; offset &lt;= 0) || (this.listPosition == 2 &amp;&amp; offset &gt;= 0)) &#123;
-            return &#123; offsetRemain: 0 &#125;
-          &#125;
-          this.listPosition = 1
-          return &#123; offsetRemain: offset &#125;;
-        &#125;)
-        .constraintSize(&#123; maxHeight: 400 &#125;)
-
-        Text(&quot;Footer&quot;)
-          .width(&quot;100%&quot;)
-          .height(&quot;20%&quot;)
-          .backgroundColor(0X330000FF)
-          .fontSize(16)
-          .textAlign(TextAlign.Center)
-      &#125;
-    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS"><a href="#4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS" class="headerlink" title="4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?"></a>4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?</h4><p><strong>Compilation Error</strong>:<br><code>Object literals cannot be used as type declarations (ArkTS-no-obj-literals-as-types) &lt;ArkTSCheck&gt;</code>  </p>
-<p><strong>Code</strong>:  </p>
-<pre><code class="language-typescript">@Builder overBuilder($$: &#123; paramA1: string &#125;) &#123;
-  Row() &#123;
-    Text(`UseStateVarByReference: $&#123;$$.paramA1&#125; `)
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Solution</strong>:  </p>
-<pre><code class="language-typescript">class Tmp &#123;
-  paramA1: string = &#39;&#39;
-&#125;
-
-@Builder function overBuilder($$: Tmp) &#123;
-  Text($$.paramA1)
-    .width(400)
-    .height(50)
-    .backgroundColor(Color.Blue)
-&#125;
-</code></pre>
-<h4 id="5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize"><a href="#5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize" class="headerlink" title="5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?"></a>5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?</h4><p><strong>Best Practices Reference</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5">https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5</a>  </p>
-<p>ArkWeb is a Web component platform designed to display Web content in applications and provide developers with capabilities such as page loading, interaction, and debugging. In the digital age, page loading speed directly impacts app fluency, user perception, and experience. Fast-loading pages reduce wait times and improve satisfaction.  </p>
-<p>The Web page display process involves multiple stages: DNS resolution, connection establishment, request sending, response receiving, HTML parsing, and resource downloading. Factors affecting page speed include network latency, server response time, page size, and resource compression. To enhance performance, optimize page loading, resource downloading, and rendering.  </p>
-<p><strong>Common Optimization Methods</strong>:  </p>
-<ul>
-<li><strong>Web Page Loading Optimization</strong>: Critical for user experience; faster loading improves app fluency.  </li>
-<li><strong>JSBridge</strong>: Reduces redundant ArkTS environment switches and avoids UI blockages.  </li>
-<li><strong>Same-Layer Rendering</strong>: Renders page elements in layers to minimize repaints and reflows, improving rendering efficiency.</li>
-</ul>
-<p>ArkWeb provides methods to optimize page display speed. These optimizations enhance app performance and user experience, enabling faster, smoother Web browsing and increasing user satisfaction and retention.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 10:00:29 / Modified: 10:03:47" itemprop="dateCreated datePublished" datetime="2025-06-27T10:00:29+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain"></a>[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</h3><h4 id="1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS"><a href="#1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS" class="headerlink" title="1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?"></a>1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?</h4><p>Use <code>focusControl.requestFocus</code> to set focus on components that need it. Refer to the documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5</a>  </p>
-<p><strong>Example Code</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct TextInputExample &#123;
-  controller: TextInputController = new TextInputController()
-  @State inputValue: string = &quot;&quot;
-  ep: number = 0;
-  del: boolean = false;
-
-  // Custom keyboard component
-  @Builder
-  CustomKeyboardBuilder() &#123;
-    Column() &#123;
-      Button(&#39;Close Keyboard&#39;).onClick(() =&gt; &#123;
-        // Close the custom keyboard
-        this.controller.stopEditing()
-      &#125;)
-      Button(&#39;Delete Character&#39;).onClick(() =&gt; &#123;
-        this.inputValue = this.inputValue.substring(0, this.ep-1) + this.inputValue.substring(this.ep)
-        this.del = true
-      &#125;)
-      Grid() &#123;
-        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, &#39;*&#39;, 0, &#39;#&#39;], (item: number | string) =&gt; &#123;
-          GridItem() &#123;
-            Button(item + &quot;&quot;)
-              .width(110).onClick(() =&gt; &#123;
-              this.inputValue = this.inputValue.substring(0, this.ep) + item + this.inputValue.substring(this.ep)
-              this.del = false
-            &#125;)
-          &#125;
-        &#125;)
-      &#125;.maxCount(3).columnsGap(10).rowsGap(10).padding(5)
-    &#125;.backgroundColor(Color.Gray)
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      TextInput(&#123; controller: this.controller, text: this.inputValue &#125;)
-        // Bind the custom keyboard
-        .customKeyboard(this.CustomKeyboardBuilder())
-        .margin(10)
-        .id(&#39;input1&#39;) // Set an ID for the component
-        .border(&#123; width: 1 &#125;)
-        // Detect cursor changes and adjust cursor position
-        .onChange(() =&gt; &#123;
-          if(this.del)&#123;
-            this.controller.caretPosition(--this.ep)
-          &#125;else&#123;
-            this.controller.caretPosition(++this.ep)
-          &#125;
-        &#125;)
-        .onTextSelectionChange((ss) =&gt; &#123;
-          this.ep = ss;
-        &#125;)
-      Button(&quot;Trigger Focus&quot;)
-        .width(200).height(70).fontColor(Color.White)
-        .onClick(() =&gt; &#123;
-          focusControl.requestFocus(&#39;input1&#39;) // Focus the TextInput
-        &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p>The default input method keyboard type is text input (<code>textinputtype</code> 0). Refer to possible <code>textinputtype</code> values:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5</a>  </p>
-<h4 id="2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS"><a href="#2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS" class="headerlink" title="2. What Are the JSBridge Implementation Methods in HarmonyOS?"></a>2. What Are the JSBridge Implementation Methods in HarmonyOS?</h4><p>For app-frontend interactions, refer to:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5</a>  </p>
-<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-2.png"></p>
-<p>The figure above shows the general architecture of a universally applicable mini-program. In this architecture, the logic layer relies on the JavaScript runtime自带 by the application, which runs within an existing C++ environment. Through Native interfaces, the logic layer can directly communicate with the view layer (where ArkWeb acts as the renderer) in the C++ environment without falling back to the ArkTS environment to use the ArkTS JSBridge interface.  </p>
-<p>The left diagram shows a mini-program solution using the ArkTS JSBridge interface. As indicated by the red box, the application must first call into the ArkTS environment and then into the C++ environment. The right diagram shows a solution using the Native JSBridge interface, which eliminates the need to switch between ArkTS and C++ environments, resulting in higher execution efficiency.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-3.png"><br>The Native JSBridge solution avoids redundant ArkTS environment switches and allows callbacks to run on non-UI threads, preventing UI blockages.  </p>
-<h4 id="3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS"><a href="#3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS" class="headerlink" title="3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?"></a>3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?</h4><p>Refer to the following demo:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct PopupExample &#123;
-  @State handlePopup: boolean = false
-  @State customPopup: boolean = false
-  
-  // Popup content builder
-  @Builder popupBuilder() &#123;
-    Row(&#123; space: 2 &#125;) &#123;
-      Image($r(&quot;app.media.startIcon&quot;)).width(24).height(24).margin(&#123; left: -5 &#125;)
-      Text(&#39;Custom Popup&#39;).fontSize(10)
-    &#125;.width(100).height(50).padding(5)
-  &#125;
-
-  build() &#123;
-    Flex(&#123; direction: FlexDirection.Column &#125;) &#123;
-      // PopupOptions configuration
-      Button(&#39;PopupOptions&#39;)
-        .onClick(() =&gt; &#123;
-          this.handlePopup = !this.handlePopup
-        &#125;)
-        .bindPopup(this.handlePopup, &#123;
-          builder: this.popupBuilder,
-          placement: Placement.Top,
-          mask: &#123;color: Color.Gray&#125;,
-          popupColor: Color.Yellow,
-          enableArrow: true,
-          message: &#39;This is a popup with PopupOptions&#39;,
-          placementOnTop: true,
-          showInSubWindow: false,
-          primaryButton: &#123;
-            value: &#39;confirm&#39;,
-            action: () =&gt; &#123;
-              this.handlePopup = !this.handlePopup
-              console.info(&#39;confirm Button click&#39;)
-            &#125;
-          &#125;,
-          // Secondary button
-          secondaryButton: &#123;
-            value: &#39;cancel&#39;,
-            action: () =&gt; &#123;
-              this.handlePopup = !this.handlePopup
-              console.info(&#39;cancel Button click&#39;)
-            &#125;
-          &#125;,
-          onStateChange: (e) =&gt; &#123;
-            console.info(JSON.stringify(e.isVisible))
-            if (!e.isVisible) &#123;
-              this.handlePopup = false
-            &#125;
-          &#125;
-        &#125;)
-        .position(&#123; x: 100, y: 150 &#125;)
-    &#125;.width(&#39;100%&#39;).padding(&#123; top: 5 &#125;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible"><a href="#4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible" class="headerlink" title="4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?"></a>4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?</h4><p>Refer to the Interaction Event Normalization interface to ensure consistent interaction experiences across different devices and minimize adaptation efforts:  </p>
-<ul>
-<li>Interaction Events Guide:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018">https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018</a>  </li>
-<li>Interaction Event Normalization Development Documentation:<br><a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md</a></li>
-</ul>
-<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-4.png"></p>
-<h4 id="5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This"><a href="#5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This" class="headerlink" title="5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?"></a>5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?</h4><p>Configure <code>customizeSchemes</code> as described in the documentation:  </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F</a></li>
-</ul>
-<p>You need to configure <code>schemeMap</code> and <code>mimeTypeMap</code> manually.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2031,7 +1887,7 @@ struct PopupExample &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-count">317</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

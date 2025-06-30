@@ -149,6 +149,458 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/304-Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Resources-Caching-Examples-Focus-Acquisition-Cross-Module-Navigation-Tabs-Component-Issues/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/26/304-Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Resources-Caching-Examples-Focus-Acquisition-Cross-Module-Navigation-Tabs-Component-Issues/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Dark Mode Resources, Caching Examples, Focus Acquisition, Cross-Module Navigation, Tabs Component Issues</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 20:11:51 / Modified: 22:07:00" itemprop="dateCreated datePublished" datetime="2025-06-26T20:11:51+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Resources-Caching-Examples-Focus-Acquisition-Cross-Module-Navigation-Tabs-Component-Issues"><a href="#Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Resources-Caching-Examples-Focus-Acquisition-Cross-Module-Navigation-Tabs-Component-Issues" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Dark Mode Resources, Caching Examples, Focus Acquisition, Cross-Module Navigation, Tabs Component Issues"></a>[Daily HarmonyOS Next Knowledge] Dark Mode Resources, Caching Examples, Focus Acquisition, Cross-Module Navigation, Tabs Component Issues</h3><h4 id="1-Does-HarmonyOS-dark-mode-adaptation-require-preparing-a-separate-set-of-resources"><a href="#1-Does-HarmonyOS-dark-mode-adaptation-require-preparing-a-separate-set-of-resources" class="headerlink" title="1. Does HarmonyOS dark mode adaptation require preparing a separate set of resources?"></a>1. Does HarmonyOS dark mode adaptation require preparing a separate set of resources?</h4><p>For dark mode adaptation, should another set of resources be prepared?  </p>
+<p>There are two scenarios:  </p>
+<ol>
+<li><p>The app follows the system to switch between dark mode and non-dark mode:  </p>
+<ul>
+<li><strong>Color adaptation</strong>: Customize two sets of color resources (resources&#x2F;dark&#x2F;element&#x2F;color.json and resources&#x2F;base&#x2F;element&#x2F;color.json), and load color resource keys via <code>$r</code>. System-provided resources can also be used directly, which are layered parameters. The same resource ID has different values under different configurations (e.g., device type, light&#x2F;dark mode). Using system resources allows developers to create apps with consistent visual styles without customizing two color resource sets, as colors will automatically switch between light and dark modes.<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5#resource9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5#resource9</a>  </li>
+<li><strong>Image resources</strong>: Use resource qualifier directories. Similar to color adaptation, place dark-mode images with the same name in the <code>dark/media</code> directory, and load image resource keys via <code>$r</code>. The system will automatically load corresponding values when switching between light and dark modes. For simple SVG icons, the <code>fillColor</code> attribute can be combined with system resources to change the drawing color, achieving dark mode adaptation without two sets of image resources.</li>
+</ul>
+</li>
+<li><p>The app does not follow the system and switches between dark mode and non-dark mode internally:  </p>
+<ul>
+<li>The app actively sets the light&#x2F;dark mode via system APIs, such as <code>setColorMode</code>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-applicationcontext-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-application-applicationcontext-V5</a>  </li>
+<li>Listen for light&#x2F;dark mode switch events and implement the mode manually using <code>this.context.config.colorMode</code> and <code>onConfigurationOnUpdate</code>.</li>
+</ul>
+</li>
+</ol>
+<h4 id="2-HarmonyOS-caching-demo-verification"><a href="#2-HarmonyOS-caching-demo-verification" class="headerlink" title="2. HarmonyOS caching demo verification?"></a>2. HarmonyOS caching demo verification?</h4><p>Reference code:  </p>
+<pre><code class="language-typescript">import &#123; promptAction &#125; from &#39;@kit.ArkUI&#39;;
+import &#123; preferences &#125; from &#39;@kit.ArkData&#39;;
+
+let context = getContext(this);
+let preference: preferences.Preferences;
+let preferenceTemp: preferences.Preferences;
+
+// Object class
+export class ImageModel &#123;
+  constructor(id: string, tokenInfo: string, imgInfo: string, urlInfo: string) &#123;
+    this.id = id
+    this.token = tokenInfo
+    this.img = imgInfo
+    this.url = urlInfo
+  &#125;
+  id?: string = &#39;&#39;;
+  token: string = &#39;&#39;;
+  img: string = &#39;&#39;;
+  url: string = &#39;&#39;
+&#125;
+
+// Preference utility class
+class PreferenceModel &#123;
+
+  // Initialization
+  async getPreferencesFromStorage() &#123;
+    try &#123;
+      preference = await preferences.getPreferences(context,&#39;ImageUrlData.db&#39;);
+    &#125; catch (err) &#123;
+      console.error(&#39;[PreferenceModel]&#39;, `Failed to get preferences, Cause: $&#123;err&#125;`);
+    &#125;
+  &#125;
+
+  // Delete preferences
+  async deletePreferences() &#123;
+    try &#123;
+      await preferences.deletePreferences(context, &#39;ImageUrlData.db&#39;);
+    &#125; catch(err) &#123;
+      console.error(&#39;[PreferenceModel]&#39;, `Failed to delete preferences, Cause: $&#123;err&#125;`);
+    &#125;;
+    preference = preferenceTemp;
+    this.showToastMessage(&#39;删除数据库成功&#39;);
+  &#125;
+
+  // Insert value
+  async putPreference(Image:string, ImageInfo: ImageModel) &#123;
+    if (!preference) &#123;
+      await this.getPreferencesFromStorage();
+    &#125;
+    try &#123;
+      await preference.put(Image, JSON.stringify(ImageInfo));
+    &#125; catch (err) &#123;
+      console.error(&#39;[PreferenceModel]&#39;, `Failed to put value, Cause: $&#123;err&#125;`);
+    &#125;
+    await preference.flush();
+  &#125;
+
+  // Get value
+  async getPreference(Image: string) &#123;
+    let ImageInfo = &#39;&#39;;
+    if (!preference) &#123;
+      await this.getPreferencesFromStorage();
+    &#125;
+    try &#123;
+      ImageInfo = (await preference.get(Image, &#39;&#39;)).toString();
+    &#125; catch (err) &#123;
+      console.error(&#39;[PreferenceModel]&#39;, `Failed to get value, Cause: $&#123;err&#125;`);
+    &#125;
+    if (ImageInfo === &#39;&#39;) &#123;
+      this.showToastMessage(&#39;数据为空，请先写入数据&#39;);
+      return;
+    &#125;
+    this.showToastMessage(&#39;写入数据成功&#39;);
+    return JSON.parse(ImageInfo);
+  &#125;
+
+  async getImageData(Image: string) &#123;
+    return await this.getPreference(Image);
+  &#125;
+
+  // Write data
+  writeData(Image:string, ImageInfo: ImageModel) &#123;
+    this.putPreference(Image, ImageInfo);
+    this.showToastMessage(&#39;写入数据成功&#39;);
+  &#125;
+
+  showToastMessage(message: string) &#123;
+    promptAction.showToast(&#123;
+      message: message,
+      duration: 3000
+    &#125;);
+  &#125;;
+&#125;
+
+/**
+ * Preference operation
+ */
+export class LocalDataManager &#123;
+  preferenceModel = new PreferenceModel()
+  private static localDataManager: LocalDataManager;
+
+  private constructor() &#123;
+    this.preferenceModel.getPreferencesFromStorage()
+  &#125;
+
+  static instance() &#123;
+    if (!LocalDataManager.localDataManager) &#123;
+      LocalDataManager.localDataManager = new LocalDataManager();
+    &#125;
+    return LocalDataManager.localDataManager;
+  &#125;
+
+  async queryImageInfo(Image:string) &#123;
+    return await this.preferenceModel.getImageData(Image)
+  &#125;
+
+  insertImageInfo(Image:string, ImageInfo: ImageModel) &#123;
+    this.preferenceModel.writeData(Image, ImageInfo)
+    return Image.length
+  &#125;
+
+  updateImageInfo(Image:string, ImageInfo: ImageModel) &#123;
+    this.preferenceModel.writeData(Image, ImageInfo)
+    return Image.length
+  &#125;
+
+  deleteImageInfo() &#123;
+    this.preferenceModel.deletePreferences()
+  &#125;
+&#125;
+
+// Use preferences for caching
+@Entry
+@Component
+struct NeiMengGuNongJi &#123;
+  private localDataManager: LocalDataManager = LocalDataManager.instance();
+  @State token_Info: string = &#39;&#39;
+  private img: string = &#39;image00&#39;
+  private url: string = &#39;url000&#39;
+  @State num: number = 0
+  @State keyInfo: string = &#39;&#39;
+  @State imageData: ImageModel = new ImageModel(&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;)
+
+  build() &#123;
+    Column() &#123;
+      Button(&#39;点击存入数据库&#39;)
+        .fontSize(50)
+        .fontWeight(FontWeight.Bold)
+        .onClick(()=&gt; &#123;
+          for (let i = 1; i &lt;= 10; i++) &#123;
+            let tokenInfo  = &quot;token00&quot;+i
+            let image = this.img+i
+            let urlInfo = this.url+i
+            let ImageInfo = new ImageModel(&quot;&quot;, tokenInfo, image, urlInfo);
+            this.localDataManager.insertImageInfo(image, ImageInfo)
+          &#125;
+        &#125;)
+      TextInput(&#123;placeholder:&#39;输入key值:例如image001&#39;&#125;)
+        .type(InputType.Normal)
+        .onChange((key: string) =&gt; &#123;
+          this.keyInfo = key
+        &#125;)
+      Button(&#39;通过key值：&#39;+this.keyInfo+&quot;, 获取value值&quot;)
+        .fontSize(18)
+        .fontWeight(FontWeight.Bold)
+        .onClick(async()=&gt; &#123;
+          if(this.keyInfo !== &#39;&#39;)&#123;
+            this.imageData = await this.localDataManager.queryImageInfo(this.keyInfo) as ImageModel
+            console.info(&quot;imageData=&quot;+JSON.stringify(this.imageData))
+          &#125;
+        &#125;)
+      Text(&quot;key: &quot;+this.keyInfo+&quot;, value: &quot; + (this.imageData.token === &#39;&#39;? &#39;&#39; : JSON.stringify(this.imageData))).fontSize(40)
+    &#125;
+    .width(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-Why-does-focusControl-requestFocus-id-string-lose-focus-after-navigating-back-to-the-page-in-HarmonyOS"><a href="#3-Why-does-focusControl-requestFocus-id-string-lose-focus-after-navigating-back-to-the-page-in-HarmonyOS" class="headerlink" title="3. Why does focusControl.requestFocus(id: string) lose focus after navigating back to the page in HarmonyOS?"></a>3. Why does focusControl.requestFocus(id: string) lose focus after navigating back to the page in HarmonyOS?</h4><p>When using <code>focusControl.requestFocus(id: string)</code>, the focus is lost after navigating back to the page.  </p>
+<p>Solution: Mark a status in <code>onAppear</code> when the page returns to maintain focus.  </p>
+<h4 id="4-Can-HarmonyOS-router-navigate-between-different-modules"><a href="#4-Can-HarmonyOS-router-navigate-between-different-modules" class="headerlink" title="4. Can HarmonyOS router navigate between different modules?"></a>4. Can HarmonyOS router navigate between different modules?</h4><p>The entry module depends on the feature module basecore, which has a BaseIndex.ets in its pages. Using <code>router.pushUrl(&#123;url:‘pages/BaseIndex’&#125;, router.RouterMode.Standard ,(err)=&gt;&#123;&#125;)</code> in the entry module has no effect.  </p>
+<ol>
+<li>A feature is an ability-type module, and each feature maintains its own routing stack. Navigating to other pages requires using <code>startAbility</code>, while <code>router</code> is for intra-page navigation. These cannot be mixed.  </li>
+<li>To avoid cross-module navigation, consider a single UIAbility with multiple Hsps.</li>
+</ol>
+<p>For cross-module navigation, refer to the document:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/uiability-intra-device-interaction-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/uiability-intra-device-interaction-V5</a>  </p>
+<p>When an app contains multiple UIAbilities, there may be scenarios where one UIAbility starts another. For example, starting a payment UIAbility from the entry UIAbility in a payment app.  </p>
+<p>Suppose the app has two UIAbilities: EntryAbility and FuncAbility (in the same or different modules). To start FuncAbility from EntryAbility’s page:<br>In EntryAbility, use <code>startAbility()</code> with a <code>want</code> object as the entry parameter, including <code>bundleName</code> (target app’s bundle name), <code>abilityName</code> (target ability name), <code>moduleName</code> (if target UIAbility is in a different module), and <code>parameters</code> (custom parameters). The <code>context</code> can be obtained as shown:  </p>
+<pre><code class="language-typescript">import &#123; common, Want &#125; from &#39;@kit.AbilityKit&#39;;
+import &#123; hilog &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+const TAG: string = &#39;[Page_UIAbilityComponentsInteractive]&#39;;
+const DOMAIN_NUMBER: number = 0xFF00;
+
+@Entry
+@Component
+struct Page_UIAbilityComponentsInteractive &#123;
+  private context = getContext(this) as common.UIAbilityContext;
+
+  build() &#123;
+    Column() &#123;
+      //...
+      List(&#123; initialIndex: 0 &#125;) &#123;
+        ListItem() &#123;
+          Row() &#123;
+            //...
+          &#125;
+          .onClick(() =&gt; &#123;
+            let wantInfo: Want = &#123;
+              deviceId: &#39;&#39;, // Empty deviceId means local device
+              bundleName: &#39;com.samples.stagemodelabilitydevelop&#39;,
+              moduleName: &#39;entry&#39;, // moduleName is optional
+              abilityName: &#39;FuncAbilityA&#39;,
+              parameters: &#123;
+                // Custom information
+                info: &#39;来自EntryAbility Page_UIAbilityComponentsInteractive页面&#39;
+              &#125;,
+            &#125;;
+            this.context.startAbility(wantInfo).then(() =&gt; &#123;
+              hilog.info(DOMAIN_NUMBER, TAG, &#39;startAbility success.&#39;);
+            &#125;).catch((error: BusinessError) =&gt; &#123;
+              hilog.error(DOMAIN_NUMBER, TAG, &#39;startAbility failed.&#39;);
+            &#125;);
+          &#125;)
+        &#125;
+        //...
+      &#125;
+      //...
+    &#125;
+    //...
+  &#125;
+&#125;
+</code></pre>
+<p>In FuncAbility’s <code>onCreate()</code> or <code>onNewWant()</code> lifecycle callback, receive parameters from EntryAbility:  </p>
+<pre><code class="language-typescript">import &#123; AbilityConstant, UIAbility, Want &#125; from &#39;@kit.AbilityKit&#39;;
+
+export default class FuncAbilityA extends UIAbility &#123;
+  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void &#123;
+    // Receive parameters from the calling UIAbility
+    let funcAbilityWant = want;
+    let info = funcAbilityWant?.parameters?.info;
+  &#125;
+  //...
+&#125;
+</code></pre>
+<p>After completing operations in FuncAbility, stop the current UIAbility instance using <code>terminateSelf()</code>:  </p>
+<pre><code class="language-typescript">import &#123; common &#125; from &#39;@kit.AbilityKit&#39;;
+import &#123; hilog &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
+
+const TAG: string = &#39;[Page_FromStageModel]&#39;;
+const DOMAIN_NUMBER: number = 0xFF00;
+
+@Entry
+@Component
+struct Page_FromStageModel &#123;
+  build() &#123;
+    Column() &#123;
+      //...
+      Button(&#39;FuncAbilityB&#39;)
+        .onClick(() =&gt; &#123;
+          let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+          context.terminateSelf((err) =&gt; &#123;
+            if (err.code) &#123;
+              hilog.error(DOMAIN_NUMBER, TAG, `Failed to terminate self. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+              return;
+            &#125;
+          &#125;);
+        &#125;)
+    &#125;
+    //...
+  &#125;
+&#125;
+</code></pre>
+<p>To close all UIAbility instances of the app, use <code>ApplicationContext.killAllProcesses()</code>.  </p>
+<h4 id="5-Issues-with-TabContent-in-HarmonyOS-Tabs-component"><a href="#5-Issues-with-TabContent-in-HarmonyOS-Tabs-component" class="headerlink" title="5. Issues with TabContent in HarmonyOS Tabs component"></a>5. Issues with TabContent in HarmonyOS Tabs component</h4><p>Is the content of TabContent in the Tabs component automatically centered?  </p>
+<p>TabContent content is centered by default. Solutions:  </p>
+<ol>
+<li>Adjust the child component’s height freely via the <code>margin</code> attribute (suitable when child components do not change).  </li>
+<li>Add a Column container in TabContent and configure its attributes to achieve the layout.</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/303-Daily-HarmonyOS-Next-Knowledge-Tab-Alignment-Relative-Layout-Full-Screen-Custom-Popups-Animation-Collections-Returning-to-Home-Screen/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/26/303-Daily-HarmonyOS-Next-Knowledge-Tab-Alignment-Relative-Layout-Full-Screen-Custom-Popups-Animation-Collections-Returning-to-Home-Screen/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Tab Alignment, Relative Layout, Full-Screen Custom Popups, Animation Collections, Returning to Home Screen</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 20:10:51 / Modified: 22:07:01" itemprop="dateCreated datePublished" datetime="2025-06-26T20:10:51+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Tab-Alignment-Relative-Layout-Full-Screen-Custom-Popups-Animation-Collections-Returning-to-Home-Screen"><a href="#Daily-HarmonyOS-Next-Knowledge-Tab-Alignment-Relative-Layout-Full-Screen-Custom-Popups-Animation-Collections-Returning-to-Home-Screen" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Tab Alignment, Relative Layout, Full-Screen Custom Popups, Animation Collections, Returning to Home Screen"></a>[Daily HarmonyOS Next Knowledge] Tab Alignment, Relative Layout, Full-Screen Custom Popups, Animation Collections, Returning to Home Screen</h3><h4 id="1-Can-HarmonyOS-Tabs-Support-Left-Aligned-TabBar"><a href="#1-Can-HarmonyOS-Tabs-Support-Left-Aligned-TabBar" class="headerlink" title="1. Can HarmonyOS Tabs Support Left-Aligned TabBar?"></a>1. Can HarmonyOS Tabs Support Left-Aligned TabBar?</h4><p>The current solution is to implement a custom tabbar. Example demo:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">TabsExample</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">tabArray</span>: <span class="title class_">Array</span>&lt;<span class="built_in">number</span>&gt; = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">focusIndex</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">pre</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">index</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">controller</span>: <span class="title class_">TabsController</span> = <span class="keyword">new</span> <span class="title class_">TabsController</span>()</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">test</span>: <span class="built_in">boolean</span> = <span class="literal">false</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Individual tab</span></span><br><span class="line">  <span class="meta">@Builder</span></span><br><span class="line">  <span class="title class_">Tab</span>(<span class="attr">tabName</span>: <span class="built_in">string</span>, <span class="attr">tabItem</span>: <span class="built_in">number</span>, <span class="attr">tabIndex</span>: <span class="built_in">number</span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>(&#123; <span class="attr">space</span>: <span class="number">20</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Text</span>(tabName).<span class="title function_">fontSize</span>(<span class="number">18</span>)</span><br><span class="line">        .<span class="title function_">fontColor</span>(tabItem === <span class="variable language_">this</span>.<span class="property">focusIndex</span> ? <span class="title class_">Color</span>.<span class="property">Red</span> : <span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">Center</span>)</span><br><span class="line">    .<span class="title function_">constraintSize</span>(&#123; <span class="attr">minWidth</span>: <span class="number">35</span> &#125;)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="number">80</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="number">60</span>)</span><br><span class="line">    .<span class="title function_">borderRadius</span>(&#123; <span class="attr">topLeft</span>: <span class="number">10</span>, <span class="attr">topRight</span>: <span class="number">10</span> &#125;)</span><br><span class="line">    .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">controller</span>.<span class="title function_">changeIndex</span>(tabIndex)</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">focusIndex</span> = tabIndex</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="comment">// Tab bar</span></span><br><span class="line">        <span class="title class_">Row</span>(&#123; <span class="attr">space</span>: <span class="number">7</span> &#125;) &#123;</span><br><span class="line">          <span class="title class_">Scroll</span>() &#123;</span><br><span class="line">            <span class="title class_">Row</span>() &#123;</span><br><span class="line">              <span class="title class_">ForEach</span>(<span class="variable language_">this</span>.<span class="property">tabArray</span>, <span class="function">(<span class="params"><span class="attr">item</span>: <span class="built_in">number</span>, <span class="attr">index</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="title class_">Tab</span>(<span class="string">&quot;Tab &quot;</span> + item, item, index)</span><br><span class="line">              &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">            .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">Start</span>)</span><br><span class="line">          &#125;</span><br><span class="line">          .<span class="title function_">align</span>(<span class="title class_">Alignment</span>.<span class="property">Start</span>)</span><br><span class="line">          .<span class="title function_">scrollable</span>(<span class="title class_">ScrollDirection</span>.<span class="property">Horizontal</span>)</span><br><span class="line">          .<span class="title function_">scrollBar</span>(<span class="title class_">BarState</span>.<span class="property">Off</span>)</span><br><span class="line">          .<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">alignItems</span>(<span class="title class_">VerticalAlign</span>.<span class="property">Bottom</span>)</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">alignItems</span>(<span class="title class_">HorizontalAlign</span>.<span class="property">Start</span>)</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Tabs content</span></span><br><span class="line">      <span class="title class_">Tabs</span>(&#123; <span class="attr">barPosition</span>: <span class="title class_">BarPosition</span>.<span class="property">Start</span>, <span class="attr">controller</span>: <span class="variable language_">this</span>.<span class="property">controller</span> &#125;) &#123;</span><br><span class="line">        <span class="title class_">ForEach</span>(<span class="variable language_">this</span>.<span class="property">tabArray</span>, <span class="function">(<span class="params"><span class="attr">item</span>: <span class="built_in">number</span>, <span class="attr">index</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="title class_">TabContent</span>() &#123;</span><br><span class="line">            <span class="title class_">Text</span>(<span class="string">&#x27;This is content for Tab &#x27;</span> + item)</span><br><span class="line">              .<span class="title function_">height</span>(<span class="number">300</span>)</span><br><span class="line">              .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">              .<span class="title function_">fontSize</span>(<span class="number">30</span>)</span><br><span class="line">          &#125;</span><br><span class="line">          .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Pink</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      .<span class="title function_">barHeight</span>(<span class="number">0</span>)</span><br><span class="line">      .<span class="title function_">animationDuration</span>(<span class="number">100</span>)</span><br><span class="line">      .<span class="title function_">onChange</span>(<span class="function">(<span class="params"><span class="attr">index</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Tab changed&#x27;</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">focusIndex</span> = index</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-Why-Is-the-bias-Property-of-alignRules-Invalid-in-HarmonyOS-RelativeContainer"><a href="#2-Why-Is-the-bias-Property-of-alignRules-Invalid-in-HarmonyOS-RelativeContainer" class="headerlink" title="2. Why Is the bias Property of alignRules Invalid in HarmonyOS RelativeContainer?"></a>2. Why Is the <code>bias</code> Property of <code>alignRules</code> Invalid in HarmonyOS RelativeContainer?</h4><p>Reference demo:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">RelativeContainer</span>() &#123;</span><br><span class="line">        <span class="title class_">Row</span>().<span class="title function_">width</span>(<span class="number">100</span>).<span class="title function_">height</span>(<span class="number">100</span>)</span><br><span class="line">          .<span class="title function_">backgroundColor</span>(<span class="string">&quot;#FF3333&quot;</span>)</span><br><span class="line">          .<span class="title function_">alignRules</span>(&#123;</span><br><span class="line">            <span class="attr">top</span>: &#123; <span class="attr">anchor</span>: <span class="string">&quot;__container__&quot;</span>, <span class="attr">align</span>: <span class="title class_">VerticalAlign</span>.<span class="property">Top</span> &#125;,</span><br><span class="line">            <span class="attr">bottom</span>: &#123; <span class="attr">anchor</span>: <span class="string">&quot;__container__&quot;</span>, <span class="attr">align</span>: <span class="title class_">VerticalAlign</span>.<span class="property">Bottom</span> &#125;,</span><br><span class="line">            <span class="attr">left</span>: &#123; <span class="attr">anchor</span>: <span class="string">&quot;__container__&quot;</span>, <span class="attr">align</span>: <span class="title class_">HorizontalAlign</span>.<span class="property">Start</span> &#125;,</span><br><span class="line">            <span class="attr">right</span>: &#123; <span class="attr">anchor</span>: <span class="string">&quot;__container__&quot;</span>, <span class="attr">align</span>: <span class="title class_">HorizontalAlign</span>.<span class="property">End</span> &#125;,</span><br><span class="line">            <span class="attr">bias</span>: &#123; <span class="attr">vertical</span>: <span class="number">0.3</span> &#125;</span><br><span class="line">          &#125;)</span><br><span class="line">          .<span class="title function_">id</span>(<span class="string">&quot;row1&quot;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="number">300</span>).<span class="title function_">height</span>(<span class="number">300</span>)</span><br><span class="line">      .<span class="title function_">margin</span>(&#123; <span class="attr">left</span>: <span class="number">50</span> &#125;)</span><br><span class="line">      .<span class="title function_">border</span>(&#123; <span class="attr">width</span>: <span class="number">2</span>, <span class="attr">color</span>: <span class="string">&quot;#6699FF&quot;</span> &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-Can’t-Custom-Dialogs-in-HarmonyOS-Be-Full-Screen"><a href="#3-Can’t-Custom-Dialogs-in-HarmonyOS-Be-Full-Screen" class="headerlink" title="3. Can’t Custom Dialogs in HarmonyOS Be Full-Screen?"></a>3. Can’t Custom Dialogs in HarmonyOS Be Full-Screen?</h4><p>Reference demo:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CustomDialog</span></span><br><span class="line"><span class="keyword">export</span> struct <span class="title class_">MyDialog1</span> &#123;</span><br><span class="line">  <span class="attr">controller1</span>: <span class="title class_">CustomDialogController</span></span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">  </span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">10</span> &#125;) &#123;</span><br><span class="line">        <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">title</span>).<span class="title function_">fontSize</span>(<span class="number">25</span>)</span><br><span class="line">          .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Blue</span>)</span><br><span class="line">        <span class="title class_">Flex</span>(&#123; <span class="attr">justifyContent</span>: <span class="title class_">FlexAlign</span>.<span class="property">SpaceAround</span> &#125;) &#123;</span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;Cancel&#x27;</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">controller1</span>.<span class="title function_">close</span>()</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>)</span><br><span class="line">            .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;Confirm&#x27;</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">controller1</span>.<span class="title function_">close</span>()</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>)</span><br><span class="line">            .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Gray</span>).<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Main page</span></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">dialogData</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">colorTest</span>: <span class="title class_">Color</span> = <span class="title class_">Color</span>.<span class="property">Blue</span></span><br><span class="line">  <span class="attr">dialogController1</span>: <span class="title class_">CustomDialogController</span> = <span class="keyword">new</span> <span class="title class_">CustomDialogController</span>(&#123;</span><br><span class="line">    <span class="attr">builder</span>: <span class="title class_">MyDialog1</span>(&#123;</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&#x27;Popup 1&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="comment">// Whether to customize the popup container style</span></span><br><span class="line">    <span class="attr">customStyle</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">offset</span>: &#123; <span class="attr">dx</span>: <span class="number">0</span>, <span class="attr">dy</span>: <span class="number">0</span> &#125;,</span><br><span class="line">    <span class="attr">alignment</span>: <span class="title class_">DialogAlignment</span>.<span class="property">Top</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="title function_">confirm</span>(<span class="params"><span class="attr">data</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">dialogData</span> = data</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;ssss&#x27;</span>) <span class="comment">// Get input from popup</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">10</span> &#125;) &#123;</span><br><span class="line">        <span class="title class_">Text</span>(<span class="string">&#x27;This is a popup test&#x27;</span>)</span><br><span class="line">          .<span class="title function_">fontSize</span>(<span class="number">25</span>).<span class="title function_">margin</span>(<span class="number">20</span>).<span class="title function_">fontColor</span>(<span class="number">0x3399FF</span>)</span><br><span class="line">        <span class="title class_">Button</span>(<span class="string">&#x27;Click to open popup&#x27;</span>)</span><br><span class="line">          .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">dialogController1</span>.<span class="title function_">open</span>()</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;.<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;.<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>).<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-How-to-Implement-Animation-Collections-in-HarmonyOS"><a href="#4-How-to-Implement-Animation-Collections-in-HarmonyOS" class="headerlink" title="4. How to Implement Animation Collections in HarmonyOS?"></a>4. How to Implement Animation Collections in HarmonyOS?</h4><p>After Component A scales and rotates for 1 second, it scales and rotates again. After another 4 seconds, it repeats the scaling and rotation, and after another 1 second, it scales and rotates again. These four actions form a collection that repeats indefinitely. How can this be achieved?</p>
+<p>You can use keyframe animations with <code>keyframeAnimateTo</code>. Reference demo:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">UIContext</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@ohos.ArkUI.UIContext&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">myScale</span>: <span class="built_in">number</span> = <span class="number">1.0</span>;</span><br><span class="line">  <span class="attr">uiContext</span>: <span class="title class_">UIContext</span> | <span class="literal">undefined</span> = <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">aboutToAppear</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">uiContext</span> = <span class="variable language_">this</span>.<span class="property">getUIContext</span>?.();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Circle</span>()</span><br><span class="line">        .<span class="title function_">width</span>(<span class="number">100</span>)</span><br><span class="line">        .<span class="title function_">height</span>(<span class="number">100</span>)</span><br><span class="line">        .<span class="title function_">fill</span>(<span class="string">&quot;#46B1E3&quot;</span>)</span><br><span class="line">        .<span class="title function_">margin</span>(<span class="number">100</span>)</span><br><span class="line">        .<span class="title function_">scale</span>(&#123; <span class="attr">x</span>: <span class="variable language_">this</span>.<span class="property">myScale</span>, <span class="attr">y</span>: <span class="variable language_">this</span>.<span class="property">myScale</span> &#125;) <span class="comment">// Set x/y scaling</span></span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">uiContext</span>) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&quot;No uiContext, keyframe animation failed&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">myScale</span> = <span class="number">1</span>;</span><br><span class="line">          </span><br><span class="line">          <span class="comment">// Set the keyframe animation to play 3 times</span></span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">uiContext</span>.<span class="title function_">keyframeAnimateTo</span>(&#123; <span class="attr">iterations</span>: <span class="number">3</span> &#125;, [</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="comment">// First keyframe: 800ms scaling from 1 to 1.5</span></span><br><span class="line">              <span class="attr">duration</span>: <span class="number">800</span>,</span><br><span class="line">              <span class="attr">event</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">myScale</span> = <span class="number">1.5</span>;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="comment">// Second keyframe: 500ms scaling from 1.5 to 1</span></span><br><span class="line">              <span class="attr">duration</span>: <span class="number">500</span>,</span><br><span class="line">              <span class="attr">event</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">myScale</span> = <span class="number">1</span>;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          ]);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;.<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>).<span class="title function_">margin</span>(&#123; <span class="attr">top</span>: <span class="number">5</span> &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-Inquire-About-HarmonyOS-API-for-Returning-to-Home-Screen"><a href="#5-Inquire-About-HarmonyOS-API-for-Returning-to-Home-Screen" class="headerlink" title="5. Inquire About HarmonyOS API for Returning to Home Screen"></a>5. Inquire About HarmonyOS API for Returning to Home Screen</h4><p>Some app features need to guide users back to the home screen to add service cards. Is there an API to trigger returning to the home screen?</p>
+<p>The window has a <code>minimize</code> method. This interface notifies the AMS to send the window to the background, achieving the effect of sending the app to the background.<br>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#minimize11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#minimize11</a></p>
+<p><code>minimize(callback: AsyncCallback&lt;void&gt;): void</code></p>
+<p>This interface implements different functions depending on the calling object:</p>
+<ul>
+<li>When called on the main window, it minimizes the app, which can be restored from the Dock.</li>
+<li>When called on a child window, it hides the window, which cannot be restored from the Dock but can be restored using <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#showwindow9">showWindow()</a>. Calling this interface on a floating window will result in error code 1300002.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/302%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Status-Bar-Font-Lifecycle-Custom-Dialog-Centering-Transparency-Tab-Centering/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -910,285 +1362,6 @@ struct TestSwiperPage &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/619-Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/619-Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Page Lifecycle Monitoring, Scroll Usage, Disabling List Scrolling, Single Page Full Screen Setting, Reference Counting Issues</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 11:29:51 / Modified: 11:30:46" itemprop="dateCreated datePublished" datetime="2025-06-25T11:29:51+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues"><a href="#Daily-HarmonyOS-Next-Knowledge-Page-Lifecycle-Monitoring-Scroll-Usage-Disabling-List-Scrolling-Single-Page-Full-Screen-Setting-Reference-Counting-Issues" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Page Lifecycle Monitoring, Scroll Usage, Disabling List Scrolling, Single Page Full Screen Setting, Reference Counting Issues"></a>[Daily HarmonyOS Next Knowledge] Page Lifecycle Monitoring, Scroll Usage, Disabling List Scrolling, Single Page Full Screen Setting, Reference Counting Issues</h3><h4 id="1-How-to-monitor-the-lifecycle-of-a-specific-page-in-HarmonyOS"><a href="#1-How-to-monitor-the-lifecycle-of-a-specific-page-in-HarmonyOS" class="headerlink" title="1. How to monitor the lifecycle of a specific page in HarmonyOS?"></a>1. How to monitor the lifecycle of a specific page in HarmonyOS?</h4><ol>
-<li>Refer to invisible monitoring: NavDestinationInfo: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-observer-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-observer-V5</a>  </li>
-<li>For lifecycle monitoring of a single page, refer to the page lifecycle methods: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5</a></li>
-</ol>
-<p><strong>Page Lifecycle</strong> (for components decorated with @Entry):  </p>
-<ul>
-<li><strong>onPageShow</strong>: Triggered once every time the page is displayed, including routing and app foreground scenarios.  </li>
-<li><strong>onPageHide</strong>: Triggered once every time the page is hidden, including routing and app background scenarios.  </li>
-<li><strong>onBackPress</strong>: Triggered when the user clicks the back button.</li>
-</ul>
-<p><strong>Component Lifecycle</strong> (for custom components decorated with @Component):  </p>
-<ul>
-<li><strong>aboutToAppear</strong>: Called before the component appears, after creating a new instance and before executing <code>build()</code>.  </li>
-<li><strong>onDidBuild</strong>: Called after the component’s <code>build()</code> completes. Use for non-UI operations like data reporting. Avoid state changes or animations here to prevent unstable UI behavior.  </li>
-<li><strong>aboutToDisappear</strong>: Called before the component is destroyed. Do not modify state variables, especially @Link variables, to avoid instability.</li>
-</ul>
-<p>The lifecycle flow for @Entry-decorated components (pages) is shown below:<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.06.19.png"></p>
-<h4 id="2-Why-doesn’t-scrollToIndex-trigger-the-onScroll-callback-in-HarmonyOS-Scroller"><a href="#2-Why-doesn’t-scrollToIndex-trigger-the-onScroll-callback-in-HarmonyOS-Scroller" class="headerlink" title="2. Why doesn’t scrollToIndex trigger the onScroll callback in HarmonyOS Scroller?"></a>2. Why doesn’t <code>scrollToIndex</code> trigger the <code>onScroll</code> callback in HarmonyOS Scroller?</h4><p>In a List, <code>scrollToIndex</code> does not trigger the <code>onScroll</code> callback, while <code>scrollTo</code> does. <code>scrollToIndex</code> jumps directly to the target element without animation by default, thus not triggering the callback.  </p>
-<p><strong>Solution</strong>: Add animation by setting the second parameter of <code>scrollToIndex</code> to <code>true</code>:  </p>
-<pre><code class="language-typescript">List(&#123;
-  space: 3,
-  scroller: this.scroller,
-&#125;) &#123;
-  LazyForEach(this.data, (item: string, index: number) =&gt; &#123;
-    ListItem() &#123;
-      MyListItem(&#123; item &#125;)
-        .onClick(() =&gt; &#123;
-          this.scroller.scrollToIndex(index, true) // Add animation to trigger callbacks
-        &#125;)
-    &#125;
-  &#125;, (item: string) =&gt; item)
-&#125;
-.onScroll((xOffset: number, yOffset: number) =&gt; &#123;
-  console.info(&#39;onScroll&#39;, yOffset)
-&#125;)
-.onDidScroll((xOffset: number, yOffset: number) =&gt; &#123;
-  console.info(&#39;onDidScroll&#39;, yOffset)
-&#125;)
-</code></pre>
-<h4 id="3-How-to-dynamically-disable-scrolling-for-a-List-in-HarmonyOS"><a href="#3-How-to-dynamically-disable-scrolling-for-a-List-in-HarmonyOS" class="headerlink" title="3. How to dynamically disable scrolling for a List in HarmonyOS?"></a>3. How to dynamically disable scrolling for a List in HarmonyOS?</h4><p>When the finger slides down, the page follows. When sliding up, both the page and List scroll. To dynamically control List scrolling:  </p>
-<p>Use the <code>enableScrollInteraction</code> method: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5</a>  </p>
-<h4 id="4-Is-there-a-way-to-set-full-screen-non-full-screen-for-a-single-page-without-affecting-others-in-HarmonyOS"><a href="#4-Is-there-a-way-to-set-full-screen-non-full-screen-for-a-single-page-without-affecting-others-in-HarmonyOS" class="headerlink" title="4. Is there a way to set full screen&#x2F;non-full screen for a single page without affecting others in HarmonyOS?"></a>4. Is there a way to set full screen&#x2F;non-full screen for a single page without affecting others in HarmonyOS?</h4><p><strong>Solution</strong>: Set full screen in <code>onPageShow</code> and reset in <code>onPageHide</code>:  </p>
-<pre><code class="language-typescript">import &#123; window &#125; from &#39;@kit.ArkUI&#39;
-
-@Entry
-@Component
-struct Page2 &#123;
-  onPageShow(): void &#123;
-    window.getLastWindow(getContext(this), (err, win) =&gt; &#123;
-      win.setWindowLayoutFullScreen(true)
-    &#125;)
-  &#125;
-
-  onPageHide(): void &#123;
-    window.getLastWindow(getContext(this), (err, win) =&gt; &#123;
-      win.setWindowLayoutFullScreen(false)
-    &#125;)
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      Text(&#39;Full screen page....&#39;)
-    &#125;
-    .width(&#39;100%&#39;)
-    .height(&#39;100%&#39;)
-    .backgroundColor(Color.Green)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="5-Does-the-HarmonyOS-API-OH-NativerWindow-CreateNativeWindowFromSurfaceId-increment-the-reference-count"><a href="#5-Does-the-HarmonyOS-API-OH-NativerWindow-CreateNativeWindowFromSurfaceId-increment-the-reference-count" class="headerlink" title="5. Does the HarmonyOS API OH_NativerWindow_CreateNativeWindowFromSurfaceId() increment the reference count?"></a>5. Does the HarmonyOS API <code>OH_NativerWindow_CreateNativeWindowFromSurfaceId()</code> increment the reference count?</h4><p><strong>Yes</strong>, it increments the reference count by 1.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/618-Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/618-Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 11:27:28 / Modified: 11:28:06" itemprop="dateCreated datePublished" datetime="2025-06-25T11:27:28+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse"><a href="#Daily-HarmonyOS-Next-Knowledge-Scroll-Events-Pixel-Units-Radius-Removal-Frame-Capture-Component-Reuse" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse"></a>[Daily HarmonyOS Next Knowledge] Scroll Events, Pixel Units, Radius Removal, Frame Capture, Component Reuse</h3><h4 id="1-Does-HarmonyOS-Scroll-support-onendreachedthreshold-with-the-endreached-event-How-to-trigger-the-endreached-event-based-on-the-distance-from-the-bottom"><a href="#1-Does-HarmonyOS-Scroll-support-onendreachedthreshold-with-the-endreached-event-How-to-trigger-the-endreached-event-based-on-the-distance-from-the-bottom" class="headerlink" title="1. Does HarmonyOS Scroll support onendreachedthreshold with the endreached event? How to trigger the endreached event based on the distance from the bottom?"></a>1. Does HarmonyOS Scroll support onendreachedthreshold with the endreached event? How to trigger the endreached event based on the distance from the bottom?</h4><p>The component can be implemented by judging the offset. Refer to the demo below:  </p>
-<pre><code class="language-typescript">import display from &#39;@ohos.display&#39;;
-
-@Entry
-@Component
-struct page240510141709017 &#123;
-  scroller: Scroller = new Scroller()
-  @State yOffset: number = 0
-  @State yPosition: number = 150
-  private arr: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  private childH: number = 0
-  private screenH: number = 0
-
-  build() &#123;
-    Column() &#123;
-      Scroll(this.scroller) &#123;
-        Column() &#123;
-          ForEach(this.arr, (item: number) =&gt; &#123;
-            Text(item.toString())
-              .width(&#39;90%&#39;)
-              .height(150)
-              .backgroundColor(0xFFFFFF)
-              .borderRadius(15)
-              .fontSize(16)
-              .textAlign(TextAlign.Center)
-              .margin(&#123; top: 10 &#125;)
-          &#125;, (item: string) =&gt; item)
-        &#125;
-        .width(&#39;100%&#39;)
-        .onAppear(() =&gt; &#123;
-          this.childH = this.scroller.getItemRect(0).height
-          console.log(&#39;this.childH&#39;, this.childH)
-        &#125;)
-      &#125;
-      .scrollable(ScrollDirection.Vertical) // Vertical scrolling direction
-      .scrollBar(BarState.On) // Scrollbar always visible
-      .scrollBarColor(Color.Gray) // Scrollbar color
-      .scrollBarWidth(10) // Scrollbar width
-      .friction(0.6)
-      .edgeEffect(EdgeEffect.None)
-      .width(&#39;100%&#39;)
-      .height(&#39;100%&#39;)
-      .onDidScroll(() =&gt; &#123;
-        if (!this.screenH) &#123;
-          let displayClass: display.Display | null = null;
-          displayClass = display.getDefaultDisplaySync()
-          this.screenH = px2vp(displayClass.height)
-          console.log(&#39;this.screenH&#39;, this.screenH)
-        &#125;
-        const yCurrentOffset = this.scroller.currentOffset().yOffset
-        console.log(&#39;yCurrentOffset&#39;, yCurrentOffset)
-        if (yCurrentOffset &lt; 100) &#123;
-          console.log(&#39;is &lt; top 100&#39;)
-        &#125; else if (yCurrentOffset &gt; this.childH - this.screenH - 100) &#123;
-          console.log(&#39;is &gt; bottom 100&#39;)
-        &#125;
-      &#125;)
-    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="2-Conversion-and-verification-of-pixel-units-in-HarmonyOS"><a href="#2-Conversion-and-verification-of-pixel-units-in-HarmonyOS" class="headerlink" title="2. Conversion and verification of pixel units in HarmonyOS"></a>2. Conversion and verification of pixel units in HarmonyOS</h4><p>Conversion between vp and px, and how to verify the correctness of the conversion.  </p>
-<ul>
-<li>Introduction to pixel units: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/design/ux-design/visual-basis.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/design/ux-design/visual-basis.md</a>  </li>
-<li>Pixel unit conversion: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-pixel-units.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-pixel-units.md</a>  </li>
-<li>Pixel unit conversion verification reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/typical-layout-scenario.md#%E4%B8%89%E5%88%86%E6%A0%8F">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/typical-layout-scenario.md#%E4%B8%89%E5%88%86%E6%A0%8F</a></li>
-</ul>
-<p>Convert length units from px to vp:<br><code>let windowWidthVp = windowWidth / (display.getDefaultDisplaySync().densityDPI / 160)</code>  </p>
-<h4 id="3-How-to-remove-rounded-corners-from-bindPopup-in-HarmonyOS"><a href="#3-How-to-remove-rounded-corners-from-bindPopup-in-HarmonyOS" class="headerlink" title="3. How to remove rounded corners from bindPopup in HarmonyOS?"></a>3. How to remove rounded corners from bindPopup in HarmonyOS?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-popup.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-popup.md</a>  </p>
-<p>Set the bubble corner radius through the <code>radius</code> attribute.  </p>
-<h4 id="4-Does-HarmonyOS-xcomponent-have-an-API-to-capture-a-specific-frame-within-the-xcomponent"><a href="#4-Does-HarmonyOS-xcomponent-have-an-API-to-capture-a-specific-frame-within-the-xcomponent" class="headerlink" title="4. Does HarmonyOS xcomponent have an API to capture a specific frame within the xcomponent?"></a>4. Does HarmonyOS xcomponent have an API to capture a specific frame within the xcomponent?</h4><p>The XComponent itself does not have a related interface. Please refer to whether the <code>image.createPixelMapFromSurface</code> interface meets your needs:  </p>
-<p>Documentation link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-image-V5#imagecreatepixelmapfromsurface11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-image-V5#imagecreatepixelmapfromsurface11</a>  </p>
-<p><code>createPixelMapFromSurface(surfaceId: string, region: Region): Promise&lt;PixelMap&gt;</code>  </p>
-<p>Creates a PixelMap object based on the Surface ID and region information. The region size is specified by <code>Region.size</code>, returned as a Promise.  </p>
-<h4 id="5-How-to-avoid-attribute-value-conflicts-when-reusing-HarmonyOS-components"><a href="#5-How-to-avoid-attribute-value-conflicts-when-reusing-HarmonyOS-components" class="headerlink" title="5. How to avoid attribute value conflicts when reusing HarmonyOS components?"></a>5. How to avoid attribute value conflicts when reusing HarmonyOS components?</h4><p>Dynamic attributes can be used to set component properties to avoid conflicts: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-attribute-modifier.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/arkui-ts/ts-universal-attributes-attribute-modifier.md</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1258,7 +1431,7 @@ struct page240510141709017 &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">315</span>
+          <span class="site-state-item-count">317</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

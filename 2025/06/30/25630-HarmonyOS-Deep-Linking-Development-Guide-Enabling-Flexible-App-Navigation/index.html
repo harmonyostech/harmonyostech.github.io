@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS Deep Linking Development Guide: Enabling Flexible App NavigationI. Introduction to Deep LinkingDeep Linking is an app navigation technology provided by HarmonyOS, which locates and launches">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/25630-HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS Deep Linking Development Guide: Enabling Flexible App NavigationI. Introduction to Deep LinkingDeep Linking is an app navigation technology provided by HarmonyOS, which locates and launches">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-30T08:50:38.000Z">
+<meta property="article:modified_time" content="2025-06-30T08:51:27.037Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/25630-HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/25630-HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 16:50:38 / Modified: 16:51:27" itemprop="dateCreated datePublished" datetime="2025-06-30T16:50:38+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation"><a href="#HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation" class="headerlink" title="HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation"></a>HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation</h1><h2 id="I-Introduction-to-Deep-Linking"><a href="#I-Introduction-to-Deep-Linking" class="headerlink" title="I. Introduction to Deep Linking"></a>I. Introduction to Deep Linking</h2><p>Deep Linking is an app navigation technology provided by HarmonyOS, which locates and launches eligible installed apps using URI information. When multiple matching apps exist, the system automatically pops up a selection dialog for users to choose the target app.  </p>
+<p><strong>Core Features</strong>:  </p>
+<ul>
+<li>Navigation based on installed local apps  </li>
+<li>Selection mechanism for multiple matching apps  </li>
+<li>Flexible URI matching rules  </li>
+<li>Suitable for various inter-app interaction scenarios</li>
+</ul>
+<h2 id="II-Implementation-Principle"><a href="#II-Implementation-Principle" class="headerlink" title="II. Implementation Principle"></a>II. Implementation Principle</h2><p>Deep Linking queries and launches target apps through URI matching in the implicit Want matching mechanism. The system parses incoming URI information and searches for apps capable of handling the URI locally according to predefined rules.  </p>
+<p><strong>Key Points of URI Matching Rules</strong>:  </p>
+<ul>
+<li><strong>Scheme</strong>: Custom identifier without special characters, not starting with “ohos”  </li>
+<li><strong>Host</strong>: Specified domain name or identifier  </li>
+<li><strong>Path</strong>: Optional, for precise path matching  </li>
+<li><strong>Query Parameters</strong>: Optional, for passing parameters</li>
+</ul>
+<h2 id="III-Configuration-Guide-for-Target-Apps"><a href="#III-Configuration-Guide-for-Target-Apps" class="headerlink" title="III. Configuration Guide for Target Apps"></a>III. Configuration Guide for Target Apps</h2><h3 id="1-Configure-module-json5-File"><a href="#1-Configure-module-json5-File" class="headerlink" title="1. Configure module.json5 File"></a>1. Configure module.json5 File</h3><p>To allow other apps to access your app via Deep Linking, you must correctly set the <code>skills</code> tag in the <code>module.json5</code> configuration file.  </p>
+<p><strong>Configuration Key Points</strong>:  </p>
+<ul>
+<li>The <code>skills</code> tag includes a default skill object identifying the app entry.  </li>
+<li>App navigation links should not be configured in the default skill object.  </li>
+<li>Create independent skill objects for each navigation scenario.  </li>
+<li>Configure multiple skill objects for multiple scenarios.</li>
+</ul>
+<p><strong>Configuration Example</strong>:  </p>
+<pre><code class="language-json">&#123;
+  &quot;module&quot;: &#123;
+    // ...Other configurations
+    &quot;abilities&quot;: [
+      &#123;
+        // ...Other capability configurations
+        &quot;skills&quot;: [
+          &#123;
+            &quot;entities&quot;: [
+              &quot;entity.system.home&quot;
+            ],
+            &quot;actions&quot;: [
+              &quot;ohos.want.action.home&quot;
+            ]
+          &#125;,
+          &#123;
+            &quot;actions&quot;: [
+              // Note: actions cannot be empty to avoid matching failure
+              &quot;ohos.want.action.viewData&quot;
+            ],
+            &quot;uris&quot;: [
+              &#123;
+                // scheme is mandatory, customizable (not starting with http, https, file)
+                &quot;scheme&quot;: &quot;link&quot;,
+                // host is mandatory, configure the matching domain name
+                &quot;host&quot;: &quot;www.example.com&quot;
+              &#125;
+            ]
+          &#125;
+          // Add more skill objects for multiple navigation scenarios
+        ]
+      &#125;
+    ]
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Notes</strong>:  </p>
+<ul>
+<li>The scheme can be customized but should not use “https”, “http”, “file”, etc., which are handled by system browsers.  </li>
+<li>Each navigation scenario requires an independent skill object configuration.  </li>
+<li>The <code>actions</code> field must not be empty to avoid matching failure on the target side.</li>
+</ul>
+<h2 id="IV-Acquire-and-Parse-Incoming-App-Links"><a href="#IV-Acquire-and-Parse-Incoming-App-Links" class="headerlink" title="IV. Acquire and Parse Incoming App Links"></a>IV. Acquire and Parse Incoming App Links</h2><p>When other apps navigate to your app via Deep Linking, you need to acquire and parse the incoming URI information in the app’s UIAbility.  </p>
+<h3 id="Example-Code"><a href="#Example-Code" class="headerlink" title="Example Code:"></a>Example Code:</h3><pre><code class="language-typescript">// Take EntryAbility.ets as an example
+import &#123; AbilityConstant, UIAbility, Want &#125; from &#39;@kit.AbilityKit&#39;;
+import &#123; url &#125; from &#39;@kit.ArkTS&#39;;
+
+export default class EntryAbility extends UIAbility &#123;
+  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void &#123;
+    // Get the incoming link from want
+    // Example: link://www.example.com/programs?action=showall
+    let uri = want?.uri;
+    if (uri) &#123;
+      // Parse parameters in the URI
+      let urlObject = url.URL.parseURL(want?.uri);
+      let action = urlObject.params.get(&#39;action&#39;);
+      
+      // Execute corresponding operations based on parameters
+      if (action === &quot;showall&quot;) &#123;
+         // Logic to display all programs
+         // ...
+      &#125;
+      // Handle more parameters and logic as needed
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h2 id="V-Implement-Navigation-for-Launching-Apps"><a href="#V-Implement-Navigation-for-Launching-Apps" class="headerlink" title="V. Implement Navigation for Launching Apps"></a>V. Implement Navigation for Launching Apps</h2><p>Launching apps can implement Deep Linking navigation in multiple ways. Below are three common implementation methods.  </p>
+<h3 id="1-Use-openLink-for-App-Navigation"><a href="#1-Use-openLink-for-App-Navigation" class="headerlink" title="1. Use openLink for App Navigation"></a>1. Use openLink for App Navigation</h3><p>The <code>openLink</code> interface provides a simple way to implement app navigation.  </p>
+<p><strong>Example Code</strong>:  </p>
+<pre><code class="language-typescript">import &#123; common, OpenLinkOptions &#125; from &#39;@kit.AbilityKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+import &#123; hilog &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
+
+const TAG: string = &#39;[UIAbilityComponentsOpenLink]&#39;;
+const DOMAIN_NUMBER: number = 0xFF00;
+
+@Entry
+@Component
+struct Index &#123;
+  build() &#123;
+    Button(&#39;start link&#39;, &#123; type: ButtonType.Capsule, stateEffect: true &#125;)
+      .width(&#39;87%&#39;)
+      .height(&#39;5%&#39;)
+      .margin(&#123; bottom: &#39;12vp&#39; &#125;)
+      .onClick(() =&gt; &#123;
+        let context = this.getUIContext().getHostContext() as common.UIAbilityContext;
+        let link: string = &quot;link://www.example.com&quot;;
+        let openLinkOptions: OpenLinkOptions = &#123;
+          appLinkingOnly: false  // Key configuration: Use Deep Linking mode
+        &#125;;
+
+        try &#123;
+          context.openLink(link, openLinkOptions)
+            .then(() =&gt; &#123;
+              hilog.info(DOMAIN_NUMBER, TAG, &#39;open link success.&#39;);
+            &#125;).catch((err: BusinessError) =&gt; &#123;
+              hilog.error(DOMAIN_NUMBER, TAG, `open link failed. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+            &#125;);
+        &#125; catch (paramError) &#123;
+          hilog.error(DOMAIN_NUMBER, TAG, `Failed to start link. Code is $&#123;paramError.code&#125;, message is $&#123;paramError.message&#125;`);
+        &#125;
+      &#125;)
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Key Points</strong>:  </p>
+<ul>
+<li>Set <code>appLinkingOnly</code> to <code>false</code> to use Deep Linking.  </li>
+<li>Setting it to <code>true</code> will attempt App Linking, possibly causing navigation failure.</li>
+</ul>
+<h3 id="2-Use-startAbility-for-App-Navigation"><a href="#2-Use-startAbility-for-App-Navigation" class="headerlink" title="2. Use startAbility for App Navigation"></a>2. Use startAbility for App Navigation</h3><p>The <code>startAbility</code> interface triggers app navigation via implicit Want matching, providing lower-level control.  </p>
+<p><strong>Example Code</strong>:  </p>
+<pre><code class="language-typescript">import &#123; common, Want &#125; from &#39;@kit.AbilityKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+import &#123; hilog &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
+
+const TAG: string = &#39;[UIAbilityComponentsOpenLink]&#39;;
+const DOMAIN_NUMBER: number = 0xFF00;
+
+@Entry
+@Component
+struct Index &#123;
+  build() &#123;
+    Button(&#39;start ability&#39;, &#123; type: ButtonType.Capsule, stateEffect: true &#125;)
+      .width(&#39;87%&#39;)
+      .height(&#39;5%&#39;)
+      .margin(&#123; bottom: &#39;12vp&#39; &#125;)
+      .onClick(() =&gt; &#123;
+        let context = this.getUIContext().getHostContext() as common.UIAbilityContext;
+        let want: Want = &#123;
+          uri: &quot;link://www.example.com&quot;  // Set the target URI
+        &#125;;
+
+        try &#123;
+          context.startAbility(want).then(() =&gt; &#123;
+            hilog.info(DOMAIN_NUMBER, TAG, &#39;start ability success.&#39;);
+          &#125;).catch((err: BusinessError) =&gt; &#123;
+            hilog.error(DOMAIN_NUMBER, TAG, `start ability failed. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+          &#125;);
+        &#125; catch (paramError) &#123;
+          hilog.error(DOMAIN_NUMBER, TAG, `Failed to start ability. Code is $&#123;paramError.code&#125;, message is $&#123;paramError.message&#125;`);
+        &#125;
+      &#125;)
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Notes</strong>:  </p>
+<ul>
+<li>Ensure the URI in <code>want</code> matches the target app’s configured URI rules.  </li>
+<li>The caller must pass correct <code>action</code> and <code>entity</code> for matching.</li>
+</ul>
+<h3 id="3-Use-Web-Components-for-App-Navigation"><a href="#3-Use-Web-Components-for-App-Navigation" class="headerlink" title="3. Use Web Components for App Navigation"></a>3. Use Web Components for App Navigation</h3><p>Deep Linking can also be implemented in web pages by intercepting page loading events or binding click events.  </p>
+<p><strong>Web Component Example Code</strong>:  </p>
+<pre><code class="language-typescript">// index.ets
+import &#123; webview &#125; from &#39;@kit.ArkWeb&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+import &#123; common &#125; from &#39;@kit.AbilityKit&#39;;
+
+@Entry
+@Component
+struct WebComponent &#123;
+  controller: webview.WebviewController = new webview.WebviewController();
+
+  build() &#123;
+    Column() &#123;
+      Web(&#123; src: $rawfile(&#39;index.html&#39;), controller: this.controller &#125;)
+        .onLoadIntercept((event) =&gt; &#123;
+          const url: string = event.data.getRequestUrl();
+          if (url === &#39;link://www.example.com&#39;) &#123;
+            // Intercept specific URL and use Deep Linking to navigate
+            (this.getUIContext().getHostContext() as common.UIAbilityContext).openLink(url)
+              .then(() =&gt; &#123;
+                console.log(&#39;openLink success&#39;);
+              &#125;).catch((err: BusinessError) =&gt; &#123;
+                console.error(&#39;openLink failed, err:&#39; + JSON.stringify(err));
+              &#125;);
+            return true;  // Prevent further loading of this URL
+          &#125;
+          // Return false to allow normal page loading
+          return false;
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Front-end Page Code</strong>:  </p>
+<pre><code class="language-html">&lt;!-- index.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;!-- Method 1: Implement navigation via window.open event binding --&gt;
+&lt;button class=&quot;doOpenLink&quot; onclick=&quot;doOpenLink()&quot;&gt;Jump to Another App 1&lt;/button&gt;
+&lt;!-- Method 2: Implement navigation via hyperlink --&gt;
+&lt;a href=&quot;link://www.example.com&quot;&gt;Jump to Another App 2&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;script&gt;
+    function doOpenLink() &#123;
+        window.open(&quot;link://www.example.com&quot;)
+    &#125;
+&lt;/script&gt;
+</code></pre>
+<p><strong>Working Principle</strong>:  </p>
+<ul>
+<li>The Web component intercepts loading of specific URLs via <code>onLoadIntercept</code>.  </li>
+<li>When a Deep Linking URI is detected, it calls the <code>openLink</code> interface for app navigation.  </li>
+<li>Returning <code>true</code> prevents the Web component from loading the URL.  </li>
+<li>Returning <code>false</code> allows normal page loading.</li>
+</ul>
+<h2 id="VI-Summary-and-Best-Practices"><a href="#VI-Summary-and-Best-Practices" class="headerlink" title="VI. Summary and Best Practices"></a>VI. Summary and Best Practices</h2><h3 id="Comparison-Between-Deep-Linking-and-App-Linking"><a href="#Comparison-Between-Deep-Linking-and-App-Linking" class="headerlink" title="Comparison Between Deep Linking and App Linking"></a>Comparison Between Deep Linking and App Linking</h3><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Deep Linking</th>
+<th>App Linking</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Target App Requirement</td>
+<td>Must be installed</td>
+<td>Works whether installed or not</td>
+</tr>
+<tr>
+<td>Navigation Experience</td>
+<td>May show app selection dialog</td>
+<td>Smoother, automatically handles installation status</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Relies on URI matching rules</td>
+<td>Adds domain verification for higher security</td>
+</tr>
+<tr>
+<td>Configuration Complexity</td>
+<td>Relatively simple</td>
+<td>Relatively complex, requires additional domain configuration</td>
+</tr>
+</tbody></table>
+<h3 id="Best-Practice-Recommendations"><a href="#Best-Practice-Recommendations" class="headerlink" title="Best Practice Recommendations"></a>Best Practice Recommendations</h3><ol>
+<li><p><strong>URI Design Specifications</strong>  </p>
+<ul>
+<li>Use meaningful schemes, avoiding common protocols like http, https, file.  </li>
+<li>Design a clear host structure for easy management and identification.  </li>
+<li>Reasonably use path and query parameters to传递 information.</li>
+</ul>
+</li>
+<li><p><strong>Multi-scenario Handling</strong>  </p>
+<ul>
+<li>Create independent skill objects for different navigation scenarios.  </li>
+<li>Ensure <code>actions</code> are not empty for each scenario.  </li>
+<li>Consider the integrity and security of parameter passing.</li>
+</ul>
+</li>
+<li><p><strong>Error Handling</strong>  </p>
+<ul>
+<li>Add appropriate error handling logic when calling navigation interfaces.  </li>
+<li>Consider fallback solutions when the target app is not installed.  </li>
+<li>Log navigation failures for analysis and optimization.</li>
+</ul>
+</li>
+<li><p><strong>Testing and Verification</strong>  </p>
+<ul>
+<li>Test navigation in multiple scenarios, including:  <ul>
+<li>Target app installed  </li>
+<li>Target app not installed  </li>
+<li>Multiple apps matching the same URI</li>
+</ul>
+</li>
+<li>Verify the correctness of parameter passing.</li>
+</ul>
+</li>
+</ol>
+<p>Through this guide, developers can master HarmonyOS Deep Linking implementation, adding flexible inter-app navigation to their apps and enhancing user experience and interoperability.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/25630HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience/" rel="prev" title="HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience">
+      <i class="fa fa-chevron-left"></i> HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#I-Introduction-to-Deep-Linking"><span class="nav-number">1.1.</span> <span class="nav-text">I. Introduction to Deep Linking</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#II-Implementation-Principle"><span class="nav-number">1.2.</span> <span class="nav-text">II. Implementation Principle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#III-Configuration-Guide-for-Target-Apps"><span class="nav-number">1.3.</span> <span class="nav-text">III. Configuration Guide for Target Apps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Configure-module-json5-File"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. Configure module.json5 File</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IV-Acquire-and-Parse-Incoming-App-Links"><span class="nav-number">1.4.</span> <span class="nav-text">IV. Acquire and Parse Incoming App Links</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-Code"><span class="nav-number">1.4.1.</span> <span class="nav-text">Example Code:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#V-Implement-Navigation-for-Launching-Apps"><span class="nav-number">1.5.</span> <span class="nav-text">V. Implement Navigation for Launching Apps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Use-openLink-for-App-Navigation"><span class="nav-number">1.5.1.</span> <span class="nav-text">1. Use openLink for App Navigation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Use-startAbility-for-App-Navigation"><span class="nav-number">1.5.2.</span> <span class="nav-text">2. Use startAbility for App Navigation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Use-Web-Components-for-App-Navigation"><span class="nav-number">1.5.3.</span> <span class="nav-text">3. Use Web Components for App Navigation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VI-Summary-and-Best-Practices"><span class="nav-number">1.6.</span> <span class="nav-text">VI. Summary and Best Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Comparison-Between-Deep-Linking-and-App-Linking"><span class="nav-number">1.6.1.</span> <span class="nav-text">Comparison Between Deep Linking and App Linking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Best-Practice-Recommendations"><span class="nav-number">1.6.2.</span> <span class="nav-text">Best Practice Recommendations</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">317</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

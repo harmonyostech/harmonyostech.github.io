@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation ExperienceI. Introduction to App LinkingApp Linking is an app navigation technology provided by HarmonyOS, which directs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/25630HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation ExperienceI. Introduction to App LinkingApp Linking is an app navigation technology provided by HarmonyOS, which directs">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-30T08:45:57.000Z">
+<meta property="article:modified_time" content="2025-06-30T08:46:17.561Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/25630HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/25630HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 16:45:57 / Modified: 16:46:17" itemprop="dateCreated datePublished" datetime="2025-06-30T16:45:57+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience"><a href="#HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience" class="headerlink" title="HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience"></a>HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience</h1><h2 id="I-Introduction-to-App-Linking"><a href="#I-Introduction-to-App-Linking" class="headerlink" title="I. Introduction to App Linking"></a>I. Introduction to App Linking</h2><p>App Linking is an app navigation technology provided by HarmonyOS, which directs users to specific content within a target app via HTTPS links. Whether the target app is installed or not, users can access the content corresponding to the link. Compared with traditional Deep Linking, App Linking offers a smoother navigation experience.  </p>
+<p><strong>Typical Application Scenario</strong>: After developers integrate the “Scan to Go” service, users can scan the app’s QR code or barcode through system-level scanning entrances (such as the Scan function in the Control Center) to directly jump to the corresponding service page of the developer’s app, achieving a one-step direct user experience.  </p>
+<h2 id="II-Applicable-Scenarios-and-Advantages"><a href="#II-Applicable-Scenarios-and-Advantages" class="headerlink" title="II. Applicable Scenarios and Advantages"></a>II. Applicable Scenarios and Advantages</h2><h3 id="Applicable-Scenarios"><a href="#Applicable-Scenarios" class="headerlink" title="Applicable Scenarios"></a>Applicable Scenarios</h3><ul>
+<li>App’s scan-to-go service  </li>
+<li>Social sharing functions  </li>
+<li>Silent app activation (re-engaging users via links)  </li>
+<li>Advertising traffic conversion</li>
+</ul>
+<h3 id="Core-Advantages"><a href="#Core-Advantages" class="headerlink" title="Core Advantages"></a>Core Advantages</h3><ol>
+<li><strong>High Security</strong>: Suitable for scenarios with high security requirements, avoiding counterfeiting by other apps.  </li>
+<li><strong>Superior Experience</strong>: Users can normally access the link whether the target app is installed or not.  </li>
+<li><strong>Cross-platform Compatibility</strong>: When the app is not installed, it automatically degrades to a web-based experience.</li>
+</ol>
+<h2 id="III-Implementation-Principle"><a href="#III-Implementation-Principle" class="headerlink" title="III. Implementation Principle"></a>III. Implementation Principle</h2><p>App Linking adds a <strong>domain name verification process</strong> based on Deep Linking. This mechanism helps users eliminate ambiguity, identify apps legally belonging to specific domain names, and makes links more secure and reliable.  </p>
+<p><strong>Workflow</strong>:  </p>
+<ul>
+<li>The same HTTPS URL supports both app and web content presentation.  </li>
+<li>When the app is installed: Prioritizes opening the app to present content.  </li>
+<li>When the app is not installed: Opens the browser to present web-based content.</li>
+</ul>
+<h2 id="IV-Development-Guidelines"><a href="#IV-Development-Guidelines" class="headerlink" title="IV. Development Guidelines"></a>IV. Development Guidelines</h2><h3 id="Role-Division"><a href="#Role-Division" class="headerlink" title="Role Division"></a>Role Division</h3><h4 id="Responsibilities-of-the-Target-Party-App-Developer"><a href="#Responsibilities-of-the-Target-Party-App-Developer" class="headerlink" title="Responsibilities of the Target Party (App Developer)"></a>Responsibilities of the Target Party (App Developer)</h4><ol>
+<li><strong>Cloud Development</strong>  <ul>
+<li>Enable the App Linking service in the AGC console.  </li>
+<li>Associate the app on the developer website.  </li>
+<li>Associate the URL domain name in the AGC console.</li>
+</ul>
+</li>
+<li><strong>Client Development</strong>  <ul>
+<li>Configure the associated URL domain name in DevEco Studio.  </li>
+<li>Process incoming links.</li>
+</ul>
+</li>
+<li><strong>Front-end Development</strong>  <ul>
+<li>Develop the H5 webpage corresponding to the link (presented when the app is not installed).</li>
+</ul>
+</li>
+</ol>
+<h4 id="Responsibilities-of-the-Launching-Party-App-Initiating-Navigation"><a href="#Responsibilities-of-the-Launching-Party-App-Initiating-Navigation" class="headerlink" title="Responsibilities of the Launching Party (App Initiating Navigation)"></a>Responsibilities of the Launching Party (App Initiating Navigation)</h4><ol>
+<li><strong>Client Development</strong>  <ul>
+<li>Call system interfaces to trigger link navigation.</li>
+</ul>
+</li>
+</ol>
+<h2 id="V-Detailed-Development-Steps-for-the-Target-App"><a href="#V-Detailed-Development-Steps-for-the-Target-App" class="headerlink" title="V. Detailed Development Steps for the Target App"></a>V. Detailed Development Steps for the Target App</h2><h3 id="1-Enable-the-App-Linking-Service-in-the-AGC-Console"><a href="#1-Enable-the-App-Linking-Service-in-the-AGC-Console" class="headerlink" title="1. Enable the App Linking Service in the AGC Console"></a>1. Enable the App Linking Service in the AGC Console</h3><ol>
+<li>Log in to AppGallery Connect and click “My Projects”.  </li>
+<li>Select the target project.  </li>
+<li>In the left navigation bar, select “Growth &gt; App Linking”, then click “Enable Now”.  </li>
+<li>If the data processing location is not set, enable and set the default location as prompted.  </li>
+<li>Go to “Project Settings &gt; General” to view the app’s APP ID (required for subsequent development).</li>
+</ol>
+<h3 id="2-Associate-the-App-on-the-Developer-Website"><a href="#2-Associate-the-App-on-the-Developer-Website" class="headerlink" title="2. Associate the App on the Developer Website"></a>2. Associate the App on the Developer Website</h3><p>Create a domain configuration file <code>applinking.json</code>:  </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;applinking&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">   <span class="attr">&quot;apps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">     <span class="punctuation">&#123;</span></span><br><span class="line">       <span class="attr">&quot;appIdentifier&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1234567&quot;</span>  <span class="comment">// Replace with the APP ID displayed in the AGC console</span></span><br><span class="line">     <span class="punctuation">&#125;</span></span><br><span class="line">   <span class="punctuation">]</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line">```  </span><br><span class="line">File deployment location<span class="punctuation">:</span>  </span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://domain.name/.well-known/applinking.json">https://domain.name/.well-known/applinking.json</a><br>&#x2F;&#x2F; Example: <a target="_blank" rel="noopener" href="https://www.example.com/.well-known/applinking.json">https://www.example.com/.well-known/applinking.json</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3. Associate the URL Domain Name in the AGC Console  </span><br><span class="line">1. Log in to AppGallery Connect and enter the project.  </span><br><span class="line">2. In the left navigation bar, select &quot;Growth &gt; App Linking&quot;, then go to the &quot;App Links (for API &gt;=12)&quot; tab.  </span><br><span class="line">3. Click &quot;Create&quot;, enter the exact URL domain name (e.g., `https://www.example.com`).  </span><br><span class="line">4. After setting, click &quot;Publish&quot;, and the system will verify the domain configuration file.  </span><br><span class="line"></span><br><span class="line">**Verification Mechanism**:  </span><br><span class="line">- The configuration file will be re-fetched for verification within 24 hours after publication.  </span><br><span class="line">- Verification successful: Domain-associated app information is visible.  </span><br><span class="line">- Verification in progress: Status shows &quot;Publishing&quot;.  </span><br><span class="line">- Verification failed: Status shows &quot;Publishing Failed&quot; with a reason.  </span><br><span class="line"></span><br><span class="line">### 4. Configure the Associated URL Domain Name in DevEco Studio  </span><br><span class="line">Add the following configuration to the app&#x27;s `module.json5` file:  </span><br><span class="line">```json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;module&quot;: &#123;</span><br><span class="line">    &quot;abilities&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;name&quot;: &quot;EntryAbility&quot;,</span><br><span class="line">        &quot;srcEntry&quot;: &quot;./ets/entryability/EntryAbility.ts&quot;,</span><br><span class="line">        &quot;icon&quot;: &quot;$media:icon&quot;,</span><br><span class="line">        &quot;label&quot;: &quot;$string:EntryAbility_label&quot;,</span><br><span class="line">        &quot;exported&quot;: true,</span><br><span class="line">        &quot;startWindowIcon&quot;: &quot;$media:icon&quot;,</span><br><span class="line">        &quot;startWindowBackground&quot;: &quot;$color:start_window_background&quot;,</span><br><span class="line">        &quot;skills&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;entities&quot;: [</span><br><span class="line">              &quot;entity.system.home&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;actions&quot;: [</span><br><span class="line">              &quot;ohos.want.action.home&quot;</span><br><span class="line">            ]</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;entities&quot;: [</span><br><span class="line">              &quot;entity.system.browsable&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;actions&quot;: [</span><br><span class="line">              &quot;ohos.want.action.viewData&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;uris&quot;: [</span><br><span class="line">              &#123;</span><br><span class="line">                &quot;scheme&quot;: &quot;https&quot;,</span><br><span class="line">                &quot;host&quot;: &quot;www.example.com&quot;,</span><br><span class="line">                &quot;path&quot;: &quot;path1&quot;</span><br><span class="line">              &#125;</span><br><span class="line">            ],</span><br><span class="line">            &quot;domainVerify&quot;: true</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Configuration Key Points**:  </span><br><span class="line">- `entities` must include `&quot;entity.system.browsable&quot;`.  </span><br><span class="line">- `actions` must include `&quot;ohos.want.action.viewData&quot;`.  </span><br><span class="line">- `uris` must include an element with `scheme` as `&quot;https&quot;` and `host` as the domain address.  </span><br><span class="line">- Set `domainVerify` to `true` to enable domain name verification.  </span><br><span class="line"></span><br><span class="line">### 5. Process Incoming Links  </span><br><span class="line">Add link processing code in the Ability lifecycle callback (e.g., EntryAbility):  </span><br><span class="line">```typescript</span><br><span class="line">import &#123; AbilityConstant, UIAbility, Want &#125; from &#x27;@kit.AbilityKit&#x27;;</span><br><span class="line">import &#123; url &#125; from &#x27;@kit.ArkTS&#x27;;</span><br><span class="line"></span><br><span class="line">export default class EntryAbility extends UIAbility &#123;</span><br><span class="line">  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void &#123;</span><br><span class="line">    let uri = want?.uri;</span><br><span class="line">    if (uri) &#123;</span><br><span class="line">      let urlObject = url.URL.parseURL(want?.uri);</span><br><span class="line">      let action = urlObject.params.get(&#x27;action&#x27;);</span><br><span class="line">      if (action === &quot;showall&quot;)&#123;</span><br><span class="line">         // Process logic to display all programs</span><br><span class="line">      &#125;</span><br><span class="line">      // Process other parameters...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## VI. Navigation Guidance for the Launching Party  </span><br><span class="line"></span><br><span class="line">### Use the openLink Interface to Launch the App  </span><br><span class="line">**Method 1: Open the App Only via App Linking**  </span><br><span class="line">```typescript</span><br><span class="line">// Implement in Index.ets</span><br><span class="line">import &#123; hilog &#125; from &#x27;@kit.PerformanceAnalysisKit&#x27;;</span><br><span class="line">import &#123; BusinessError &#125; from &#x27;@kit.BasicServicesKit&#x27;;</span><br><span class="line">import &#123; GlobalContext &#125; from &#x27;../common/GlobalContext&#x27;;</span><br><span class="line"></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Button(&#x27;start link&#x27;, &#123; type: ButtonType.Capsule, stateEffect: true &#125;)</span><br><span class="line">      .width(&#x27;87%&#x27;)</span><br><span class="line">      .height(&#x27;5%&#x27;)</span><br><span class="line">      .margin(&#123; bottom: &#x27;12vp&#x27; &#125;)</span><br><span class="line">      .onClick(() =&gt; &#123;</span><br><span class="line">        let context = GlobalContext.getContext();</span><br><span class="line">        let link: string = &quot;https://www.example.com/programs?action=showall&quot;;</span><br><span class="line">        // Open the app only via App Linking</span><br><span class="line">        context.openLink(link, &#123; appLinkingOnly: true &#125;)</span><br><span class="line">          .then(() =&gt; &#123;</span><br><span class="line">            hilog.info(0x0000, &#x27;testTag&#x27;, `Succeeded in opening link.`);</span><br><span class="line">          &#125;)</span><br><span class="line">          .catch((error: BusinessError) =&gt; &#123;</span><br><span class="line">            hilog.error(0x0000, &#x27;testTag&#x27;, `Failed to open link, code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Method 2: Open the App with App Linking Priority**  </span><br><span class="line">Simply set the `appLinkingOnly` parameter to `false` or omit it.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## VII. Verification and Troubleshooting  </span><br><span class="line"></span><br><span class="line">### Verify the App Launch Effect  </span><br><span class="line">1. Manually sign the app (automatic signing is not allowed).  </span><br><span class="line">2. Compile, package, and install it on the debugging device.  </span><br><span class="line">3. Test the navigation function via the launching app.  </span><br><span class="line"></span><br><span class="line">### Common Issue Troubleshooting  </span><br><span class="line">**1. Incorrect skills configuration in the app&#x27;s module.json5 file**  </span><br><span class="line">- Check if the domain name in the &quot;host&quot; field is correctly set.  </span><br><span class="line">- Ensure independent skill objects are created for different navigation scenarios.  </span><br><span class="line"></span><br><span class="line">**2. Incorrect developer website server configuration**  </span><br><span class="line">- Check if `appIdentifier` in `applinking.json` is correct.  </span><br><span class="line">- Confirm the file is located in the `.well-known` directory.  </span><br><span class="line">- Test accessibility by visiting `https://your.domain.name/.well-known/applinking.json` in a browser.  </span><br><span class="line"></span><br><span class="line">**3. System has not completed domain name verification**  </span><br><span class="line">- Wait at least 20 seconds after installing the app.  </span><br><span class="line">- Check network connection status (weak networks may cause verification failure).  </span><br><span class="line">- The system will automatically retry verification within 24 hours.  </span><br><span class="line"></span><br><span class="line">**4. Confirm whether domain name verification succeeded**  </span><br><span class="line">Use the following command to query the verification result:  </span><br></pre></td></tr></table></figure>
+<p>hdc shell hidumper -s AppDomainVerifyManager</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Success message example:  </span><br></pre></td></tr></table></figure>
+<p>BundleName:<br>  appIdentifier:123456789<br>   domain verify status:<br>    <a href="https://www.example.com:success">https://www.example.com:success</a></p>
+<pre><code>**Error message handling**:  
+- `client-error`: Check `appIdentifier` and domain publication status.  
+- `http_unknown`: Ensure the device is connected to the network.  
+- Other errors: Contact technical support.  
+
+**5. Pre-installed apps cannot be launched on the first device startup**  
+- The system attempts verification within 20 minutes after the first startup.  
+- Failure may occur if there is no network connection during this period.  
+- Solution: Restart the device or wait 24 hours.  
+
+**6. CDN content is not updated in a timely manner**  
+- CDN caching time is 10 minutes; please be patient.  
+
+**7. Correspondence between apps and domain names**  
+- One app can be associated with multiple domains, and one domain can be associated with multiple apps.  
+- When multiple apps are associated with the same domain:  
+  - If each app has the same uris configuration, the system will display a selection list.  
+  - Target apps can be distinguished by configuring different paths.  
+
+
+## VIII. Conclusion  
+
+HarmonyOS&#39;s App Linking technology provides developers with a powerful and flexible app navigation solution, offering strong support for enhancing user experience, achieving precise marketing, and improving app security. Through the detailed steps in this guide, developers can smoothly implement App Linking integration and create a seamless app navigation experience for users.
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/25630-HarmonyOS-Next-6-0-0-Beta1-Update-Notes-and-Adaptation-Guide/" rel="prev" title="HarmonyOS Next 6.0.0 Beta1 Update Notes and Adaptation Guide">
+      <i class="fa fa-chevron-left"></i> HarmonyOS Next 6.0.0 Beta1 Update Notes and Adaptation Guide
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/25630-HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation/" rel="next" title="HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation">
+      HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#I-Introduction-to-App-Linking"><span class="nav-number">1.1.</span> <span class="nav-text">I. Introduction to App Linking</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#II-Applicable-Scenarios-and-Advantages"><span class="nav-number">1.2.</span> <span class="nav-text">II. Applicable Scenarios and Advantages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Applicable-Scenarios"><span class="nav-number">1.2.1.</span> <span class="nav-text">Applicable Scenarios</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Advantages"><span class="nav-number">1.2.2.</span> <span class="nav-text">Core Advantages</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#III-Implementation-Principle"><span class="nav-number">1.3.</span> <span class="nav-text">III. Implementation Principle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IV-Development-Guidelines"><span class="nav-number">1.4.</span> <span class="nav-text">IV. Development Guidelines</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Role-Division"><span class="nav-number">1.4.1.</span> <span class="nav-text">Role Division</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Responsibilities-of-the-Target-Party-App-Developer"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">Responsibilities of the Target Party (App Developer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Responsibilities-of-the-Launching-Party-App-Initiating-Navigation"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">Responsibilities of the Launching Party (App Initiating Navigation)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#V-Detailed-Development-Steps-for-the-Target-App"><span class="nav-number">1.5.</span> <span class="nav-text">V. Detailed Development Steps for the Target App</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Enable-the-App-Linking-Service-in-the-AGC-Console"><span class="nav-number">1.5.1.</span> <span class="nav-text">1. Enable the App Linking Service in the AGC Console</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Associate-the-App-on-the-Developer-Website"><span class="nav-number">1.5.2.</span> <span class="nav-text">2. Associate the App on the Developer Website</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">317</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
