@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS Layout Practice 1: Implementation of Common TitleBarBackgroundTitleBar is the most commonly used component in daily development. Although each application may have a different style, the ove">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS Next Layout Practice 1: Implementation of Common TitleBar">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Layout-Practice-1-Implementation-of-Common-TitleBar/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS Layout Practice 1: Implementation of Common TitleBarBackgroundTitleBar is the most commonly used component in daily development. Although each application may have a different style, the ove">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20%E5%B8%83%E5%B1%80%E5%AE%9E%E8%B7%B51%20%E5%B8%B8%E7%94%A8TitleBar%E5%AE%9E%E7%8E%B0.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20%E5%B8%83%E5%B1%80%E5%AE%9E%E8%B7%B51%20%E5%B8%B8%E7%94%A8TitleBar%E5%AE%9E%E7%8E%B0-1.png">
+<meta property="article:published_time" content="2025-06-30T13:46:54.000Z">
+<meta property="article:modified_time" content="2025-06-30T13:50:22.483Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20%E5%B8%83%E5%B1%80%E5%AE%9E%E8%B7%B51%20%E5%B8%B8%E7%94%A8TitleBar%E5%AE%9E%E7%8E%B0.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Layout-Practice-1-Implementation-of-Common-TitleBar/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS Next Layout Practice 1: Implementation of Common TitleBar | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Layout-Practice-1-Implementation-of-Common-TitleBar/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS Next Layout Practice 1: Implementation of Common TitleBar
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 21:46:54 / Modified: 21:50:22" itemprop="dateCreated datePublished" datetime="2025-06-30T21:46:54+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-Layout-Practice-1-Implementation-of-Common-TitleBar"><a href="#HarmonyOS-Layout-Practice-1-Implementation-of-Common-TitleBar" class="headerlink" title="HarmonyOS Layout Practice 1: Implementation of Common TitleBar"></a>HarmonyOS Layout Practice 1: Implementation of Common TitleBar</h1><h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>TitleBar is the most commonly used component in daily development. Although each application may have a different style, the overall layout generally consists of three areas:  </p>
+<ol>
+<li>Left return area  </li>
+<li>Middle title area  </li>
+<li>Right button area</li>
+</ol>
+<p>Below are screenshots of the TitleBar effects from WeChat and My Huawei applications:  </p>
+<p><img src="/../images/HarmonyOS%20%E5%B8%83%E5%B1%80%E5%AE%9E%E8%B7%B51%20%E5%B8%B8%E7%94%A8TitleBar%E5%AE%9E%E7%8E%B0.png"><br><img src="/../images/HarmonyOS%20%E5%B8%83%E5%B1%80%E5%AE%9E%E8%B7%B51%20%E5%B8%B8%E7%94%A8TitleBar%E5%AE%9E%E7%8E%B0-1.png"></p>
+<p>In WeChat, the content area is centered, while in My Huawei, it is left-aligned. In practical development, we may encounter both scenarios. Let’s encapsulate a TitleBar to achieve the following functions:  </p>
+<ol>
+<li>The far left supports a return button + text.  </li>
+<li>The right side can have up to two buttons.  </li>
+<li>The middle title area should adaptively occupy space without exceeding the left and right areas, and can be controlled to align left or center.</li>
+</ol>
+<h2 id="Selection-of-Layout-Container"><a href="#Selection-of-Layout-Container" class="headerlink" title="Selection of Layout Container"></a>Selection of Layout Container</h2><p>The overall effect requires fixed left and right areas with the middle area expanding. In Android, we would first think of RelativeLayout, and HarmonyOS provides a similar relative layout called RelativeContainer. RelativeContainer supports setting relative position relationships for child elements, making it suitable for complex interface scenarios to align and arrange multiple sub-components. Child elements can specify siblings or the parent container as anchors for relative positioning.  </p>
+<p>RelativeContainer introduces two concepts: anchors and alignment methods:  </p>
+<ul>
+<li><strong>Anchors</strong>: Set the position of the current element based on another element. Anchor settings define the positional dependency of child elements relative to the parent or siblings. Horizontally, left, middle, and right anchors can be set; vertically, top, center, and bottom anchors are supported. IDs must be set for the RelativeContainer and its child elements to specify anchor information. The RelativeContainer’s default ID is “<strong>container</strong>“, and other child elements use the <code>id</code> attribute. Components without an ID can still be displayed but cannot be used as anchors by other children. The framework will generate an ID for them, but the pattern is unpredictable and cannot be directly used.  </li>
+<li><strong>Alignment Methods</strong>: Define whether the current element aligns top&#x2F;middle&#x2F;bottom or left&#x2F;middle&#x2F;right relative to the anchor.</li>
+</ul>
+<p><strong>Notes</strong>: Avoid circular dependencies, as they will cause all child components in the container to fail to render. If more than two position anchors are set in the same direction, and the anchor positions are out of order, the child component will have a size of 0 (i.e., not render).  </p>
+<h2 id="Layout-Implementation"><a href="#Layout-Implementation" class="headerlink" title="Layout Implementation"></a>Layout Implementation</h2><p>The parent layout uses RelativeContainer. The left and right buttons are positioned relative to the parent’s left and right sides, while the middle container is positioned relative to the right of the left layout and the left of the right layout. The overall structure is as follows:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">build() &#123;  </span><br><span class="line">  RelativeContainer() &#123;  </span><br><span class="line">    Text(&#x27;左侧&#x27;)  </span><br><span class="line">      .fontSize(10)  </span><br><span class="line">      .fontWeight(FontWeight.Bold)  </span><br><span class="line">      .id(&quot;base_title_left_container&quot;)  </span><br><span class="line">      .alignRules(&#123;  </span><br><span class="line">        bottom: &#123; anchor: &quot;__container__&quot;, align: VerticalAlign.Bottom &#125;,  </span><br><span class="line">        left: &#123; anchor: &quot;__container__&quot;, align: HorizontalAlign.Start &#125;  </span><br><span class="line">      &#125;)  </span><br><span class="line">  </span><br><span class="line">    Text(&#x27;右侧&#x27;)  </span><br><span class="line">        .fontSize(10)  </span><br><span class="line">        .fontWeight(FontWeight.Bold)  </span><br><span class="line">    .id(&quot;base_title_right_container&quot;)  </span><br><span class="line">      .alignRules(&#123;  </span><br><span class="line">        bottom: &#123; anchor: &quot;__container__&quot;, align: VerticalAlign.Bottom &#125;,  </span><br><span class="line">        right: &#123; anchor: &quot;__container__&quot;, align: HorizontalAlign.End &#125;  </span><br><span class="line">      &#125;)  </span><br><span class="line">      // .backgroundColor(&#x27;#00ff00&#x27;)  </span><br><span class="line">    Row()&#123;  </span><br><span class="line">      Text(&#x27;中间内容&#x27;)  </span><br><span class="line">        .fontSize(10)  </span><br><span class="line">        .fontWeight(FontWeight.Bold)  </span><br><span class="line">  </span><br><span class="line">    &#125;.alignRules(&#123;  </span><br><span class="line">      bottom: &#123; anchor: &quot;__container__&quot;, align: VerticalAlign.Bottom &#125;,  </span><br><span class="line">      left: &#123; anchor: &quot;base_title_left_container&quot;, align: HorizontalAlign.End &#125;,  </span><br><span class="line">      right: &#123; anchor: &quot;base_title_right_container&quot;, align: HorizontalAlign.Start &#125;  </span><br><span class="line">    &#125;).backgroundColor(&#x27;#ff0000&#x27;)  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">  &#125;  </span><br><span class="line">  .height(&#x27;40&#x27;)  </span><br><span class="line">  .width(&#x27;100%&#x27;)  </span><br><span class="line">  .backgroundColor(&#x27;#ccc&#x27;)  </span><br><span class="line">  .margin(&#123;top:100&#125;)  </span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">The display effect is as follows:  </span><br><span class="line">![](../images/HarmonyOS%20布局实践1%20常用TitleBar实现-2.png)</span><br><span class="line">This meets expectations. When the right side needs to display two buttons, wrap them in a container:  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>build() {<br>  RelativeContainer() {<br>    Text(‘左侧’)<br>      .fontSize(10)<br>      .fontWeight(FontWeight.Bold)<br>      .id(“base_title_left_container”)<br>      .alignRules({<br>        bottom: { anchor: “<strong>container</strong>“, align: VerticalAlign.Bottom },<br>        left: { anchor: “<strong>container</strong>“, align: HorizontalAlign.Start }<br>      })  </p>
+<pre><code>Flex(&#123; justifyContent: FlexAlign.End, alignItems: ItemAlign.Center &#125;) &#123;  
+  Text(&#39;右侧2&#39;)  
+    .fontSize(10)  
+    .fontWeight(FontWeight.Bold)  
+  Text(&#39;右侧1&#39;)  
+    .fontSize(10)  
+    .fontWeight(FontWeight.Bold)  
+&#125;  
+.id(&quot;base_title_right_container&quot;)  
+  .alignRules(&#123;  
+    bottom: &#123; anchor: &quot;__container__&quot;, align: VerticalAlign.Bottom &#125;,  
+    right: &#123; anchor: &quot;__container__&quot;, align: HorizontalAlign.End &#125;  
+  &#125;)  
+  // .backgroundColor(&#39;#00ff00&#39;)  
+Row()&#123;  
+  Text(&#39;中间内容&#39;)  
+    .fontSize(10)  
+    .fontWeight(FontWeight.Bold)  
+
+&#125;.alignRules(&#123;  
+  bottom: &#123; anchor: &quot;__container__&quot;, align: VerticalAlign.Bottom &#125;,  
+  left: &#123; anchor: &quot;base_title_left_container&quot;, align: HorizontalAlign.End &#125;,  
+  right: &#123; anchor: &quot;base_title_right_container&quot;, align: HorizontalAlign.Start &#125;  
+&#125;).backgroundColor(&#39;#ff0000&#39;)  
+</code></pre>
+<p>  }<br>  .height(‘40’)<br>  .width(‘100%’)<br>  .backgroundColor(‘#ccc’)<br>  .margin({top:100})<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Effect:  </span><br><span class="line">![](../images/HarmonyOS%20布局实践1%20常用TitleBar实现-3.png)</span><br><span class="line">The middle content disappears. After adding a background color to the right container:  </span><br><span class="line">![](../images/HarmonyOS%20布局实践1%20常用TitleBar实现-4.png)</span><br><span class="line"></span><br><span class="line">It is found that the right layout occupies the entire width. Why?  </span><br><span class="line">The issue is that Flex cannot adapt to child node sizes. Switch to the Row container instead:  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>build() {<br>  RelativeContainer() {<br>    Text(‘左侧’)<br>      .fontSize(10)<br>      .fontWeight(FontWeight.Bold)<br>      .id(“base_title_left_container”)<br>      .alignRules({<br>        bottom: { anchor: “<strong>container</strong>“, align: VerticalAlign.Bottom },<br>        left: { anchor: “<strong>container</strong>“, align: HorizontalAlign.Start }<br>      })  </p>
+<pre><code>Row() &#123;  
+  Text(&#39;右侧2&#39;)  
+    .fontSize(10)  
+    .fontWeight(FontWeight.Bold)  
+  Text(&#39;右侧1&#39;)  
+    .fontSize(10)  
+    .fontWeight(FontWeight.Bold)  
+&#125;  
+.id(&quot;base_title_right_container&quot;)  
+  .alignRules(&#123;  
+    bottom: &#123; anchor: &quot;__container__&quot;, align: VerticalAlign.Bottom &#125;,  
+    right: &#123; anchor: &quot;__container__&quot;, align: HorizontalAlign.End &#125;  
+  &#125;)  
+  .backgroundColor(&#39;#00ff00&#39;)  
+Row()&#123;  
+  Text(&#39;中间内容&#39;)  
+    .fontSize(10)  
+    .fontWeight(FontWeight.Bold)  
+
+&#125;.alignRules(&#123;  
+  bottom: &#123; anchor: &quot;__container__&quot;, align: VerticalAlign.Bottom &#125;,  
+  left: &#123; anchor: &quot;base_title_left_container&quot;, align: HorizontalAlign.End &#125;,  
+  right: &#123; anchor: &quot;base_title_right_container&quot;, align: HorizontalAlign.Start &#125;  
+&#125;).backgroundColor(&#39;#ff0000&#39;)  
+</code></pre>
+<p>  }<br>  .height(‘40’)<br>  .width(‘100%’)<br>  .backgroundColor(‘#ccc’)<br>  .margin({top:100})<br>}</p>
+<pre><code>
+The effect returns to normal:  
+![](../images/HarmonyOS%20布局实践1%20常用TitleBar实现-5.png)
+
+
+## Summary  
+This article introduces the characteristics and attributes of HarmonyOS&#39;s RelativeContainer through the layout implementation of the common TitleBar control. It also highlights the difference in adaptive child node capabilities between Flex and Row: Row can adapt to child node widths, while Flex will fill the entire parent layout width.
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/25630-Introduction-to-HarmonyOS-Next-Data-Base-Vector-Database/" rel="prev" title="Introduction to HarmonyOS Next Data Base Vector Database">
+      <i class="fa fa-chevron-left"></i> Introduction to HarmonyOS Next Data Base Vector Database
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Private-Repository-Construction-Practice/" rel="next" title="HarmonyOS Private Repository Construction Practice">
+      HarmonyOS Private Repository Construction Practice <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-Layout-Practice-1-Implementation-of-Common-TitleBar"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS Layout Practice 1: Implementation of Common TitleBar</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selection-of-Layout-Container"><span class="nav-number">1.2.</span> <span class="nav-text">Selection of Layout Container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Layout-Implementation"><span class="nav-number">1.3.</span> <span class="nav-text">Layout Implementation</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">347</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

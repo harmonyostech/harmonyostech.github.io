@@ -149,6 +149,602 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/125-Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:04:39 / Modified: 10:05:14" itemprop="dateCreated datePublished" datetime="2025-06-27T10:04:39+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance"><a href="#Daily-HarmonyOS-Next-Knowledge-Tab-Switch-Lifecycle-Complex-JSON-Assembly-Scroll-Max-Height-Reference-Passing-Error-Web-Performance" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance"></a>[Daily HarmonyOS Next Knowledge] Tab Switch Lifecycle, Complex JSON Assembly, Scroll Max Height, Reference Passing Error, Web Performance</h3><h4 id="1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS"><a href="#1-Components-Embedded-in-Tabs-Do-Not-Trigger-onPageShow-Method-in-HarmonyOS" class="headerlink" title="1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?"></a>1. Components Embedded in Tabs Do Not Trigger onPageShow Method in HarmonyOS?</h4><p>The <code>onPageShow</code> lifecycle method does not execute when switching tabs because <code>onPageShow</code> is a page-level lifecycle callback. Tab switching triggers the component-level lifecycle method <code>aboutToAppear()</code> for child components. You can call <code>showPage()</code> within this lifecycle. If you need the <code>showPage</code> method in <code>TabContent</code> to execute every time a tab is switched, use <code>onTabBarClick(event: (index: number) =&gt; void)</code> to get the currently clicked tab index in the parent component.  </p>
+<p>Define a <code>currentTabIndex</code> variable in the parent component using <code>@State</code>, assign the clicked index to <code>currentTabIndex</code> in the <code>onTabBarClick</code> callback, and pass this value to child components wrapped by <code>TabContent</code>. In child components, use <code>@Props</code> and <code>@Watch</code> to listen for changes to the value passed from the parent component and execute the <code>showPage</code> method in each <code>TabContent</code>.  </p>
+<p><strong>Demo Reference</strong>:  </p>
+<pre><code class="language-typescript">// xxx.ets
+import &#123; FirstPage &#125; from &#39;./FirstPage&#39;
+
+@Entry
+@Component
+struct TabsExample &#123;
+  @State fontColor: string = &#39;#182431&#39;
+  @State selectedFontColor: string = &#39;#007DFF&#39;
+  @State currentIndex: number = 0
+  private controller: TabsController = new TabsController()
+  @State mainPageState: boolean = false
+  
+  @Builder tabBuilder(index: number, name: string) &#123;
+    Column() &#123;
+      Text(name)
+        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
+        .fontSize(16)
+        .fontWeight(this.currentIndex === index ? 500 : 400)
+        .lineHeight(22)
+        .margin(&#123; top: 17, bottom: 7 &#125;)
+      Divider()
+        .strokeWidth(2)
+        .color(&#39;#007DFF&#39;)
+        .opacity(this.currentIndex === index ? 1 : 0)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Tabs(&#123; barPosition: BarPosition.Start, index: this.currentIndex, controller: this.controller &#125;) &#123;
+        TabContent() &#123;
+          FirstPage(&#123; mainPageState: this.mainPageState &#125;).width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#00CB87&#39;)
+        &#125;.tabBar(this.tabBuilder(0, &#39;green&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#007DFF&#39;)
+        &#125;.tabBar(this.tabBuilder(1, &#39;blue&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#FFBF00&#39;)
+        &#125;.tabBar(this.tabBuilder(2, &#39;yellow&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#E67C92&#39;)
+        &#125;.tabBar(this.tabBuilder(3, &#39;pink&#39;))
+      &#125;
+      .vertical(false)
+      .barMode(BarMode.Fixed)
+      .barWidth(360)
+      .barHeight(56)
+      .animationDuration(400)
+      .onChange((index: number) =&gt; &#123;
+        this.currentIndex = index
+      &#125;)
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+      .margin(&#123; top: 52 &#125;)
+      .backgroundColor(&#39;#F1F3F5&#39;)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+
+  onPageShow(): void &#123;
+    console.log(&#39;index--- onPageShow&#39;)
+    this.mainPageState = true
+  &#125;
+  
+  onPageHide(): void &#123;
+    console.log(&#39;index--- onPageHide&#39;)
+    this.mainPageState = false
+  &#125;
+&#125;
+</code></pre>
+<pre><code class="language-typescript">import &#123; router &#125; from &#39;@kit.ArkUI&#39;;
+import &#123; FaultLogger &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
+
+@Entry
+@Component
+export struct FirstPage &#123;
+  @State message: string = &#39;Hello World&#39;;
+  @Link @Watch(&#39;mainIsShow&#39;) mainPageState: boolean
+  
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+          .onClick(() =&gt; &#123;
+            router.pushUrl(&#123;
+              url: &#39;pages/DetailPage&#39;,
+            &#125;)
+          &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+  
+  mainIsShow() &#123;
+    console.log(&#39;mainIsShow--&#39;, this.mainPageState)
+  &#125;
+  
+  aboutToAppear(): void &#123;
+    console.log(&#39;firstPAGE--- aboutToAppear&#39;)
+  &#125;
+
+  onPageShow(): void &#123;
+    console.log(&#39;firstPAGE--- onPageShow&#39;)
+  &#125;
+  
+  onPageHide(): void &#123;
+    console.log(&#39;firstPAGE--- onPageHide&#39;)
+  &#125;
+  
+  aboutToRecycle(): void &#123;
+    console.log(&#39;firstPAGE--- aboutToRecycle&#39;)
+  &#125;
+&#125;
+</code></pre>
+<pre><code class="language-typescript">import &#123; Notification &#125; from &#39;@kit.NotificationKit&#39;;
+
+@Entry
+@Component
+struct DetailPage &#123;
+  @State message: string = &#39;Detail&#39;;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+  
+  onPageShow(): void &#123;
+  &#125;
+  
+  onPageHide(): void &#123;
+    console.log(&#39;firstPAGE--- onPageHide&#39;)
+  &#125;
+  
+  onBackPress(): boolean | void &#123;
+    console.log(&#39;firstPAGE--- onBackPress&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-Assemble-Complex-JSON-Data"><a href="#2-How-to-Assemble-Complex-JSON-Data" class="headerlink" title="2. How to Assemble Complex JSON Data?"></a>2. How to Assemble Complex JSON Data?</h4><p><strong>Reference Demo</strong>:  </p>
+<pre><code class="language-typescript">jsonObject: Record&lt;string, Object&gt; = &#123;&#125;
+
+aboutToAppear(): void &#123;
+  this.jsonObject[&quot;k1&quot;] = &quot;v1&quot;
+  this.jsonObject[&quot;k2&quot;] = 20
+  let json: string = JSON.stringify(this.jsonObject)
+  console.log(json)
+&#125;
+</code></pre>
+<h4 id="3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS"><a href="#3-How-to-Limit-the-Maximum-Height-of-a-Scroll-Component-in-HarmonyOS" class="headerlink" title="3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?"></a>3. How to Limit the Maximum Height of a Scroll Component in HarmonyOS?</h4><p>When displaying text in the middle of a layout with other UI elements above and below, wrap the <code>Text</code> component with a <code>Scroll</code> component. To prevent other UI elements from being pushed off-screen when the text is too long, set a maximum height for the <code>Scroll</code> component.  </p>
+<p><strong>Reference Demo</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct NestedScroll &#123;
+  @State listPosition: number = 0; // 0: scroll to top, 1: middle, 2: scroll to bottom
+  private arr: number[] = [1]
+  private scrollerForList: Scroller = new Scroller()
+
+  build() &#123;
+    Flex() &#123;
+      Column() &#123;
+        Text(&quot;Header&quot;)
+          .width(&quot;100%&quot;)
+          .height(&quot;20%&quot;)
+          .backgroundColor(0X330000FF)
+          .fontSize(16)
+          .textAlign(TextAlign.Center)
+
+        List(&#123; space: 20, scroller: this.scrollerForList &#125;) &#123;
+          ForEach(this.arr, (item: number) =&gt; &#123;
+            ListItem() &#123;
+              Text(&quot;This is a very long text...&quot;) // Omitted for brevity
+                .borderRadius(15)
+                .fontSize(16)
+                .backgroundColor(Color.White)
+            &#125;.width(&quot;100%&quot;)
+          &#125;, (item: string) =&gt; item)
+        &#125;
+        .borderColor(Color.Green)
+        .borderWidth(2)
+        .width(&quot;100%&quot;)
+        .edgeEffect(EdgeEffect.None)
+        .friction(0.6)
+        .onReachStart(() =&gt; &#123;
+          this.listPosition = 0
+        &#125;)
+        .onReachEnd(() =&gt; &#123;
+          this.listPosition = 2
+        &#125;)
+        .onScrollFrameBegin((offset: number) =&gt; &#123;
+          if ((this.listPosition == 0 &amp;&amp; offset &lt;= 0) || (this.listPosition == 2 &amp;&amp; offset &gt;= 0)) &#123;
+            return &#123; offsetRemain: 0 &#125;
+          &#125;
+          this.listPosition = 1
+          return &#123; offsetRemain: offset &#125;;
+        &#125;)
+        .constraintSize(&#123; maxHeight: 400 &#125;)
+
+        Text(&quot;Footer&quot;)
+          .width(&quot;100%&quot;)
+          .height(&quot;20%&quot;)
+          .backgroundColor(0X330000FF)
+          .fontSize(16)
+          .textAlign(TextAlign.Center)
+      &#125;
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS"><a href="#4-Compilation-Error-When-Passing-Parameters-by-Reference-in-Builder-in-HarmonyOS" class="headerlink" title="4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?"></a>4. Compilation Error When Passing Parameters by Reference in @Builder in HarmonyOS?</h4><p><strong>Compilation Error</strong>:<br><code>Object literals cannot be used as type declarations (ArkTS-no-obj-literals-as-types) &lt;ArkTSCheck&gt;</code>  </p>
+<p><strong>Code</strong>:  </p>
+<pre><code class="language-typescript">@Builder overBuilder($$: &#123; paramA1: string &#125;) &#123;
+  Row() &#123;
+    Text(`UseStateVarByReference: $&#123;$$.paramA1&#125; `)
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Solution</strong>:  </p>
+<pre><code class="language-typescript">class Tmp &#123;
+  paramA1: string = &#39;&#39;
+&#125;
+
+@Builder function overBuilder($$: Tmp) &#123;
+  Text($$.paramA1)
+    .width(400)
+    .height(50)
+    .backgroundColor(Color.Blue)
+&#125;
+</code></pre>
+<h4 id="5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize"><a href="#5-Does-Nested-H5-Pages-in-HarmonyOS-Cause-Page-Lag-How-to-Optimize" class="headerlink" title="5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?"></a>5. Does Nested H5 Pages in HarmonyOS Cause Page Lag? How to Optimize?</h4><p><strong>Best Practices Reference</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5">https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5</a>  </p>
+<p>ArkWeb is a Web component platform designed to display Web content in applications and provide developers with capabilities such as page loading, interaction, and debugging. In the digital age, page loading speed directly impacts app fluency, user perception, and experience. Fast-loading pages reduce wait times and improve satisfaction.  </p>
+<p>The Web page display process involves multiple stages: DNS resolution, connection establishment, request sending, response receiving, HTML parsing, and resource downloading. Factors affecting page speed include network latency, server response time, page size, and resource compression. To enhance performance, optimize page loading, resource downloading, and rendering.  </p>
+<p><strong>Common Optimization Methods</strong>:  </p>
+<ul>
+<li><strong>Web Page Loading Optimization</strong>: Critical for user experience; faster loading improves app fluency.  </li>
+<li><strong>JSBridge</strong>: Reduces redundant ArkTS environment switches and avoids UI blockages.  </li>
+<li><strong>Same-Layer Rendering</strong>: Renders page elements in layers to minimize repaints and reflows, improving rendering efficiency.</li>
+</ul>
+<p>ArkWeb provides methods to optimize page display speed. These optimizations enhance app performance and user experience, enabling faster, smoother Web browsing and increasing user satisfaction and retention.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/124-Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 10:00:29 / Modified: 10:03:47" itemprop="dateCreated datePublished" datetime="2025-06-27T10:00:29+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Auto-Focus-JS-Bridge-Implementation-Popup-Full-Screen-Mask-Mouse-Event-Adaptation-Web-Cross-Domain" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain"></a>[Daily HarmonyOS Next Knowledge] Input Box Auto-Focus, JS Bridge Implementation, Popup Full-Screen Mask, Mouse Event Adaptation, Web Cross-Domain</h3><h4 id="1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS"><a href="#1-How-to-Auto-Focus-a-TextInput-or-TextArea-in-HarmonyOS" class="headerlink" title="1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?"></a>1. How to Auto-Focus a TextInput or TextArea in HarmonyOS?</h4><p>Use <code>focusControl.requestFocus</code> to set focus on components that need it. Refer to the documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5</a>  </p>
+<p><strong>Example Code</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct TextInputExample &#123;
+  controller: TextInputController = new TextInputController()
+  @State inputValue: string = &quot;&quot;
+  ep: number = 0;
+  del: boolean = false;
+
+  // Custom keyboard component
+  @Builder
+  CustomKeyboardBuilder() &#123;
+    Column() &#123;
+      Button(&#39;Close Keyboard&#39;).onClick(() =&gt; &#123;
+        // Close the custom keyboard
+        this.controller.stopEditing()
+      &#125;)
+      Button(&#39;Delete Character&#39;).onClick(() =&gt; &#123;
+        this.inputValue = this.inputValue.substring(0, this.ep-1) + this.inputValue.substring(this.ep)
+        this.del = true
+      &#125;)
+      Grid() &#123;
+        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, &#39;*&#39;, 0, &#39;#&#39;], (item: number | string) =&gt; &#123;
+          GridItem() &#123;
+            Button(item + &quot;&quot;)
+              .width(110).onClick(() =&gt; &#123;
+              this.inputValue = this.inputValue.substring(0, this.ep) + item + this.inputValue.substring(this.ep)
+              this.del = false
+            &#125;)
+          &#125;
+        &#125;)
+      &#125;.maxCount(3).columnsGap(10).rowsGap(10).padding(5)
+    &#125;.backgroundColor(Color.Gray)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      TextInput(&#123; controller: this.controller, text: this.inputValue &#125;)
+        // Bind the custom keyboard
+        .customKeyboard(this.CustomKeyboardBuilder())
+        .margin(10)
+        .id(&#39;input1&#39;) // Set an ID for the component
+        .border(&#123; width: 1 &#125;)
+        // Detect cursor changes and adjust cursor position
+        .onChange(() =&gt; &#123;
+          if(this.del)&#123;
+            this.controller.caretPosition(--this.ep)
+          &#125;else&#123;
+            this.controller.caretPosition(++this.ep)
+          &#125;
+        &#125;)
+        .onTextSelectionChange((ss) =&gt; &#123;
+          this.ep = ss;
+        &#125;)
+      Button(&quot;Trigger Focus&quot;)
+        .width(200).height(70).fontColor(Color.White)
+        .onClick(() =&gt; &#123;
+          focusControl.requestFocus(&#39;input1&#39;) // Focus the TextInput
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>The default input method keyboard type is text input (<code>textinputtype</code> 0). Refer to possible <code>textinputtype</code> values:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5</a>  </p>
+<h4 id="2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS"><a href="#2-What-Are-the-JSBridge-Implementation-Methods-in-HarmonyOS" class="headerlink" title="2. What Are the JSBridge Implementation Methods in HarmonyOS?"></a>2. What Are the JSBridge Implementation Methods in HarmonyOS?</h4><p>For app-frontend interactions, refer to:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkweb-ndk-jsbridge-V5</a>  </p>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-2.png"></p>
+<p>The figure above shows the general architecture of a universally applicable mini-program. In this architecture, the logic layer relies on the JavaScript runtime自带 by the application, which runs within an existing C++ environment. Through Native interfaces, the logic layer can directly communicate with the view layer (where ArkWeb acts as the renderer) in the C++ environment without falling back to the ArkTS environment to use the ArkTS JSBridge interface.  </p>
+<p>The left diagram shows a mini-program solution using the ArkTS JSBridge interface. As indicated by the red box, the application must first call into the ArkTS environment and then into the C++ environment. The right diagram shows a solution using the Native JSBridge interface, which eliminates the need to switch between ArkTS and C++ environments, resulting in higher execution efficiency.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-3.png"><br>The Native JSBridge solution avoids redundant ArkTS environment switches and allows callbacks to run on non-UI threads, preventing UI blockages.  </p>
+<h4 id="3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS"><a href="#3-How-to-Set-a-Full-Screen-Mask-for-bindPopup-in-HarmonyOS" class="headerlink" title="3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?"></a>3. How to Set a Full-Screen Mask for bindPopup in HarmonyOS?</h4><p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct PopupExample &#123;
+  @State handlePopup: boolean = false
+  @State customPopup: boolean = false
+  
+  // Popup content builder
+  @Builder popupBuilder() &#123;
+    Row(&#123; space: 2 &#125;) &#123;
+      Image($r(&quot;app.media.startIcon&quot;)).width(24).height(24).margin(&#123; left: -5 &#125;)
+      Text(&#39;Custom Popup&#39;).fontSize(10)
+    &#125;.width(100).height(50).padding(5)
+  &#125;
+
+  build() &#123;
+    Flex(&#123; direction: FlexDirection.Column &#125;) &#123;
+      // PopupOptions configuration
+      Button(&#39;PopupOptions&#39;)
+        .onClick(() =&gt; &#123;
+          this.handlePopup = !this.handlePopup
+        &#125;)
+        .bindPopup(this.handlePopup, &#123;
+          builder: this.popupBuilder,
+          placement: Placement.Top,
+          mask: &#123;color: Color.Gray&#125;,
+          popupColor: Color.Yellow,
+          enableArrow: true,
+          message: &#39;This is a popup with PopupOptions&#39;,
+          placementOnTop: true,
+          showInSubWindow: false,
+          primaryButton: &#123;
+            value: &#39;confirm&#39;,
+            action: () =&gt; &#123;
+              this.handlePopup = !this.handlePopup
+              console.info(&#39;confirm Button click&#39;)
+            &#125;
+          &#125;,
+          // Secondary button
+          secondaryButton: &#123;
+            value: &#39;cancel&#39;,
+            action: () =&gt; &#123;
+              this.handlePopup = !this.handlePopup
+              console.info(&#39;cancel Button click&#39;)
+            &#125;
+          &#125;,
+          onStateChange: (e) =&gt; &#123;
+            console.info(JSON.stringify(e.isVisible))
+            if (!e.isVisible) &#123;
+              this.handlePopup = false
+            &#125;
+          &#125;
+        &#125;)
+        .position(&#123; x: 100, y: 150 &#125;)
+    &#125;.width(&#39;100%&#39;).padding(&#123; top: 5 &#125;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible"><a href="#4-The-Right-Click-Event-in-the-HarmonyOS-Web-Component-Works-on-2-in-1-Devices-but-Fails-on-Tablets-How-to-Make-It-Compatible" class="headerlink" title="4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?"></a>4. The Right-Click Event in the HarmonyOS Web Component Works on 2-in-1 Devices but Fails on Tablets. How to Make It Compatible?</h4><p>Refer to the Interaction Event Normalization interface to ensure consistent interaction experiences across different devices and minimize adaptation efforts:  </p>
+<ul>
+<li>Interaction Events Guide:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018">https://developer.huawei.com/consumer/cn/doc/design-guides/hmi-interaction-events-0000001795531217#section485844185018</a>  </li>
+<li>Interaction Event Normalization Development Documentation:<br><a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/key-features/multi-device-app-dev/interaction-event-normalization.md</a></li>
+</ul>
+<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.01.24-4.png"></p>
+<h4 id="5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This"><a href="#5-When-the-HarmonyOS-Web-Component-Loads-Local-Files-via-the-file-Protocol-HTTP-Requests-from-Local-JS-Files-Fail-Due-to-Cross-Domain-Restrictions-How-to-Solve-This" class="headerlink" title="5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?"></a>5. When the HarmonyOS Web Component Loads Local Files via the file:&#x2F;&#x2F; Protocol, HTTP Requests from Local JS Files Fail Due to Cross-Domain Restrictions. How to Solve This?</h4><p>Configure <code>customizeSchemes</code> as described in the documentation:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#ZH-CN_TOPIC_0000001920279886__customizeschemes</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5#ZH-CN_TOPIC_0000001884916574__%E6%8B%A6%E6%88%AA%E6%9C%AC%E5%9C%B0%E8%B5%84%E6%BA%90%E8%B7%A8%E5%9F%9F</a></li>
+</ul>
+<p>You need to configure <code>schemeMap</code> and <code>mimeTypeMap</code> manually.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/123-Daily-HarmonyOS-Next-Knowledge-Web-Cross-Origin-Resources-Web-Long-Press-Menu-Web-Request-Interception-Screen-Recording-Prevention-Base64-Image-Dimensions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/123-Daily-HarmonyOS-Next-Knowledge-Web-Cross-Origin-Resources-Web-Long-Press-Menu-Web-Request-Interception-Screen-Recording-Prevention-Base64-Image-Dimensions/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Web Cross-Origin Resources, Web Long-Press Menu, Web Request Interception, Screen Recording Prevention, Base64 Image Dimensions</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 09:58:29 / Modified: 09:59:39" itemprop="dateCreated datePublished" datetime="2025-06-27T09:58:29+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Web-Cross-Origin-Resources-Web-Long-Press-Menu-Web-Request-Interception-Screen-Recording-Prevention-Base64-Image-Dimensions"><a href="#Daily-HarmonyOS-Next-Knowledge-Web-Cross-Origin-Resources-Web-Long-Press-Menu-Web-Request-Interception-Screen-Recording-Prevention-Base64-Image-Dimensions" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Web Cross-Origin Resources, Web Long-Press Menu, Web Request Interception, Screen Recording Prevention, Base64 Image Dimensions"></a>[Daily HarmonyOS Next Knowledge] Web Cross-Origin Resources, Web Long-Press Menu, Web Request Interception, Screen Recording Prevention, Base64 Image Dimensions</h3><h4 id="1-HarmonyOS-Web-Component-Local-Resource-Cross-Origin-Issue"><a href="#1-HarmonyOS-Web-Component-Local-Resource-Cross-Origin-Issue" class="headerlink" title="1. HarmonyOS Web Component Local Resource Cross-Origin Issue"></a>1. HarmonyOS Web Component Local Resource Cross-Origin Issue</h4><p>For solutions to cross-origin resource issues, refer to the official documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5</a>  </p>
+<p><strong>Method 1</strong><br>To enable the Web component to access cross-origin resources, developers should use protocols like <code>http</code> or <code>https</code> instead of <code>file</code> or <code>resource</code> for loading. The replacement URL domain name should be a custom-constructed domain for personal or organizational use to avoid conflicts with actual internet domains. Meanwhile, use the Web component’s <code>onInterceptRequest</code> method to intercept and replace local resources.  </p>
+<p>The following example demonstrates resolving cross-origin access failures for local resources. Here, <code>index.html</code> and <code>js/script.js</code> are placed in the project’s <code>rawfile</code> directory. Accessing <code>index.html</code> via the <code>resource</code> protocol will block <code>js/script.js</code> due to cross-origin restrictions. The example uses <code>https://www.example.com/</code> to replace the <code>resource</code> protocol and leverages the <code>onInterceptRequest</code> interface to replace resources, enabling <code>js/script.js</code> to load successfully and resolve cross-origin blocking.  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main/ets/pages/Index.ets</span></span><br><span class="line"><span class="keyword">import</span> &#123; webview &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.ArkWeb&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello World&#x27;</span>;</span><br><span class="line">  <span class="attr">webviewController</span>: webview.<span class="property">WebviewController</span> = <span class="keyword">new</span> webview.<span class="title class_">WebviewController</span>();</span><br><span class="line">  <span class="comment">// Mapping table for constructed domain names and local files</span></span><br><span class="line">  schemeMap = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">    [<span class="string">&quot;https://www.example.com/index.html&quot;</span>, <span class="string">&quot;index.html&quot;</span>],</span><br><span class="line">    [<span class="string">&quot;https://www.example.com/js/script.js&quot;</span>, <span class="string">&quot;js/script.js&quot;</span>],</span><br><span class="line">  ])</span><br><span class="line">  <span class="comment">// Mapping table for local files and constructed response MIME types</span></span><br><span class="line">  mimeTypeMap = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">    [<span class="string">&quot;index.html&quot;</span>, <span class="string">&#x27;text/html&#x27;</span>],</span><br><span class="line">    [<span class="string">&quot;js/script.js&quot;</span>, <span class="string">&quot;text/javascript&quot;</span>]</span><br><span class="line">  ])</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="comment">// For local index.html, use http or https protocol instead of file or resource protocol, and construct a custom domain name.</span></span><br><span class="line">        <span class="comment">// This example uses www.example.com.</span></span><br><span class="line">        <span class="title class_">Web</span>(&#123; <span class="attr">src</span>: <span class="string">&quot;https://www.example.com/index.html&quot;</span>, <span class="attr">controller</span>: <span class="variable language_">this</span>.<span class="property">webviewController</span> &#125;)</span><br><span class="line">          .<span class="title function_">javaScriptAccess</span>(<span class="literal">true</span>)</span><br><span class="line">          .<span class="title function_">fileAccess</span>(<span class="literal">true</span>)</span><br><span class="line">          .<span class="title function_">domStorageAccess</span>(<span class="literal">true</span>)</span><br><span class="line">          .<span class="title function_">geolocationAccess</span>(<span class="literal">true</span>)</span><br><span class="line">          .<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">          .<span class="title function_">height</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">          .<span class="title function_">onInterceptRequest</span>(<span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!event) &#123;</span><br><span class="line">              <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Intercept and replace local offline resources to bypass cross-origin restrictions</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">schemeMap</span>.<span class="title function_">has</span>(event.<span class="property">request</span>.<span class="title function_">getRequestUrl</span>())) &#123;</span><br><span class="line">              <span class="keyword">let</span> <span class="attr">rawfileName</span>: <span class="built_in">string</span> = <span class="variable language_">this</span>.<span class="property">schemeMap</span>.<span class="title function_">get</span>(event.<span class="property">request</span>.<span class="title function_">getRequestUrl</span>())!;</span><br><span class="line">              <span class="keyword">let</span> mimeType = <span class="variable language_">this</span>.<span class="property">mimeTypeMap</span>.<span class="title function_">get</span>(rawfileName);</span><br><span class="line">              <span class="keyword">if</span> (<span class="keyword">typeof</span> mimeType === <span class="string">&#x27;string&#x27;</span>) &#123;</span><br><span class="line">                <span class="keyword">let</span> response = <span class="keyword">new</span> <span class="title class_">WebResourceResponse</span>();</span><br><span class="line">                <span class="comment">// Construct response data. If the local file is in rawfile, set it as follows</span></span><br><span class="line">                response.<span class="title function_">setResponseData</span>($rawfile(rawfileName));</span><br><span class="line">                response.<span class="title function_">setResponseEncoding</span>(<span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line">                response.<span class="title function_">setResponseMimeType</span>(mimeType);</span><br><span class="line">                response.<span class="title function_">setResponseCode</span>(<span class="number">200</span>);</span><br><span class="line">                response.<span class="title function_">setReasonMessage</span>(<span class="string">&#x27;OK&#x27;</span>);</span><br><span class="line">                response.<span class="title function_">setResponseIsReady</span>(<span class="literal">true</span>);</span><br><span class="line">                <span class="keyword">return</span> response;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>html</span><br><span class="line">&lt;!-- main/resources/rawfile/index.<span class="property">html</span> --&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;script crossorigin src=&quot;./js/script.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">```  </span><br><span class="line">```javascript</span><br><span class="line">// main/resources/rawfile/js/script.js</span><br><span class="line">const body = document.body;</span><br><span class="line">const element = document.createElement(&#x27;div&#x27;);</span><br><span class="line">element.textContent = &#x27;success&#x27;;</span><br><span class="line">body.appendChild(element);</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">**Method 2**  </span><br><span class="line">Set a path list using `setPathAllowingUniversalAccess`. When accessing resources in this list via the `file` protocol, cross-origin access to local files is allowed. Once the path list is set, the `file` protocol is restricted to accessing only resources in the list (the behavior of `fileAccess` will be overridden by this interface). Paths in the list must conform to either of the following formats:  </span><br><span class="line"></span><br><span class="line">1. Application file directory obtained via `Context.filesDir`, with subdirectory examples:  </span><br><span class="line">   - /data/storage/el2/base/files/example  </span><br><span class="line">   - /data/storage/el2/base/haps/entry/files/example  </span><br><span class="line"></span><br><span class="line">2. Application resource directory obtained via `Context.resourceDir`, with subdirectory examples:  </span><br><span class="line">   - /data/storage/el1/bundle/entry/resource/resfile  </span><br><span class="line">   - /data/storage/el1/bundle/entry/resource/resfile/example  </span><br><span class="line"></span><br><span class="line">If any path in the list fails to meet the above conditions, the system will throw an exception code 401 and mark the path list setup as failed. If the path list is empty, the accessible range of the `file` protocol will follow the rules of `fileAccess`, as shown in the example below.  </span><br><span class="line">```typescript</span><br><span class="line">// main/ets/pages/Index.ets</span><br><span class="line">import &#123; webview &#125; from &#x27;@kit.ArkWeb&#x27;;</span><br><span class="line">import &#123; BusinessError &#125; from &#x27;@kit.BasicServicesKit&#x27;;</span><br><span class="line"></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct WebComponent &#123;</span><br><span class="line">  controller: WebviewController = new webview.WebviewController();</span><br><span class="line"></span><br><span class="line">  build() &#123;</span><br><span class="line">    Row() &#123;</span><br><span class="line">      Web(&#123; src: &quot;&quot;, controller: this.controller &#125;)</span><br><span class="line">        .onControllerAttached(() =&gt; &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">            // Set the path list allowing cross-origin access</span><br><span class="line">            this.controller.setPathAllowingUniversalAccess([</span><br><span class="line">              getContext().resourceDir,</span><br><span class="line">              getContext().filesDir + &quot;/example&quot;</span><br><span class="line">            ])</span><br><span class="line">            this.controller.loadUrl(&quot;file://&quot; + getContext().resourceDir + &quot;/index.html&quot;)</span><br><span class="line">          &#125; catch (error) &#123;</span><br><span class="line">            console.error(`ErrorCode: $&#123;(error as BusinessError).code&#125;,  Message: $&#123;(error as BusinessError).message&#125;`);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .javaScriptAccess(true)</span><br><span class="line">        .fileAccess(true)</span><br><span class="line">        .domStorageAccess(true)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">```html</span><br><span class="line">&lt;!-- main/resource/rawfile/index.html --&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Demo&lt;/title&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover&quot;&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        function getFile() &#123;</span><br><span class="line">            var file = &quot;file:///data/storage/el1/bundle/entry/resources/resfile/js/script.js&quot;;</span><br><span class="line">      // Use file protocol to access local js files across origins via XMLHttpRequest</span><br><span class="line">            var xmlHttpReq = new XMLHttpRequest();</span><br><span class="line">            xmlHttpReq.onreadystatechange = function()&#123;</span><br><span class="line">                console.log(&quot;readyState:&quot; + xmlHttpReq.readyState);</span><br><span class="line">                console.log(&quot;status:&quot; + xmlHttpReq.status);</span><br><span class="line">                if(xmlHttpReq.readyState == 4)&#123;</span><br><span class="line">                    if (xmlHttpReq.status == 200) &#123;</span><br><span class="line">                // If the ets side correctly sets the path list, resources can be obtained here</span><br><span class="line">                        const element = document.getElementById(&#x27;text&#x27;);</span><br><span class="line">                        element.textContent = &quot;load &quot; + file + &quot; success&quot;;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                // If the ets side does not set the path list, a CORS cross-origin check error will be triggered here</span><br><span class="line">                        const element = document.getElementById(&#x27;text&#x27;);</span><br><span class="line">                        element.textContent = &quot;load &quot; + file + &quot; failed&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            xmlHttpReq.open(&quot;GET&quot;, file);</span><br><span class="line">            xmlHttpReq.send(null);</span><br><span class="line">        &#125;</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div class=&quot;page&quot;&gt;</span><br><span class="line">    &lt;button id=&quot;example&quot; onclick=&quot;getFile()&quot;&gt;stealFile&lt;/button&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div id=&quot;text&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br><span class="line">```  </span><br><span class="line">```javascript</span><br><span class="line">// main/resources/rawfile/js/script.js</span><br><span class="line">const body = document.body;</span><br><span class="line">const element = document.createElement(&#x27;div&#x27;);</span><br><span class="line">element.textContent = &#x27;success&#x27;;</span><br><span class="line">body.appendChild(element);</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 2. HarmonyOS Web: How to Implement Long-Press to Pop Up a Menu for Saving Images, Similar to getHitTestResult?  </span><br><span class="line">Refer to the `onContextMenuShow` event in the Web component. Long-pressing a specific element (e.g., image, link) or right-clicking the mouse will trigger the menu. For details, refer to: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#oncontextmenushow9  </span><br><span class="line">Currently, conditions for the long-press pop-up cannot be controlled. You can try to control the selection box via H5-side events and CSS.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 3. HarmonyOS Web: Demo for Intercepting App Navigation and Custom Request Responses  </span><br><span class="line">For Web interception and custom request responses, refer to the official documentation: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-resource-interception-request-mgmt-V5  </span><br><span class="line"></span><br><span class="line">The Web component supports custom response capabilities after the app intercepts page requests. Developers can use the `onInterceptRequest()` interface to implement custom resource request responses, which can be applied to scenarios such as custom Web page responses and custom file resource responses.  </span><br><span class="line"></span><br><span class="line">Process: The Web page initiates a resource loading request → the app layer receives the resource request message → the app layer constructs a local resource response message and sends it to the Web kernel → the Web kernel parses the app layer&#x27;s response information and loads page resources based on this response.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. HarmonyOS: How to Prevent Screen Recording/Screenshot for a Single Page or Dialog (e.g., Security Password Keyboard in a Dialog)  </span><br><span class="line">To prevent screen recording and screenshot for specific pages or dialogs, set the window to privacy mode using `setWindowPrivacyMode`. This will display a gray overlay during screen recording, screenshot, or screen sharing (privacy windows do not allow these operations).  </span><br><span class="line"></span><br><span class="line">Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setwindowprivacymode9  </span><br><span class="line"></span><br><span class="line">**setWindowPrivacyMode**  </span><br><span class="line">`setWindowPrivacyMode(isPrivacyMode: boolean, callback: AsyncCallback&lt;void&gt;): void`  </span><br><span class="line">Sets whether the window is in privacy mode using an asynchronous callback. A window in privacy mode cannot be screenshotted or screen-recorded, suitable for scenarios requiring protection against screenshots/screen recordings.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 5. HarmonyOS: How to Obtain Original Dimensions of a Base64 Image  </span><br><span class="line">In image verification code scenarios, the server returns two base64-encoded images (background image and verification image). The scaling factor needs to be calculated based on the dimensions of the background and original images to determine the size and positioning of the verification image.  </span><br><span class="line"></span><br><span class="line">Use Image Kit capabilities. Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-image-V5#imageinfo  </span><br><span class="line"></span><br><span class="line">**Demo**:  </span><br><span class="line">```typescript</span><br><span class="line">import util from &#x27;@ohos.util&#x27;;</span><br><span class="line">import &#123; image &#125; from &#x27;@kit.ImageKit&#x27;;</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State message: string = &#x27;getImage&#x27;;</span><br><span class="line">  @StorageLink(&#x27;test&#x27;) test: object = new Object;</span><br><span class="line">  @State imageBase64: string =</span><br><span class="line">    &#x27;iVBORw0KGgoAAAANSUhEUgAAADwAAAAUCAYAAADRA14pAAABN0lEQVR42mP4P8IAAy0Mjf6xAYxHnIcHo6cZaOlZYj38VbESjIech5E9SayHYZ5FxnT1cL7uFwxMbt4lxtPYPElLjzNg8ywhMWp6GOZBeiVzDA/jinFySmZSkzUpHn5oLosXk+1hYj2NXliRUnjh8hy5MYzP0wzEeIzUvEyNGCY3WZMUw5Qm61EPjzQPkwIGjYfp4VlsnianIULIs3gbHvT2LLZWFzVLZ7xNS3p7lBqAGM+CPZy6o+w/DGfvrv5ffagTjtuOT/4/8cxcOF50Zc3/5dc3wvHeh0fh+PDjk/8vv74Bx/c+PPz/8utrOP7559fg8LD/uqT/A4GpHdB7Q/XBmFBAMyBLPv70DCWWTjw7h2L42pvbUCxGdlTPqRkoji7Y24DiqdCN6f8HKnCRMcNA5bmBCmgACwohlRAJ3H4AAAAASUVORK5CYII=&#x27;</span><br><span class="line">  @State pixelMap: image.PixelMap | undefined = undefined;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Column() &#123;</span><br><span class="line">      Text(this.message)</span><br><span class="line">        .id(&#x27;HelloWorld&#x27;)</span><br><span class="line">        .fontSize(50)</span><br><span class="line">        .fontWeight(FontWeight.Bold)</span><br><span class="line">        .onClick(async () =&gt; &#123;</span><br><span class="line">          let helper = new util.Base64Helper();</span><br><span class="line">          let buffer: ArrayBuffer = helper.decodeSync(this.imageBase64, util.Type.MIME).buffer as ArrayBuffer;</span><br><span class="line">          let imageSource = image.createImageSource(buffer);</span><br><span class="line">          let opts: image.DecodingOptions = &#123; editable: true &#125;;</span><br><span class="line">          this.pixelMap = await imageSource.createPixelMap(opts);</span><br><span class="line">          this.pixelMap.getImageInfo().then((imageInfo: image.ImageInfo) =&gt; &#123;</span><br><span class="line">            if (imageInfo == undefined) &#123;</span><br><span class="line">              console.error(`Failed to obtain the image pixel map information.`);</span><br><span class="line">            &#125;</span><br><span class="line">            let wit = imageInfo.size.width;</span><br><span class="line">            let hig = imageInfo.size.height;</span><br><span class="line">            console.log(`Succeeded in obtaining the image pixel map information., $&#123;JSON.stringify(wit)&#125;, $&#123;JSON.stringify(hig)&#125;`);</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .height(&#x27;100%&#x27;)</span><br><span class="line">    .width(&#x27;100%&#x27;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/122-Daily-Harmony-Learnings-on-HarmonyOS-Next-Web-File-Upload-Continuous-Click-Monitoring-in-Four-Directions-Fold-Hover-String-Operations-and-Sandbox-Video-Playback/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -907,304 +1503,6 @@ struct TextInputExample &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/115-Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/115-Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Animated GIF Looping, Tab Switch Monitoring, Rich Text Scroll, Tab Default Centering, A Tag Calling Dialer</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 08:42:10 / Modified: 09:50:05" itemprop="dateCreated datePublished" datetime="2025-06-27T08:42:10+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer"><a href="#Daily-HarmonyOS-Next-Knowledge-Animated-GIF-Looping-Tab-Switch-Monitoring-Rich-Text-Scroll-Tab-Default-Centering-A-Tag-Calling-Dialer" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Animated GIF Looping, Tab Switch Monitoring, Rich Text Scroll, Tab Default Centering, A Tag Calling Dialer"></a>[Daily HarmonyOS Next Knowledge] Animated GIF Looping, Tab Switch Monitoring, Rich Text Scroll, Tab Default Centering, A Tag Calling Dialer</h3><h4 id="1-Image-loads-a-network-animated-GIF-that-stops-playing-after-one-loop-How-to-set-loop-play"><a href="#1-Image-loads-a-network-animated-GIF-that-stops-playing-after-one-loop-How-to-set-loop-play" class="headerlink" title="1. Image loads a network animated GIF that stops playing after one loop. How to set loop play?"></a>1. Image loads a network animated GIF that stops playing after one loop. How to set loop play?</h4><p>Currently, ArkUI does not support setting the loop count for GIF images. You can use the third-party library <code>ohos-gif-drawable</code> to set the loop count. Update the loop count in the callback method <code>getLoopFinish()</code> after one play ends, and set the play rate <code>setSpeedFactor()</code> to 0 to stop playing when the specified count is reached.  </p>
-<p><strong>Reference Document</strong>: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony-sig/ohos_gif-drawable">https://gitee.com/openharmony-sig/ohos_gif-drawable</a><br><code>ohos-gif-drawable</code> is drawn based on Canvas, with main capabilities including:  </p>
-<ul>
-<li>Support for playing GIF images.  </li>
-<li>Support for controlling GIF play&#x2F;pause.  </li>
-<li>Support for resetting GIF play animation.  </li>
-<li>Support for adjusting GIF play rate.  </li>
-<li>Support for listening to callbacks after all GIF frames are displayed.  </li>
-<li>Support for setting display size.  </li>
-<li>Support for 7 different display types.  </li>
-<li>Support for setting the display area background color.</li>
-</ul>
-<h4 id="2-How-to-monitor-when-a-TabContent-page-is-switched-to-in-HarmonyOS"><a href="#2-How-to-monitor-when-a-TabContent-page-is-switched-to-in-HarmonyOS" class="headerlink" title="2. How to monitor when a TabContent page is switched to in HarmonyOS?"></a>2. How to monitor when a TabContent page is switched to in HarmonyOS?</h4><p>When switching TabContent pages, how to monitor that the current page is active? Does switching trigger the lifecycle methods of the page in TabContent?  </p>
-<p>Use the <code>onTabBarClick</code> event.<br><strong>Reference Document</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-tabs-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-tabs-V5</a><br>Tab switching should trigger the component-level lifecycle <code>aboutToAppear</code> of the child component.  </p>
-<h4 id="3-Can-HarmonyOS-RichText-slide-left-and-up"><a href="#3-Can-HarmonyOS-RichText-slide-left-and-up" class="headerlink" title="3. Can HarmonyOS RichText slide left and up?"></a>3. Can HarmonyOS RichText slide left and up?</h4><p>Use the Web component for display.<br><strong>Reference Link</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5</a>  </p>
-<pre><code class="language-typescript">// xxx.ets
-import &#123; webview &#125; from &#39;@kit.ArkWeb&#39;;
-import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
-
-@Entry
-@Component
-struct WebComponent &#123;
-  controller: webview.WebviewController = new webview.WebviewController();
-
-  build() &#123;
-    Column() &#123;
-      Button(&#39;loadData&#39;)
-        .onClick(() =&gt; &#123;
-          try &#123;
-            this.controller.loadData(
-              &quot;&lt;html&gt;&lt;body&gt; &lt;p style=\&quot;font-size: 100; color: #999999;\&quot;&gt;我是一个richtext&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;,
-              &quot;text/html&quot;,
-              &quot;UTF-8&quot;, &quot; &quot;, &quot; &quot; // If there are special characters like #, the last two parameters should be changed to a space
-            );
-            this.controller.setScrollable(false); // Set whether to enable scrolling
-          &#125; catch (error) &#123;
-            console.error(`ErrorCode: $&#123;(error as BusinessError).code&#125;,  Message: $&#123;(error as BusinessError).message&#125;`);
-          &#125;
-        &#125;)
-      Web(&#123; src: &#39;&#39;, controller: this.controller &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-How-to-implement-horizontal-tab-quick-scrolling-in-HarmonyOS-with-tabs-automatically-centered-and-selected-after-stopping"><a href="#4-How-to-implement-horizontal-tab-quick-scrolling-in-HarmonyOS-with-tabs-automatically-centered-and-selected-after-stopping" class="headerlink" title="4. How to implement horizontal tab quick scrolling in HarmonyOS, with tabs automatically centered and selected after stopping?"></a>4. How to implement horizontal tab quick scrolling in HarmonyOS, with tabs automatically centered and selected after stopping?</h4><p>In the List component, use the <code>.scrollSnapAlign(ScrollSnapAlign.CENTER)</code> property of the <code>onScrollIndex</code> method to achieve centering. To position the tab to the middle of the visible area after scrolling stops, use the <code>onScrollStop</code> event to listen for the stop and adjust the position. To keep it centered in the visible area, directly position it to the middle.<br><strong>Reference Link</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#ZH-CN_TOPIC_0000001930756925__onscrollindex">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-list-V5#ZH-CN_TOPIC_0000001930756925__onscrollindex</a>  </p>
-<h4 id="5-Using-the-element-in-an-H5-page-to-invoke-the-system-dialer-does-not-work-in-HarmonyOS-Next"><a href="#5-Using-the-element-in-an-H5-page-to-invoke-the-system-dialer-does-not-work-in-HarmonyOS-Next" class="headerlink" title="5. Using the &lt;a&gt; element in an H5 page to invoke the system dialer does not work in HarmonyOS Next."></a>5. Using the <code>&lt;a&gt;</code> element in an H5 page to invoke the system dialer does not work in HarmonyOS Next.</h4><p>Possible reasons include:  </p>
-<ul>
-<li><strong>Page loading issues</strong>: If the <code>system.onmessage</code> function in the H5 page has complex logic and relies on external JS library references, incomplete page loading may prevent the system dialer from being called. In this case, trigger the system dialer in the <code>onpagefinish</code> event handler.  </li>
-<li><strong>System permission issues</strong>: Ensure the device has enabled the system dialer and the app has the corresponding permissions. Check the app permission configuration in device settings.  </li>
-<li><strong>Network issues</strong>: Ensure the device is connected to a network with normal connectivity.  </li>
-<li><strong>Page loading order issues</strong>: If the page has resources to load (e.g., images, scripts), the system dialer may not be called until these resources finish loading. Place the system dialer code after resource loading is complete.  </li>
-<li><strong>Page lifecycle issues</strong>:  <ul>
-<li>Ensure page lifecycle events (e.g., <code>onload</code>, <code>onready</code>) are handled correctly to trigger the system dialer after page loading.  </li>
-<li>Check the page loading order to execute the system dialer code after resources are loaded.  </li>
-<li>Set page lifecycle events to trigger the system dialer using <code>onload</code> or <code>onready</code> after page loading.  </li>
-<li>Verify system permissions in device settings to ensure the app can call the system dialer.  </li>
-<li>Ensure the device is connected to a network with normal connectivity.</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/114-Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/114-Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Screenshot Component for Lists, Toggle Component, Web Component Request Headers, List Selection Popup, Game Acceleration</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 08:41:22 / Modified: 09:50:18" itemprop="dateCreated datePublished" datetime="2025-06-27T08:41:22+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration"><a href="#Daily-HarmonyOS-Next-Knowledge-Screenshot-Component-for-Lists-Toggle-Component-Web-Component-Request-Headers-List-Selection-Popup-Game-Acceleration" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Screenshot Component for Lists, Toggle Component, Web Component Request Headers, List Selection Popup, Game Acceleration"></a>[Daily HarmonyOS Next Knowledge] Screenshot Component for Lists, Toggle Component, Web Component Request Headers, List Selection Popup, Game Acceleration</h3><h4 id="1-How-does-HarmonyOS-handle-screenshotting-components-that-exceed-the-screen-such-as-lists-and-scrollable-content-using-componentSnapshot"><a href="#1-How-does-HarmonyOS-handle-screenshotting-components-that-exceed-the-screen-such-as-lists-and-scrollable-content-using-componentSnapshot" class="headerlink" title="1. How does HarmonyOS handle screenshotting components that exceed the screen, such as lists and scrollable content, using componentSnapshot?"></a>1. How does HarmonyOS handle screenshotting components that exceed the screen, such as lists and scrollable content, using componentSnapshot?</h4><p>The official componentSnapshot currently does not support capturing ultra-long images of components beyond the screen. For details, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentsnapshot-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentsnapshot-V5</a>  </p>
-<p>This module provides the ability to capture screenshots of components, including both loaded and unloaded components. Component screenshots can only capture the area within the component’s size. If the component or its child components are drawn beyond their defined areas, the content outside the component’s area will not appear in the screenshot. Sibling nodes stacked within the component’s area will not be displayed in the screenshot.  </p>
-<p><strong>Alternative solutions</strong>:  </p>
-<ol>
-<li>When capturing the screen, control the scroll coordinates of the list or scrollable content to take multiple screenshots, then stitch the images together.  </li>
-<li>Draw all UI components in the view onto a canvas, then capture the entire canvas to obtain the image.</li>
-</ol>
-<h4 id="2-When-switching-dark-mode-within-the-onChange-callback-of-the-HarmonyOS-Toggle-component-the-callback-triggers-twice-with-opposite-states-How-to-handle-this"><a href="#2-When-switching-dark-mode-within-the-onChange-callback-of-the-HarmonyOS-Toggle-component-the-callback-triggers-twice-with-opposite-states-How-to-handle-this" class="headerlink" title="2. When switching dark mode within the onChange callback of the HarmonyOS Toggle component, the callback triggers twice with opposite states. How to handle this?"></a>2. When switching dark mode within the onChange callback of the HarmonyOS Toggle component, the callback triggers twice with opposite states. How to handle this?</h4><p>Clicking the Toggle switch on the page correctly switches the page to dark mode, but the switch state of the button remains unchanged. Investigation shows the callback triggers twice with conflicting states. How to ensure callback correctness in this scenario?  </p>
-<p><strong>Reference demo</strong>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct TogglePage2 &#123;
-  @State isDarkMode: boolean = false
-  build() &#123;
-    Column() &#123;
-      Toggle(&#123; type: ToggleType.Switch, isOn: this.isDarkMode &#125;) // Do not omit the isOn property when the page refresh is triggered.
-        .onChange((isOn: boolean) =&gt; &#123;
-          console.log(&#39;Toggle.onChange2： isOn&#39;, isOn)
-          this.isDarkMode = isOn
-          getContext(this).getApplicationContext().setColorMode(this.isDarkMode ? 0 : 1) // Triggers secondary rendering. If isOn is not assigned, the default value (false) will cause incorrect state.
-        &#125;)
-    &#125;.width(&quot;100%&quot;).height(&quot;100%&quot;).padding(32)
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Note</strong>: Do not omit the isOn property of Toggle in scenarios that trigger secondary rendering. Secondary rendering reads the default value, and omitting isOn will use the default value (false), leading to incorrect toggle states.  </p>
-<h4 id="3-How-to-attach-request-headers-to-the-HarmonyOS-Web-component"><a href="#3-How-to-attach-request-headers-to-the-HarmonyOS-Web-component" class="headerlink" title="3. How to attach request headers to the HarmonyOS Web component?"></a>3. How to attach request headers to the HarmonyOS Web component?</h4><p>Write the loadUrl method within the Web component’s lifecycle:  </p>
-<pre><code class="language-typescript">Web(&#123; src: &quot;&quot;, controller: this.controller &#125;)
-  .onControllerAttached(() =&gt; &#123;
-    this.controller.loadUrl(&quot;xxxxxxxxx&quot;, header)
-  &#125;)
-</code></pre>
-<h4 id="4-How-to-customize-the-style-of-the-HarmonyOS-list-selection-popup-ActionSheet"><a href="#4-How-to-customize-the-style-of-the-HarmonyOS-list-selection-popup-ActionSheet" class="headerlink" title="4. How to customize the style of the HarmonyOS list selection popup (ActionSheet)?"></a>4. How to customize the style of the HarmonyOS list selection popup (ActionSheet)?</h4><p>ActionSheet does not provide a custom style interface. For custom styles, use the CustomDialog component: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5</a>  </p>
-<p>Display custom popups using the CustomDialogController class. Custom popups are preferred for easier style and content customization.  </p>
-<h4 id="5-Does-HarmonyOS-support-game-loading-with-the-TBS-X5-kernel"><a href="#5-Does-HarmonyOS-support-game-loading-with-the-TBS-X5-kernel" class="headerlink" title="5. Does HarmonyOS support game loading with the TBS (X5) kernel?"></a>5. Does HarmonyOS support game loading with the TBS (X5) kernel?</h4><p>You can try using the system’s native webview component.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/113-Daily-HarmonyOS-Next-Knowledge-Web-Scheme-Launching-App-List-Refresh-Web-File-Download-Adaptive-to-Child-Elements/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/113-Daily-HarmonyOS-Next-Knowledge-Web-Scheme-Launching-App-List-Refresh-Web-File-Download-Adaptive-to-Child-Elements/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Web Scheme Launching App, List Refresh, Web File Download, Adaptive to Child Elements</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 08:40:35 / Modified: 08:40:49" itemprop="dateCreated datePublished" datetime="2025-06-27T08:40:35+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Web-Scheme-Launching-App-List-Refresh-Web-File-Download-Adaptive-to-Child-Elements"><a href="#Daily-HarmonyOS-Next-Knowledge-Web-Scheme-Launching-App-List-Refresh-Web-File-Download-Adaptive-to-Child-Elements" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Web Scheme Launching App, List Refresh, Web File Download, Adaptive to Child Elements"></a>[Daily HarmonyOS Next Knowledge] Web Scheme Launching App, List Refresh, Web File Download, Adaptive to Child Elements</h3><h4 id="1-Does-HarmonyOS-currently-support-launching-an-app-via-web-Scheme-in-the-app"><a href="#1-Does-HarmonyOS-currently-support-launching-an-app-via-web-Scheme-in-the-app" class="headerlink" title="1. Does HarmonyOS currently support launching an app via web Scheme in the app?"></a>1. Does HarmonyOS currently support launching an app via web Scheme in the app?</h4><p>Deeplink is supported. Add a button on the web page to guide users to launch the app. The web side directly prompts an “Open App” button bound to the click event <code>window.open(tzptest://www.xxxxx.com?url=XXX)</code>. Clicking this button will open the URL <code>tzptest://www.xxxxx.com?url=XXX</code> received by the web端.  </p>
-<p>For the app to be successfully launched, configure the <code>skills</code> of <code>abilities</code> in the project’s <code>model.json5</code> file:  </p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;actions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;ohos.want.action.viewData&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;uris&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;scheme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tzptest&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">**Notes**<span class="punctuation">:</span>  </span><br><span class="line">- The `scheme` protocol header of the deeplink link must match the app configuration for web launching.  </span><br><span class="line">- Browsers do not parse or process deeplink links<span class="punctuation">,</span> but pass them to the launched app intact. Therefore<span class="punctuation">,</span> third-party apps only need to negotiate URL rules between the web and app sides and parse them to open the corresponding page.  </span><br><span class="line"></span><br><span class="line">Reference<span class="punctuation">:</span> Implicit Want to launch the app<span class="punctuation">:</span> https<span class="punctuation">:</span><span class="comment">//developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/want-overview-V5  </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### <span class="number">2.</span> How to refresh list data based on the list&#x27;s title in HarmonyOS?  </span><br><span class="line">Refer to the following demo for implementation<span class="punctuation">:</span>  </span><br><span class="line">```typescript</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index <span class="punctuation">&#123;</span></span><br><span class="line">  @State focusIndex<span class="punctuation">:</span> number = <span class="number">0</span>;</span><br><span class="line">  private controller<span class="punctuation">:</span> TabsController = new TabsController();</span><br><span class="line">  tabArray = <span class="punctuation">[</span><span class="number">0</span><span class="punctuation">,</span> <span class="number">1</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">,</span> <span class="number">3</span><span class="punctuation">,</span> <span class="number">4</span><span class="punctuation">,</span> <span class="number">5</span><span class="punctuation">,</span> <span class="number">6</span><span class="punctuation">,</span> <span class="number">7</span><span class="punctuation">]</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Custom tab</span></span><br><span class="line">  @Builder</span><br><span class="line">  Tab(tabName<span class="punctuation">:</span> string<span class="punctuation">,</span> tabItem<span class="punctuation">:</span> number<span class="punctuation">,</span> tabIndex<span class="punctuation">:</span> number) <span class="punctuation">&#123;</span></span><br><span class="line">    Column(<span class="punctuation">&#123;</span> space<span class="punctuation">:</span> <span class="number">20</span> <span class="punctuation">&#125;</span>) <span class="punctuation">&#123;</span></span><br><span class="line">      Text(tabName).fontSize(<span class="number">18</span>)</span><br><span class="line">      Image($r(&#x27;app.media.icon&#x27;)).width(<span class="number">20</span>).height(<span class="number">20</span>)</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    .width(<span class="number">100</span>)</span><br><span class="line">    .height(<span class="number">60</span>)</span><br><span class="line">    .borderRadius(<span class="punctuation">&#123;</span> topLeft<span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span> topRight<span class="punctuation">:</span> <span class="number">10</span> <span class="punctuation">&#125;</span>)</span><br><span class="line">    .onClick(() =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">      this.controller.changeIndex(tabIndex);</span><br><span class="line">      this.focusIndex = tabIndex;</span><br><span class="line">    <span class="punctuation">&#125;</span>)</span><br><span class="line">    .backgroundColor(tabIndex === this.focusIndex ? &#x27;#ffffffff&#x27; <span class="punctuation">:</span> &#x27;#ffb7b7b7&#x27;)</span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">  build() <span class="punctuation">&#123;</span></span><br><span class="line">    Column() <span class="punctuation">&#123;</span></span><br><span class="line">      Column() <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="comment">// Tabs</span></span><br><span class="line">        Row(<span class="punctuation">&#123;</span> space<span class="punctuation">:</span> <span class="number">6</span> <span class="punctuation">&#125;</span>) <span class="punctuation">&#123;</span></span><br><span class="line">          Scroll() <span class="punctuation">&#123;</span></span><br><span class="line">            Row() <span class="punctuation">&#123;</span></span><br><span class="line">              ForEach(this.tabArray<span class="punctuation">,</span> (item<span class="punctuation">:</span> number<span class="punctuation">,</span> index<span class="punctuation">:</span> number) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">                this.Tab(&#x27;Page &#x27; + item<span class="punctuation">,</span> item<span class="punctuation">,</span> index);</span><br><span class="line">              <span class="punctuation">&#125;</span>)</span><br><span class="line">            <span class="punctuation">&#125;</span>.margin(<span class="punctuation">&#123;</span> right<span class="punctuation">:</span> <span class="number">80</span> <span class="punctuation">&#125;</span>)</span><br><span class="line">            .justifyContent(FlexAlign.Start)</span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="comment">// Set left alignment</span></span><br><span class="line">          .align(Alignment.Start)</span><br><span class="line">          .scrollable(ScrollDirection.Horizontal)</span><br><span class="line">          .scrollBar(BarState.Off)</span><br><span class="line">          .width(&#x27;<span class="number">80</span>%&#x27;)</span><br><span class="line">          .backgroundColor(&#x27;#ffb7b7b7&#x27;)</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        .width(&#x27;<span class="number">100</span>%&#x27;)</span><br><span class="line">        .backgroundColor(&#x27;#ffb7b7b7&#x27;)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Tabs content</span></span><br><span class="line">        Tabs(<span class="punctuation">&#123;</span> barPosition<span class="punctuation">:</span> BarPosition.Start<span class="punctuation">,</span> controller<span class="punctuation">:</span> this.controller <span class="punctuation">&#125;</span>) <span class="punctuation">&#123;</span></span><br><span class="line">          ForEach(this.tabArray<span class="punctuation">,</span> (item<span class="punctuation">:</span> number<span class="punctuation">,</span> index<span class="punctuation">:</span> number) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">            TabContent() <span class="punctuation">&#123;</span></span><br><span class="line">              Text(&#x27; Content of Page &#x27; + item)</span><br><span class="line">                .height(<span class="number">300</span>)</span><br><span class="line">                .width(&#x27;<span class="number">100</span>%&#x27;)</span><br><span class="line">                .fontSize(<span class="number">30</span>)</span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">            .backgroundColor(Color.Pink)</span><br><span class="line">          <span class="punctuation">&#125;</span>)</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        .barHeight(<span class="number">0</span>)</span><br><span class="line">        .animationDuration(<span class="number">100</span>)</span><br><span class="line">        .onChange((index<span class="punctuation">:</span> number) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">          console.log(&#x27;foo change&#x27;);</span><br><span class="line">          this.focusIndex = index;</span><br><span class="line">        <span class="punctuation">&#125;</span>)</span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">      .alignItems(HorizontalAlign.Start)</span><br><span class="line">      .width(&#x27;<span class="number">100</span>%&#x27;)</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    .height(&#x27;<span class="number">100</span>%&#x27;)</span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### <span class="number">3.</span> No response when clicking to download files in HarmonyOS Web?  </span><br><span class="line">Set all Web permissions to `<span class="literal"><span class="keyword">true</span></span>`<span class="punctuation">,</span> then debug whether the download is successfully triggered on the page. For debugging the page<span class="punctuation">,</span> refer to<span class="punctuation">:</span> Using Devtools to debug front-end pages<span class="punctuation">:</span> https<span class="punctuation">:</span><span class="comment">//developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-debugging-with-devtools-V5  </span></span><br><span class="line"></span><br><span class="line">The Web component supports front-end page debugging using DevTools. DevTools is a Web front-end development debugging tool that enables debugging of mobile device front-end pages on a computer. Developers enable Web component front-end page debugging via the `setWebDebuggingAccess()` interface. DevTools can debug front-end web pages on mobile devices (device version <span class="number">4.1</span><span class="number">.0</span> and above).  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### <span class="number">4.</span> How to use `any` in HarmonyOS .ets files?  </span><br><span class="line">Use `ESObject` as an alternative to `any`. Understand the usage scenarios of `ESObject` via the links<span class="punctuation">:</span>  </span><br><span class="line">- https<span class="punctuation">:</span><span class="comment">//developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-coding-9-V5  </span></span><br><span class="line">- https<span class="punctuation">:</span><span class="comment">//developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/typescript-to-arkts-migration-guide-V5#%E9%99%90%E5%88%B6%E4%BD%BF%E7%94%A8esobject%E7%B1%BB%E5%9E%8B  </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### <span class="number">5.</span> How does the HarmonyOS Grid component adapt its height to child elements?  </span><br><span class="line">Expect the Grid component&#x27;s overall height to be determined by the total height of its internal elements without a scrollbar. Can this be achieved? (Internal element heights are uncertain<span class="punctuation">,</span> so the Grid height cannot be fixed.)  </span><br><span class="line"></span><br><span class="line">Refer to the following demo<span class="punctuation">:</span>  </span><br><span class="line">```typescript</span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct GridExample <span class="punctuation">&#123;</span></span><br><span class="line">  @State numbers<span class="punctuation">:</span> String<span class="punctuation">[</span><span class="punctuation">]</span> = <span class="punctuation">[</span>&#x27;<span class="number">0</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">1</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">2</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">3</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">4</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">5</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">6</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">7</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">8</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">9</span>&#x27;<span class="punctuation">]</span></span><br><span class="line">  scroller<span class="punctuation">:</span> Scroller = new Scroller()</span><br><span class="line">  build() <span class="punctuation">&#123;</span></span><br><span class="line">    Column(<span class="punctuation">&#123;</span> space<span class="punctuation">:</span> <span class="number">5</span> <span class="punctuation">&#125;</span>) <span class="punctuation">&#123;</span></span><br><span class="line">      Text(&#x27;scroll&#x27;).fontColor(<span class="number">0xCCCCCC</span>).fontSize(<span class="number">9</span>).width(&#x27;<span class="number">90</span>%&#x27;)</span><br><span class="line">      Grid(this.scroller) <span class="punctuation">&#123;</span></span><br><span class="line">        ForEach(this.numbers<span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">          ForEach(this.numbers<span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">            GridItem() <span class="punctuation">&#123;</span></span><br><span class="line">              Text(day)</span><br><span class="line">                .fontSize(<span class="number">16</span>)</span><br><span class="line">                .backgroundColor(<span class="number">0xF9CF93</span>)</span><br><span class="line">                .width(&#x27;<span class="number">100</span>%&#x27;)</span><br><span class="line">                .height(<span class="number">80</span>)</span><br><span class="line">                .textAlign(TextAlign.Center)</span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; day)</span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; day)</span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">      .columnsTemplate(&#x27;<span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr&#x27;)</span><br><span class="line">      .columnsGap(<span class="number">10</span>)</span><br><span class="line">      .rowsGap(<span class="number">10</span>)</span><br><span class="line">      .onScrollIndex((first<span class="punctuation">:</span> number) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">        console.info(first.toString())</span><br><span class="line">      <span class="punctuation">&#125;</span>)</span><br><span class="line">      .width(&#x27;<span class="number">80</span>%&#x27;)</span><br><span class="line">      .layoutDirection(GridDirection.Row)</span><br><span class="line">      .maxCount(<span class="number">3</span>)</span><br><span class="line">      .backgroundColor(<span class="number">0xFAEEE0</span>)</span><br><span class="line">      .scrollBarWidth(<span class="number">0</span>)</span><br><span class="line">    <span class="punctuation">&#125;</span>.width(&#x27;<span class="number">100</span>%&#x27;).margin(<span class="punctuation">&#123;</span> top<span class="punctuation">:</span> <span class="number">5</span> <span class="punctuation">&#125;</span>)</span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Add a scroll layout to the outer layer</span></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct GridExample <span class="punctuation">&#123;</span></span><br><span class="line">  @State numbers<span class="punctuation">:</span> String<span class="punctuation">[</span><span class="punctuation">]</span> = <span class="punctuation">[</span>&#x27;<span class="number">0</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">1</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">2</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">3</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">4</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">5</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">6</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">7</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">8</span>&#x27;<span class="punctuation">,</span> &#x27;<span class="number">9</span>&#x27;<span class="punctuation">]</span></span><br><span class="line">  scroller<span class="punctuation">:</span> Scroller = new Scroller()</span><br><span class="line">  build() <span class="punctuation">&#123;</span></span><br><span class="line">    Scroll() <span class="punctuation">&#123;</span></span><br><span class="line">      Column(<span class="punctuation">&#123;</span> space<span class="punctuation">:</span> <span class="number">5</span> <span class="punctuation">&#125;</span>) <span class="punctuation">&#123;</span></span><br><span class="line">        Text(&#x27;scroll&#x27;).fontColor(<span class="number">0xCCCCCC</span>).fontSize(<span class="number">9</span>).width(&#x27;<span class="number">90</span>%&#x27;)</span><br><span class="line">        Grid(this.scroller) <span class="punctuation">&#123;</span></span><br><span class="line">          ForEach(this.numbers<span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">            ForEach(this.numbers<span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">              GridItem() <span class="punctuation">&#123;</span></span><br><span class="line">                Text(day)</span><br><span class="line">                  .fontSize(<span class="number">16</span>)</span><br><span class="line">                  .backgroundColor(<span class="number">0xF9CF93</span>)</span><br><span class="line">                  .width(&#x27;<span class="number">100</span>%&#x27;)</span><br><span class="line">                  .height(<span class="number">80</span>)</span><br><span class="line">                  .textAlign(TextAlign.Center)</span><br><span class="line">              <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; day)</span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span> (day<span class="punctuation">:</span> string) =&gt; day)</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">        .columnsTemplate(&#x27;<span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr <span class="number">1</span>fr&#x27;)</span><br><span class="line">        .columnsGap(<span class="number">10</span>)</span><br><span class="line">        .rowsGap(<span class="number">10</span>)</span><br><span class="line">        .onScrollIndex((first<span class="punctuation">:</span> number) =&gt; <span class="punctuation">&#123;</span></span><br><span class="line">          console.info(first.toString())</span><br><span class="line">        <span class="punctuation">&#125;</span>)</span><br><span class="line">        .width(&#x27;<span class="number">80</span>%&#x27;)</span><br><span class="line">        .layoutDirection(GridDirection.Row)</span><br><span class="line">        .maxCount(<span class="number">3</span>)</span><br><span class="line">        .backgroundColor(<span class="number">0xFAEEE0</span>)</span><br><span class="line">        .scrollBarWidth(<span class="number">0</span>)</span><br><span class="line">      <span class="punctuation">&#125;</span>.width(&#x27;<span class="number">100</span>%&#x27;).margin(<span class="punctuation">&#123;</span> top<span class="punctuation">:</span> <span class="number">5</span> <span class="punctuation">&#125;</span>)</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">    .scrollBarWidth(<span class="number">0</span>)</span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1274,7 +1572,7 @@ struct TogglePage2 &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">344</span>
+          <span class="site-state-item-count">347</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

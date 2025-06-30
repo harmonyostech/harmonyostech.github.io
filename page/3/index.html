@@ -149,6 +149,487 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4811-Learn-HarmonyOS-Next-Knowledge-Daily-Hotfix-Image-Preview-Performance-Issues-with-Multiple-State-Refreshes-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/30/4811-Learn-HarmonyOS-Next-Knowledge-Daily-Hotfix-Image-Preview-Performance-Issues-with-Multiple-State-Refreshes-etc/" class="post-title-link" itemprop="url">[Learn HarmonyOS Next Knowledge Daily] Hotfix, Image Preview, Performance Issues with Multiple @State Refreshes, etc.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 17:16:49 / Modified: 17:17:06" itemprop="dateCreated datePublished" datetime="2025-06-30T17:16:49+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Learn-HarmonyOS-Next-Knowledge-Daily-Hotfix-Image-Preview-Performance-Issues-with-Multiple-State-Refreshes-etc"><a href="#Learn-HarmonyOS-Next-Knowledge-Daily-Hotfix-Image-Preview-Performance-Issues-with-Multiple-State-Refreshes-etc" class="headerlink" title="[Learn HarmonyOS Next Knowledge Daily] Hotfix, Image Preview, Performance Issues with Multiple @State Refreshes, etc."></a>[Learn HarmonyOS Next Knowledge Daily] Hotfix, Image Preview, Performance Issues with Multiple @State Refreshes, etc.</h1><h2 id="1-Is-it-recommended-to-use-bm-quickfix-to-create-repair-packages"><a href="#1-Is-it-recommended-to-use-bm-quickfix-to-create-repair-packages" class="headerlink" title="1. Is it recommended to use bm quickfix to create repair packages?"></a>1. Is it recommended to use bm quickfix to create repair packages?</h2><p>The <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/bm-tool-V5#%E5%BF%AB%E9%80%9F%E4%BF%AE%E5%A4%8D">official document</a> shows the command for installing quick-fix patches: <code>bm quickfix -a -f /data/app/</code>, but two issues exist:  </p>
+<ol>
+<li>Documentation on how to create HQF files is missing.  </li>
+<li>Is HQF a delta package between the new and old versions?<br><strong>Scenario</strong>: Can the bm quickfix command repair partial bugs during app runtime? Are there relevant reference documents?</li>
+</ol>
+<p><strong>Current recommendation</strong>: Manual creation of HQF packages is not recommended. Use the hot-reload capability instead: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hot-reload-0000001527628941-V5?catalogVersion=V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hot-reload-0000001527628941-V5?catalogVersion=V5</a>  </p>
+<h2 id="2-How-to-implement-image-preview"><a href="#2-How-to-implement-image-preview" class="headerlink" title="2. How to implement image preview?"></a>2. How to implement image preview?</h2><p>How to implement clicking an image to enlarge it with pinch-to-zoom support?  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State visible: Visibility = Visibility.None
+  @State scaleValue: number = 1
+  @State pinchValue: number = 1
+  @State pinchX: number = 0
+  @State pinchY: number = 0
+  @State count: number = 0
+  @State offsetX: number = 0
+  @State offsetY: number = 0
+  @State positionX: number = 0
+  @State positionY: number = 0
+
+  build() &#123;
+    Stack() &#123;
+      Row() &#123;
+        Column() &#123;
+          Image($r(&#39;app.media.icon&#39;))
+            .width(100)
+            .height(100)
+            .onClick(() =&gt; &#123;
+              console.log(&quot;hit me!&quot;)
+              if (this.visible == Visibility.Visible) &#123;
+                this.visible = Visibility.None
+              &#125; else &#123;
+                this.visible = Visibility.Visible
+              &#125;
+            &#125;)
+        &#125;
+        .width(&#39;100%&#39;)
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+      &#125;
+      .height(&#39;100%&#39;)
+
+
+      Text(&#39;&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.visible == Visibility.Visible) &#123;
+            this.visible = Visibility.None
+          &#125; else &#123;
+            this.visible = Visibility.Visible
+          &#125;
+        &#125;)
+        .width(&#39;100%&#39;)
+        .height(&#39;100%&#39;)// Transparency can be adjusted
+        .opacity(0.16)
+        .backgroundColor(0x000000)
+        .visibility(this.visible)
+
+      Column() &#123;
+        Image($r(&#39;app.media.icon&#39;))
+          .width(300)
+          .height(300)
+          .draggable(false)
+          .visibility(this.visible)
+          .scale(&#123; x: this.scaleValue, y: this.scaleValue, z: 1 &#125;)
+          .translate(&#123; x: this.offsetX, y: this.offsetY, z: 0 &#125;)
+          .gesture(
+            GestureGroup(GestureMode.Parallel,
+              PinchGesture(&#123; fingers: 2 &#125;)
+                .onActionStart((event?: GestureEvent) =&gt; &#123;
+                  console.info(&#39;Pinch start&#39;)
+                &#125;)
+                .onActionUpdate((event?: GestureEvent) =&gt; &#123;
+                  if (event) &#123;
+                    this.scaleValue = this.pinchValue * event.scale
+                    this.pinchX = event.pinchCenterX
+                    this.pinchY = event.pinchCenterY
+                  &#125;
+                &#125;)
+                .onActionEnd(() =&gt; &#123;
+                  this.pinchValue = this.scaleValue
+                  console.info(&#39;Pinch end&#39;)
+                &#125;),
+
+              PanGesture()
+                .onActionUpdate((event?: GestureEvent) =&gt; &#123;
+                  if (event) &#123;
+                    this.offsetX = this.positionX + event.offsetX
+                    this.offsetY = this.positionY + event.offsetY
+                  &#125;
+                  console.info(&#39;pan update&#39;)
+                &#125;)
+                .onActionEnd(() =&gt; &#123;
+                  this.positionX = this.offsetX
+                  this.positionY = this.offsetY
+                  console.info(&#39;pan end&#39;)
+                &#125;)
+            )
+          )
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h2 id="3-What-are-the-roles-of-netlost-and-netUnavailable-in-the-connection-module"><a href="#3-What-are-the-roles-of-netlost-and-netUnavailable-in-the-connection-module" class="headerlink" title="3. What are the roles of netlost and netUnavailable in the connection module?"></a>3. What are the roles of netlost and netUnavailable in the connection module?</h2><ul>
+<li>The <code>netlost</code> event monitors network status loss, such as when Wi-Fi&#x2F;mobile network disconnects.  </li>
+<li>The <code>netUnavailable</code> event monitors scenarios where the network is connected but abnormal, preventing normal browser access.</li>
+</ul>
+<h2 id="4-How-to-handle-installation-error-code-9568347-error-install-parse-native-so-failed"><a href="#4-How-to-handle-installation-error-code-9568347-error-install-parse-native-so-failed" class="headerlink" title="4. How to handle installation error code: 9568347, error: install parse native so failed?"></a>4. How to handle installation error code: 9568347, error: install parse native so failed?</h2><p>Refer to the official document for troubleshooting:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/bm-tool-V5#%E5%AE%89%E8%A3%85hap%E6%97%B6%E6%8F%90%E7%A4%BAcode9568347-error-install-parse-native-so-failed%E9%94%99%E8%AF%AF">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/bm-tool-V5#%E5%AE%89%E8%A3%85hap%E6%97%B6%E6%8F%90%E7%A4%BAcode9568347-error-install-parse-native-so-failed%E9%94%99%E8%AF%AF</a>  </p>
+<h2 id="5-Will-batch-refreshing-multiple-State-variables-in-a-custom-component-affect-performance"><a href="#5-Will-batch-refreshing-multiple-State-variables-in-a-custom-component-affect-performance" class="headerlink" title="5. Will batch-refreshing multiple @State variables in a custom component affect performance?"></a>5. Will batch-refreshing multiple @State variables in a custom component affect performance?</h2><p>For example, a custom Component has 20 @State variables, each with defined update interfaces. If these States are batch-updated at a certain timing, will calling each State’s update interface cause frequent Component updates and performance issues?  </p>
+<p>Batch-updating multiple State interfaces does not cause performance issues. Each @State is designed to update the UI, and modifying multiple States at once does not trigger repeated refreshes for the same component. Within one Vsync cycle, multiple dirt markings for the same component only trigger one refresh.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4807-Learn-HarmonyOS-Next-Knowledge-Daily-JSVM-API-Hotfix-Object-Unique-Hash-Value-Monitoring-VPN-Network-Changes-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/30/4807-Learn-HarmonyOS-Next-Knowledge-Daily-JSVM-API-Hotfix-Object-Unique-Hash-Value-Monitoring-VPN-Network-Changes-etc/" class="post-title-link" itemprop="url">[Learn HarmonyOS Next Knowledge Daily] JSVM-API, Hotfix, Object Unique Hash Value, Monitoring VPN Network Changes, etc.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 17:15:19 / Modified: 17:15:51" itemprop="dateCreated datePublished" datetime="2025-06-30T17:15:19+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Learn-HarmonyOS-Next-Knowledge-Daily-JSVM-API-Hotfix-Object-Unique-Hash-Value-Monitoring-VPN-Network-Changes-etc"><a href="#Learn-HarmonyOS-Next-Knowledge-Daily-JSVM-API-Hotfix-Object-Unique-Hash-Value-Monitoring-VPN-Network-Changes-etc" class="headerlink" title="[Learn HarmonyOS Next Knowledge Daily] JSVM-API, Hotfix, Object Unique Hash Value, Monitoring VPN Network Changes, etc."></a>[Learn HarmonyOS Next Knowledge Daily] JSVM-API, Hotfix, Object Unique Hash Value, Monitoring VPN Network Changes, etc.</h1><h2 id="1-How-to-Use-JSVM-API-Interfaces-to-Create-Multiple-Engines-for-Executing-JS-Code-and-Destroy-Them"><a href="#1-How-to-Use-JSVM-API-Interfaces-to-Create-Multiple-Engines-for-Executing-JS-Code-and-Destroy-Them" class="headerlink" title="1. How to Use JSVM-API Interfaces to Create Multiple Engines for Executing JS Code and Destroy Them?"></a>1. How to Use JSVM-API Interfaces to Create Multiple Engines for Executing JS Code and Destroy Them?</h2><p>Create a new JS basic runtime environment and obtain a CoreID through the <code>CreateJsCore</code> method:  </p>
+<pre><code class="language-cpp">static napi_value CreateJsCore(napi_env env1, napi_callback_info info) &#123;
+  OH_LOG_INFO(LOG_APP, &quot;JSVM CreateJsCore START&quot;);
+  size_t argc = 1;
+  napi_value argv[1];
+  napi_get_cb_info(env1, info, &amp;argc, argv, nullptr, nullptr);
+  if (argc &lt; 1) &#123;
+    OH_LOG_ERROR(LOG_APP, &quot;JSVM CreateJsCore the number of params must be one&quot;);
+    return nullptr;
+  &#125;
+  g_napiEnvMap[ENVTAG_NUMBER] = env1;
+  g_taskQueueMap[ENVTAG_NUMBER] = deque&lt;Task *&gt;&#123;&#125;;
+  // Store the callback function passed from the TS side in correspondence with env for subsequent calls
+  napi_ref callFun;
+  napi_create_reference(env1, argv[0], 1, &amp;callFun);
+  g_callBackMap[ENVTAG_NUMBER] = callFun;
+  napi_value coreID = 0;
+  &#123;
+    std::lock_guard&lt;std::mutex&gt; lock_guard(envMapLock);
+    CreateArkJSContext();
+    napi_create_uint32(env1, ENVTAG_NUMBER, &amp;coreID);
+    ENVTAG_NUMBER++;
+  &#125;
+  OH_LOG_INFO(LOG_APP, &quot;JSVM CreateJsCore END&quot;);
+  return coreID;
+&#125;
+</code></pre>
+<p>Execute JS code using the runtime environment corresponding to CoreID through the <code>EvalUateJS</code> method:  </p>
+<pre><code class="language-cpp">static napi_value EvalUateJS(napi_env env, napi_callback_info info) &#123;
+  OH_LOG_INFO(LOG_APP, &quot;JSVM EvalUateJS START&quot;);
+  size_t argc = 2;
+  napi_value args[2] = &#123;nullptr&#125;;
+  napi_get_cb_info(env, info, &amp;argc, args, nullptr, nullptr);
+  uint32_t envId;
+  napi_status status = napi_get_value_uint32(env, args[0], &amp;envId);
+  if (status != napi_ok) &#123;
+    OH_LOG_ERROR(LOG_APP, &quot;EvalUateJS first param should be number&quot;);
+    return nullptr;
+  &#125;
+
+  if (g_envMap.count(envId) == 0 || g_envMap[envId] == nullptr) &#123;
+    OH_LOG_ERROR(LOG_APP, &quot;EvalUateJS env is null&quot;);
+    return nullptr;
+  &#125;
+  std::string dataStr = napiValueToString(env, args[1]);
+  napi_value res = nullptr;
+  std::lock_guard&lt;std::mutex&gt; lock_guard(mutexLock);
+  &#123;
+    // Open handle scope
+    JSVM_HandleScope handlescope;
+    OH_JSVM_OpenHandleScope(*g_envMap[envId], &amp;handlescope);
+    // Compile js script
+    JSVM_Value sourcecodevalue;
+    OH_JSVM_CreateStringUtf8(*g_envMap[envId], dataStr.c_str(), dataStr.size(), &amp;sourcecodevalue);
+    JSVM_Script script;
+    OH_JSVM_CompileScript(*g_envMap[envId], sourcecodevalue, nullptr, 0, true, nullptr, &amp;script);
+    // Run js script
+    JSVM_Value result;
+    OH_JSVM_RunScript(*g_envMap[envId], script, &amp;result);
+    JSVM_ValueType type;
+    OH_JSVM_Typeof(*g_envMap[envId], result, &amp;type);
+    OH_LOG_INFO(LOG_APP, &quot;JSVM API TEST type: %&#123;public&#125;d&quot;, type);
+    // Execute tasks in the current env event queue
+    while (!g_taskQueueMap[envId].empty()) &#123;
+      auto task = g_taskQueueMap[envId].front();
+      g_taskQueueMap[envId].pop_front();
+      task-&gt;Run();
+      delete task;
+    &#125;
+
+    if (type == JSVM_STRING) &#123;
+      std::string stdResult = fromOHStringValue(*g_envMap[envId], result);
+      napi_create_string_utf8(env, stdResult.c_str(), stdResult.length(), &amp;res);
+    &#125; else if (type == JSVM_BOOLEAN) &#123;
+      bool ret = false;
+      std::string stdResult;
+      OH_JSVM_GetValueBool(*g_envMap[envId], result, &amp;ret);
+      ret ? stdResult = &quot;true&quot; : stdResult = &quot;false&quot;;
+      napi_create_string_utf8(env, stdResult.c_str(), stdResult.length(), &amp;res);
+    &#125; else if (type == JSVM_NUMBER) &#123;
+      int32_t num;
+      OH_JSVM_GetValueInt32(*g_envMap[envId], result, &amp;num);
+      std::string stdResult = std::to_string(num);
+      napi_create_string_utf8(env, stdResult.c_str(), stdResult.length(), &amp;res);
+    &#125; else if (type == JSVM_OBJECT) &#123;
+      JSVM_Value objResult;
+      OH_JSVM_JsonStringify(*g_envMap[envId], result, &amp;objResult);
+      std::string stdResult = fromOHStringValue(*g_envMap[envId], objResult);
+      napi_create_string_utf8(env, stdResult.c_str(), stdResult.length(), &amp;res);
+    &#125;
+    OH_JSVM_CloseHandleScope(*g_envMap[envId], handlescope);
+  &#125;
+  OH_LOG_INFO(LOG_APP, &quot;JSVM EvalUateJS END&quot;);
+  return res;
+&#125;
+</code></pre>
+<p>Release the runtime environment corresponding to CoreID through the <code>ReleaseJsCore</code> method:  </p>
+<pre><code class="language-cpp">static napi_value ReleaseJsCore(napi_env env1, napi_callback_info info) &#123;
+  OH_LOG_INFO(LOG_APP, &quot;JSVM ReleaseJsCore START&quot;);
+  size_t argc = 1;
+  napi_value argv[1];
+  napi_get_cb_info(env1, info, &amp;argc, argv, nullptr, nullptr);
+  if (argc &lt; 1) &#123;
+    OH_LOG_ERROR(LOG_APP, &quot;JSVM ReleaseJsCore the number of params must be one&quot;);
+    return nullptr;
+  &#125;
+
+  uint32_t coreEnvId;
+  napi_status status = napi_get_value_uint32(env1, argv[0], &amp;coreEnvId);
+  if (status != napi_ok) &#123;
+    OH_LOG_ERROR(LOG_APP, &quot;JSVM CreateJsCore napi_get_value_uint32 faild&quot;);
+    return nullptr;
+  &#125;
+  if (g_envMap.count(coreEnvId) == 0 ) &#123;
+    OH_LOG_ERROR(LOG_APP, &quot;JSVM CreateJsCore not has env &quot;);
+    return nullptr;
+  &#125;
+  if (g_envMap[coreEnvId] != nullptr) &#123;
+    std::lock_guard&lt;std::mutex&gt; lock_guard(envMapLock);
+    OH_JSVM_CloseEnvScope(*g_envMap[coreEnvId], g_envScopeMap[coreEnvId]);
+    g_envScopeMap.erase(coreEnvId);
+    OH_JSVM_DestroyEnv(*g_envMap[coreEnvId]);
+    g_envMap[coreEnvId] = nullptr;
+    g_envMap.erase(coreEnvId);
+    OH_JSVM_CloseVMScope(*g_vmMap[coreEnvId], g_vmScopeMap[coreEnvId]);
+    g_vmScopeMap.erase(coreEnvId);
+    OH_JSVM_DestroyVM(*g_vmMap[coreEnvId]);
+    g_vmMap[coreEnvId] = nullptr;
+    g_vmMap.erase(coreEnvId);
+    delete [] g_callBackStructMap[coreEnvId];
+    g_callBackStructMap[coreEnvId] = nullptr;
+    g_callBackStructMap.erase(coreEnvId);
+    napi_delete_reference(env1, g_callBackMap[coreEnvId]);
+    g_callBackMap.erase(coreEnvId);
+    g_taskQueueMap.erase(coreEnvId);
+  &#125;
+  OH_LOG_INFO(LOG_APP, &quot;JSVM ReleaseJsCore END&quot;);
+  return nullptr;
+&#125;
+</code></pre>
+<h2 id="2-How-to-Handle-Error-Code-9568258-error-install-releaseType-not-same"><a href="#2-How-to-Handle-Error-Code-9568258-error-install-releaseType-not-same" class="headerlink" title="2. How to Handle Error Code 9568258: error:install releaseType not same?"></a>2. How to Handle Error Code 9568258: error:install releaseType not same?</h2><p>After upgrading the IDE, package installation consistently prompts code:9568258, error:install releaseType not same, even after formatting the phone. Suspected to be caused by HSP packages, but there are 14 HSP packages in the private repository, making a full rebuild impractical. Are there alternative solutions?  </p>
+<p><strong>Method 1</strong>: Uninstall the previous HAP on the local device before reinstalling.<br><strong>Method 2</strong>: The issue arises from installing HAPs compiled with different SDK versions. Search for releasetype in the generated artifacts to check if the corresponding SDK value matches the current version.  </p>
+<h2 id="3-How-to-Monitor-and-Determine-VPN-Type-Networks"><a href="#3-How-to-Monitor-and-Determine-VPN-Type-Networks" class="headerlink" title="3. How to Monitor and Determine VPN-Type Networks?"></a>3. How to Monitor and Determine VPN-Type Networks?</h2><p>The VPN type can be obtained using the <code>getNetCapabilities</code> method to get <code>bearerTypes</code>. When the value of <code>bearerTypes</code> is 4, it indicates a VPN is in use. Sample code:  </p>
+<pre><code class="language-typescript">connection.getDefaultNet().then((netHandle: connection.NetHandle) =&gt; &#123;
+  connection.getNetCapabilities(netHandle).then((data: connection.NetCapabilities) =&gt; &#123;
+    const type: Number = data.bearerTypes[0];
+    if (type === 4) &#123;
+      console.info(&#39;is vpn&#39;);
+    &#125;
+  &#125;)
+&#125;);
+</code></pre>
+<h2 id="4-How-to-Obtain-a-Unique-Identifier-Hash-Value-for-an-Object"><a href="#4-How-to-Obtain-a-Unique-Identifier-Hash-Value-for-an-Object" class="headerlink" title="4. How to Obtain a Unique Identifier (Hash Value) for an Object?"></a>4. How to Obtain a Unique Identifier (Hash Value) for an Object?</h2><p>Use the <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-util-V5#utilgethash12">util.getHash</a> interface:  </p>
+<ul>
+<li>For the first-time acquisition, calculate the Hash value and save it to the object’s Hash field (returns a random Hash value).  </li>
+<li>For subsequent acquisitions, retrieve and return the Hash value from the Hash field (the same object returns a consistent value across multiple calls).</li>
+</ul>
+<h2 id="5-Is-It-Recommended-to-Use-bm-quickfix-to-Create-Repair-Packages"><a href="#5-Is-It-Recommended-to-Use-bm-quickfix-to-Create-Repair-Packages" class="headerlink" title="5. Is It Recommended to Use bm quickfix to Create Repair Packages?"></a>5. Is It Recommended to Use bm quickfix to Create Repair Packages?</h2><p>The <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/bm-tool-V5#%E5%BF%AB%E9%80%9F%E4%BF%AE%E5%A4%8D">reference document</a> shows the command for installing quick-fix patches: <code>bm quickfix -a -f /data/app/</code>. Two questions arise:  </p>
+<ol>
+<li>Documentation on how to create HQF files is missing.  </li>
+<li>Is HQF a delta package between new and old versions? Scenario: Can the bm quickfix command be used to fix partial bugs during app runtime? Are there relevant reference documents?</li>
+</ol>
+<p><strong>Current Recommendation</strong>: Manual creation of HQF packages is not recommended. Instead, use the hot-reload capability: <a target="_blank" rel="noopener" href="https://link.segmentfault.com/?enc=Gi2XNg57BafRnYTjEImzbQ==.zvgzN8qZZsT1TUA0+Bk1CCIzj/9nOZBE+nRf+34SIzE/+W6vwh2OxV5h6xMsBIUGXqdh6zk7xyCEDk8S1d9+8jVozpppBlQyoCs/0zMQEIMZ7goF6obk1W3eb5Z3MNDX/67NDVt3M2sa2R5E4cJ54peh1/xEZI2d+VefeSa3pqk=">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hot-reload-0000001527628941-V5?catalogVersion=V5</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4806-Learn-HarmonyOS-Next-Knowledge-Daily-Debugging-Network-Caching-Rich-Text-Editing-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/30/4806-Learn-HarmonyOS-Next-Knowledge-Daily-Debugging-Network-Caching-Rich-Text-Editing-etc/" class="post-title-link" itemprop="url">[Learn HarmonyOS Next Knowledge Daily] Debugging, Network, Caching, Rich Text Editing, etc.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 17:14:06 / Modified: 17:14:23" itemprop="dateCreated datePublished" datetime="2025-06-30T17:14:06+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Learn-HarmonyOS-Next-Knowledge-Daily-Debugging-Network-Caching-Rich-Text-Editing-etc"><a href="#Learn-HarmonyOS-Next-Knowledge-Daily-Debugging-Network-Caching-Rich-Text-Editing-etc" class="headerlink" title="[Learn HarmonyOS Next Knowledge Daily] Debugging, Network, Caching, Rich Text Editing, etc."></a>[Learn HarmonyOS Next Knowledge Daily] Debugging, Network, Caching, Rich Text Editing, etc.</h1><h2 id="1-How-to-Use-a-Release-Certificate-for-Debugging"><a href="#1-How-to-Use-a-Release-Certificate-for-Debugging" class="headerlink" title="1. How to Use a Release Certificate for Debugging?"></a>1. How to Use a Release Certificate for Debugging?</h2><p>Since some functions require certificate information verification, debugging needs to be performed using both a debug certificate and a release certificate. However, after using the release certificate, an installation error occurs:<br><code>05/14 19:04:39: Install Failed: error: failed to install bundle.code:9568322error: signature verification failed due to not trusted app source.View detailed instructions.$ hdc shell rm -rf data/local/tmp/c07053e4cafe4f06bbbfecc3c2a697bbError while Deploy Hap.</code>  </p>
+<p><strong>Specification Issue</strong>: Release certificates published on the AppGallery cannot be installed through non-AppGallery channels.<br><strong>Solution</strong>: For testing release certificate applications, consider using AGC-&gt;Open Testing.  </p>
+<h2 id="2-Is-netBearType-Defined-as-an-Array-Type-in-the-Documentation-the-Current-Specification"><a href="#2-Is-netBearType-Defined-as-an-Array-Type-in-the-Documentation-the-Current-Specification" class="headerlink" title="2. Is netBearType Defined as an Array Type in the Documentation the Current Specification?"></a>2. Is netBearType Defined as an Array Type in the Documentation the Current Specification?</h2><p>In scenarios where both Wi-Fi and cellular networks are connected (dual-mode), the netBearType parameter only returns the status information of Wi-Fi. The array type definition is the current specification to handle multiple calling scenarios.  </p>
+<h2 id="3-How-to-Make-RichEditor-and-a-Component-a-Whole-for-Adaptive-Scrolling-Based-on-Cursor-Position"><a href="#3-How-to-Make-RichEditor-and-a-Component-a-Whole-for-Adaptive-Scrolling-Based-on-Cursor-Position" class="headerlink" title="3. How to Make RichEditor and a Component a Whole for Adaptive Scrolling Based on Cursor Position?"></a>3. How to Make RichEditor and a Component a Whole for Adaptive Scrolling Based on Cursor Position?</h2><p>There is a Component above RichEditor, and the goal is to make RichEditor and the Component a whole that can scroll adaptively based on the cursor position. Currently, using a Scroller cannot obtain the specific coordinates of the cursor in RichEditor (cursor x and y positions relative to RichEditor), making scrolling impossible.  </p>
+<p><strong>Solution</strong>: Wrap RichEditor and the Component with a Scroll component. Use the onAreaChange callback to call scroller.scrollBy to adjust the height of the scrolling component.  </p>
+<p><strong>Reference Code</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  editorController = <span class="keyword">new</span> <span class="title class_">RichEditorController</span>()</span><br><span class="line">  <span class="attr">scroller</span>: <span class="title class_">Scroller</span> = <span class="keyword">new</span> <span class="title class_">Scroller</span>()</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Scroll</span>(<span class="variable language_">this</span>.<span class="property">scroller</span>) &#123;</span><br><span class="line">        <span class="title class_">Column</span>() &#123;</span><br><span class="line">          <span class="title class_">Image</span>($r(<span class="string">&#x27;app.media.startIcon&#x27;</span>))</span><br><span class="line">            .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">200</span>)</span><br><span class="line">            .<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="number">20</span> &#125;)</span><br><span class="line">          <span class="title class_">RichEditor</span>(&#123; <span class="attr">controller</span>: <span class="variable language_">this</span>.<span class="property">editorController</span> &#125;)</span><br><span class="line">            .<span class="title function_">id</span>(<span class="string">&#x27;RichEditor&#x27;</span>)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Yellow</span>)</span><br><span class="line">            .<span class="title function_">onReady</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">editorController</span>.<span class="title function_">addImageSpan</span>($r(<span class="string">&quot;app.media.startIcon&quot;</span>),</span><br><span class="line">                &#123;</span><br><span class="line">                  <span class="attr">imageStyle</span>:</span><br><span class="line">                  &#123;</span><br><span class="line">                    <span class="attr">size</span>: [<span class="string">&quot;100px&quot;</span>, <span class="string">&quot;100px&quot;</span>]</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">editorController</span>.<span class="title function_">addTextSpan</span>(<span class="string">&#x27;男生女生向前冲&#x27;</span>,</span><br><span class="line">                &#123;</span><br><span class="line">                  <span class="attr">style</span>:</span><br><span class="line">                  &#123;</span><br><span class="line">                    <span class="attr">fontColor</span>: <span class="title class_">Color</span>.<span class="property">Blue</span>,</span><br><span class="line">                    <span class="attr">fontSize</span>: <span class="number">30</span></span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">onAreaChange</span>(<span class="function">(<span class="params">_, value</span>) =&gt;</span> &#123;</span><br><span class="line">              <span class="keyword">if</span> (_.<span class="property">height</span> !== value.<span class="property">height</span>) &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">scroller</span>.<span class="title function_">scrollBy</span>(<span class="number">0</span>, <span class="title class_">Number</span>(value.<span class="property">height</span>) - <span class="number">200</span>)</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;---_.height&#x27;</span>, _.<span class="property">height</span>)</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;---value.height&#x27;</span>, value.<span class="property">height</span>)</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;getSpans-文字&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">(<span class="params"><span class="attr">event</span>: <span class="title class_">ClickEvent</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> getSpans = <span class="variable language_">this</span>.<span class="property">editorController</span>.<span class="title function_">getSpans</span>(&#123; <span class="attr">start</span>: <span class="number">0</span> &#125;)</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;getSpans0&#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(getSpans[<span class="number">0</span>]))</span><br><span class="line">            <span class="comment">// Strong casting is required to obtain text or image information</span></span><br><span class="line">            <span class="keyword">let</span> span0 = getSpans[<span class="number">0</span>] <span class="keyword">as</span> <span class="title class_">RichEditorTextSpanResult</span></span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Text-related information: &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(span0))</span><br><span class="line">          &#125;)</span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;getSpans-图片&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">(<span class="params"><span class="attr">event</span>: <span class="title class_">ClickEvent</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> getSpans = <span class="variable language_">this</span>.<span class="property">editorController</span>.<span class="title function_">getSpans</span>(&#123; <span class="attr">start</span>: <span class="number">0</span> &#125;)</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;getSpans1&#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(getSpans[<span class="number">1</span>]))</span><br><span class="line">            <span class="keyword">let</span> span1 = getSpans[<span class="number">1</span>] <span class="keyword">as</span> <span class="title class_">RichEditorImageSpanResult</span></span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Image-related information: &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(span1))</span><br><span class="line">          &#125;)</span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;RichEditor获焦&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            focusControl.<span class="title function_">requestFocus</span>(<span class="string">&#x27;RichEditor&#x27;</span>)</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">scrollable</span>(<span class="title class_">ScrollDirection</span>.<span class="property">Vertical</span>) <span class="comment">// Vertical scrolling direction</span></span><br><span class="line">      .<span class="title function_">scrollBar</span>(<span class="title class_">BarState</span>.<span class="property">On</span>) <span class="comment">// Scrollbar always visible</span></span><br><span class="line">      .<span class="title function_">scrollBarColor</span>(<span class="title class_">Color</span>.<span class="property">Gray</span>) <span class="comment">// Scrollbar color</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">## 4. Why Do Performance Issues Occur When Storing Complex Objects in LocalStorage or APPStorage?  </span></span><br><span class="line"><span class="string">Two questions about performance issues when storing complex objects in LocalStorage and APPStorage:  </span></span><br><span class="line"><span class="string">1. **Frequent Reading/Writing**: Why does frequent reading/writing of complex objects degrade page performance? Does LocalStorage affect page rendering?  </span></span><br><span class="line"><span class="string">2. **Data Structure**: Are data stored locally in LocalStorage and APPStorage? They should be in memory—why does serialization/deserialization occur?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Answers**:  </span></span><br><span class="line"><span class="string">- LocalStorage operations are synchronous. When reading/writing, the program blocks until the operation completes, which affects refresh efficiency, especially for complex objects.  </span></span><br><span class="line"><span class="string">- LocalStorage and APPStorage do not serialize complex objects when reading them locally.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">## 5. Error When Using Synchronous Methods to Get Network Status in a No-Network Environment?  </span></span><br><span class="line"><span class="string">In a no-network environment, calling synchronous methods cannot parse the corresponding nethandle content, and an error occurs when the method internally executes getCap. Use try-catch to get the error information:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> netHandle = connection.<span class="title function_">getDefaultNetSync</span>();</span><br><span class="line">  <span class="keyword">let</span> connectionproperties = connection.<span class="title function_">getConnectionPropertiesSync</span>(netHandle);</span><br><span class="line">&#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;error: &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(err));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4805-Learn-HarmonyOS-Next-Knowledge-Daily-Package-Size-Optimization-WebView-PDF-Download-etc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -972,728 +1453,6 @@ export class NetJudge &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/25630-HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/30/25630-HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation/" class="post-title-link" itemprop="url">HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-30 16:50:38 / Modified: 16:51:27" itemprop="dateCreated datePublished" datetime="2025-06-30T16:50:38+08:00">2025-06-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation"><a href="#HarmonyOS-Deep-Linking-Development-Guide-Enabling-Flexible-App-Navigation" class="headerlink" title="HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation"></a>HarmonyOS Deep Linking Development Guide: Enabling Flexible App Navigation</h1><h2 id="I-Introduction-to-Deep-Linking"><a href="#I-Introduction-to-Deep-Linking" class="headerlink" title="I. Introduction to Deep Linking"></a>I. Introduction to Deep Linking</h2><p>Deep Linking is an app navigation technology provided by HarmonyOS, which locates and launches eligible installed apps using URI information. When multiple matching apps exist, the system automatically pops up a selection dialog for users to choose the target app.  </p>
-<p><strong>Core Features</strong>:  </p>
-<ul>
-<li>Navigation based on installed local apps  </li>
-<li>Selection mechanism for multiple matching apps  </li>
-<li>Flexible URI matching rules  </li>
-<li>Suitable for various inter-app interaction scenarios</li>
-</ul>
-<h2 id="II-Implementation-Principle"><a href="#II-Implementation-Principle" class="headerlink" title="II. Implementation Principle"></a>II. Implementation Principle</h2><p>Deep Linking queries and launches target apps through URI matching in the implicit Want matching mechanism. The system parses incoming URI information and searches for apps capable of handling the URI locally according to predefined rules.  </p>
-<p><strong>Key Points of URI Matching Rules</strong>:  </p>
-<ul>
-<li><strong>Scheme</strong>: Custom identifier without special characters, not starting with “ohos”  </li>
-<li><strong>Host</strong>: Specified domain name or identifier  </li>
-<li><strong>Path</strong>: Optional, for precise path matching  </li>
-<li><strong>Query Parameters</strong>: Optional, for passing parameters</li>
-</ul>
-<h2 id="III-Configuration-Guide-for-Target-Apps"><a href="#III-Configuration-Guide-for-Target-Apps" class="headerlink" title="III. Configuration Guide for Target Apps"></a>III. Configuration Guide for Target Apps</h2><h3 id="1-Configure-module-json5-File"><a href="#1-Configure-module-json5-File" class="headerlink" title="1. Configure module.json5 File"></a>1. Configure module.json5 File</h3><p>To allow other apps to access your app via Deep Linking, you must correctly set the <code>skills</code> tag in the <code>module.json5</code> configuration file.  </p>
-<p><strong>Configuration Key Points</strong>:  </p>
-<ul>
-<li>The <code>skills</code> tag includes a default skill object identifying the app entry.  </li>
-<li>App navigation links should not be configured in the default skill object.  </li>
-<li>Create independent skill objects for each navigation scenario.  </li>
-<li>Configure multiple skill objects for multiple scenarios.</li>
-</ul>
-<p><strong>Configuration Example</strong>:  </p>
-<pre><code class="language-json">&#123;
-  &quot;module&quot;: &#123;
-    // ...Other configurations
-    &quot;abilities&quot;: [
-      &#123;
-        // ...Other capability configurations
-        &quot;skills&quot;: [
-          &#123;
-            &quot;entities&quot;: [
-              &quot;entity.system.home&quot;
-            ],
-            &quot;actions&quot;: [
-              &quot;ohos.want.action.home&quot;
-            ]
-          &#125;,
-          &#123;
-            &quot;actions&quot;: [
-              // Note: actions cannot be empty to avoid matching failure
-              &quot;ohos.want.action.viewData&quot;
-            ],
-            &quot;uris&quot;: [
-              &#123;
-                // scheme is mandatory, customizable (not starting with http, https, file)
-                &quot;scheme&quot;: &quot;link&quot;,
-                // host is mandatory, configure the matching domain name
-                &quot;host&quot;: &quot;www.example.com&quot;
-              &#125;
-            ]
-          &#125;
-          // Add more skill objects for multiple navigation scenarios
-        ]
-      &#125;
-    ]
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Notes</strong>:  </p>
-<ul>
-<li>The scheme can be customized but should not use “https”, “http”, “file”, etc., which are handled by system browsers.  </li>
-<li>Each navigation scenario requires an independent skill object configuration.  </li>
-<li>The <code>actions</code> field must not be empty to avoid matching failure on the target side.</li>
-</ul>
-<h2 id="IV-Acquire-and-Parse-Incoming-App-Links"><a href="#IV-Acquire-and-Parse-Incoming-App-Links" class="headerlink" title="IV. Acquire and Parse Incoming App Links"></a>IV. Acquire and Parse Incoming App Links</h2><p>When other apps navigate to your app via Deep Linking, you need to acquire and parse the incoming URI information in the app’s UIAbility.  </p>
-<h3 id="Example-Code"><a href="#Example-Code" class="headerlink" title="Example Code:"></a>Example Code:</h3><pre><code class="language-typescript">// Take EntryAbility.ets as an example
-import &#123; AbilityConstant, UIAbility, Want &#125; from &#39;@kit.AbilityKit&#39;;
-import &#123; url &#125; from &#39;@kit.ArkTS&#39;;
-
-export default class EntryAbility extends UIAbility &#123;
-  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void &#123;
-    // Get the incoming link from want
-    // Example: link://www.example.com/programs?action=showall
-    let uri = want?.uri;
-    if (uri) &#123;
-      // Parse parameters in the URI
-      let urlObject = url.URL.parseURL(want?.uri);
-      let action = urlObject.params.get(&#39;action&#39;);
-      
-      // Execute corresponding operations based on parameters
-      if (action === &quot;showall&quot;) &#123;
-         // Logic to display all programs
-         // ...
-      &#125;
-      // Handle more parameters and logic as needed
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<h2 id="V-Implement-Navigation-for-Launching-Apps"><a href="#V-Implement-Navigation-for-Launching-Apps" class="headerlink" title="V. Implement Navigation for Launching Apps"></a>V. Implement Navigation for Launching Apps</h2><p>Launching apps can implement Deep Linking navigation in multiple ways. Below are three common implementation methods.  </p>
-<h3 id="1-Use-openLink-for-App-Navigation"><a href="#1-Use-openLink-for-App-Navigation" class="headerlink" title="1. Use openLink for App Navigation"></a>1. Use openLink for App Navigation</h3><p>The <code>openLink</code> interface provides a simple way to implement app navigation.  </p>
-<p><strong>Example Code</strong>:  </p>
-<pre><code class="language-typescript">import &#123; common, OpenLinkOptions &#125; from &#39;@kit.AbilityKit&#39;;
-import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
-import &#123; hilog &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
-
-const TAG: string = &#39;[UIAbilityComponentsOpenLink]&#39;;
-const DOMAIN_NUMBER: number = 0xFF00;
-
-@Entry
-@Component
-struct Index &#123;
-  build() &#123;
-    Button(&#39;start link&#39;, &#123; type: ButtonType.Capsule, stateEffect: true &#125;)
-      .width(&#39;87%&#39;)
-      .height(&#39;5%&#39;)
-      .margin(&#123; bottom: &#39;12vp&#39; &#125;)
-      .onClick(() =&gt; &#123;
-        let context = this.getUIContext().getHostContext() as common.UIAbilityContext;
-        let link: string = &quot;link://www.example.com&quot;;
-        let openLinkOptions: OpenLinkOptions = &#123;
-          appLinkingOnly: false  // Key configuration: Use Deep Linking mode
-        &#125;;
-
-        try &#123;
-          context.openLink(link, openLinkOptions)
-            .then(() =&gt; &#123;
-              hilog.info(DOMAIN_NUMBER, TAG, &#39;open link success.&#39;);
-            &#125;).catch((err: BusinessError) =&gt; &#123;
-              hilog.error(DOMAIN_NUMBER, TAG, `open link failed. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
-            &#125;);
-        &#125; catch (paramError) &#123;
-          hilog.error(DOMAIN_NUMBER, TAG, `Failed to start link. Code is $&#123;paramError.code&#125;, message is $&#123;paramError.message&#125;`);
-        &#125;
-      &#125;)
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Key Points</strong>:  </p>
-<ul>
-<li>Set <code>appLinkingOnly</code> to <code>false</code> to use Deep Linking.  </li>
-<li>Setting it to <code>true</code> will attempt App Linking, possibly causing navigation failure.</li>
-</ul>
-<h3 id="2-Use-startAbility-for-App-Navigation"><a href="#2-Use-startAbility-for-App-Navigation" class="headerlink" title="2. Use startAbility for App Navigation"></a>2. Use startAbility for App Navigation</h3><p>The <code>startAbility</code> interface triggers app navigation via implicit Want matching, providing lower-level control.  </p>
-<p><strong>Example Code</strong>:  </p>
-<pre><code class="language-typescript">import &#123; common, Want &#125; from &#39;@kit.AbilityKit&#39;;
-import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
-import &#123; hilog &#125; from &#39;@kit.PerformanceAnalysisKit&#39;;
-
-const TAG: string = &#39;[UIAbilityComponentsOpenLink]&#39;;
-const DOMAIN_NUMBER: number = 0xFF00;
-
-@Entry
-@Component
-struct Index &#123;
-  build() &#123;
-    Button(&#39;start ability&#39;, &#123; type: ButtonType.Capsule, stateEffect: true &#125;)
-      .width(&#39;87%&#39;)
-      .height(&#39;5%&#39;)
-      .margin(&#123; bottom: &#39;12vp&#39; &#125;)
-      .onClick(() =&gt; &#123;
-        let context = this.getUIContext().getHostContext() as common.UIAbilityContext;
-        let want: Want = &#123;
-          uri: &quot;link://www.example.com&quot;  // Set the target URI
-        &#125;;
-
-        try &#123;
-          context.startAbility(want).then(() =&gt; &#123;
-            hilog.info(DOMAIN_NUMBER, TAG, &#39;start ability success.&#39;);
-          &#125;).catch((err: BusinessError) =&gt; &#123;
-            hilog.error(DOMAIN_NUMBER, TAG, `start ability failed. Code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
-          &#125;);
-        &#125; catch (paramError) &#123;
-          hilog.error(DOMAIN_NUMBER, TAG, `Failed to start ability. Code is $&#123;paramError.code&#125;, message is $&#123;paramError.message&#125;`);
-        &#125;
-      &#125;)
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Notes</strong>:  </p>
-<ul>
-<li>Ensure the URI in <code>want</code> matches the target app’s configured URI rules.  </li>
-<li>The caller must pass correct <code>action</code> and <code>entity</code> for matching.</li>
-</ul>
-<h3 id="3-Use-Web-Components-for-App-Navigation"><a href="#3-Use-Web-Components-for-App-Navigation" class="headerlink" title="3. Use Web Components for App Navigation"></a>3. Use Web Components for App Navigation</h3><p>Deep Linking can also be implemented in web pages by intercepting page loading events or binding click events.  </p>
-<p><strong>Web Component Example Code</strong>:  </p>
-<pre><code class="language-typescript">// index.ets
-import &#123; webview &#125; from &#39;@kit.ArkWeb&#39;;
-import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
-import &#123; common &#125; from &#39;@kit.AbilityKit&#39;;
-
-@Entry
-@Component
-struct WebComponent &#123;
-  controller: webview.WebviewController = new webview.WebviewController();
-
-  build() &#123;
-    Column() &#123;
-      Web(&#123; src: $rawfile(&#39;index.html&#39;), controller: this.controller &#125;)
-        .onLoadIntercept((event) =&gt; &#123;
-          const url: string = event.data.getRequestUrl();
-          if (url === &#39;link://www.example.com&#39;) &#123;
-            // Intercept specific URL and use Deep Linking to navigate
-            (this.getUIContext().getHostContext() as common.UIAbilityContext).openLink(url)
-              .then(() =&gt; &#123;
-                console.log(&#39;openLink success&#39;);
-              &#125;).catch((err: BusinessError) =&gt; &#123;
-                console.error(&#39;openLink failed, err:&#39; + JSON.stringify(err));
-              &#125;);
-            return true;  // Prevent further loading of this URL
-          &#125;
-          // Return false to allow normal page loading
-          return false;
-        &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p><strong>Front-end Page Code</strong>:  </p>
-<pre><code class="language-html">&lt;!-- index.html --&gt;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Hello World&lt;/h1&gt;
-&lt;!-- Method 1: Implement navigation via window.open event binding --&gt;
-&lt;button class=&quot;doOpenLink&quot; onclick=&quot;doOpenLink()&quot;&gt;Jump to Another App 1&lt;/button&gt;
-&lt;!-- Method 2: Implement navigation via hyperlink --&gt;
-&lt;a href=&quot;link://www.example.com&quot;&gt;Jump to Another App 2&lt;/a&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-&lt;script&gt;
-    function doOpenLink() &#123;
-        window.open(&quot;link://www.example.com&quot;)
-    &#125;
-&lt;/script&gt;
-</code></pre>
-<p><strong>Working Principle</strong>:  </p>
-<ul>
-<li>The Web component intercepts loading of specific URLs via <code>onLoadIntercept</code>.  </li>
-<li>When a Deep Linking URI is detected, it calls the <code>openLink</code> interface for app navigation.  </li>
-<li>Returning <code>true</code> prevents the Web component from loading the URL.  </li>
-<li>Returning <code>false</code> allows normal page loading.</li>
-</ul>
-<h2 id="VI-Summary-and-Best-Practices"><a href="#VI-Summary-and-Best-Practices" class="headerlink" title="VI. Summary and Best Practices"></a>VI. Summary and Best Practices</h2><h3 id="Comparison-Between-Deep-Linking-and-App-Linking"><a href="#Comparison-Between-Deep-Linking-and-App-Linking" class="headerlink" title="Comparison Between Deep Linking and App Linking"></a>Comparison Between Deep Linking and App Linking</h3><table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Deep Linking</th>
-<th>App Linking</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Target App Requirement</td>
-<td>Must be installed</td>
-<td>Works whether installed or not</td>
-</tr>
-<tr>
-<td>Navigation Experience</td>
-<td>May show app selection dialog</td>
-<td>Smoother, automatically handles installation status</td>
-</tr>
-<tr>
-<td>Security</td>
-<td>Relies on URI matching rules</td>
-<td>Adds domain verification for higher security</td>
-</tr>
-<tr>
-<td>Configuration Complexity</td>
-<td>Relatively simple</td>
-<td>Relatively complex, requires additional domain configuration</td>
-</tr>
-</tbody></table>
-<h3 id="Best-Practice-Recommendations"><a href="#Best-Practice-Recommendations" class="headerlink" title="Best Practice Recommendations"></a>Best Practice Recommendations</h3><ol>
-<li><p><strong>URI Design Specifications</strong>  </p>
-<ul>
-<li>Use meaningful schemes, avoiding common protocols like http, https, file.  </li>
-<li>Design a clear host structure for easy management and identification.  </li>
-<li>Reasonably use path and query parameters to传递 information.</li>
-</ul>
-</li>
-<li><p><strong>Multi-scenario Handling</strong>  </p>
-<ul>
-<li>Create independent skill objects for different navigation scenarios.  </li>
-<li>Ensure <code>actions</code> are not empty for each scenario.  </li>
-<li>Consider the integrity and security of parameter passing.</li>
-</ul>
-</li>
-<li><p><strong>Error Handling</strong>  </p>
-<ul>
-<li>Add appropriate error handling logic when calling navigation interfaces.  </li>
-<li>Consider fallback solutions when the target app is not installed.  </li>
-<li>Log navigation failures for analysis and optimization.</li>
-</ul>
-</li>
-<li><p><strong>Testing and Verification</strong>  </p>
-<ul>
-<li>Test navigation in multiple scenarios, including:  <ul>
-<li>Target app installed  </li>
-<li>Target app not installed  </li>
-<li>Multiple apps matching the same URI</li>
-</ul>
-</li>
-<li>Verify the correctness of parameter passing.</li>
-</ul>
-</li>
-</ol>
-<p>Through this guide, developers can master HarmonyOS Deep Linking implementation, adding flexible inter-app navigation to their apps and enhancing user experience and interoperability.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/25630HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/30/25630HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience/" class="post-title-link" itemprop="url">HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-30 16:45:57 / Modified: 16:46:17" itemprop="dateCreated datePublished" datetime="2025-06-30T16:45:57+08:00">2025-06-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience"><a href="#HarmonyOS-Next-App-Linking-Development-Guide-Achieving-Seamless-App-Navigation-Experience" class="headerlink" title="HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience"></a>HarmonyOS Next App Linking Development Guide: Achieving Seamless App Navigation Experience</h1><h2 id="I-Introduction-to-App-Linking"><a href="#I-Introduction-to-App-Linking" class="headerlink" title="I. Introduction to App Linking"></a>I. Introduction to App Linking</h2><p>App Linking is an app navigation technology provided by HarmonyOS, which directs users to specific content within a target app via HTTPS links. Whether the target app is installed or not, users can access the content corresponding to the link. Compared with traditional Deep Linking, App Linking offers a smoother navigation experience.  </p>
-<p><strong>Typical Application Scenario</strong>: After developers integrate the “Scan to Go” service, users can scan the app’s QR code or barcode through system-level scanning entrances (such as the Scan function in the Control Center) to directly jump to the corresponding service page of the developer’s app, achieving a one-step direct user experience.  </p>
-<h2 id="II-Applicable-Scenarios-and-Advantages"><a href="#II-Applicable-Scenarios-and-Advantages" class="headerlink" title="II. Applicable Scenarios and Advantages"></a>II. Applicable Scenarios and Advantages</h2><h3 id="Applicable-Scenarios"><a href="#Applicable-Scenarios" class="headerlink" title="Applicable Scenarios"></a>Applicable Scenarios</h3><ul>
-<li>App’s scan-to-go service  </li>
-<li>Social sharing functions  </li>
-<li>Silent app activation (re-engaging users via links)  </li>
-<li>Advertising traffic conversion</li>
-</ul>
-<h3 id="Core-Advantages"><a href="#Core-Advantages" class="headerlink" title="Core Advantages"></a>Core Advantages</h3><ol>
-<li><strong>High Security</strong>: Suitable for scenarios with high security requirements, avoiding counterfeiting by other apps.  </li>
-<li><strong>Superior Experience</strong>: Users can normally access the link whether the target app is installed or not.  </li>
-<li><strong>Cross-platform Compatibility</strong>: When the app is not installed, it automatically degrades to a web-based experience.</li>
-</ol>
-<h2 id="III-Implementation-Principle"><a href="#III-Implementation-Principle" class="headerlink" title="III. Implementation Principle"></a>III. Implementation Principle</h2><p>App Linking adds a <strong>domain name verification process</strong> based on Deep Linking. This mechanism helps users eliminate ambiguity, identify apps legally belonging to specific domain names, and makes links more secure and reliable.  </p>
-<p><strong>Workflow</strong>:  </p>
-<ul>
-<li>The same HTTPS URL supports both app and web content presentation.  </li>
-<li>When the app is installed: Prioritizes opening the app to present content.  </li>
-<li>When the app is not installed: Opens the browser to present web-based content.</li>
-</ul>
-<h2 id="IV-Development-Guidelines"><a href="#IV-Development-Guidelines" class="headerlink" title="IV. Development Guidelines"></a>IV. Development Guidelines</h2><h3 id="Role-Division"><a href="#Role-Division" class="headerlink" title="Role Division"></a>Role Division</h3><h4 id="Responsibilities-of-the-Target-Party-App-Developer"><a href="#Responsibilities-of-the-Target-Party-App-Developer" class="headerlink" title="Responsibilities of the Target Party (App Developer)"></a>Responsibilities of the Target Party (App Developer)</h4><ol>
-<li><strong>Cloud Development</strong>  <ul>
-<li>Enable the App Linking service in the AGC console.  </li>
-<li>Associate the app on the developer website.  </li>
-<li>Associate the URL domain name in the AGC console.</li>
-</ul>
-</li>
-<li><strong>Client Development</strong>  <ul>
-<li>Configure the associated URL domain name in DevEco Studio.  </li>
-<li>Process incoming links.</li>
-</ul>
-</li>
-<li><strong>Front-end Development</strong>  <ul>
-<li>Develop the H5 webpage corresponding to the link (presented when the app is not installed).</li>
-</ul>
-</li>
-</ol>
-<h4 id="Responsibilities-of-the-Launching-Party-App-Initiating-Navigation"><a href="#Responsibilities-of-the-Launching-Party-App-Initiating-Navigation" class="headerlink" title="Responsibilities of the Launching Party (App Initiating Navigation)"></a>Responsibilities of the Launching Party (App Initiating Navigation)</h4><ol>
-<li><strong>Client Development</strong>  <ul>
-<li>Call system interfaces to trigger link navigation.</li>
-</ul>
-</li>
-</ol>
-<h2 id="V-Detailed-Development-Steps-for-the-Target-App"><a href="#V-Detailed-Development-Steps-for-the-Target-App" class="headerlink" title="V. Detailed Development Steps for the Target App"></a>V. Detailed Development Steps for the Target App</h2><h3 id="1-Enable-the-App-Linking-Service-in-the-AGC-Console"><a href="#1-Enable-the-App-Linking-Service-in-the-AGC-Console" class="headerlink" title="1. Enable the App Linking Service in the AGC Console"></a>1. Enable the App Linking Service in the AGC Console</h3><ol>
-<li>Log in to AppGallery Connect and click “My Projects”.  </li>
-<li>Select the target project.  </li>
-<li>In the left navigation bar, select “Growth &gt; App Linking”, then click “Enable Now”.  </li>
-<li>If the data processing location is not set, enable and set the default location as prompted.  </li>
-<li>Go to “Project Settings &gt; General” to view the app’s APP ID (required for subsequent development).</li>
-</ol>
-<h3 id="2-Associate-the-App-on-the-Developer-Website"><a href="#2-Associate-the-App-on-the-Developer-Website" class="headerlink" title="2. Associate the App on the Developer Website"></a>2. Associate the App on the Developer Website</h3><p>Create a domain configuration file <code>applinking.json</code>:  </p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"> <span class="attr">&quot;applinking&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">   <span class="attr">&quot;apps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">     <span class="punctuation">&#123;</span></span><br><span class="line">       <span class="attr">&quot;appIdentifier&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1234567&quot;</span>  <span class="comment">// Replace with the APP ID displayed in the AGC console</span></span><br><span class="line">     <span class="punctuation">&#125;</span></span><br><span class="line">   <span class="punctuation">]</span></span><br><span class="line"> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line">```  </span><br><span class="line">File deployment location<span class="punctuation">:</span>  </span><br></pre></td></tr></table></figure>
-<p><a target="_blank" rel="noopener" href="https://domain.name/.well-known/applinking.json">https://domain.name/.well-known/applinking.json</a><br>&#x2F;&#x2F; Example: <a target="_blank" rel="noopener" href="https://www.example.com/.well-known/applinking.json">https://www.example.com/.well-known/applinking.json</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3. Associate the URL Domain Name in the AGC Console  </span><br><span class="line">1. Log in to AppGallery Connect and enter the project.  </span><br><span class="line">2. In the left navigation bar, select &quot;Growth &gt; App Linking&quot;, then go to the &quot;App Links (for API &gt;=12)&quot; tab.  </span><br><span class="line">3. Click &quot;Create&quot;, enter the exact URL domain name (e.g., `https://www.example.com`).  </span><br><span class="line">4. After setting, click &quot;Publish&quot;, and the system will verify the domain configuration file.  </span><br><span class="line"></span><br><span class="line">**Verification Mechanism**:  </span><br><span class="line">- The configuration file will be re-fetched for verification within 24 hours after publication.  </span><br><span class="line">- Verification successful: Domain-associated app information is visible.  </span><br><span class="line">- Verification in progress: Status shows &quot;Publishing&quot;.  </span><br><span class="line">- Verification failed: Status shows &quot;Publishing Failed&quot; with a reason.  </span><br><span class="line"></span><br><span class="line">### 4. Configure the Associated URL Domain Name in DevEco Studio  </span><br><span class="line">Add the following configuration to the app&#x27;s `module.json5` file:  </span><br><span class="line">```json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;module&quot;: &#123;</span><br><span class="line">    &quot;abilities&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;name&quot;: &quot;EntryAbility&quot;,</span><br><span class="line">        &quot;srcEntry&quot;: &quot;./ets/entryability/EntryAbility.ts&quot;,</span><br><span class="line">        &quot;icon&quot;: &quot;$media:icon&quot;,</span><br><span class="line">        &quot;label&quot;: &quot;$string:EntryAbility_label&quot;,</span><br><span class="line">        &quot;exported&quot;: true,</span><br><span class="line">        &quot;startWindowIcon&quot;: &quot;$media:icon&quot;,</span><br><span class="line">        &quot;startWindowBackground&quot;: &quot;$color:start_window_background&quot;,</span><br><span class="line">        &quot;skills&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;entities&quot;: [</span><br><span class="line">              &quot;entity.system.home&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;actions&quot;: [</span><br><span class="line">              &quot;ohos.want.action.home&quot;</span><br><span class="line">            ]</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;entities&quot;: [</span><br><span class="line">              &quot;entity.system.browsable&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;actions&quot;: [</span><br><span class="line">              &quot;ohos.want.action.viewData&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;uris&quot;: [</span><br><span class="line">              &#123;</span><br><span class="line">                &quot;scheme&quot;: &quot;https&quot;,</span><br><span class="line">                &quot;host&quot;: &quot;www.example.com&quot;,</span><br><span class="line">                &quot;path&quot;: &quot;path1&quot;</span><br><span class="line">              &#125;</span><br><span class="line">            ],</span><br><span class="line">            &quot;domainVerify&quot;: true</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Configuration Key Points**:  </span><br><span class="line">- `entities` must include `&quot;entity.system.browsable&quot;`.  </span><br><span class="line">- `actions` must include `&quot;ohos.want.action.viewData&quot;`.  </span><br><span class="line">- `uris` must include an element with `scheme` as `&quot;https&quot;` and `host` as the domain address.  </span><br><span class="line">- Set `domainVerify` to `true` to enable domain name verification.  </span><br><span class="line"></span><br><span class="line">### 5. Process Incoming Links  </span><br><span class="line">Add link processing code in the Ability lifecycle callback (e.g., EntryAbility):  </span><br><span class="line">```typescript</span><br><span class="line">import &#123; AbilityConstant, UIAbility, Want &#125; from &#x27;@kit.AbilityKit&#x27;;</span><br><span class="line">import &#123; url &#125; from &#x27;@kit.ArkTS&#x27;;</span><br><span class="line"></span><br><span class="line">export default class EntryAbility extends UIAbility &#123;</span><br><span class="line">  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void &#123;</span><br><span class="line">    let uri = want?.uri;</span><br><span class="line">    if (uri) &#123;</span><br><span class="line">      let urlObject = url.URL.parseURL(want?.uri);</span><br><span class="line">      let action = urlObject.params.get(&#x27;action&#x27;);</span><br><span class="line">      if (action === &quot;showall&quot;)&#123;</span><br><span class="line">         // Process logic to display all programs</span><br><span class="line">      &#125;</span><br><span class="line">      // Process other parameters...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## VI. Navigation Guidance for the Launching Party  </span><br><span class="line"></span><br><span class="line">### Use the openLink Interface to Launch the App  </span><br><span class="line">**Method 1: Open the App Only via App Linking**  </span><br><span class="line">```typescript</span><br><span class="line">// Implement in Index.ets</span><br><span class="line">import &#123; hilog &#125; from &#x27;@kit.PerformanceAnalysisKit&#x27;;</span><br><span class="line">import &#123; BusinessError &#125; from &#x27;@kit.BasicServicesKit&#x27;;</span><br><span class="line">import &#123; GlobalContext &#125; from &#x27;../common/GlobalContext&#x27;;</span><br><span class="line"></span><br><span class="line">@Entry</span><br><span class="line">@Component</span><br><span class="line">struct Index &#123;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Button(&#x27;start link&#x27;, &#123; type: ButtonType.Capsule, stateEffect: true &#125;)</span><br><span class="line">      .width(&#x27;87%&#x27;)</span><br><span class="line">      .height(&#x27;5%&#x27;)</span><br><span class="line">      .margin(&#123; bottom: &#x27;12vp&#x27; &#125;)</span><br><span class="line">      .onClick(() =&gt; &#123;</span><br><span class="line">        let context = GlobalContext.getContext();</span><br><span class="line">        let link: string = &quot;https://www.example.com/programs?action=showall&quot;;</span><br><span class="line">        // Open the app only via App Linking</span><br><span class="line">        context.openLink(link, &#123; appLinkingOnly: true &#125;)</span><br><span class="line">          .then(() =&gt; &#123;</span><br><span class="line">            hilog.info(0x0000, &#x27;testTag&#x27;, `Succeeded in opening link.`);</span><br><span class="line">          &#125;)</span><br><span class="line">          .catch((error: BusinessError) =&gt; &#123;</span><br><span class="line">            hilog.error(0x0000, &#x27;testTag&#x27;, `Failed to open link, code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">**Method 2: Open the App with App Linking Priority**  </span><br><span class="line">Simply set the `appLinkingOnly` parameter to `false` or omit it.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## VII. Verification and Troubleshooting  </span><br><span class="line"></span><br><span class="line">### Verify the App Launch Effect  </span><br><span class="line">1. Manually sign the app (automatic signing is not allowed).  </span><br><span class="line">2. Compile, package, and install it on the debugging device.  </span><br><span class="line">3. Test the navigation function via the launching app.  </span><br><span class="line"></span><br><span class="line">### Common Issue Troubleshooting  </span><br><span class="line">**1. Incorrect skills configuration in the app&#x27;s module.json5 file**  </span><br><span class="line">- Check if the domain name in the &quot;host&quot; field is correctly set.  </span><br><span class="line">- Ensure independent skill objects are created for different navigation scenarios.  </span><br><span class="line"></span><br><span class="line">**2. Incorrect developer website server configuration**  </span><br><span class="line">- Check if `appIdentifier` in `applinking.json` is correct.  </span><br><span class="line">- Confirm the file is located in the `.well-known` directory.  </span><br><span class="line">- Test accessibility by visiting `https://your.domain.name/.well-known/applinking.json` in a browser.  </span><br><span class="line"></span><br><span class="line">**3. System has not completed domain name verification**  </span><br><span class="line">- Wait at least 20 seconds after installing the app.  </span><br><span class="line">- Check network connection status (weak networks may cause verification failure).  </span><br><span class="line">- The system will automatically retry verification within 24 hours.  </span><br><span class="line"></span><br><span class="line">**4. Confirm whether domain name verification succeeded**  </span><br><span class="line">Use the following command to query the verification result:  </span><br></pre></td></tr></table></figure>
-<p>hdc shell hidumper -s AppDomainVerifyManager</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Success message example:  </span><br></pre></td></tr></table></figure>
-<p>BundleName:<br>  appIdentifier:123456789<br>   domain verify status:<br>    <a href="https://www.example.com:success">https://www.example.com:success</a></p>
-<pre><code>**Error message handling**:  
-- `client-error`: Check `appIdentifier` and domain publication status.  
-- `http_unknown`: Ensure the device is connected to the network.  
-- Other errors: Contact technical support.  
-
-**5. Pre-installed apps cannot be launched on the first device startup**  
-- The system attempts verification within 20 minutes after the first startup.  
-- Failure may occur if there is no network connection during this period.  
-- Solution: Restart the device or wait 24 hours.  
-
-**6. CDN content is not updated in a timely manner**  
-- CDN caching time is 10 minutes; please be patient.  
-
-**7. Correspondence between apps and domain names**  
-- One app can be associated with multiple domains, and one domain can be associated with multiple apps.  
-- When multiple apps are associated with the same domain:  
-  - If each app has the same uris configuration, the system will display a selection list.  
-  - Target apps can be distinguished by configuring different paths.  
-
-
-## VIII. Conclusion  
-
-HarmonyOS&#39;s App Linking technology provides developers with a powerful and flexible app navigation solution, offering strong support for enhancing user experience, achieving precise marketing, and improving app security. Through the detailed steps in this guide, developers can smoothly implement App Linking integration and create a seamless app navigation experience for users.
-</code></pre>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/25630-HarmonyOS-Next-6-0-0-Beta1-Update-Notes-and-Adaptation-Guide/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/30/25630-HarmonyOS-Next-6-0-0-Beta1-Update-Notes-and-Adaptation-Guide/" class="post-title-link" itemprop="url">HarmonyOS Next 6.0.0 Beta1 Update Notes and Adaptation Guide</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-30 15:13:23 / Modified: 15:14:28" itemprop="dateCreated datePublished" datetime="2025-06-30T15:13:23+08:00">2025-06-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="HarmonyOS-Next-6-0-0-Beta1-Update-Notes-and-Adaptation-Guide"><a href="#HarmonyOS-Next-6-0-0-Beta1-Update-Notes-and-Adaptation-Guide" class="headerlink" title="HarmonyOS Next 6.0.0 Beta1 Update Notes and Adaptation Guide"></a>HarmonyOS Next 6.0.0 Beta1 Update Notes and Adaptation Guide</h2><p>On June 20, 2025, the Huawei Developers Conference (HDC) officially announced the launch of HarmonyOS 6 Developer Beta for developers.  </p>
-<h3 id="HarmonyOS-6-Beta-Version-Description"><a href="#HarmonyOS-6-Beta-Version-Description" class="headerlink" title="HarmonyOS 6 Beta Version Description"></a>HarmonyOS 6 Beta Version Description</h3><p>HarmonyOS developer version 6.0.0 (20) Beta1 adds a batch of underlying open capabilities, such as cross-thread data transmission, pull request processing, background service extension capabilities, and support for filtering qualified grouped data. ArkUI and ArkWeb capabilities are further enhanced. Multiple high-level Kit capabilities are added, such as the Data Augmentation Kit, Enterprise Space Kit, and Screen Time Guard Kit.  </p>
-<h4 id="6-0-0-20-Beta1-Developer-Kit-Supporting-Information"><a href="#6-0-0-20-Beta1-Developer-Kit-Supporting-Information" class="headerlink" title="6.0.0 (20) Beta1 Developer Kit Supporting Information"></a>6.0.0 (20) Beta1 Developer Kit Supporting Information</h4><table>
-<thead>
-<tr>
-<th align="left"><strong>Software Package</strong></th>
-<th align="left"><strong>Release Type</strong></th>
-<th align="left"><strong>Version Number</strong></th>
-<th align="left">Build Version</th>
-<th align="left"><strong>Release Date</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">System</td>
-<td align="left">Beta</td>
-<td align="left">HarmonyOS 6.0.0 Beta1</td>
-<td align="left"><strong>Software Version:</strong> 6.0.0.35<br><br><strong>API Version:</strong> 6.0.0 (20)</td>
-<td align="left">2025&#x2F;06&#x2F;20</td>
-</tr>
-<tr>
-<td align="left">DevEco Studio</td>
-<td align="left">Beta</td>
-<td align="left">DevEco Studio 6.0.0 Beta1</td>
-<td align="left">6.0.0.418</td>
-<td align="left">2025&#x2F;06&#x2F;20</td>
-</tr>
-<tr>
-<td align="left">SDK</td>
-<td align="left">Beta</td>
-<td align="left">HarmonyOS 6.0.0 Beta1 SDK</td>
-<td align="left">Based on OpenHarmony SDK Ohos_sdk_public 6.0.0.35 (API 20 Beta1)</td>
-<td align="left">2025&#x2F;06&#x2F;20</td>
-</tr>
-</tbody></table>
-<h4 id="New-and-Enhanced-OS-Features"><a href="#New-and-Enhanced-OS-Features" class="headerlink" title="New and Enhanced OS Features"></a>New and Enhanced OS Features</h4><h5 id="I-Ability-Kit-Comprehensive-Enhancement-of-Application-Capabilities"><a href="#I-Ability-Kit-Comprehensive-Enhancement-of-Application-Capabilities" class="headerlink" title="I. Ability Kit: Comprehensive Enhancement of Application Capabilities"></a>I. Ability Kit: Comprehensive Enhancement of Application Capabilities</h5><p>The Ability Kit adds multiple practical functions in this update:  </p>
-<ul>
-<li>New optional parameter <code>CompletionHandler</code> for <code>StartOptions</code> to flexibly handle pull request results  </li>
-<li>Supports enabling <code>Eventhub</code> cross-thread data transmission function in <code>Context</code>  </li>
-<li>New C API support for obtaining application-level resource directories, querying debug modes, and acquiring module metadata  </li>
-<li>Specifically adds the <code>AppServiceExtensionAbility</code> module to provide full lifecycle management for background services</li>
-</ul>
-<h5 id="II-AR-Engine-Upgraded-Spatial-Measurement-Capabilities"><a href="#II-AR-Engine-Upgraded-Spatial-Measurement-Capabilities" class="headerlink" title="II. AR Engine: Upgraded Spatial Measurement Capabilities"></a>II. AR Engine: Upgraded Spatial Measurement Capabilities</h5><p>The AR Engine update introduces powerful volume measurement functions:  </p>
-<ul>
-<li>New ArkTS API supports cube object recognition and volume calculation  </li>
-<li>Simultaneously adds C API support for the same functions  </li>
-<li>Accurately identifies cube objects or embedded cubic spaces in space, calculating length, width, height, and volume</li>
-</ul>
-<h5 id="III-ArkData-Smarter-Data-Filtering"><a href="#III-ArkData-Smarter-Data-Filtering" class="headerlink" title="III. ArkData: Smarter Data Filtering"></a>III. ArkData: Smarter Data Filtering</h5><ul>
-<li>New <code>having</code> interface supports more flexible grouping data filtering conditions</li>
-</ul>
-<h5 id="IV-Comprehensive-Optimization-of-Graphics-Capabilities"><a href="#IV-Comprehensive-Optimization-of-Graphics-Capabilities" class="headerlink" title="IV. Comprehensive Optimization of Graphics Capabilities"></a>IV. Comprehensive Optimization of Graphics Capabilities</h5><h6 id="ArkGraphics-2D"><a href="#ArkGraphics-2D" class="headerlink" title="ArkGraphics 2D"></a>ArkGraphics 2D</h6><ul>
-<li>Wraps original C API capabilities into more user-friendly ArkTS APIs</li>
-</ul>
-<h6 id="ArkGraphics-3D"><a href="#ArkGraphics-3D" class="headerlink" title="ArkGraphics 3D"></a>ArkGraphics 3D</h6><ul>
-<li>New ability to发射 rays from specified screen positions to detect 3D objects</li>
-</ul>
-<h5 id="V-ArkUI-Comprehensive-Upgrade-of-User-Experience"><a href="#V-ArkUI-Comprehensive-Upgrade-of-User-Experience" class="headerlink" title="V. ArkUI: Comprehensive Upgrade of User Experience"></a>V. ArkUI: Comprehensive Upgrade of User Experience</h5><p>ArkUI brings numerous UI component enhancements in this update:  </p>
-<ul>
-<li><strong>Text and Input Components</strong>: New strikethrough&#x2F;underline styles, line spacing control, ultra-long text display effects, verification code input modes, etc.  </li>
-<li><strong>Interaction Experience</strong>: Supports drag event screen ID acquisition, graphic rotation control, custom pop-up states, etc.  </li>
-<li><strong>Layout Optimization</strong>: Intelligent breakpoint completion for grid layouts, scrollbar margin control, etc.  </li>
-<li><strong>New Components</strong>: ToolBarItem component, accessibility event support, etc.  </li>
-<li><strong>Performance Optimization</strong>: Component translation API, Canvas rounded rectangle drawing support, etc.</li>
-</ul>
-<h5 id="VI-ArkWeb-Improved-Web-Experience"><a href="#VI-ArkWeb-Improved-Web-Experience" class="headerlink" title="VI. ArkWeb: Improved Web Experience"></a>VI. ArkWeb: Improved Web Experience</h5><ul>
-<li>New long-press menu vibration effect support  </li>
-<li>Enhanced Web instance binding detection capabilities  </li>
-<li>Upgraded based on Chromium M132 kernel  </li>
-<li>New JSBridge synchronous calls, custom user agents, and other functions  </li>
-<li>Supports picture-in-picture video playback mode</li>
-</ul>
-<h5 id="VII-Enhanced-Audio-and-Security-Capabilities"><a href="#VII-Enhanced-Audio-and-Security-Capabilities" class="headerlink" title="VII. Enhanced Audio and Security Capabilities"></a>VII. Enhanced Audio and Security Capabilities</h5><h6 id="Audio-Kit"><a href="#Audio-Kit" class="headerlink" title="Audio Kit"></a>Audio Kit</h6><ul>
-<li>New echo cancellation query function</li>
-</ul>
-<h6 id="Device-Security-Kit"><a href="#Device-Security-Kit" class="headerlink" title="Device Security Kit"></a>Device Security Kit</h6><ul>
-<li>New simulated click detection  </li>
-<li>Introduces digital shield service to ensure password security  </li>
-<li>New anti-peep protection function</li>
-</ul>
-<h5 id="VIII-Brand-New-Kits-Debut"><a href="#VIII-Brand-New-Kits-Debut" class="headerlink" title="VIII. Brand-New Kits Debut"></a>VIII. Brand-New Kits Debut</h5><p>This update introduces multiple new development kits:  </p>
-<ul>
-<li><strong>Data Augmentation Kit</strong>: Provides data enhancement capabilities such as knowledge bases, knowledge retrieval, and RAG  </li>
-<li><strong>Enterprise Space Kit</strong>: Enterprise digital space service supporting secure data transmission and management  </li>
-<li><strong>Screen Time Guard Kit</strong>: Screen time guardian service providing usage time control capabilities</li>
-</ul>
-<h5 id="IX-Other-Important-Updates"><a href="#IX-Other-Important-Updates" class="headerlink" title="IX. Other Important Updates"></a>IX. Other Important Updates</h5><ul>
-<li><strong>Basic Services Kit</strong>: New device type enumeration values  </li>
-<li><strong>Device Certificate Kit</strong>: Enhanced X509 certificate information acquisition capabilities  </li>
-<li><strong>Location Kit</strong>: New POI definition and distance calculation  </li>
-<li><strong>MDM Kit</strong>: New public network upgrade control, device maintenance mode, etc.  </li>
-<li><strong>Online Authentication Kit</strong>: Supports passkey services  </li>
-<li><strong>Remote Communication Kit</strong>: Optimized network connection strategies  </li>
-<li><strong>Scan Kit</strong>: New emulator support  </li>
-<li><strong>Share Kit</strong>: Expanded touch-to-share scenarios  </li>
-<li><strong>Test Kit</strong>: Enhanced text testing capabilities  </li>
-<li><strong>UI Design Kit</strong>: New UI components and effects  </li>
-<li><strong>XEngine Kit</strong>: Supports high-performance GPU sorting  </li>
-<li><strong>Debugging Tools</strong>: Packaging tools add universal normalization commands</li>
-</ul>
-<h4 id="DevEco-Studio-Beta1-6-0-0-418-New-and-Enhanced-Features"><a href="#DevEco-Studio-Beta1-6-0-0-418-New-and-Enhanced-Features" class="headerlink" title="DevEco Studio Beta1 (6.0.0.418) New and Enhanced Features"></a>DevEco Studio Beta1 (6.0.0.418) New and Enhanced Features</h4><ul>
-<li>DevEco Studio supports developing API 20 projects.  </li>
-<li>DevEco Studio adapts to the IntelliJ 2024.3.3 base upgrade, providing a new user interface with a simpler appearance and development experience.  </li>
-<li>New page generation function supports multi-turn dialogue through natural language to generate usable page code for applications&#x2F;meta-services, completing page construction quickly.  </li>
-<li>Provides problem repair capabilities for syntax errors in compilation and build scenarios.  </li>
-<li>New support for natural language interaction to analyze and explain performance issues in the current instance or project, helping developers quickly locate specific causes affecting performance.  </li>
-<li>Supports querying changes in C APIs and provides cross-version query capabilities.  </li>
-<li>Code Linter adds 3 new inspection rules, and the @typescript-eslint&#x2F;explicit-function-return-type rule adds a configuration option to support inspection of .ets files.  </li>
-<li>Enhanced Profiler tuning tool capabilities:  <ul>
-<li>Snapshot analysis template supports displaying reference chains in chart form.  </li>
-<li>Snapshot analysis supports parsing the names of application object classes.  </li>
-<li>Launch template supports displaying ETS file loading during application cold start.  </li>
-<li>The Profiler tool’s Energy template supports displaying abnormal energy consumption data and locating abnormal energy consumption components.</li>
-</ul>
-</li>
-<li>Provides Graphics Profiler tools to capture GPU frame information.  </li>
-<li>New support for quickly applying for partial ACL permissions via auto-signing.  </li>
-<li>ohpm supports introducing dependencies using @module to point to module directories by module name.  </li>
-<li>ohpm supports encrypted storage and reading of sensitive configuration items.  </li>
-<li>ohpm command-line tools support the list –recursive option to display dependency trees of all modules.  </li>
-<li>ohpm-repo supports OHMUrl version consistency verification for third-party library bytecode files.  </li>
-<li>The hvigor-config.json5 file’s execution section adds the optimizationStrategy field to specify the build mode. Command-line parameters support –optimization-strategy&#x3D;performance&#x2F;memory.  </li>
-<li>The following fields are added under properties in the hvigor-config.json5 file:  <ul>
-<li>ohos.rollupCache.usePathPlaceholder: Specifies whether to replace absolute paths in rollup caches under the build directory with placeholders.  </li>
-<li>ohos.rollupCache.useSourceHash: Specifies whether to replace source code in rollup caches under the build directory with corresponding hash content to reduce cache size.</li>
-</ul>
-</li>
-<li>The skipOhModulesLint field is added under buildOption&#x2F;arkOptions in project-level and module-level build-profile.json5 files to specify whether to skip <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/typescript-to-arkts-migration-guide">ArkTS rule checks</a> for the oh_modules directory in the project.  </li>
-<li>Build Analyzer build analysis adds support for ultra-fine-grained mode. Compared with advanced mode, it records more detailed timing data during ArkTS compilation, but enabling it may prolong compilation and build time.  </li>
-<li>The obfuscation assistant supports associating historical records, eliminating the need to recheck whitelist fields already investigated historically, and supports merging whitelist files.  </li>
-<li>ArkUI Inspector supports 3D expansion of applications by component granularity, facilitating viewing of nesting and occlusion relationships between components.  </li>
-<li>FaultLog of Cpp Crash type supports structured display and log filtering.  </li>
-<li>The emulator supports custom screen size, resolution, DPI, and other configurations.  </li>
-<li>Partial Kits support running on the emulator.  </li>
-<li>The emulator supports adding multiple screens for quickly testing UI layouts in different resolution and DPI scenarios.  </li>
-<li>The application and meta-service health check adds a pre-listing health check mode to quickly detect listing blocking issues. After detection, you can choose to upload the health check report for reference in AppGallery listing, improving listing efficiency.  </li>
-<li>The rule health check for applications and meta-services adds seven new UX detection rules.</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1763,7 +1522,7 @@ HarmonyOS&#39;s App Linking technology provides developers with a powerful and f
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">344</span>
+          <span class="site-state-item-count">347</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
