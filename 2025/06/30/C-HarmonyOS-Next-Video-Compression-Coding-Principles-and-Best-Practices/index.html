@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS Next Video Compression Coding Principles and Best PracticesBackgroundPrevious articles introduced that HarmonyOS Next allows the system album and camera tools to acquire images and videos wi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS Next Video Compression Coding Principles and Best Practices">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Video-Compression-Coding-Principles-and-Best-Practices/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS Next Video Compression Coding Principles and Best PracticesBackgroundPrevious articles introduced that HarmonyOS Next allows the system album and camera tools to acquire images and videos wi">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-2.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-1.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-3.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-5.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-6.png">
+<meta property="article:published_time" content="2025-06-30T14:06:10.000Z">
+<meta property="article:modified_time" content="2025-06-30T14:07:36.426Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-2.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Video-Compression-Coding-Principles-and-Best-Practices/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS Next Video Compression Coding Principles and Best Practices | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Video-Compression-Coding-Principles-and-Best-Practices/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS Next Video Compression Coding Principles and Best Practices
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 22:06:10 / Modified: 22:07:36" itemprop="dateCreated datePublished" datetime="2025-06-30T22:06:10+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-Next-Video-Compression-Coding-Principles-and-Best-Practices"><a href="#HarmonyOS-Next-Video-Compression-Coding-Principles-and-Best-Practices" class="headerlink" title="HarmonyOS Next Video Compression Coding Principles and Best Practices"></a>HarmonyOS Next Video Compression Coding Principles and Best Practices</h1><h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>Previous articles introduced that HarmonyOS Next allows the system album and camera tools to acquire images and videos without special permissions. After acquiring these assets, we generally need to compress them to reduce bandwidth and storage resource consumption. For example, a 10-second video shot by the Huawei Mate60 Pro’s system camera generates a file of about 38MB, with an analysis showing a video bitrate as high as 30Mbps—significantly higher than required in many scenarios where video quality demands are lower:  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-2.png"></p>
+<p>Image compression methods have been discussed previously. This article focuses on video compression coding based on the HarmonyOS Next platform.  </p>
+<h2 id="Principles-of-Video-Compression"><a href="#Principles-of-Video-Compression" class="headerlink" title="Principles of Video Compression"></a>Principles of Video Compression</h2><h3 id="Related-Concepts"><a href="#Related-Concepts" class="headerlink" title="Related Concepts"></a>Related Concepts</h3><p><strong>What is a video?</strong><br>A video is a sequence of continuous images. Typically, a frame rate of 18 frames per second (fps) ensures smooth playback.  </p>
+<p><strong>What is video compression?</strong><br>Video compression uses digital signal processing techniques and algorithms to reduce video data size, minimizing storage space and transmission bandwidth while maintaining original quality.  </p>
+<p><strong>Why is compression possible?</strong><br>Because images and video sequences contain redundant information, compression aims to remove this redundancy:  </p>
+<ul>
+<li><strong>Intra-frame redundancy</strong>: Large areas of uniform color or blank spaces in an image can be stored with fewer bits.  </li>
+<li><strong>Inter-frame redundancy</strong>: Adjacent frames in a video sequence (e.g., a person running) often differ only slightly (e.g., leg movements).</li>
+</ul>
+<p>Key compression techniques include:  </p>
+<ol>
+<li><strong>Intra-frame compression</strong>: Encodes individual frames without considering adjacent frames (e.g., DCT, Discrete Cosine Transform).  </li>
+<li><strong>Inter-frame compression</strong>: Utilizes correlation between adjacent frames (e.g., motion estimation, motion compensation).  </li>
+<li><strong>Transform coding</strong>: Converts spatial-domain image information to the frequency domain for efficient encoding.  </li>
+<li><strong>Quantization</strong>: Reduces data volume by quantizing transformed coefficients.</li>
+</ol>
+<p><strong>What is compression transcoding?</strong><br>The degree of video compression is measured by <strong>bitrate</strong> (bit rate), the number of bits transmitted per unit time (e.g., kbps, Mbps). Higher bitrates generally mean higher resolution, smoother motion, and more accurate color reproduction.  </p>
+<p>For example, a 1280×720 video at 18 fps in RGBA format would require:  </p>
+<ul>
+<li>1 second uncompressed: <code>1280×720×18</code> bytes &#x3D; <code>3,686,400×18</code> bytes &#x3D; <code>3,686,400×18×8</code> bits &#x3D; <strong>530 Mbps</strong>.<br>In contrast, high-quality 4K&#x2F;8K videos typically have bitrates of only a few Mbps, demonstrating the 100× compression achievable through coding.</li>
+</ul>
+<p>Videos captured by mobile phone cameras are often large, but we may need to reduce their size for scenarios where full quality isn’t necessary—hence the focus on video compression coding.  </p>
+<h3 id="Introduction-to-Audio-Video-Processing-Flow"><a href="#Introduction-to-Audio-Video-Processing-Flow" class="headerlink" title="Introduction to Audio-Video Processing Flow"></a>Introduction to Audio-Video Processing Flow</h3><p>The typical audio-video processing flow in daily scenarios is as follows:<br><img src="/../images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.png"></p>
+<p>The main principle of video compression coding is to:  </p>
+<ol>
+<li>Decode and demultiplex the video into raw data.  </li>
+<li>Optionally process the raw data.  </li>
+<li>Re-encode it with a new <strong>bitrate</strong> to reduce file size.<br><img src="/../images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-1.png"></li>
+</ol>
+<h2 id="Introduction-to-HarmonyOS-Next-Audio-Video-Codec-APIs"><a href="#Introduction-to-HarmonyOS-Next-Audio-Video-Codec-APIs" class="headerlink" title="Introduction to HarmonyOS Next Audio-Video Codec APIs"></a>Introduction to HarmonyOS Next Audio-Video Codec APIs</h2><p>Third-party libraries like FFmpeg can compress videos, but they rely on software codecs (CPU processing). Mobile phones often provide specialized hardware for audio-video processing, accessible via system-provided hardware codec interfaces. This section introduces HarmonyOS Next’s hardware audio-video codec APIs.  </p>
+<p><strong>Software vs. Hardware Codecs</strong>:  </p>
+<ul>
+<li><strong>Software codecs</strong>: Run on CPU, offering flexible iteration, better compatibility, and easier protocol&#x2F;format extension.  </li>
+<li><strong>Hardware codecs</strong>: Operate on dedicated hardware, delivering better power efficiency, lower latency, higher throughput, and reduced CPU load.</li>
+</ul>
+<p>HarmonyOS Next provides audio-video codec interfaces only via C APIs, covering demultiplexing, decoding, encoding, and muxing.  </p>
+<h3 id="Demultiplexing"><a href="#Demultiplexing" class="headerlink" title="Demultiplexing"></a>Demultiplexing</h3><p>Demultiplexing operates on files (local or network), parsing them to extract DRM information and media samples (audio, video, subtitles).  </p>
+<p>HarmonyOS Next supports data input types:  </p>
+<ul>
+<li>Remote connections (HTTP protocol, requires <code>ohos.permission.INTERNET</code>).  </li>
+<li>File descriptors (FD, requires <code>ohos.permission.READ_MEDIA</code> for local files).</li>
+</ul>
+<p>Dynamic libraries for demultiplexing:  </p>
+<ul>
+<li><code>libnative_media_codecbase.so</code>: Codec base library  </li>
+<li><code>libnative_media_avdemuxer.so</code>: Demultiplexer library  </li>
+<li><code>libnative_media_avsource.so</code>: Media source library  </li>
+<li><code>libnative_media_core.so</code>: Media core library</li>
+</ul>
+<p>Demultiplexing involves structured file reading (IO operations) with minimal CPU overhead.  </p>
+<h4 id="1-Include-Header-Files"><a href="#1-Include-Header-Files" class="headerlink" title="1. Include Header Files"></a>1. Include Header Files</h4><pre><code class="language-c">#include &lt;multimedia/player_framework/native_avdemuxer.h&gt;
+#include &lt;multimedia/player_framework/native_avsource.h&gt;
+#include &lt;multimedia/player_framework/native_avcodec_base.h&gt;
+#include &lt;multimedia/player_framework/native_avformat.h&gt;
+#include &lt;multimedia/player_framework/native_avbuffer.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/stat.h&gt;
+</code></pre>
+<h4 id="2-Create-a-Resource-Management-Object"><a href="#2-Create-a-Resource-Management-Object" class="headerlink" title="2. Create a Resource Management Object"></a>2. Create a Resource Management Object</h4><pre><code class="language-c">// Create a source object for an FD resource file (offset=0, size=fileSize is recommended for completeness)
+OH_AVSource *source = OH_AVSource_CreateWithFD(fd, 0, fileSize);
+if (source == nullptr) &#123;
+   printf(&quot;create source failed&quot;);
+   return;
+&#125;
+</code></pre>
+<p>For network resources:  </p>
+<pre><code class="language-c">// Create a source object for a URI resource (optional)
+OH_AVSource *source = OH_AVSource_CreateWithURI(uri);
+</code></pre>
+<p>For custom data sources (requires implementing <code>AVSourceReadAt</code>):  </p>
+<pre><code class="language-c">g_filePath = filePath;
+OH_AVDataSource dataSource = &#123;fileSize, AVSourceReadAt&#125;;
+OH_AVSource *source = OH_AVSource_CreateWithDataSource(&amp;dataSource);
+</code></pre>
+<h4 id="3-Create-a-Demultiplexer-Instance"><a href="#3-Create-a-Demultiplexer-Instance" class="headerlink" title="3. Create a Demultiplexer Instance"></a>3. Create a Demultiplexer Instance</h4><pre><code class="language-c">// Create a demuxer for the source object
+OH_AVDemuxer *demuxer = OH_AVDemuxer_CreateWithSource(source);
+if (demuxer == nullptr) &#123;
+   printf(&quot;create demuxer failed&quot;);
+   return;
+&#125;
+</code></pre>
+<h4 id="4-Get-the-Number-of-File-Tracks"><a href="#4-Get-the-Number-of-File-Tracks" class="headerlink" title="4. Get the Number of File Tracks"></a>4. Get the Number of File Tracks</h4><pre><code class="language-c">// Get the source format to obtain the track count
+OH_AVFormat *sourceFormat = OH_AVSource_GetSourceFormat(source);
+if (sourceFormat == nullptr) &#123;
+   printf(&quot;get source format failed&quot;);
+   return;
+&#125;
+int32_t trackCount = 0;
+if (!OH_AVFormat_GetIntValue(sourceFormat, OH_MD_KEY_TRACK_COUNT, &amp;trackCount)) &#123;
+   printf(&quot;get track count from source format failed&quot;);
+   return;
+&#125;
+OH_AVFormat_Destroy(sourceFormat);
+</code></pre>
+<h4 id="5-Get-Track-Indices-and-Information"><a href="#5-Get-Track-Indices-and-Information" class="headerlink" title="5. Get Track Indices and Information"></a>5. Get Track Indices and Information</h4><pre><code class="language-c">uint32_t audioTrackIndex = 0;
+uint32_t videoTrackIndex = 0;
+int32_t w = 0, h = 0, trackType;
+for (uint32_t index = 0; index &lt; static_cast&lt;uint32_t&gt;(trackCount); index++) &#123;
+   OH_AVFormat *trackFormat = OH_AVSource_GetTrackFormat(source, index);
+   if (trackFormat == nullptr) &#123;
+      printf(&quot;get track format failed&quot;);
+      return;
+   &#125;
+   if (!OH_AVFormat_GetIntValue(trackFormat, OH_MD_KEY_TRACK_TYPE, &amp;trackType)) &#123;
+      printf(&quot;get track type from track format failed&quot;);
+      return;
+   &#125;
+   // Classify tracks as audio or video
+   if (static_cast&lt;OH_MediaType&gt;(trackType) == OH_MediaType::MEDIA_TYPE_AUD) &#123;
+      audioTrackIndex = index;
+   &#125; else &#123;
+      videoTrackIndex = index;
+      // Get video dimensions
+      if (!OH_AVFormat_GetIntValue(trackFormat, OH_MD_KEY_WIDTH, &amp;w) ||
+          !OH_AVFormat_GetIntValue(trackFormat, OH_MD_KEY_HEIGHT, &amp;h)) &#123;
+         printf(&quot;get track dimensions failed&quot;);
+         return;
+      &#125;
+   &#125;
+   OH_AVFormat_Destroy(trackFormat);
+&#125;
+</code></pre>
+<h4 id="6-Select-Tracks-for-the-Demuxer"><a href="#6-Select-Tracks-for-the-Demuxer" class="headerlink" title="6. Select Tracks for the Demuxer"></a>6. Select Tracks for the Demuxer</h4><pre><code class="language-c">if (OH_AVDemuxer_SelectTrackByID(demuxer, audioTrackIndex) != AV_ERR_OK) &#123;
+   printf(&quot;select audio track failed: %d&quot;, audioTrackIndex);
+   return;
+&#125;
+if (OH_AVDemuxer_SelectTrackByID(demuxer, videoTrackIndex) != AV_ERR_OK) &#123;
+   printf(&quot;select video track failed: %d&quot;, videoTrackIndex);
+   return;
+&#125;
+</code></pre>
+<p>Use <code>OH_AVDemuxer_UnselectTrackByID</code> to deselect tracks when done.  </p>
+<h4 id="7-Start-Demultiplexing-and-Read-Samples"><a href="#7-Start-Demultiplexing-and-Read-Samples" class="headerlink" title="7. Start Demultiplexing and Read Samples"></a>7. Start Demultiplexing and Read Samples</h4><pre><code class="language-c">// Create a buffer to hold demuxed data
+OH_AVBuffer *buffer = OH_AVBuffer_Create(w * h * 3 &gt;&gt; 1);
+if (buffer == nullptr) &#123;
+   printf(&quot;build buffer failed&quot;);
+   return;
+&#125;
+OH_AVCodecBufferAttr info;
+bool videoIsEnd = false, audioIsEnd = false;
+int32_t ret;
+while (!audioIsEnd || !videoIsEnd) &#123;
+   // Read audio samples
+   if (!audioIsEnd) &#123;
+      ret = OH_AVDemuxer_ReadSampleBuffer(demuxer, audioTrackIndex, buffer);
+      if (ret == AV_ERR_OK) &#123;
+         OH_AVBuffer_GetBufferAttr(buffer, &amp;info);
+         printf(&quot;audio info.size: %d\n&quot;, info.size);
+         if (info.flags == OH_AVCodecBufferFlags::AVCODEC_BUFFER_FLAGS_EOS) &#123;
+            audioIsEnd = true;
+         &#125;
+      &#125;
+   &#125;
+   // Read video samples
+   if (!videoIsEnd) &#123;
+      ret = OH_AVDemuxer_ReadSampleBuffer(demuxer, videoTrackIndex, buffer);
+      if (ret == AV_ERR_OK) &#123;
+         OH_AVBuffer_GetBufferAttr(buffer, &amp;info);
+         printf(&quot;video info.size: %d\n&quot;, info.size);
+         if (info.flags == OH_AVCodecBufferFlags::AVCODEC_BUFFER_FLAGS_EOS) &#123;
+            videoIsEnd = true;
+         &#125;
+      &#125;
+   &#125;
+&#125;
+OH_AVBuffer_Destroy(buffer);
+</code></pre>
+<p>Use <code>OH_AVDemuxer_SeekToTime</code> to seek to a specific time (like scrubbing in a player).  </p>
+<h4 id="8-Destroy-Demultiplexer-Resources"><a href="#8-Destroy-Demultiplexer-Resources" class="headerlink" title="8. Destroy Demultiplexer Resources"></a>8. Destroy Demultiplexer Resources</h4><pre><code class="language-c">OH_AVSource_Destroy(source);
+OH_AVDemuxer_Destroy(demuxer);
+</code></pre>
+<h3 id="Decoding"><a href="#Decoding" class="headerlink" title="Decoding"></a>Decoding</h3><p>HarmonyOS Next supports AVC (H.264) and HEVC (H.265) for both software and hardware decoding.  </p>
+<p>Decoded data can be output via:  </p>
+<ul>
+<li><strong>Surface</strong>: Uses <code>OHNativeWindow</code> for data transfer (e.g., to XComponent).  </li>
+<li><strong>Buffer</strong>: Outputs decoded data via shared memory.</li>
+</ul>
+<p>Like Android’s MediaCodec, HarmonyOS Next decoders operate as state machines with six main states:<br><img src="/../images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-3.png"> </p>
+<p>State transitions:  </p>
+<ul>
+<li><code>OH_VideoDecoder_Reset</code> or creation → <code>Initialized</code>  </li>
+<li><code>OH_VideoDecoder_Configure</code> → <code>Configured</code>  </li>
+<li><code>OH_VideoDecoder_Prepare</code> → <code>Prepared</code>  </li>
+<li><code>OH_VideoDecoder_Start</code> → <code>Executing</code>  </li>
+<li><code>OH_VideoDecoder_Destroy</code> → <code>Released</code></li>
+</ul>
+<p>Refer to the official flow chart for the interaction process:<br>![[HarmonyOS Next 视频压缩编码原理与最佳实践-4.png]]  </p>
+<p>Dynamic libraries for codecs:  </p>
+<ul>
+<li><code>libnative_media_codecbase.so</code>: Codec base library  </li>
+<li><code>libnative_media_core.so</code>: Media processing core  </li>
+<li><code>libnative_media_venc.so</code>: Video encoding  </li>
+<li><code>libnative_media_vdec.so</code>: Video decoding</li>
+</ul>
+<p>For specific interfaces, see the official example:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/video-decoding-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/video-decoding-V5</a>  </p>
+<p>Decoders accept buffers from demuxers and output YUV buffers or surface data. Use <code>OH_VideoDecoder_SetSurface(videoDec, window)</code> to set a surface for direct rendering (reducing data copy overhead). Data writing is triggered via callback functions registered with <code>OH_VideoDecoder_RegisterCallback</code>:  </p>
+<pre><code class="language-c">// Error callback implementation
+static void OnError(OH_AVCodec *codec, int32_t errorCode, void *userData)
+&#123;
+    (void)codec;
+    (void)errorCode;
+    (void)userData;
+&#125;
+
+// Stream change callback implementation
+static void OnStreamChanged(OH_AVCodec *codec, OH_AVFormat *format, void *userData)
+&#123;
+    (void)codec;
+    (void)userData;
+    OH_AVFormat_GetIntValue(format, OH_MD_KEY_VIDEO_PIC_WIDTH, &amp;width);
+    OH_AVFormat_GetIntValue(format, OH_MD_KEY_VIDEO_PIC_HEIGHT, &amp;height);
+    OH_AVFormat_GetIntValue(format, OH_MD_KEY_VIDEO_STRIDE, &amp;widthStride);
+    OH_AVFormat_GetIntValue(format, OH_MD_KEY_VIDEO_SLICE_HEIGHT, &amp;heightStride);
+&#125;
+
+// Input buffer request callback implementation
+static void OnNeedInputBuffer(OH_AVCodec *codec, uint32_t index, OH_AVBuffer *buffer, void *userData)
+&#123;
+    // Process input buffer index and data
+&#125;
+
+// New output buffer callback implementation (buffer is null in Surface mode)
+static void OnNewOutputBuffer(OH_AVCodec *codec, uint32_t index, OH_AVBuffer *buffer, void *userData)
+&#123;
+    // Process output buffer index and data
+&#125;
+
+// Register asynchronous callbacks
+OH_AVCodecCallback cb = &#123;&amp;OnError, &amp;OnStreamChanged, &amp;OnNeedInputBuffer, &amp;OnNewOutputBuffer&#125;;
+int32_t ret = OH_VideoDecoder_RegisterCallback(videoDec, cb, NULL);
+if (ret != AV_ERR_OK) &#123;
+    // Error handling
+&#125;
+</code></pre>
+<p><strong>Software vs. Hardware Decoding Differences</strong>:  </p>
+<ul>
+<li>Software decoding (via MimeType) currently supports only H.264 (<code>OH_AVCODEC_MIMETYPE_VIDEO_AVC</code>).  </li>
+<li>Hardware decoding supports H.264 and H.265 (<code>OH_AVCODEC_MIMETYPE_VIDEO_HEVC</code>).</li>
+</ul>
+<h3 id="Encoding"><a href="#Encoding" class="headerlink" title="Encoding"></a>Encoding</h3><p>Video encoding is the reverse of decoding, currently supporting only hardware encoding for H.264 and H.265.  </p>
+<p>Encoders accept input via Surface or Buffer modes (e.g., screen rendering or camera capture data).  </p>
+<p>Like decoders, encoders operate as state machines:<br><img src="/../images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-5.png"></p>
+<p>Refer to the official flow chart for the encoding process:<br><img src="/../images/HarmonyOS%20Next%20%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E5%8E%9F%E7%90%86%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-6.png"></p>
+<p>For specific interfaces, see:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/video-encoding-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/video-encoding-V5</a>  </p>
+<p>To compress videos, focus on encoder configuration:  </p>
+<pre><code class="language-c">// Configure encoder parameters
+double frameRate = 30.0;
+bool rangeFlag = false;
+int32_t primary = static_cast&lt;int32_t&gt;(OH_ColorPrimary::COLOR_PRIMARY_BT709);
+int32_t transfer = static_cast&lt;int32_t&gt;(OH_TransferCharacteristic::TRANSFER_CHARACTERISTIC_BT709);
+int32_t matrix = static_cast&lt;int32_t&gt;(OH_MatrixCoefficient::MATRIX_COEFFICIENT_IDENTITY);
+int32_t profile = static_cast&lt;int32_t&gt;(OH_AVCProfile::AVC_PROFILE_BASELINE);
+int32_t rateMode = static_cast&lt;int32_t&gt;(OH_VideoEncodeBitrateMode::CBR);
+int32_t iFrameInterval = 23000;
+int64_t bitRate = 3000000;
+int64_t quality = 0;
+
+// Create and configure the format
+OH_AVFormat *format = OH_AVFormat_Create();
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_WIDTH, width);       // Required
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_HEIGHT, height);     // Required
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_PIXEL_FORMAT, DEFAULT_PIXELFORMAT); // Required
+
+OH_AVFormat_SetDoubleValue(format, OH_MD_KEY_FRAME_RATE, frameRate);
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_RANGE_FLAG, rangeFlag);
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_COLOR_PRIMARIES, primary);
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_TRANSFER_CHARACTERISTICS, transfer);
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_MATRIX_COEFFICIENTS, matrix);
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_I_FRAME_INTERVAL, iFrameInterval);
+OH_AVFormat_SetIntValue(format, OH_MD_KEY_PROFILE, profile);
+
+// Set bitrate based on rate mode
+if (rateMode == static_cast&lt;int32_t&gt;(OH_VideoEncodeBitrateMode::CQ)) &#123;
+    OH_AVFormat_SetIntValue(format, OH_MD_KEY_QUALITY, quality);
+&#125; else if (rateMode == static_cast&lt;int32_t&gt;(OH_VideoEncodeBit
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-Mastering-HarmonyOS-Next-Logging-Knowledge/" rel="prev" title="Mastering HarmonyOS Next Logging Knowledge">
+      <i class="fa fa-chevron-left"></i> Mastering HarmonyOS Next Logging Knowledge
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-Mastering-the-HarmonyOS-Next-Signature-Verification-Mechanism/" rel="next" title="Mastering the HarmonyOS Next Signature Verification Mechanism">
+      Mastering the HarmonyOS Next Signature Verification Mechanism <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-Next-Video-Compression-Coding-Principles-and-Best-Practices"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS Next Video Compression Coding Principles and Best Practices</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Principles-of-Video-Compression"><span class="nav-number">1.2.</span> <span class="nav-text">Principles of Video Compression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Related-Concepts"><span class="nav-number">1.2.1.</span> <span class="nav-text">Related Concepts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-to-Audio-Video-Processing-Flow"><span class="nav-number">1.2.2.</span> <span class="nav-text">Introduction to Audio-Video Processing Flow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-to-HarmonyOS-Next-Audio-Video-Codec-APIs"><span class="nav-number">1.3.</span> <span class="nav-text">Introduction to HarmonyOS Next Audio-Video Codec APIs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Demultiplexing"><span class="nav-number">1.3.1.</span> <span class="nav-text">Demultiplexing</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Include-Header-Files"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">1. Include Header Files</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Create-a-Resource-Management-Object"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">2. Create a Resource Management Object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Create-a-Demultiplexer-Instance"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">3. Create a Demultiplexer Instance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Get-the-Number-of-File-Tracks"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">4. Get the Number of File Tracks</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Get-Track-Indices-and-Information"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">5. Get Track Indices and Information</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-Select-Tracks-for-the-Demuxer"><span class="nav-number">1.3.1.6.</span> <span class="nav-text">6. Select Tracks for the Demuxer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-Start-Demultiplexing-and-Read-Samples"><span class="nav-number">1.3.1.7.</span> <span class="nav-text">7. Start Demultiplexing and Read Samples</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-Destroy-Demultiplexer-Resources"><span class="nav-number">1.3.1.8.</span> <span class="nav-text">8. Destroy Demultiplexer Resources</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Decoding"><span class="nav-number">1.3.2.</span> <span class="nav-text">Decoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Encoding"><span class="nav-number">1.3.3.</span> <span class="nav-text">Encoding</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">364</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

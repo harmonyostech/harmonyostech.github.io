@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Mastering the HarmonyOS Next Signature Verification MechanismBackground IntroductionAndroid app signing requires only one signature file. In the development environment, we use a debug signature by de">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mastering the HarmonyOS Next Signature Verification Mechanism">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-Mastering-the-HarmonyOS-Next-Signature-Verification-Mechanism/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="Mastering the HarmonyOS Next Signature Verification MechanismBackground IntroductionAndroid app signing requires only one signature file. In the development environment, we use a debug signature by de">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-1.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-2.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-3.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-4.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-5.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-6.png">
+<meta property="article:published_time" content="2025-06-30T14:08:03.000Z">
+<meta property="article:modified_time" content="2025-06-30T14:10:06.877Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-Mastering-the-HarmonyOS-Next-Signature-Verification-Mechanism/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Mastering the HarmonyOS Next Signature Verification Mechanism | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-Mastering-the-HarmonyOS-Next-Signature-Verification-Mechanism/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mastering the HarmonyOS Next Signature Verification Mechanism
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 22:08:03 / Modified: 22:10:06" itemprop="dateCreated datePublished" datetime="2025-06-30T22:08:03+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Mastering-the-HarmonyOS-Next-Signature-Verification-Mechanism"><a href="#Mastering-the-HarmonyOS-Next-Signature-Verification-Mechanism" class="headerlink" title="Mastering the HarmonyOS Next Signature Verification Mechanism"></a>Mastering the HarmonyOS Next Signature Verification Mechanism</h1><h2 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h2><p>Android app signing requires only one signature file. In the development environment, we use a debug signature by default. The debug signature alias is <code>androiddebugkey</code>, with the password <code>android</code>. The debug certificate is stored in the <code>.android</code> folder under the user directory, typically named <code>debug.keystore</code>, and doesn’t require special configuration in <code>build.gradle</code>.  </p>
+<p>HarmonyOS Next adopts a signing mechanism similar to iOS. Signing configuration information for the project is stored in the project-level <code>build-profile.json5</code>. When using automatic signing, the locally generated signing configuration path is automatically updated in <code>build-profile.json5</code>. This creates an issue: since each person’s signing path differs, <code>build-profile.json5</code> cannot be configured to be ignored by Git nor maintained consistently in multi-person collaboration.  </p>
+<p>Before Develop Beta6, we could create a <code>sign</code> folder in the project, use my account to generate signing files automatically, copy them to the <code>sign</code> folder, and allow others to use my signature for development and debugging. However, starting from Develop Beta6, sharing automatically generated signatures causes real-device installation failures:  </p>
+<pre><code>09/06 18:10:04:702: $ hdc shell bm install -p data/local/tmp/140f0b9059b04d8286941346c79d8f7b  in 304 ms
+Install Failed: error: failed to install bundle.
+code:9568322
+error: signature verification failed due to not trusted app source.
+View detailed instructions.
+09/06 18:10:04:791: $ hdc shell rm -rf data/local/tmp/140f0b9059b04d8286941346c79d8f7b
+09/06 18:10:04:792: Launch com.qingkouwei.demo failed, starting handle failure progress
+Error while Deploy Hap
+</code></pre>
+<p>As the HarmonyOS system stabilizes through iterations, system security has been strengthened. During installation, the system now verifies whether the UDID in the signature matches the device UDID. This necessitates continuing with automatic signing and finding a thorough solution.  </p>
+<h2 id="HarmonyOS-Signing-Mechanism"><a href="#HarmonyOS-Signing-Mechanism" class="headerlink" title="HarmonyOS Signing Mechanism"></a>HarmonyOS Signing Mechanism</h2><p>To solve this problem, we must understand the signing principles. Let’s first look at the files generated by automatic signing:  </p>
+<ul>
+<li><code>.p12</code>: Key file. The P12 certificate (PKCS#12, Public-Key Cryptography Standards #12) is an encryption standard for exchanging digital certificates. It describes personal identity information, includes public and private keys for asymmetric encryption, and is stored in a keystore file. The key pair is used for digital signatures and verification.  </li>
+<li><code>.csr</code>: Certificate Signing Request file, containing the public key in the key pair, public name, organization name, organizational unit, etc., used to apply for a digital certificate from AppGallery Connect.  </li>
+<li><code>.cer</code>: Digital certificate issued by Huawei AppGallery Connect.  </li>
+<li><code>.p7b</code>: Profile file, containing the package name of the HarmonyOS app&#x2F;service, digital certificate information, a list of certificate permissions the app&#x2F;service is allowed to apply for, and a list of devices allowed for debugging (if the app&#x2F;service type is Release, the device list is empty). Each app&#x2F;service package must include a Profile file.  </li>
+<li><code>material</code> folder: Stores signing scheme-related materials, such as passwords and certificates.</li>
+</ul>
+<p>The P12 and CSR files are generated locally and used to upload to the AppGallery Connect platform to apply for certificates and P7B files. The role of the <code>material</code> folder is introduced later.  </p>
+<h3 id="Role-of-the-Key"><a href="#Role-of-the-Key" class="headerlink" title="Role of the Key"></a>Role of the Key</h3><p>The P12 file contains public and private keys for asymmetric encryption (典型算法如RSA), where encryption and decryption keys differ. Typical uses include:  </p>
+<ul>
+<li><strong>Confidentiality</strong>: Encrypt plaintext with the recipient’s public key and transmit it. The ciphertext can only be decrypted with the recipient’s private key, ensuring transmission confidentiality even if intercepted.  </li>
+<li><strong>Identity Verification and Tamper Prevention (Signing)</strong>: Encrypt a message with the sender’s private key to sign it. The signed message can only be decrypted with the sender’s public key, ensuring authenticity (the message indeed belongs to the sender). If the ciphertext is intercepted, modified, and resent, it cannot be decrypted, ensuring message integrity. Thus, signing ensures message authenticity and integrity.</li>
+</ul>
+<h3 id="Role-of-the-Digital-Certificate"><a href="#Role-of-the-Digital-Certificate" class="headerlink" title="Role of the Digital Certificate"></a>Role of the Digital Certificate</h3><p>Asymmetric encryption algorithms are time-consuming for encrypting long plaintexts. In practice, the message is first hashed using a digest algorithm (e.g., MD5, SHA), the digest is encrypted, and the plaintext, encrypted digest, and public key are sent together. The recipient decrypts the digest ciphertext, hashes the plaintext, and compares the digests to verify integrity. This is a digital signature.  </p>
+<p>What is a certificate? Consider a communication fraud scenario: A intends to deceive B by sending a forged message pretending to be from C. A encrypts the file with their private key, sends it with their public key, and claims the public key belongs to C. How does B verify the public key’s ownership? This is where certificates play a role—like a network ID card proving the holder’s identity.  </p>
+<p>A digital certificate is issued by a CA (Certificate Authority) and contains the holder’s information and public key. Like a notarized document, it gains validity through CA authentication. B can verify the message sender by querying the CA with the digital certificate, confirming whether the public key belongs to A or C—similar to checking an ID card.  </p>
+<h2 id="Using-AppGallery-Connect-Platform-Debug-Certificates"><a href="#Using-AppGallery-Connect-Platform-Debug-Certificates" class="headerlink" title="Using AppGallery Connect Platform Debug Certificates"></a>Using AppGallery Connect Platform Debug Certificates</h2><p>The AppGallery Connect platform provides debug certificates. We can generate local keys, create debug certificates on the platform, place them in the app project’s <code>sign</code> folder, configure a unified signing file, and add other developers’ device IDs to the debug Profile. Here’s how to generate debug certificates:  </p>
+<h3 id="Generating-a-P12-Key"><a href="#Generating-a-P12-Key" class="headerlink" title="Generating a P12 Key"></a>Generating a P12 Key</h3><p>DevEco Studio provides a tool to generate P12 keys. In the main menu, click <strong>Build &gt; Generate Key and CSR</strong>:  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6.png"></p>
+<p>Key generation configuration:<br><img src="/../images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-1.png"></p>
+<p>For “Key store file,” select the path and filename for the key file (ending with <code>.p12</code>):<br><img src="/../images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-2.png"><br><img src="/../images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-3.png"></p>
+<p>Next, select the CSR file path:<br><img src="/../images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-4.png"></p>
+<p>Upon completion, you will obtain:  </p>
+<ul>
+<li><code>qingkouwei.csr</code>  </li>
+<li><code>qingkouwei.p12</code>  </li>
+<li><code>material</code> folder</li>
+</ul>
+<h3 id="Applying-for-a-Debug-Certificate-and-Debug-Profile"><a href="#Applying-for-a-Debug-Certificate-and-Debug-Profile" class="headerlink" title="Applying for a Debug Certificate and Debug Profile"></a>Applying for a Debug Certificate and Debug Profile</h3><p>A certificate is a digital certificate configuring signing information for a HarmonyOS app&#x2F;meta-service, ensuring code integrity and publisher identity. In <code>.cer</code> format, it contains public keys, certificate fingerprints, etc. For applying for a debug certificate, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-add-debugcert-0000001914263178">Apply for a Debug Certificate</a>  </p>
+<p>The Profile (<code>.p7b</code> format) contains the package name, digital certificate information, allowed certificate permissions, and debug device list (empty for Release-type apps&#x2F;services). Each app&#x2F;meta-service must include a Profile. For applying for a debug Profile, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-add-debugprofile-0000001914423102">Apply for a Debug Profile</a>  </p>
+<p>Copy the downloaded <code>.p7b</code> and <code>.cer</code> files to the <code>sign</code> folder and configure signing information in <code>build-profile.json</code>:<br><img src="/../images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-5.png"></p>
+<p>Note: The <code>storePassword</code> is not the password used when generating the signature. How to obtain it? Configure signing information via the project tool’s signing tool, which will automatically retrieve <code>storePassword</code>—this is the role of the <code>material</code> folder mentioned in signing.  </p>
+<p>Note: To generate a signature, first create an APPID on the AppGallery Connect platform:<br><img src="/../images/HarmonyOS%20Next%20%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%AD%BE%E5%90%8D%E9%AA%8C%E8%AF%81%E6%9C%BA%E5%88%B6-6.png"></p>
+<p>Additional considerations:  </p>
+<ol>
+<li>Before using automatic signing, ensure the local system time matches Beijing Time (UTC&#x2F;GMT +8.00); otherwise, signing will fail.  </li>
+<li>Each account can apply for up to two debug certificates. Automatic signing consumes debug certificate quotas. If two debug certificates already exist on AppGallery Connect, subsequent automatic signing for the account will fail.  </li>
+<li>A certificate is “active” upon successful application. If its status becomes “invalid” or “revoked,” it is no longer usable, and all Profiles applied for with this certificate will also become invalid or revoked. You need to reapply for certificates and Profiles. Revoked certificates cannot be recovered, so proceed with caution.  </li>
+<li>An app can apply for up to 100 Profile files.  </li>
+<li>Modifying debug devices generates a new debug Profile; download it after it takes effect.  </li>
+<li>If a Profile’s status becomes “invalid” or “revoked,” it is no longer usable; reapply for a Profile.  </li>
+<li>Obtain the device UDID using the command <code>hdc shell bm get --udid</code>.</li>
+</ol>
+<p>If an account has already created two debug certificates, using it for automatic signing will fail with the following error:<br>![[HarmonyOS Next 调试签名最佳实践.png]]  </p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>This article introduces the HarmonyOS signing mechanism and how to handle signing conflict management in collaborative development.  </p>
+<h2 id="Reference-Documents"><a href="#Reference-Documents" class="headerlink" title="Reference Documents"></a>Reference Documents</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-signing-V5#section462703710326">App&#x2F;Service Signing</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-add-debugcert-0000001914263178">Apply for a Debug Certificate</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-add-debugprofile-0000001914423102">Apply for a Debug Profile</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-add-device-0000001946142249#section67331926102911">Register Debug Devices</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Next-Video-Compression-Coding-Principles-and-Best-Practices/" rel="prev" title="HarmonyOS Next Video Compression Coding Principles and Best Practices">
+      <i class="fa fa-chevron-left"></i> HarmonyOS Next Video Compression Coding Principles and Best Practices
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-Mastering-Image-and-Video-Selection-in-HarmonyOS-Next/" rel="next" title="Mastering Image and Video Selection in HarmonyOS Next">
+      Mastering Image and Video Selection in HarmonyOS Next <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mastering-the-HarmonyOS-Next-Signature-Verification-Mechanism"><span class="nav-number">1.</span> <span class="nav-text">Mastering the HarmonyOS Next Signature Verification Mechanism</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Background-Introduction"><span class="nav-number">1.1.</span> <span class="nav-text">Background Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HarmonyOS-Signing-Mechanism"><span class="nav-number">1.2.</span> <span class="nav-text">HarmonyOS Signing Mechanism</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Role-of-the-Key"><span class="nav-number">1.2.1.</span> <span class="nav-text">Role of the Key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Role-of-the-Digital-Certificate"><span class="nav-number">1.2.2.</span> <span class="nav-text">Role of the Digital Certificate</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-AppGallery-Connect-Platform-Debug-Certificates"><span class="nav-number">1.3.</span> <span class="nav-text">Using AppGallery Connect Platform Debug Certificates</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Generating-a-P12-Key"><span class="nav-number">1.3.1.</span> <span class="nav-text">Generating a P12 Key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Applying-for-a-Debug-Certificate-and-Debug-Profile"><span class="nav-number">1.3.2.</span> <span class="nav-text">Applying for a Debug Certificate and Debug Profile</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">1.4.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference-Documents"><span class="nav-number">1.5.</span> <span class="nav-text">Reference Documents</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">364</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

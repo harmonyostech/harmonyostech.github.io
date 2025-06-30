@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment Background IntroductionInstant Messaging (IM) has become an indispensable part of modern applications, playing a crucial role i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-IM-System-Practice-One-Development-Multi-Endpoint-Deployment/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment Background IntroductionInstant Messaging (IM) has become an indispensable part of modern applications, playing a crucial role i">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2.jpg">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2-1.jpg">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2-2.jpg">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2-3.jpg">
+<meta property="article:published_time" content="2025-06-30T14:29:38.000Z">
+<meta property="article:modified_time" content="2025-06-30T14:30:56.729Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2.jpg">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-IM-System-Practice-One-Development-Multi-Endpoint-Deployment/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-IM-System-Practice-One-Development-Multi-Endpoint-Deployment/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 22:29:38 / Modified: 22:30:56" itemprop="dateCreated datePublished" datetime="2025-06-30T22:29:38+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-IM-System-Practice-One-Development-Multi-Endpoint-Deployment"><a href="#HarmonyOS-IM-System-Practice-One-Development-Multi-Endpoint-Deployment" class="headerlink" title="HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment"></a>HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment</h1><p><img src="/../images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2.jpg"></p>
+<h3 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h3><p>Instant Messaging (IM) has become an indispensable part of modern applications, playing a crucial role in enhancing user experience, improving business efficiency, strengthening customer service, and driving business growth. From the live streaming apps developed at the start of my career to the current housing platform applications, IM has always played a vital role. With the rise of the HarmonyOS and the maturity of its ecosystem, many manufacturers are adapting to HarmonyOS Next. As an early adopter, I hope to explore new ways to implement IM scenarios through the new features of HarmonyOS.  </p>
+<p>This article shares practical implementations of “One Development, Multi-Endpoint Deployment” (referred to as “One-Many”) in IM systems.  </p>
+<h3 id="1-What-is-One-Development-Multi-Endpoint-Deployment"><a href="#1-What-is-One-Development-Multi-Endpoint-Deployment" class="headerlink" title="1. What is One Development, Multi-Endpoint Deployment?"></a>1. What is One Development, Multi-Endpoint Deployment?</h3><p>First, let’s look at the official definition of “One Development, Multi-Endpoint Deployment” (abbreviated as “One-Many”):<br><strong>One codebase, one development and release process, multi-endpoint deployment on demand.</strong>  </p>
+<p><strong>Goal</strong>: Enable developers to efficiently develop applications supporting multiple device forms, ensuring compatibility with different devices while providing distributed experiences such as cross-device flow, migration, and collaboration.  </p>
+<p>To achieve the “One-Many” goal, two fundamental issues need to be solved:  </p>
+<ul>
+<li>How to adapt to devices with different sizes and display capabilities;  </li>
+<li>How to兼容 functions for devices with different system capabilities (e.g., TVs without cameras or watches without microphones).</li>
+</ul>
+<p>In summary: <strong>“One-Many” solves page adaptation and functional compatibility issues for different devices with a single codebase.</strong> This article focuses on page adaptation.  </p>
+<p>After understanding the definition of One-Many, let’s examine the pain points of device adaptation in the past.  </p>
+<p>In the early days of my career, I developed a live streaming app for two platforms: Windows and Android, each implemented with native technologies. This approach was inefficient. Later, the Windows platform switched to the QT framework for cross-platform development. However, QT increased the package size, and due to the different screen sizes of Windows and Android, the UI layouts for the two platforms had to be completely different. As a result, only business logic could be shared across platforms, while UI development remained platform-specific.  </p>
+<p>Popular frameworks like Flutter face the same challenge: due to differing UI layouts, the UI layer must be adapted to platforms with different screen sizes.  </p>
+<p>Before HarmonyOS Next, there was no complete solution for achieving satisfactory UI effects with a single codebase—separate adaptations were necessary. HarmonyOS’s page-level One-Many capability completely solves this problem.  </p>
+<h3 id="2-What-Can-One-Many-Bring-to-IM"><a href="#2-What-Can-One-Many-Bring-to-IM" class="headerlink" title="2. What Can One-Many Bring to IM?"></a>2. What Can One-Many Bring to IM?</h3><p>In IM scenarios, take Feishu’s chat function as an example: on PC, the conversation list and chat page are arranged side-by-side:  </p>
+<p><img src="/../images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2-1.jpg"></p>
+<p>On mobile devices with smaller screens, the conversation list and chat page become separate pages:<br><img src="/../images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2-2.jpg"></p>
+<p><img src="/../images/HarmonyOS%E5%AE%9E%E6%88%98IM%E7%B3%BB%E7%BB%9F%E4%B9%8B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BA%A7%E4%B8%80%E6%AC%A1%E5%BC%80%E5%8F%91%E5%A4%9A%E7%AB%AF%E9%83%A8%E7%BD%B2-3.jpg"></p>
+<p>Based on HarmonyOS Next’s page-level One-Many capability, we can use a single codebase to implement the above chat interface adaptations.  </p>
+<h3 id="3-Introduction-to-HarmonyOS-One-Many"><a href="#3-Introduction-to-HarmonyOS-One-Many" class="headerlink" title="3. Introduction to HarmonyOS One-Many"></a>3. Introduction to HarmonyOS One-Many</h3><p>Let’s think: how would we design a system to achieve the above capabilities without considering HarmonyOS?  </p>
+<p>First, device-independent pixels (similar to dp units in Android) are essential to adapt content size to different device sizes.<br>Second, the system needs to support using different UIs for devices with varying screen sizes.  </p>
+<p>HarmonyOS ArkUI provides two layout capabilities to solve these problems:  </p>
+<ol>
+<li><strong>Adaptive Layout</strong>: When the external container size changes, page elements automatically adjust based on relative relationships (e.g., proportion, fixed aspect ratio, display priority) to adapt to the container. For example, on large screens, the conversation list and chat notifications are displayed side-by-side, while on small screens, they are displayed separately. ArkTS offers seven adaptive layout capabilities: stretching, equal distribution, proportion, scaling, extension, hiding, and wrapping.  </li>
+<li><strong>Responsive Layout</strong>: When the external container size changes significantly (e.g., foldable phone switching from 400vp to 1000vp width), elements adjust based on breakpoints, grids, or specific features (e.g., screen orientation, window size) to adapt to the container. ArkTS provides three responsive layout capabilities: breakpoints, media queries, and grid layout.</li>
+</ol>
+<h4 id="3-1-Adaptive-Layout"><a href="#3-1-Adaptive-Layout" class="headerlink" title="3.1 Adaptive Layout"></a>3.1 Adaptive Layout</h4><p>ArkUI abstracts seven adaptive layout capabilities:  </p>
+<ol>
+<li><strong>Stretching</strong>: When the container size changes, the increased or decreased space is <strong>fully allocated</strong> to specified areas within the container. Achieved via <code>flexGrow</code> and <code>flexShrink</code> in Flex layout.  </li>
+<li><strong>Equal Distribution</strong>: When the container size changes, the space is <strong>evenly distributed</strong> to all empty areas within the container. Achieved by setting <code>justifyContent</code> to <code>FlexAlign.SpaceEvenly</code> for Row, Column, or Flex components (e.g., TAB layouts on home pages).  </li>
+<li><strong>Proportion</strong>: The width or height of child components changes with the container <strong>according to a preset ratio</strong>. Implemented by setting child component width&#x2F;height as a percentage of the parent or using the <code>layoutWeight</code> property.  </li>
+<li><strong>Scaling</strong>: The width and height of child components change with the container <strong>according to a preset ratio</strong> while maintaining the aspect ratio. Achieved via the <code>aspectRatio</code> property in layout constraints.  </li>
+<li><strong>Extension</strong>: Child components in the container are displayed or hidden <strong>in their order within the list</strong> as the container size changes. Implemented via List components or Scroll components with Row&#x2F;Column.  </li>
+<li><strong>Hiding</strong>: Child components in the container are displayed or hidden <strong>based on preset display priorities</strong>. Components with the same priority are displayed or hidden simultaneously. Achieved via the <code>displayPriority</code> property in layout constraints.  </li>
+<li><strong>Wrapping</strong>: When the container size is insufficient to display all content, the layout <strong>automatically wraps to the next line</strong>. Achieved by setting <code>wrap</code> to <code>FlexWrap.Wrap</code> in Flex components.</li>
+</ol>
+<h4 id="3-2-Responsive-Layout"><a href="#3-2-Responsive-Layout" class="headerlink" title="3.2 Responsive Layout"></a>3.2 Responsive Layout</h4><p>Adaptive layouts ensure normal display within a certain window size range. However, when the window size changes significantly (e.g., a foldable phone switching from 400vp to 1000vp width), relying solely on adaptive layout may cause issues like abnormal image scaling or excessive white space (e.g., a feed stream that looks sparse with two columns on a large screen and should display four columns for better aesthetics). In such cases, responsive layout capabilities are needed to adjust the page structure.  </p>
+<p>Responsive layout refers to the ability of page elements to automatically adapt to changes in the external container based on specific features (e.g., window width, screen orientation). The most commonly used feature in responsive layout is window width, which is divided into different ranges (called “breakpoints” in ArkUI). When the window width crosses a breakpoint, the page layout is adjusted (e.g., changing from a single column to two or three columns) for optimal display.  </p>
+<p>The system currently provides three responsive layout capabilities:  </p>
+<ol>
+<li><strong>Breakpoints</strong>: Divide window width into ranges (breakpoints), listen for window size changes, and adjust the page layout when a breakpoint is crossed.  </li>
+<li><strong>Media Queries</strong>: Listen for multiple media features (window width, orientation, light&#x2F;dark mode, device type, etc.) and adjust the page layout when features change.  </li>
+<li><strong>Grid Layout</strong>: Divides the area into regular columns, allowing layout adjustments by modifying grid parameters and the number of columns occupied by child components at different breakpoints.</li>
+</ol>
+<h3 id="4-Practical-Implementation-of-One-Many-in-IM-Systems"><a href="#4-Practical-Implementation-of-One-Many-in-IM-Systems" class="headerlink" title="4. Practical Implementation of One-Many in IM Systems"></a>4. Practical Implementation of One-Many in IM Systems</h3><h4 id="4-1-Adapting-to-Screen-Size-Changes"><a href="#4-1-Adapting-to-Screen-Size-Changes" class="headerlink" title="4.1 Adapting to Screen Size Changes"></a>4.1 Adapting to Screen Size Changes</h4><p><strong>Grid Layout</strong><br>Grid layout provides a regular structure for layouts, solving dynamic layout problems across multi-size devices and ensuring layout consistency. For example, on small screens, the “My Page” section fills the screen, while on large screens, we may want留白 on both sides—achievable via grid layout. Grid layout parameters determine how the screen is divided into columns and can set different spacing for different screens.  </p>
+<p>ArkUI provides <code>GridRow</code> and <code>GridCol</code> to implement grid layouts, which can be used to listen for breakpoints.  </p>
+<p>Sample code:  </p>
+<pre><code class="language-typescript">build() &#123;  
+  GridRow(&#123;  
+    columns: &#123;  
+      sm: 4,  
+      md: 12,  
+      lg: 12  
+    &#125;  
+  &#125;) &#123;  
+    GridCol(&#123; span: &#123;  
+      sm: 4,  
+      md: 12,  
+      lg: 12  
+    &#125; &#125;) &#123;  
+      Column() &#123;  
+        Home()  
+      &#125;  
+      .width(&#39;100%&#39;)  
+      .height(&#39;100%&#39;)  
+  
+    &#125;  
+    .height(&#39;100%&#39;)  
+    .width(&#39;100%&#39;)  
+  &#125;  
+  .onBreakpointChange((breakPoints) =&gt; &#123;  
+    this.currentBreakpoint = breakPoints;  
+  &#125;)  
+&#125;
+</code></pre>
+<h4 id="4-2-Displaying-Different-Content-on-Different-Screens"><a href="#4-2-Displaying-Different-Content-on-Different-Screens" class="headerlink" title="4.2 Displaying Different Content on Different Screens"></a>4.2 Displaying Different Content on Different Screens</h4><p><strong>Navigation Component</strong><br>How to display different pages on different screens? For example, showing only the conversation list on mobile devices and a split view (left list, right details) on foldables or PCs.  </p>
+<p>ArkUI provides the <code>Navigation</code> component, which serves as the root container for pages and supports three display modes: single-page, split-view, and adaptive. Suitable for in-module page switching in One-Many scenarios, it enables smooth transition effects through component-level routing and offers various title bar styles for better title-content linkage. In One-Many scenarios, the Navigation component automatically adapts to window size, switching to split-view on larger screens.  </p>
+<p>Key properties used:  </p>
+<ul>
+<li><code>navBarWidth</code>: Width of the navigation bar, effective only in split-view mode.  </li>
+<li><code>navDestination</code>: Creates <code>NavDestination</code> components to build different content pages based on strings (e.g., building a chat page for selected conversations or a blank page for unselected ones).  </li>
+<li><code>mode</code>: Display mode of the navigation bar. Default is <code>NavigationMode.Auto</code>; use <code>NavigationMode.Split</code> for large screens and <code>NavigationMode.Stack</code> for mobile.</li>
+</ul>
+<p>Sample code:  </p>
+<pre><code class="language-typescript">build() &#123;  
+  Column() &#123;  
+    
+      Navigation(this.pageInfo) &#123;   
+		  Flex(&#123; direction: FlexDirection.Column, justifyContent: FlexAlign.Center &#125;) &#123;  
+			ConversationList(&#123;  
+			  currentConversationUserName: $currentConversationUserName,  
+			  currentContactUserName: $currentContactUserName  
+			&#125;)  
+			  .flexGrow(BaseConstants.FLEX_GROW_ONE)  
+			  .width(BaseConstants.FULL_WIDTH)  
+      &#125;      
+      .hideTitleBar(true)  
+      .hideToolBar(true)  
+      .navBarWidth(this.currentBreakpoint === BreakpointConstants.BREAKPOINT_LG ? HomeConstants.NAVIGATION_NAV_BAR_WIDTH_LG :  
+      HomeConstants.NAVIGATION_NAV_BAR_WIDTH_MD)  
+      .navDestination(this.PageMap)  
+      .mode(this.currentBreakpoint === BreakpointConstants.BREAKPOINT_SM ? NavigationMode.Stack : NavigationMode.Split)  
+      .width(BaseConstants.FULL_WIDTH)  
+    &#125;
+&#125;
+
+@Builder  
+PageMap(name: string) &#123;  
+  if (name === &#39;ConversationDetail&#39;) &#123;  
+    ConversationDetail(&#123; currentConversationUserName: this.currentConversationUserName, currentFeatureIndex: 1 &#125;);  
+  &#125; else if (name === &#39;ConversationDetailNone&#39;) &#123;  
+    ConversationDetailNone();  
+  &#125; else &#123;  
+    ConversationDetailNone();  
+  &#125;  
+&#125;
+</code></pre>
+<h3 id="5-Summary"><a href="#5-Summary" class="headerlink" title="5. Summary"></a>5. Summary</h3><p>This article introduces HarmonyOS’s page-level One-Many features and capabilities through IM chat adaptation. ArkUI truly enables one codebase for multi-endpoint deployment, solving the last mile of cross-platform development. We look forward to the improvement of the HarmonyOS ecosystem and the early experience of smooth and convenient new products.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-Introduction-to-DevEco-Studio-for-HarmonyOS-Next-Development-ASan-and-TSan-Detection-to-Cure-Your-C-Phobia/" rel="prev" title="Introduction to DevEco Studio for HarmonyOS Next Development: ASan and TSan Detection to Cure Your C++ Phobia">
+      <i class="fa fa-chevron-left"></i> Introduction to DevEco Studio for HarmonyOS Next Development: ASan and TSan Detection to Cure Your C++ Phobia
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Multi-Target-Artifact-Construction-Best-Practices/" rel="next" title="HarmonyOS Multi-Target Artifact Construction Best Practices">
+      HarmonyOS Multi-Target Artifact Construction Best Practices <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-IM-System-Practice-One-Development-Multi-Endpoint-Deployment"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS IM System Practice: One Development, Multi-Endpoint Deployment</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-Introduction"><span class="nav-number">1.0.1.</span> <span class="nav-text">Background Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-What-is-One-Development-Multi-Endpoint-Deployment"><span class="nav-number">1.0.2.</span> <span class="nav-text">1. What is One Development, Multi-Endpoint Deployment?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-What-Can-One-Many-Bring-to-IM"><span class="nav-number">1.0.3.</span> <span class="nav-text">2. What Can One-Many Bring to IM?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Introduction-to-HarmonyOS-One-Many"><span class="nav-number">1.0.4.</span> <span class="nav-text">3. Introduction to HarmonyOS One-Many</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-Adaptive-Layout"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">3.1 Adaptive Layout</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Responsive-Layout"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">3.2 Responsive Layout</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Practical-Implementation-of-One-Many-in-IM-Systems"><span class="nav-number">1.0.5.</span> <span class="nav-text">4. Practical Implementation of One-Many in IM Systems</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-Adapting-to-Screen-Size-Changes"><span class="nav-number">1.0.5.1.</span> <span class="nav-text">4.1 Adapting to Screen Size Changes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-Displaying-Different-Content-on-Different-Screens"><span class="nav-number">1.0.5.2.</span> <span class="nav-text">4.2 Displaying Different Content on Different Screens</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Summary"><span class="nav-number">1.0.6.</span> <span class="nav-text">5. Summary</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">364</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

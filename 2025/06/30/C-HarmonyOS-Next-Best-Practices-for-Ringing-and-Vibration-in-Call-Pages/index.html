@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages1. Background IntroductionIn developing audio-video calling modules, call ringing is typically implemented on both outgoing and inc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Best-Practices-for-Ringing-and-Vibration-in-Call-Pages/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages1. Background IntroductionIn developing audio-video calling modules, call ringing is typically implemented on both outgoing and inc">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B9%8B%E5%91%BC%E5%8F%AB%E9%A1%B5%E9%9D%A2%E5%93%8D%E9%93%83%E4%B8%8E%E9%9C%87%E5%8A%A8%E5%AE%9E%E7%8E%B0-1.png">
+<meta property="og:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B9%8B%E5%91%BC%E5%8F%AB%E9%A1%B5%E9%9D%A2%E5%93%8D%E9%93%83%E4%B8%8E%E9%9C%87%E5%8A%A8%E5%AE%9E%E7%8E%B0.png">
+<meta property="article:published_time" content="2025-06-30T14:21:07.000Z">
+<meta property="article:modified_time" content="2025-06-30T14:22:17.999Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://harmonyostech.github.io/images/HarmonyOS%20Next%20%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B9%8B%E5%91%BC%E5%8F%AB%E9%A1%B5%E9%9D%A2%E5%93%8D%E9%93%83%E4%B8%8E%E9%9C%87%E5%8A%A8%E5%AE%9E%E7%8E%B0-1.png">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Best-Practices-for-Ringing-and-Vibration-in-Call-Pages/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/C-HarmonyOS-Next-Best-Practices-for-Ringing-and-Vibration-in-Call-Pages/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 22:21:07 / Modified: 22:22:17" itemprop="dateCreated datePublished" datetime="2025-06-30T22:21:07+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HarmonyOS-Next-Tech/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HarmonyOS-Next-Best-Practices-for-Ringing-and-Vibration-in-Call-Pages"><a href="#HarmonyOS-Next-Best-Practices-for-Ringing-and-Vibration-in-Call-Pages" class="headerlink" title="HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages"></a>HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages</h1><h3 id="1-Background-Introduction"><a href="#1-Background-Introduction" class="headerlink" title="1. Background Introduction"></a>1. Background Introduction</h3><p><img src="/../images/HarmonyOS%20Next%20%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B9%8B%E5%91%BC%E5%8F%AB%E9%A1%B5%E9%9D%A2%E5%93%8D%E9%93%83%E4%B8%8E%E9%9C%87%E5%8A%A8%E5%AE%9E%E7%8E%B0-1.png"><br>In developing audio-video calling modules, call ringing is typically implemented on both outgoing and incoming call pages, similar to WeChat’s video call interface. The called party often experiences vibration alongside ringing. On Android, <code>MediaPlayer</code> loops MP3 ringtones from the <code>raw</code> directory, and <code>Vibrator</code> achieves vibration effects. This article introduces how to implement ringing and vibration in HarmonyOS Next.  </p>
+<h3 id="2-Ringing-Implementation"><a href="#2-Ringing-Implementation" class="headerlink" title="2. Ringing Implementation"></a>2. Ringing Implementation</h3><p>For package size considerations, we usually place a short ringtone in the app and repeat it for continuous ringing. Call pages often limit the maximum duration to one minute, so the ringtone can play for up to one minute.  </p>
+<p>We place the ringtone file in <code>rawfile</code> and read it via <code>resourceManager</code>. HarmonyOS provides two ways to play audio:  </p>
+<ul>
+<li><strong>SoundPool</strong>: Enables low-latency short sound playback, suitable for急促 brief sound effects (e.g., camera shutter, system notifications). It supports audio resources under 1MB; files over 1MB are truncated to 1MB.  </li>
+<li><strong>AVPlayer</strong>: Achieves end-to-end playback of original media resources.</li>
+</ul>
+<p>Since <code>SoundPool</code>‘s <code>load</code> method does not support <code>rawfile</code> directory resources, we focus on <code>AVPlayer</code> for audio playback.  </p>
+<h4 id="AVPlayer-Playback-Workflow"><a href="#AVPlayer-Playback-Workflow" class="headerlink" title="AVPlayer Playback Workflow"></a>AVPlayer Playback Workflow</h4><p>The full process includes: creating an <code>AVPlayer</code>, setting playback resources, configuring parameters (volume&#x2F;speed&#x2F;focus mode), playback control (play&#x2F;pause&#x2F;seek&#x2F;stop), resetting, and destroying resources.  </p>
+<p><code>AVPlayer</code> is similar to Android’s <code>MediaPlayer</code>, maintaining a state machine. You can actively get the current state via the <code>state</code> property or listen for changes using <code>on(&#39;stateChange&#39;)</code>. Operating on an <code>AVPlayer</code> in an error state may throw exceptions or cause undefined behavior.  </p>
+<p><img src="/../images/HarmonyOS%20Next%20%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B9%8B%E5%91%BC%E5%8F%AB%E9%A1%B5%E9%9D%A2%E5%93%8D%E9%93%83%E4%B8%8E%E9%9C%87%E5%8A%A8%E5%AE%9E%E7%8E%B0.png"></p>
+<h4 id="Ringing-Tool-RingAVPlayer"><a href="#Ringing-Tool-RingAVPlayer" class="headerlink" title="Ringing Tool: RingAVPlayer"></a>Ringing Tool: <code>RingAVPlayer</code></h4><ol>
+<li>Create the player: <code>let avPlayer: media.AVPlayer = await media.createAVPlayer();</code>  </li>
+<li>Set state change callbacks: <code>avPlayer.on(&#39;stateChange&#39;, async (state: string, reason: media.StateChangeReason) =&gt; &#123;&#125;);</code>  </li>
+<li>Get the local audio resource FD: <code>let fileDescriptor = await context.resourceManager.getRawFd(&#39;ring.mp3&#39;);</code>  </li>
+<li>Assign <code>fdSrc</code> to trigger the <code>initialized</code> state: <code>avPlayer.fdSrc = fileDescriptor;</code>  </li>
+<li>In the state callback, call <code>avPlayer.prepare()</code> after receiving <code>initialized</code> to trigger resource loading.  </li>
+<li>In the state callback, call <code>avPlayer.play()</code> after receiving <code>prepared</code>; set <code>avPlayer.loop = true</code> before playback for looping.  </li>
+<li>Call <code>stop</code> to end playback.</li>
+</ol>
+<pre><code class="language-typescript">import &#123; media &#125; from &#39;@kit.MediaKit&#39;;  
+import &#123; common &#125; from &#39;@kit.AbilityKit&#39;;  
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;  
+import &#123; audio &#125; from &#39;@kit.AudioKit&#39;;  
+import &#123; Logg &#125; from &#39;../../../../../../../Index&#39;;  
+  
+const TAG = &#39;RingAVPlayer&#39;;  
+export class RingAVPlayer &#123;  
+  private mAVPlayer: media.AVPlayer|undefined = undefined;  
+  private count: number = 0;  
+  
+  // Register AVPlayer callback functions  
+  setAVPlayerCallback(avPlayer: media.AVPlayer) &#123;  
+    // Seek operation result callback  
+    avPlayer.on(&#39;seekDone&#39;, (seekDoneTime: number) =&gt; &#123;  
+      Logg.i(TAG, `AVPlayer seek succeeded, seek time is $&#123;seekDoneTime&#125;`);  
+    &#125;)  
+    // Error callback: call reset when an error occurs  
+    avPlayer.on(&#39;error&#39;, (err: BusinessError) =&gt; &#123;  
+      Logg.e(TAG, `Invoke avPlayer failed, code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);  
+      avPlayer.reset(); // Reset resources, trigger idle state  
+    &#125;)  
+    // State machine change callback  
+    avPlayer.on(&#39;stateChange&#39;, async (state: string, reason: media.StateChangeReason) =&gt; &#123;  
+      switch (state) &#123;  
+        case &#39;idle&#39;:  
+          console.info(&#39;AVPlayer state idle called.&#39;);  
+          avPlayer.release();  
+          break;  
+        case &#39;initialized&#39;:  
+          Logg.i(TAG, &#39;AVPlayer state initialized called.&#39;);  
+          avPlayer.audioRendererInfo = &#123;  
+            usage: audio.StreamUsage.STREAM_USAGE_MUSIC,  
+            rendererFlags: 0  
+          &#125;  
+          avPlayer.prepare();  
+          break;  
+        case &#39;prepared&#39;:  
+          Logg.i(TAG, &#39;AVPlayer state prepared called.&#39;);  
+          avPlayer.loop = true;  
+          avPlayer.play();  
+          break;  
+        case &#39;playing&#39;:  
+          Logg.i(TAG, &#39;AVPlayer state playing called.&#39;);  
+          break;  
+        case &#39;paused&#39;:  
+          Logg.i(TAG, &#39;AVPlayer state paused called.&#39;);  
+          break;  
+        case &#39;completed&#39;:  
+          Logg.i(TAG, &#39;AVPlayer state completed called.&#39;);  
+          break;  
+        case &#39;stopped&#39;:  
+          Logg.i(TAG, &#39;AVPlayer state stopped called.&#39;);  
+          break;  
+        case &#39;released&#39;:  
+          Logg.i(TAG, &#39;AVPlayer state released called.&#39;);  
+          break;  
+        default:  
+          Logg.i(TAG, &#39;AVPlayer state unknown called.&#39;);  
+          break;  
+      &#125;  
+    &#125;)  
+  &#125;  
+  
+  // Demo: Use resource manager to get media files in HAP and play via fdSrc  
+  async startAVPlayer() &#123;  
+    this.mAVPlayer = await media.createAVPlayer();  
+    this.setAVPlayerCallback(this.mAVPlayer);  
+    let context = getContext(this) as common.UIAbilityContext;  
+    let fileDescriptor = await context.resourceManager.getRawFd(&#39;call_music.mp3&#39;);  
+    let avFileDescriptor: media.AVFileDescriptor =  
+      &#123; fd: fileDescriptor.fd, offset: fileDescriptor.offset, length: fileDescriptor.length &#125;;  
+    this.mAVPlayer.fdSrc = avFileDescriptor;  
+  &#125;  
+  
+  stopAVPlayer() &#123;  
+    if (this.mAVPlayer) &#123;  
+      this.mAVPlayer.stop();  
+      this.mAVPlayer.release();  
+    &#125;  
+  &#125;  
+&#125;
+</code></pre>
+<h3 id="3-Vibration-Implementation"><a href="#3-Vibration-Implementation" class="headerlink" title="3. Vibration Implementation"></a>3. Vibration Implementation</h3><p>On Android, <code>Vibrator</code> is used as follows:  </p>
+<pre><code class="language-java">protected long[] pattern = &#123; 1000, 1000, 1000, 1000 &#125;;
+mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);  
+mVibrator.vibrate(pattern, 0);
+</code></pre>
+<p>The array elements represent vibration durations (ms). The first element is the wait time before vibration, and subsequent elements alternate between vibration and pause. <code>repeat</code> determines repetition: <code>-1</code> for no repeat, <code>0</code> for continuous vibration. <code>&#123; 1000, 1000, 1000, 1000 &#125;</code> means wait 1s, vibrate 1s, wait 1s, vibrate 1s, repeating. Call <code>cancel</code> to stop.  </p>
+<p>HarmonyOS Next provides corresponding vibration capabilities via the <code>Vibrator</code> module, supporting:  </p>
+<ul>
+<li>Key presses with different intensities and durations  </li>
+<li>Alarms and calls with single or periodic vibrations of varying intensities and durations</li>
+</ul>
+<h4 id="Three-Vibration-Types"><a href="#Three-Vibration-Types" class="headerlink" title="Three Vibration Types"></a>Three Vibration Types</h4><table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Fixed-duration vibration</td>
+<td align="left">Specify a duration; the motor vibrates at default intensity and frequency. See <code>VibrateTime</code>.</td>
+</tr>
+<tr>
+<td align="left">Preset vibration</td>
+<td align="left">System-defined vibration effects for fixed scenarios (e.g., <code>haptic.clock.timer</code> for timer adjustments). See <code>VibratePreset</code>.</td>
+</tr>
+<tr>
+<td align="left">Custom vibration</td>
+<td align="left">Allows users to design vibration effects via configuration files. See <code>VibrateFromFile</code>.</td>
+</tr>
+</tbody></table>
+<h4 id="Example-Code"><a href="#Example-Code" class="headerlink" title="Example Code"></a>Example Code</h4><h5 id="Fixed-Duration-Vibration"><a href="#Fixed-Duration-Vibration" class="headerlink" title="Fixed-Duration Vibration"></a>Fixed-Duration Vibration</h5><pre><code class="language-typescript">import &#123; vibrator &#125; from &#39;@kit.SensorServiceKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+try &#123;
+  vibrator.startVibration(&#123;
+    type: &#39;time&#39;,
+    duration: 1000,
+  &#125;, &#123;
+    id: 0,
+    usage: &#39;alarm&#39;
+  &#125;, (error: BusinessError) =&gt; &#123;
+    if (error) &#123;
+      console.error(`Failed to start vibration. Code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);
+      return;
+    &#125;
+    console.info(&#39;Succeed in starting vibration&#39;);
+  &#125;);
+&#125; catch (err) &#123;
+  let e: BusinessError = err as BusinessError;
+  console.error(`An unexpected error occurred. Code: $&#123;e.code&#125;, message: $&#123;e.message&#125;`);
+&#125;
+
+// Stop fixed-duration vibration
+import &#123; vibrator &#125; from &#39;@kit.SensorServiceKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+try &#123;
+  vibrator.stopVibration(vibrator.VibratorStopMode.VIBRATOR_STOP_MODE_TIME, (error: BusinessError) =&gt; &#123;
+    if (error) &#123;
+      console.error(`Failed to stop vibration. Code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);
+      return;
+    &#125;
+    console.info(&#39;Succeed in stopping vibration&#39;);
+  &#125;)
+&#125; catch (err) &#123;
+  let e: BusinessError = err as BusinessError;
+  console.error(`An unexpected error occurred. Code: $&#123;e.code&#125;, message: $&#123;e.message&#125;`);
+&#125;
+</code></pre>
+<h5 id="Preset-Vibration"><a href="#Preset-Vibration" class="headerlink" title="Preset Vibration"></a>Preset Vibration</h5><pre><code class="language-typescript">import &#123; vibrator &#125; from &#39;@kit.SensorServiceKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+try &#123;
+  vibrator.isSupportEffect(&#39;haptic.effect.soft&#39;, (err: BusinessError, state: boolean) =&gt; &#123;
+    if (err) &#123;
+      console.error(`Failed to query effect. Code: $&#123;err.code&#125;, message: $&#123;err.message&#125;`);
+      return;
+    &#125;
+    console.info(&#39;Succeed in querying effect&#39;);
+    if (state) &#123;
+      vibrator.startVibration(&#123;
+        type: &#39;preset&#39;,
+        effectId: &#39;haptic.effect.soft&#39;,
+        count: 1,
+        intensity: 50,
+      &#125;, &#123;
+        usage: &#39;unknown&#39;
+      &#125;, (error: BusinessError) =&gt; &#123;
+        if (error) &#123;
+          console.error(`Failed to start vibration. Code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);
+        &#125; else &#123;
+          console.info(&#39;Succeed in starting vibration&#39;);
+        &#125;
+      &#125;);
+    &#125;
+  &#125;)
+&#125; catch (error) &#123;
+  let e: BusinessError = error as BusinessError;
+  console.error(`An unexpected error occurred. Code: $&#123;e.code&#125;, message: $&#123;e.message&#125;`);
+&#125;
+
+// Stop preset vibration
+import &#123; vibrator &#125; from &#39;@kit.SensorServiceKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+try &#123;
+  vibrator.stopVibration(vibrator.VibratorStopMode.VIBRATOR_STOP_MODE_PRESET, (error: BusinessError) =&gt; &#123;
+    if (error) &#123;
+      console.error(`Failed to stop vibration. Code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);
+      return;
+    &#125;
+    console.info(&#39;Succeed in stopping vibration&#39;);
+  &#125;)
+&#125; catch (err) &#123;
+  let e: BusinessError = err as BusinessError;
+  console.error(`An unexpected error occurred. Code: $&#123;e.code&#125;, message: $&#123;e.message&#125;`);
+&#125;
+</code></pre>
+<h5 id="Custom-Vibration-from-File"><a href="#Custom-Vibration-from-File" class="headerlink" title="Custom Vibration from File"></a>Custom Vibration from File</h5><pre><code class="language-typescript">import &#123; vibrator &#125; from &#39;@kit.SensorServiceKit&#39;;
+import &#123; resourceManager &#125; from &#39;@kit.LocalizationKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+const fileName: string = &#39;xxx.json&#39;;
+let rawFd: resourceManager.RawFileDescriptor = getContext().resourceManager.getRawFdSync(fileName);
+
+try &#123;
+  vibrator.startVibration(&#123;
+    type: &quot;file&quot;,
+    hapticFd: &#123; fd: rawFd.fd, offset: rawFd.offset, length: rawFd.length &#125;
+  &#125;, &#123;
+    id: 0,
+    usage: &#39;alarm&#39;
+  &#125;, (error: BusinessError) =&gt; &#123;
+    if (error) &#123;
+      console.error(`Failed to start vibration. Code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);
+      return;
+    &#125;
+    console.info(&#39;Succeed in starting vibration&#39;);
+  &#125;);
+&#125; catch (err) &#123;
+  let e: BusinessError = err as BusinessError;
+  console.error(`An unexpected error occurred. Code: $&#123;e.code&#125;, message: $&#123;e.message&#125;`);
+&#125;
+
+getContext().resourceManager.closeRawFdSync(fileName);
+
+// Stop all vibrations
+import &#123; vibrator &#125; from &#39;@kit.SensorServiceKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+try &#123;
+  vibrator.stopVibration((error: BusinessError) =&gt; &#123;
+    if (error) &#123;
+      console.error(`Failed to stop vibration. Code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);
+      return;
+    &#125;
+    console.info(&#39;Succeed in stopping vibration&#39;);
+  &#125;)
+&#125; catch (error) &#123;
+  let e: BusinessError = error as BusinessError;
+  console.error(`An unexpected error occurred. Code: $&#123;e.code&#125;, message: $&#123;e.message&#125;`);
+&#125;
+</code></pre>
+<h3 id="4-Reference-Documents"><a href="#4-Reference-Documents" class="headerlink" title="4. Reference Documents"></a>4. Reference Documents</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-vibrator-V5#effectid">@ohos.vibrator (Vibration)</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/vibrator-guidelines-V5">Vibration Development Guide (ArkTS)</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inner-multimedia-soundpool-V5#load">SoundPool (Audio Pool) API</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-media-V5#avplayer9">@ohos.multimedia.media (Media Service)</a></li>
+</ul>
+<h3 id="5-Summary"><a href="#5-Summary" class="headerlink" title="5. Summary"></a>5. Summary</h3><p>This article introduces implementing custom ringing and vibration effects on call pages in HarmonyOS Next audio-video calling scenarios, focusing on <code>AVPlayer</code> and <code>vibrator</code> APIs.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-HarmonyOS-Next-Best-Practices-for-Actively-Invoking-Methods-Encapsulated-in-Custom-Controls/" rel="prev" title="HarmonyOS Next Best Practices for Actively Invoking Methods Encapsulated in Custom Controls">
+      <i class="fa fa-chevron-left"></i> HarmonyOS Next Best Practices for Actively Invoking Methods Encapsulated in Custom Controls
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/C-A-Comprehensive-Guide-to-Data-Type-Conversion-Between-ArkTS-and-C-in-HarmonyOS-Next/" rel="next" title="A Comprehensive Guide to Data Type Conversion Between ArkTS and C++ in HarmonyOS Next">
+      A Comprehensive Guide to Data Type Conversion Between ArkTS and C++ in HarmonyOS Next <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HarmonyOS-Next-Best-Practices-for-Ringing-and-Vibration-in-Call-Pages"><span class="nav-number">1.</span> <span class="nav-text">HarmonyOS Next Best Practices for Ringing and Vibration in Call Pages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Background-Introduction"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. Background Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Ringing-Implementation"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. Ringing Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AVPlayer-Playback-Workflow"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">AVPlayer Playback Workflow</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ringing-Tool-RingAVPlayer"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">Ringing Tool: RingAVPlayer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Vibration-Implementation"><span class="nav-number">1.0.3.</span> <span class="nav-text">3. Vibration Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Three-Vibration-Types"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">Three Vibration Types</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Example-Code"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">Example Code</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Fixed-Duration-Vibration"><span class="nav-number">1.0.3.2.1.</span> <span class="nav-text">Fixed-Duration Vibration</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Preset-Vibration"><span class="nav-number">1.0.3.2.2.</span> <span class="nav-text">Preset Vibration</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Custom-Vibration-from-File"><span class="nav-number">1.0.3.2.3.</span> <span class="nav-text">Custom Vibration from File</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Reference-Documents"><span class="nav-number">1.0.4.</span> <span class="nav-text">4. Reference Documents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Summary"><span class="nav-number">1.0.5.</span> <span class="nav-text">5. Summary</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">364</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
