@@ -149,6 +149,286 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/506%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Popup-Components-Object-Passing-Obtaining-Current-Route-Component-Instances-Irregular-Polygon-Drawing-and-Checkbox-Groups/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/506%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Popup-Components-Object-Passing-Obtaining-Current-Route-Component-Instances-Irregular-Polygon-Drawing-and-Checkbox-Groups/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Popup Components, Object Passing, Obtaining Current Route Component Instances, Irregular Polygon Drawing, and Checkbox Groups</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 08:09:35 / Modified: 08:10:55" itemprop="dateCreated datePublished" datetime="2025-06-25T08:09:35+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】-Popup-Components-Object-Passing-Obtaining-Current-Route-Component-Instances-Irregular-Polygon-Drawing-and-Checkbox-Groups"><a href="#【Daily-HarmonyOS-Next-Knowledge】-Popup-Components-Object-Passing-Obtaining-Current-Route-Component-Instances-Irregular-Polygon-Drawing-and-Checkbox-Groups" class="headerlink" title="【Daily HarmonyOS Next Knowledge】 Popup Components, Object Passing, Obtaining Current Route Component Instances, Irregular Polygon Drawing, and Checkbox Groups"></a>【Daily HarmonyOS Next Knowledge】 Popup Components, Object Passing, Obtaining Current Route Component Instances, Irregular Polygon Drawing, and Checkbox Groups</h3><h4 id="1-Recommend-a-Popup-Component-in-HarmonyOS-that-Can-Anchor-Below-a-Specific-Component"><a href="#1-Recommend-a-Popup-Component-in-HarmonyOS-that-Can-Anchor-Below-a-Specific-Component" class="headerlink" title="1. Recommend a Popup Component in HarmonyOS that Can Anchor Below a Specific Component"></a>1. Recommend a Popup Component in HarmonyOS that Can Anchor Below a Specific Component</h4><p>Is there a recommended popup component that allows setting the position to anchor below a specific component? Can a global custom popup meet this requirement?  </p>
+<p>Currently, <code>bindPopup</code> can be used. Refer to the link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-popup-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-popup-V5</a>  </p>
+<p><strong>Reference demo</strong>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;Hello World&#39;;
+  @State handlePopup: boolean = false;
+
+  build() &#123;
+    Column() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold)
+      &#125;
+      .width(&#39;100%&#39;)
+      .height(&#39;200vp&#39;)
+      .alignItems(HorizontalAlign.Start)
+      .justifyContent(FlexAlign.Start)
+      .backgroundColor(Color.Orange)
+      .onClick(() =&gt; &#123;
+        this.handlePopup = !this.handlePopup;
+      &#125;)
+      .bindPopup(this.handlePopup, &#123; 
+        message: &#39;This is a popup with PopupOptions This is a popup with PopupOptions&#39; +
+                 &#39; xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#39; +
+                 &#39; xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#39; +
+                 &#39; xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#39; +
+                 &#39; xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#39;,
+        messageOptions: &#123; 
+          textColor: Color.Red,
+          font: &#123;
+            size: &#39;14vp&#39;,
+            style: FontStyle.Italic,
+            weight: FontWeight.Bolder
+          &#125;
+        &#125;,
+        placement: Placement.Bottom,
+        enableArrow: false,
+        width: &#39;100%&#39;,
+        radius: 0,
+        onStateChange: (e) =&gt; &#123;
+          console.info(JSON.stringify(e.isVisible));
+          if (!e.isVisible) &#123;
+            this.handlePopup = false;
+          &#125;
+        &#125;
+      &#125;);
+    &#125;
+    .height(&#39;100%&#39;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-Use-ObjectLink-in-HarmonyOS"><a href="#2-How-to-Use-ObjectLink-in-HarmonyOS" class="headerlink" title="2. How to Use @ObjectLink in HarmonyOS"></a>2. How to Use @ObjectLink in HarmonyOS</h4><p>The page data is an array of <code>ClassA</code>, and <code>ClassA</code> contains an array of <code>ClassB</code>, structured as follows:  </p>
+<pre><code class="language-typescript">@Observed
+export class ClassA &#123;
+  a: number;
+  datas: ClassB[];
+&#125;
+
+@Observed
+export class ClassB &#123;
+  b: number;
+  c: number;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  @State pageDatas: ClassA[] = [];
+
+  build() &#123;
+    Tabs(&#123; barPosition: BarPosition.Start, index: this.currentIndex, controller: this.controller &#125;) &#123;
+      ForEach(this.pageDatas, (page_item: ClassA, page_index: number) =&gt; &#123;
+        TabContent() &#123;
+          PageView(&#123;
+            page_item: page_item,
+          &#125;)
+        &#125;
+      &#125;);
+    &#125;
+  &#125;
+
+  @Component
+  export struct PageView &#123;
+    @ObjectLink page_item: ClassA;
+
+    build() &#123;
+      Column() &#123;
+        Text(this.page_item.a + &quot;&quot;)
+          .onClick((e: ClickEvent) =&gt; &#123;
+            // Pop up a dialog to select the &#39;a&#39; value
+            this.page_item.a = selecta;
+          &#125;);
+
+        ForEach(this.page_item.datas, (item: ClassB, index: number) =&gt; &#123;
+          ItemView(&#123;
+            page_item: this.page_item,
+            item: item
+          &#125;);
+        &#125;, (item: ClassB) =&gt; JSON.stringify(item));
+      &#125;
+    &#125;
+  &#125;
+
+  @Component
+  export struct ItemView &#123;
+    @ObjectLink page_item: ClassA;
+    @ObjectLink item: ClassB;
+
+    build() &#123;
+      Row() &#123;
+        Button(&quot;加1&quot;)
+          .onClick((e: ClickEvent) =&gt; &#123;
+            this.item.b = this.item.b + 1;
+          &#125;);
+
+        TextInput(&#123; text: this.item.b === 0 ? &#39;&#39; : this.item.b.toString() &#125;)
+          .onChange((value: string) =&gt; &#123;
+            if (value === null || value === undefined || value === &#39;&#39;) &#123;
+              this.item.b = 0;
+            &#125; else &#123;
+              this.item.b = parseInt(value);
+            &#125;
+          &#125;);
+
+        Text(this.page_item.a * this.item.b * this.item.c + &quot;m³&quot;);
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Desired effects</strong>:  </p>
+<ol>
+<li>Clicking in each page of the <code>Index</code> page pops up a dialog to select the <code>a</code> value, which should update the display of <code>Text(this.page_item.a * item.b * item.c + &quot;m³&quot;)</code>.  </li>
+<li>Entering values in <code>TextInput</code> should also update the above text.  </li>
+<li>Clicking the <code>Button</code> should update the value in <code>TextInput</code> and the above text.</li>
+</ol>
+<p><strong>Solution</strong>: Use the <code>@ObjectLink</code> decorator to monitor deep nested object changes. For complex nested objects, refer to:  </p>
+<ul>
+<li>Object array usage: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84</a>  </li>
+<li>Cases where nested object property changes fail: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%A4%8D%E6%9D%82%E5%B5%8C%E5%A5%97%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E6%9B%B4%E6%94%B9%E5%A4%B1%E6%95%88">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-observed-and-objectlink-V5#%E5%A4%8D%E6%9D%82%E5%B5%8C%E5%A5%97%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E6%9B%B4%E6%94%B9%E5%A4%B1%E6%95%88</a></li>
+</ul>
+<h4 id="3-Can-HarmonyOS-Obtain-the-Instance-of-the-Current-Route’s-Page-Component"><a href="#3-Can-HarmonyOS-Obtain-the-Instance-of-the-Current-Route’s-Page-Component" class="headerlink" title="3. Can HarmonyOS Obtain the Instance of the Current Route’s Page Component?"></a>3. Can HarmonyOS Obtain the Instance of the Current Route’s Page Component?</h4><p><strong>Application scenario</strong>: Encapsulate independent dialog components (e.g., Loading, Toast).  </p>
+<pre><code class="language-typescript">function getCurrentPageInstance() &#123;
+  return // Get the instance of the current route&#39;s page component
+&#125;
+
+@Builder
+function XLoadingBuilder(text: string) &#123;
+  // ...
+&#125;
+
+export class XLoading &#123;
+  static show() &#123;
+    promptAction.openCustomDialog(&#123;
+      builder: XLoadingBuilder.bind(getCurrentPageInstance(), &#39;加载中...&#39;),
+      alignment: DialogAlignment.Center,
+      isModal: true,
+      backgroundColor: Color.Transparent,
+      maskColor: Color.Transparent,
+      autoCancel: true,
+    &#125;);
+  &#125;
+&#125;
+
+// Usage:
+XLoading.show();
+</code></pre>
+<p><strong>References</strong>:  </p>
+<ul>
+<li>UIContext: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#uicontext">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#uicontext</a>  </li>
+<li><code>openCustomDialog</code>: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#opencustomdialog12">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/reference/apis-arkui/js-apis-arkui-UIContext.md#opencustomdialog12</a></li>
+</ul>
+<h4 id="4-How-to-Draw-Irregular-Polygons-and-Add-Click-Events-in-HarmonyOS"><a href="#4-How-to-Draw-Irregular-Polygons-and-Add-Click-Events-in-HarmonyOS" class="headerlink" title="4. How to Draw Irregular Polygons and Add Click Events in HarmonyOS"></a>4. How to Draw Irregular Polygons and Add Click Events in HarmonyOS</h4><p><strong>Method</strong>: Find an icon on <a target="_blank" rel="noopener" href="http://www.iconfont.cn/">www.iconfont.cn</a>, copy the SVG code, and paste the <code>d</code> attribute from the <code>path</code> tag into the <code>commands</code> property.  </p>
+<p><strong>Demo</strong>:  </p>
+<pre><code class="language-typescript">let d = &#39;M1016.832 606.208q2.048 12.288-1.024 29.696t-10.24 35.328-17.408 32.256-22.528 20.48-21.504 6.144-20.48-4.096q-10.24-3.072-25.6-5.632t-31.232-1.024-31.744 6.656-27.136 17.408q-24.576 25.6-28.672 58.368t9.216 62.464q10.24 20.48-3.072 40.96-6.144 8.192-19.456 16.896t-29.184 15.872-33.28 11.264-30.72 4.096q-9.216 0-17.408-7.168t-11.264-15.36l-1.024 0q-11.264-31.744-38.4-54.784t-62.976-23.04q-34.816 0-62.976 23.04t-39.424 53.76q-5.12 12.288-15.36 17.92t-22.528 5.632q-14.336 0-32.256-5.12t-35.84-12.8-32.256-17.92-21.504-20.48q-5.12-7.168-5.632-16.896t7.68-27.136q11.264-23.552 8.704-53.76t-26.112-55.808q-14.336-15.36-34.816-19.968t-38.912-3.584q-21.504 1.024-44.032 8.192-14.336 4.096-28.672-2.048-11.264-4.096-20.992-18.944t-17.408-32.768-11.776-36.864-2.048-31.232q3.072-22.528 20.48-28.672 30.72-12.288 55.296-40.448t24.576-62.976q0-35.84-24.576-62.464t-55.296-38.912q-9.216-3.072-15.36-14.848t-6.144-24.064q0-13.312 4.096-29.696t10.752-31.744 15.36-28.16 18.944-18.944q8.192-5.12 15.872-4.096t16.896 4.096q30.72 12.288 64 7.68t58.88-29.184q12.288-12.288 17.92-30.208t7.168-35.328 0-31.744-2.56-20.48q-2.048-6.144-3.584-14.336t1.536-14.336q6.144-14.336 22.016-25.088t34.304-17.92 35.84-10.752 27.648-3.584q13.312 0 20.992 8.704t10.752 17.92q11.264 27.648 36.864 48.64t60.416 20.992q35.84 0 63.488-19.968t38.912-50.688q4.096-8.192 12.8-16.896t17.92-8.704q14.336 0 31.232 4.096t33.28 11.264 30.208 18.432 22.016 24.576q5.12 8.192 3.072 17.92t-4.096 13.824q-13.312 29.696-8.192 62.464t29.696 57.344 60.416 27.136 66.56-11.776q8.192-5.12 19.968-4.096t19.968 9.216q15.36 14.336 27.136 43.52t15.872 58.88q2.048 17.408-5.632 27.136t-15.872 12.8q-31.744 11.264-54.272 39.424t-22.528 64q0 34.816 18.944 60.928t49.664 37.376q7.168 4.096 12.288 8.192 11.264 9.216 15.36 23.552zM540.672 698.368q46.08 0 87.04-17.408t71.168-48.128 47.616-71.168 17.408-86.528-17.408-86.528-47.616-70.656-71.168-47.616-87.04-17.408-86.528 17.408-70.656 47.616-47.616 70.656-17.408 86.528 17.408 86.528 47.616 71.168 70.656 48.128 86.528 17.408z&#39;;
+
+@Entry
+@Component
+struct Index &#123;
+  build() &#123;
+    Column() &#123;
+      Path().width(&#39;100%&#39;).height(&#39;100%&#39;)
+        .commands(d)
+        .stroke(&#39;#8a8a8a&#39;).strokeWidth(3);
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-Can-CheckboxGroup-in-HarmonyOS-Reference-an-Upper-Level-CheckboxGroup"><a href="#5-Can-CheckboxGroup-in-HarmonyOS-Reference-an-Upper-Level-CheckboxGroup" class="headerlink" title="5. Can CheckboxGroup in HarmonyOS Reference an Upper-Level CheckboxGroup?"></a>5. Can CheckboxGroup in HarmonyOS Reference an Upper-Level CheckboxGroup?</h4><p><strong>Can CheckboxGroup reference an upper-level CheckboxGroup?</strong>  </p>
+<p>The CheckboxGroup component can associate with other CheckboxGroup components to reference an upper-level group. Implementation steps:  </p>
+<ol>
+<li><p><strong>Basic functions of CheckboxGroup</strong>:  </p>
+<ul>
+<li>CheckboxGroup is a checkbox group component that controls whether checkboxes in the group are fully selected.  </li>
+<li>Each CheckboxGroup has a unique <code>group</code> value; CheckboxGroup and Checkbox with the same <code>group</code> value belong to the same group.</li>
+</ul>
+</li>
+<li><p><strong>Referencing an upper-level CheckboxGroup</strong>:  </p>
+<ul>
+<li>Set the <code>group</code> attribute of CheckboxGroup to associate with another CheckboxGroup.  </li>
+<li>Two CheckboxGroups with the same <code>group</code> value are treated as the same group.</li>
+</ul>
+</li>
+<li><p><strong>Example</strong>:  </p>
+<ul>
+<li>Suppose there are two CheckboxGroups: CheckboxGroupA and CheckboxGroupB.  </li>
+<li>To make CheckboxGroupB reference CheckboxGroupA, set CheckboxGroupB’s <code>group</code> value to CheckboxGroupA’s <code>group</code> value.</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/505%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Brightness-Adjustment-Margin-Settings-Scroll-Calculation-Units-Dialog-Safe-Area-Issues-and-Flex-Overflow-Prevention/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1813,294 +2093,6 @@ tabList: Book[][] = []; // Lists under all tabs
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/426%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/426%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 07:25:05 / Modified: 07:27:34" itemprop="dateCreated datePublished" datetime="2025-06-25T07:25:05+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page"><a href="#【Daily-HarmonyOS-Next-Knowledge】Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page"></a>【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page</h3><h4 id="1-How-to-obtain-the-page-stack-object-in-HarmonyOS"><a href="#1-How-to-obtain-the-page-stack-object-in-HarmonyOS" class="headerlink" title="1. How to obtain the page stack object in HarmonyOS?"></a>1. How to obtain the page stack object in HarmonyOS?</h4><p>How to get the current page hierarchy and the page hierarchy object through the router, such as pages A - B - C, where page C can obtain the list of current page hierarchies and the corresponding page objects.  </p>
-<p>Currently, only information about the current page in the router page stack can be obtained, such as the index, path, page name, and the number of pages in the page stack. Obtaining the list of the page stack is not supported yet.  </p>
-<p>For navigation within and between modules, use <code>Navigation</code> as much as possible, as the router will stop evolving and may not add new capabilities in the future. The tight coupling caused by using <code>Navigation</code> for inter-module navigation can be solved by dynamic imports. The router does not support fine-grained operations on the page stack. For clearing the stack, such as A-B-B1, clearing page B from page B1 is not supported; only <code>clear</code> can be used to remove all pages except the current one. The router does not support skipping more than 32 pages, and the maximum capacity of the page stack is 32 pages. The router’s routing stack only supports obtaining the properties of the top page, including only the current page path and file name. <code>Navigation</code> will continue to evolve, so if capabilities are insufficient, requirements can be planned further. In <code>Navigation</code>, you can use <code>getAllPathName</code> to obtain the names of all <code>NavDestination</code> pages in the stack (for details, refer to Example 2 in the link below: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10</a>)  </p>
-<pre><code class="language-typescript">// Index.ets
-@Entry
-@Component
-struct NavigationExample &#123;
-  pageInfos: NavPathStack = new NavPathStack();
-  isUseInterception: boolean = false;
-
-  registerInterception() &#123;
-    this.pageInfos.setInterception(&#123;
-      // Intercept before page navigation, allowing stack operations that take effect in the current navigation.
-      willShow: (from: NavDestinationContext | &quot;navBar&quot;, to: NavDestinationContext | &quot;navBar&quot;,
-        operation: NavigationOperation, animated: boolean) =&gt; &#123;
-        if (!this.isUseInterception) &#123;
-          return;
-        &#125;
-        if (typeof to === &quot;string&quot;) &#123;
-          console.log(&quot;target page is navigation home&quot;);
-          return;
-        &#125;
-        // Redirect the target page, changing from pageTwo to pageOne.
-        let target: NavDestinationContext = to as NavDestinationContext;
-        if (target.pathInfo.name === &#39;pageTwo&#39;) &#123;
-          target.pathStack.pop();
-          target.pathStack.pushPathByName(&#39;pageOne&#39;, null);
-        &#125;
-      &#125;,
-      // Callback after page navigation; stack operations in this callback refresh on the next navigation.
-      didShow: (from: NavDestinationContext | &quot;navBar&quot;, to: NavDestinationContext | &quot;navBar&quot;,
-        operation: NavigationOperation, isAnimated: boolean) =&gt; &#123;
-        if (!this.isUseInterception) &#123;
-          return;
-        &#125;
-        if (typeof from === &quot;string&quot;) &#123;
-          console.log(&quot;current transition is from navigation home&quot;);
-        &#125; else &#123;
-          console.log(`current transition is from  $&#123;(from as NavDestinationContext).pathInfo.name&#125;`);
-        &#125;
-        if (typeof to === &quot;string&quot;) &#123;
-          console.log(&quot;current transition to is navBar&quot;);
-        &#125; else &#123;
-          console.log(`current transition is to $&#123;(to as NavDestinationContext).pathInfo.name&#125;`);
-        &#125;
-      &#125;,
-      // Triggered when the Navigation single/double bar display state changes.
-      modeChange: (mode: NavigationMode) =&gt; &#123;
-        if (!this.isUseInterception) &#123;
-          return;
-        &#125;
-        console.log(`current navigation mode is $&#123;mode&#125;`);
-      &#125;
-    &#125;);
-  &#125;
-
-  build() &#123;
-    Navigation(this.pageInfos) &#123;
-      Column() &#123;
-        Button(&#39;pushPath&#39;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
-          .width(&#39;80%&#39;)
-          .height(40)
-          .margin(20)
-          .onClick(() =&gt; &#123;
-            this.pageInfos.pushPath(&#123; name: &#39;pageOne&#39; &#125;); // Push the NavDestination page information specified by name onto the stack
-          &#125;);
-        Button(&#39;use interception&#39;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
-          .width(&#39;80%&#39;)
-          .height(40)
-          .margin(20)
-          .onClick(() =&gt; &#123;
-            this.isUseInterception = !this.isUseInterception;
-            if (this.isUseInterception) &#123;
-              this.registerInterception();
-            &#125; else &#123;
-              this.pageInfos.setInterception(undefined);
-            &#125;
-          &#125;);
-      &#125;
-    &#125;.title(&#39;NavIndex&#39;);
-  &#125;
-&#125;
-</code></pre>
-<h4 id="2-Animation-demo-based-on-drawing-canvas-in-HarmonyOS"><a href="#2-Animation-demo-based-on-drawing-canvas-in-HarmonyOS" class="headerlink" title="2. Animation demo based on drawing.canvas in HarmonyOS?"></a>2. Animation demo based on drawing.canvas in HarmonyOS?</h4><p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/blog/topic/03797837883380062">https://developer.huawei.com/consumer/cn/blog/topic/03797837883380062</a>  </p>
-<h4 id="3-Security-button-returns-permission-failure-in-HarmonyOS"><a href="#3-Security-button-returns-permission-failure-in-HarmonyOS" class="headerlink" title="3. Security button returns permission failure in HarmonyOS?"></a>3. Security button returns permission failure in HarmonyOS?</h4><p>The security button returns a permission failure with <code>result</code> as <code>TEMPORARY_AUTHORIZATION_FAILED</code>. How to solve it?  </p>
-<pre><code class="language-typescript">// With default parameters, the icon, text, and background all exist
-SaveButton().onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) =&gt; &#123;
-  if (result === SaveButtonOnClickResult.SUCCESS) &#123;&#125;
-&#125;);
-</code></pre>
-<p>Using a URI to open a file allows continuous writing without time restrictions:  </p>
-<pre><code class="language-typescript">let file = await fs.open(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
-</code></pre>
-<p>This requires corresponding permissions, which need to be defined in <code>modules.json5</code>:  </p>
-<pre><code class="language-json5">&#123;
-  &quot;name&quot;: &quot;ohos.permission.WRITE_MEDIA&quot;,
-  &quot;reason&quot;: &quot;$string:EntryAbility_desc&quot;,
-  &quot;usedScene&quot;: &#123;
-    &quot;abilities&quot;: [&quot;EntryAbility&quot;],
-    &quot;when&quot;: &quot;always&quot;
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-Can-the-color-of-an-image-be-dynamically-modified-after-setting-a-local-resource-file-in-the-HarmonyOS-Image-component"><a href="#4-Can-the-color-of-an-image-be-dynamically-modified-after-setting-a-local-resource-file-in-the-HarmonyOS-Image-component" class="headerlink" title="4. Can the color of an image be dynamically modified after setting a local resource file in the HarmonyOS Image component?"></a>4. Can the color of an image be dynamically modified after setting a local resource file in the HarmonyOS Image component?</h4><p>Refer to the following document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-image-V5#colorfilter9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-image-V5#colorfilter9</a>  </p>
-<p><code>colorFilter(value: ColorFilter | DrawingColorFilter)</code><br>Sets a color filter effect for the image.<br>When this property is set, the <code>renderMode</code> property has no effect.  </p>
-<table>
-<thead>
-<tr>
-<th align="left">Parameter Name</th>
-<th align="left">Type</th>
-<th align="left">Required</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">value</td>
-<td align="left">ColorFilter | DrawingColorFilter</td>
-<td align="left">Yes</td>
-<td align="left">1. Sets a color filter effect for the image with a 4x5 RGBA transformation matrix.<br><br>The first row of the matrix represents the vector value of R (red), the second row represents G (green), the third row represents B (blue), the fourth row represents A (alpha), and the four rows represent the vector values of different RGBA components.<br><br>When the diagonal values of the matrix are 1 and the rest are 0, the original color of the image is maintained.<br><br><strong>Calculation rule:</strong><br><br>If the input filter matrix is:<br><br><img src="/../images/123a71ca10b754dc5ea030fc4ddddf2b_MD5.jpg"><br><br>The pixel is <code>[R, G, B, A]</code><br><br>The filtered color is <code>[R’, G’, B’, A’]</code><br><br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.04.26.png"><br><br>2. Starting from API Version 12, the <code>ColorFilter</code> type from <code>@ohos.graphics.drawing</code> is supported as a parameter.<br><br><strong>Note:</strong><br>For API Version 11 and earlier, this property is not supported for SVG image sources.<br>Starting from API Version 12, the <code>DrawingColorfilter</code> type in this interface is supported for use in meta services, where SVG image sources must have a <code>stroke</code> property.</td>
-</tr>
-</tbody></table>
-<h4 id="5-How-to-set-a-popup-to-display-only-on-the-current-page-in-HarmonyOS"><a href="#5-How-to-set-a-popup-to-display-only-on-the-current-page-in-HarmonyOS" class="headerlink" title="5. How to set a popup to display only on the current page in HarmonyOS?"></a>5. How to set a popup to display only on the current page in HarmonyOS?</h4><p>A popup is used as a notification prompt. When page A shows the popup and then navigates to page B, the popup still appears on page B. Can the popup be set to display only on page A?  </p>
-<p>The current behavior of popups is as described. You can use <code>CustomDialog</code> instead. Refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5</a>  </p>
-<p><strong>Sample demo</strong>:  </p>
-<pre><code class="language-typescript">import router from &#39;@ohos.router&#39;;
-
-@CustomDialog
-export default struct UserPrivacyDialog &#123;
-  controller: CustomDialogController = new CustomDialogController(&#123; builder: &#39;&#39; &#125;);
-  cancel: Function = () =&gt; &#123;&#125;;
-  confirm: Function = () =&gt; &#123;&#125;;
-  visible: Visibility = Visibility.None;
-
-  build() &#123;
-    Column() &#123;
-      Text(&#39;I am a popup&#39;);
-
-      Button(&#39;jump&#39;)
-        .onClick(() =&gt; &#123;
-          router.pushUrl(&#123;
-            url: &#39;pages/Second&#39;
-          &#125;);
-        &#125;)
-        .backgroundColor(0xffffff)
-        .fontColor(Color.Red);
-    &#125;
-    .margin(&#123; top: 22 &#125;)
-    .justifyContent(FlexAlign.SpaceEvenly);
-  &#125;
-&#125;
-
-@Entry
-@Component
-struct Index &#123;
-  @State textValue: string = &#39;Hello World&#39;;
-  @State visible: Visibility = Visibility.None;
-
-  build() &#123;
-    Stack() &#123;
-      Row() &#123;
-        Column() &#123;
-          Button(&#39;click&#39;)
-            .onClick(() =&gt; &#123;
-              if (this.visible === Visibility.Visible) &#123;
-                this.visible = Visibility.None;
-              &#125; else &#123;
-                this.visible = Visibility.Visible;
-              &#125;
-            &#125;)
-            .backgroundColor(0x777474)
-            .fontColor(0x000000);
-        &#125;
-        .width(&#39;100%&#39;);
-      &#125;
-      .height(&#39;100%&#39;)
-      .backgroundColor(0x885555);
-
-      Text(&#39;&#39;)
-        .onClick(() =&gt; &#123;
-          if (this.visible === Visibility.Visible) &#123;
-            this.visible = Visibility.None;
-          &#125; else &#123;
-            this.visible = Visibility.Visible;
-          &#125;
-        &#125;)
-        .width(&#39;100%&#39;)
-        .height(&#39;100%&#39;) // Transparency can be adjusted
-        .opacity(0.16)
-        .backgroundColor(0x000000)
-        .visibility(this.visible);
-
-      Column() &#123;
-        GridRow(&#123;
-          columns: &#123; xs: 1, sm: 4, md: 8, lg: 12 &#125;,
-          breakpoints: &#123;
-            value: [&quot;400vp&quot;, &quot;600vp&quot;, &quot;800vp&quot;],
-            reference: BreakpointsReference.WindowSize
-          &#125;,
-        &#125;) &#123;
-          GridCol(&#123;
-            span: &#123; xs: 1, sm: 2, md: 4, lg: 8 &#125;,
-            offset: &#123; xs: 0, sm: 1, md: 2, lg: 2 &#125;
-          &#125;) &#123;
-            Column() &#123;
-              Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
-                UserPrivacyDialog();
-              &#125;.margin(&#123; bottom: 10 &#125;);
-            &#125;
-            .backgroundColor(0xffffff)
-            .visibility(this.visible)
-            .clip(true)
-            .borderRadius(20);
-          &#125;
-        &#125;
-      &#125;.width(&#39;95%&#39;); // Set popup width
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p>Refer to <code>componentUtils.getRectangleById</code>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentutils-V5#componentutilsgetrectanglebyid">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentutils-V5#componentutilsgetrectanglebyid</a>  </p>
-<p><code>getRectangleById(id: string): ComponentInfo</code><br>Obtains the component instance object by component ID and synchronously returns the obtained coordinates and size to the developer through the component instance object.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2170,13 +2162,13 @@ struct Index &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

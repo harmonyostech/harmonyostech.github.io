@@ -149,6 +149,156 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41226-Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Webview-Version-Check-Window-Brightness-Setting-List-Cache-Node-Update-Precompiled-JS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/41226-Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Webview-Version-Check-Window-Brightness-Setting-List-Cache-Node-Update-Precompiled-JS/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Dark Mode, Webview Version Check, Window Brightness Setting, List Cache Node Update, Precompiled JS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:18:17 / Modified: 09:36:49" itemprop="dateCreated datePublished" datetime="2025-06-29T09:18:17+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Webview-Version-Check-Window-Brightness-Setting-List-Cache-Node-Update-Precompiled-JS"><a href="#Daily-HarmonyOS-Next-Knowledge-Dark-Mode-Webview-Version-Check-Window-Brightness-Setting-List-Cache-Node-Update-Precompiled-JS" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Dark Mode, Webview Version Check, Window Brightness Setting, List Cache Node Update, Precompiled JS"></a>[Daily HarmonyOS Next Knowledge] Dark Mode, Webview Version Check, Window Brightness Setting, List Cache Node Update, Precompiled JS</h1><h4 id="1-In-HarmonyOS-dark-mode-the-color-obtained-via-resourcemanager-getColor-for-Canvas-drawing-does-not-match-the-actual-dark-mode-color"><a href="#1-In-HarmonyOS-dark-mode-the-color-obtained-via-resourcemanager-getColor-for-Canvas-drawing-does-not-match-the-actual-dark-mode-color" class="headerlink" title="1. In HarmonyOS dark mode, the color obtained via resourcemanager.getColor for Canvas drawing does not match the actual dark mode color."></a>1. In HarmonyOS dark mode, the color obtained via resourcemanager.getColor for Canvas drawing does not match the actual dark mode color.</h4><ol>
+<li>Correctly obtain the resource: <code>resourcemanager.getColorSync($r(&#39;app.color.test_color&#39;).id);</code>  </li>
+<li>For dark mode Canvas drawing adaptation, listen to <code>onConfigurationUpdate</code> to monitor and save the dark mode status to AppStorage, then use <code>@Watch</code> to listen for state changes and trigger Canvas redrawing: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-light-dark-color-adaptation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-light-dark-color-adaptation-V5</a></li>
+</ol>
+<p>By default, the app follows the system to switch between light and dark modes. To fix the app’s mode independently:  </p>
+<pre><code class="language-typescript">onCreate(): void &#123;
+  hilog.info(0x0000, &#39;testTag&#39;, &#39;%&#123;public&#125;s&#39;, &#39;Ability onCreate&#39;);
+  this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_DARK);
+&#125;
+</code></pre>
+<h4 id="2-How-to-check-the-API-version-in-HarmonyOS-Webview"><a href="#2-How-to-check-the-API-version-in-HarmonyOS-Webview" class="headerlink" title="2. How to check the API version in HarmonyOS Webview?"></a>2. How to check the API version in HarmonyOS Webview?</h4><p>When executing <code>hdc shell getprop hw_sc.build.os.apiversion</code>, the command is unavailable. Use the following methods in hdc:  </p>
+<pre><code class="language-bash">param get const.ohos.apiversion  # Output: 11
+param get const.ohos.releasetype  # Output: Canary1
+param get const.ohos.fullname     # Output: OpenHarmony-4.1.1.5
+</code></pre>
+<p>Version description: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-releases-V5/overview-baseline-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-releases-V5/overview-baseline-V5</a>  </p>
+<h4 id="3-After-setting-brightness-via-window-setWindowBrightness-in-HarmonyOS-the-system-brightness-adjustment-becomes-ineffective"><a href="#3-After-setting-brightness-via-window-setWindowBrightness-in-HarmonyOS-the-system-brightness-adjustment-becomes-ineffective" class="headerlink" title="3. After setting brightness via window.setWindowBrightness in HarmonyOS, the system brightness adjustment becomes ineffective."></a>3. After setting brightness via <code>window.setWindowBrightness</code> in HarmonyOS, the system brightness adjustment becomes ineffective.</h4><p><strong>Behavior specification</strong>: When the window sets the screen brightness, the control center cannot adjust the system brightness. The control center resumes functionality after the window restores the default system brightness.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5</a>  </p>
+<p><strong>Window module capabilities</strong>:  </p>
+<ul>
+<li><strong>Window</strong>: The basic unit managed by the window manager.  </li>
+<li><strong>WindowStage</strong>: Manages all window units.</li>
+</ul>
+<p><strong>Method</strong>: <code>setWindowBrightness(brightness: number, callback: AsyncCallback&lt;void&gt;): void</code>  </p>
+<ul>
+<li>Allows the app’s main window to set the screen brightness asynchronously via a callback.  </li>
+<li><strong>Parameters</strong>:  <table>
+<thead>
+<tr>
+<th align="left">Parameter</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">brightness</td>
+<td align="left">number</td>
+<td align="left">Yes</td>
+<td align="left">Brightness value (float, range: [0.0, 1.0] or -1.0; 1.0 &#x3D; maximum, -1.0 &#x3D; default).</td>
+</tr>
+<tr>
+<td align="left">callback</td>
+<td align="left">AsyncCallback<void></td>
+<td align="left">Yes</td>
+<td align="left">Asynchronous callback.</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="4-In-HarmonyOS-List-updates-refresh-all-cached-nodes-including-invisible-areas"><a href="#4-In-HarmonyOS-List-updates-refresh-all-cached-nodes-including-invisible-areas" class="headerlink" title="4. In HarmonyOS, List updates refresh all cached nodes (including invisible areas)."></a>4. In HarmonyOS, List updates refresh all cached nodes (including invisible areas).</h4><p><strong>Solution</strong>: Use component freezing: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/arkts-custom-components-freeze.md#navigation">https://gitee.com/openharmony/docs/blob/master/zh-cn/application-dev/quick-start/arkts-custom-components-freeze.md#navigation</a>  </p>
+<p><strong>Freezing principles</strong>:  </p>
+<ol>
+<li>Enable via <code>freezeWhenInactive</code> to activate the freezing mechanism.  </li>
+<li>The system only updates active custom components, narrowing the update scope to visible areas.  </li>
+<li>Inactive components refresh when they become active.</li>
+</ol>
+<p><strong>Applicable scenarios</strong>:  </p>
+<ul>
+<li>Page routing: Top-of-stack pages are active; others are inactive.  </li>
+<li>TabContent: Only the current tab’s components are active.  </li>
+<li>LazyForEach: Only visible components are active; cached nodes are inactive.  </li>
+<li>Navigation: Only the current NavDestination’s components are active.  </li>
+<li>Component reuse: Nodes in the reuse pool are inactive; mounted nodes are active.</li>
+</ul>
+<h4 id="5-Inquiries-about-HarmonyOS-precompileJavaScript"><a href="#5-Inquiries-about-HarmonyOS-precompileJavaScript" class="headerlink" title="5. Inquiries about HarmonyOS precompileJavaScript."></a>5. Inquiries about HarmonyOS precompileJavaScript.</h4><p><strong>Question 1</strong>: How does the businessWebview use the bytecode cache generated by <code>precompileWebview.controller.precompileJavaScript</code>? Are bytecode caches shared across different Web components?  </p>
+<ul>
+<li>The businessWebview must set the cache mode. If the local cached JS matches the requested URL, the cache is used first.  </li>
+<li>Caches are shared if <code>precompileJavaScript</code> is used.</li>
+</ul>
+<p><strong>Question 2</strong>: Can thousands of local JS files be precompiled into bytecode for Web components?  </p>
+<ul>
+<li>Not recommended. Precompile JS files only when needed to avoid performance overhead.</li>
+</ul>
+<p><strong>Question 3</strong>: Which performs better: ① Using precompiled JS cache for businessWebview; ② Directly loading local resources?  </p>
+<ul>
+<li>Performance depends on bottlenecks:  <ul>
+<li>If JS compilation is slow, use precompilation.  </li>
+<li>If resource loading is slow, use resource pre-caching.</li>
+</ul>
+</li>
+<li>These methods are complementary, not mutually exclusive.</li>
+</ul>
+<p>Performance optimization reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5">https://developer.huawei.com/consumer/cn/doc/best-practices-V5/bpta-web-develop-optimization-V5</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41225-Daily-HarmonyOS-Next-Knowledge-RichText-Display-Issues-Slider-Component-Built-in-Spacing-WebView-Performance-Optimization-AVSession-Errors/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1530,142 +1680,6 @@ struct ArticleCard &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41212-Daily-HarmonyOS-Next-Knowledge-Column-Containing-List-Actual-Size-After-Scaling-Animation-touchstart-Event-Web-Reload-JSON-Error/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/41212-Daily-HarmonyOS-Next-Knowledge-Column-Containing-List-Actual-Size-After-Scaling-Animation-touchstart-Event-Web-Reload-JSON-Error/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Column Containing List, Actual Size After Scaling Animation, touchstart Event, Web Reload, JSON Error</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 08:39:54 / Modified: 08:40:17" itemprop="dateCreated datePublished" datetime="2025-06-29T08:39:54+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-Column-Containing-List-Actual-Size-After-Scaling-Animation-touchstart-Event-Web-Reload-JSON-Error"><a href="#Daily-HarmonyOS-Next-Knowledge-Column-Containing-List-Actual-Size-After-Scaling-Animation-touchstart-Event-Web-Reload-JSON-Error" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Column Containing List, Actual Size After Scaling Animation, touchstart Event, Web Reload, JSON Error"></a>[Daily HarmonyOS Next Knowledge] Column Containing List, Actual Size After Scaling Animation, touchstart Event, Web Reload, JSON Error</h1><h4 id="1-HarmonyOS-Column-layout-containing-a-List"><a href="#1-HarmonyOS-Column-layout-containing-a-List" class="headerlink" title="1. HarmonyOS: Column layout containing a List?"></a>1. HarmonyOS: Column layout containing a List?</h4><p>When a Column layout includes both normal components and a List, the last item of the List cannot be fully displayed. How to solve this?  </p>
-<p>The most likely cause is that in a non-Flex linear layout container, the layout constraints of child components are affected by properties like <code>layoutWeight</code>, <code>flexShrink</code>, or <code>flexGrow</code>. If other components and the List have the same layout constraints, the List uses <code>maxHeight</code> to obtain its real height (equal to the Column’s height). Combined with the height occupation of other components, the last part of the List items cannot be fully displayed on the screen. Setting <code>layoutWeight</code> on the List allows the Column to allocate the remaining space to the List, ensuring complete display.  </p>
-<p><strong>Example code</strong>: If the List does not set <code>.layoutWeight(100)</code>, the last item of the List cannot be fully displayed.  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct Index &#123;
-  @State strList: Array&lt;String&gt; = [&#39;Hello World&#39;, &#39;init&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;, &#39;10&#39;, &#39;11&#39;, &#39;12&#39;, &#39;13&#39;, &#39;14&#39;, &#39;15&#39;, &#39;16&#39;, &#39;17&#39;]
-  build() &#123;
-    Column() &#123;
-      Text(&quot;111111&quot;)
-        .fontSize(100)
-      List() &#123;
-        ForEach(this.strList, (item: string, index: number) =&gt; &#123;
-          ListItem() &#123;
-            Text(item)
-              .fontSize(100)
-          &#125;
-        &#125;)
-      &#125;
-      .layoutWeight(300)
-    &#125;
-    .width(&#39;100%&#39;)
-    .height(&#39;100%&#39;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="2-HarmonyOS-After-scaling-and-translating-a-component-the-values-returned-by-ComponentInfo-do-not-match-the-inspector-Is-there-an-interface-to-get-the-actual-scaled-size-of-the-component"><a href="#2-HarmonyOS-After-scaling-and-translating-a-component-the-values-returned-by-ComponentInfo-do-not-match-the-inspector-Is-there-an-interface-to-get-the-actual-scaled-size-of-the-component" class="headerlink" title="2. HarmonyOS: After scaling and translating a component, the values returned by ComponentInfo do not match the inspector. Is there an interface to get the actual scaled size of the component?"></a>2. HarmonyOS: After scaling and translating a component, the values returned by ComponentInfo do not match the inspector. Is there an interface to get the actual scaled size of the component?</h4><p>Call the area change callback <code>onAreaChange</code> function for the component and read the <code>Area</code> type data. Example: (First define component width and height variables <code>cw, ch</code>)  </p>
-<pre><code class="language-typescript">.onAreaChange((oldValue: Area, newValue: Area) =&gt; &#123;
-  this.cw = new Number(newValue.width).valueOf()
-  this.ch = new Number(newValue.height).valueOf()
-&#125;)
-</code></pre>
-<h4 id="3-HarmonyOS-The-touchstart-event-does-not-respond-after-opening-a-page-in-WebView"><a href="#3-HarmonyOS-The-touchstart-event-does-not-respond-after-opening-a-page-in-WebView" class="headerlink" title="3. HarmonyOS: The touchstart event does not respond after opening a page in WebView."></a>3. HarmonyOS: The touchstart event does not respond after opening a page in WebView.</h4><p>The <code>touchstart</code> event conflicts with the <code>click</code> event. When adapting a completed PC site for mobile devices, using mobile-specific event systems (e.g., <code>touchstart</code> instead of <code>click</code>) can improve response speed. Mobile browsers delay the <code>click</code> event by 300ms to distinguish between single and double clicks, while <code>touchstart</code> triggers instantly when the user touches the screen.  </p>
-<p>However, when adapting a PC site for mobile devices, simply replacing <code>click</code> with <code>touchstart</code> is insufficient because PCs cannot recognize <code>touchstart</code>. Binding both events to an element causes conflicts on mobile devices, as both events trigger sequentially (with <code>click</code> delayed by ~300ms), executing callbacks twice.  </p>
-<p><strong>Solutions</strong>:  </p>
-<ol>
-<li><p>Use <code>preventDefault</code>:  </p>
-<pre><code class="language-javascript">const Button = document.getElementById(&quot;targetButton&quot;)
-
-Button.addEventListener(&quot;touchstart&quot;, e =&gt; &#123;
-    e.preventDefault()
-    console.log(&quot;touchstart event!&quot;)
-&#125;)
-
-Button.addEventListener(&quot;click&quot;, e =&gt; &#123;
-    e.preventDefault()
-    console.log(&quot;click event!&quot;)
-&#125;)
-</code></pre>
-<p>Simulating a mobile device in the browser will only log <code>touchstart event!</code>, blocking the <code>click</code> event.  </p>
-</li>
-<li><p>Bind events based on feature detection:  </p>
-<pre><code class="language-javascript">const Button = document.getElementById(&quot;targetButton&quot;)
-
-const clickEvent = (function() &#123;
-  if (&#39;ontouchstart&#39; in document.documentElement === true)
-    return &#39;touchstart&#39;;
-  else
-    return &#39;click&#39;;
-&#125;)();
-
-Button.addEventListener(clickEvent, e =&gt; &#123;
-  console.log(&quot;things happened!&quot;)
-&#125;)
-</code></pre>
-</li>
-</ol>
-<h4 id="4-HarmonyOS-If-the-page-stack-contains-a-WebView-page-how-to-get-the-WebView-instance-to-perform-a-reload-operation-for-a-specific-WebView-in-the-stack"><a href="#4-HarmonyOS-If-the-page-stack-contains-a-WebView-page-how-to-get-the-WebView-instance-to-perform-a-reload-operation-for-a-specific-WebView-in-the-stack" class="headerlink" title="4. HarmonyOS: If the page stack contains a WebView page, how to get the WebView instance to perform a reload operation for a specific WebView in the stack?"></a>4. HarmonyOS: If the page stack contains a WebView page, how to get the WebView instance to perform a reload operation for a specific WebView in the stack?</h4><p>Refer to <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-page-loading-with-web-components-V5">Dynamically Creating Web Components</a>.  </p>
-<h4 id="5-When-converting-a-JSON-array-to-a-string-and-saving-it-to-Preferences-an-error-occurs-“Parameter-error-The-type-of-‘value’-must-be-ValueType-”"><a href="#5-When-converting-a-JSON-array-to-a-string-and-saving-it-to-Preferences-an-error-occurs-“Parameter-error-The-type-of-‘value’-must-be-ValueType-”" class="headerlink" title="5. When converting a JSON array to a string and saving it to Preferences, an error occurs: “Parameter error. The type of ‘value’ must be ValueType.”"></a>5. When converting a JSON array to a string and saving it to Preferences, an error occurs: “Parameter error. The type of ‘value’ must be ValueType.”</h4><p>This issue may be caused by an excessively long string. The maximum length limit for <code>Value</code> is 8192 bytes. Preferences are recommended for storing small amounts of persistent data; consider using a relational database for large data: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-data-preferences-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-data-preferences-V5</a>.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1735,13 +1749,13 @@ Button.addEventListener(clickEvent, e =&gt; &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

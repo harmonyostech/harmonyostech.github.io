@@ -149,6 +149,294 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/426%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/426%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 07:25:05 / Modified: 07:27:34" itemprop="dateCreated datePublished" datetime="2025-06-25T07:25:05+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page"><a href="#【Daily-HarmonyOS-Next-Knowledge】Obtaining-Page-Stack-Objects-Canvas-Animations-Security-Buttons-Modifying-Image-Colors-in-Image-Components-Setting-Popups-to-Display-Only-on-the-Current-Page" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page"></a>【Daily HarmonyOS Next Knowledge】Obtaining Page Stack Objects, Canvas Animations, Security Buttons, Modifying Image Colors in Image Components, Setting Popups to Display Only on the Current Page</h3><h4 id="1-How-to-obtain-the-page-stack-object-in-HarmonyOS"><a href="#1-How-to-obtain-the-page-stack-object-in-HarmonyOS" class="headerlink" title="1. How to obtain the page stack object in HarmonyOS?"></a>1. How to obtain the page stack object in HarmonyOS?</h4><p>How to get the current page hierarchy and the page hierarchy object through the router, such as pages A - B - C, where page C can obtain the list of current page hierarchies and the corresponding page objects.  </p>
+<p>Currently, only information about the current page in the router page stack can be obtained, such as the index, path, page name, and the number of pages in the page stack. Obtaining the list of the page stack is not supported yet.  </p>
+<p>For navigation within and between modules, use <code>Navigation</code> as much as possible, as the router will stop evolving and may not add new capabilities in the future. The tight coupling caused by using <code>Navigation</code> for inter-module navigation can be solved by dynamic imports. The router does not support fine-grained operations on the page stack. For clearing the stack, such as A-B-B1, clearing page B from page B1 is not supported; only <code>clear</code> can be used to remove all pages except the current one. The router does not support skipping more than 32 pages, and the maximum capacity of the page stack is 32 pages. The router’s routing stack only supports obtaining the properties of the top page, including only the current page path and file name. <code>Navigation</code> will continue to evolve, so if capabilities are insufficient, requirements can be planned further. In <code>Navigation</code>, you can use <code>getAllPathName</code> to obtain the names of all <code>NavDestination</code> pages in the stack (for details, refer to Example 2 in the link below: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5#getallpathname10</a>)  </p>
+<pre><code class="language-typescript">// Index.ets
+@Entry
+@Component
+struct NavigationExample &#123;
+  pageInfos: NavPathStack = new NavPathStack();
+  isUseInterception: boolean = false;
+
+  registerInterception() &#123;
+    this.pageInfos.setInterception(&#123;
+      // Intercept before page navigation, allowing stack operations that take effect in the current navigation.
+      willShow: (from: NavDestinationContext | &quot;navBar&quot;, to: NavDestinationContext | &quot;navBar&quot;,
+        operation: NavigationOperation, animated: boolean) =&gt; &#123;
+        if (!this.isUseInterception) &#123;
+          return;
+        &#125;
+        if (typeof to === &quot;string&quot;) &#123;
+          console.log(&quot;target page is navigation home&quot;);
+          return;
+        &#125;
+        // Redirect the target page, changing from pageTwo to pageOne.
+        let target: NavDestinationContext = to as NavDestinationContext;
+        if (target.pathInfo.name === &#39;pageTwo&#39;) &#123;
+          target.pathStack.pop();
+          target.pathStack.pushPathByName(&#39;pageOne&#39;, null);
+        &#125;
+      &#125;,
+      // Callback after page navigation; stack operations in this callback refresh on the next navigation.
+      didShow: (from: NavDestinationContext | &quot;navBar&quot;, to: NavDestinationContext | &quot;navBar&quot;,
+        operation: NavigationOperation, isAnimated: boolean) =&gt; &#123;
+        if (!this.isUseInterception) &#123;
+          return;
+        &#125;
+        if (typeof from === &quot;string&quot;) &#123;
+          console.log(&quot;current transition is from navigation home&quot;);
+        &#125; else &#123;
+          console.log(`current transition is from  $&#123;(from as NavDestinationContext).pathInfo.name&#125;`);
+        &#125;
+        if (typeof to === &quot;string&quot;) &#123;
+          console.log(&quot;current transition to is navBar&quot;);
+        &#125; else &#123;
+          console.log(`current transition is to $&#123;(to as NavDestinationContext).pathInfo.name&#125;`);
+        &#125;
+      &#125;,
+      // Triggered when the Navigation single/double bar display state changes.
+      modeChange: (mode: NavigationMode) =&gt; &#123;
+        if (!this.isUseInterception) &#123;
+          return;
+        &#125;
+        console.log(`current navigation mode is $&#123;mode&#125;`);
+      &#125;
+    &#125;);
+  &#125;
+
+  build() &#123;
+    Navigation(this.pageInfos) &#123;
+      Column() &#123;
+        Button(&#39;pushPath&#39;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
+          .width(&#39;80%&#39;)
+          .height(40)
+          .margin(20)
+          .onClick(() =&gt; &#123;
+            this.pageInfos.pushPath(&#123; name: &#39;pageOne&#39; &#125;); // Push the NavDestination page information specified by name onto the stack
+          &#125;);
+        Button(&#39;use interception&#39;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
+          .width(&#39;80%&#39;)
+          .height(40)
+          .margin(20)
+          .onClick(() =&gt; &#123;
+            this.isUseInterception = !this.isUseInterception;
+            if (this.isUseInterception) &#123;
+              this.registerInterception();
+            &#125; else &#123;
+              this.pageInfos.setInterception(undefined);
+            &#125;
+          &#125;);
+      &#125;
+    &#125;.title(&#39;NavIndex&#39;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-Animation-demo-based-on-drawing-canvas-in-HarmonyOS"><a href="#2-Animation-demo-based-on-drawing-canvas-in-HarmonyOS" class="headerlink" title="2. Animation demo based on drawing.canvas in HarmonyOS?"></a>2. Animation demo based on drawing.canvas in HarmonyOS?</h4><p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/blog/topic/03797837883380062">https://developer.huawei.com/consumer/cn/blog/topic/03797837883380062</a>  </p>
+<h4 id="3-Security-button-returns-permission-failure-in-HarmonyOS"><a href="#3-Security-button-returns-permission-failure-in-HarmonyOS" class="headerlink" title="3. Security button returns permission failure in HarmonyOS?"></a>3. Security button returns permission failure in HarmonyOS?</h4><p>The security button returns a permission failure with <code>result</code> as <code>TEMPORARY_AUTHORIZATION_FAILED</code>. How to solve it?  </p>
+<pre><code class="language-typescript">// With default parameters, the icon, text, and background all exist
+SaveButton().onClick(async (event: ClickEvent, result: SaveButtonOnClickResult) =&gt; &#123;
+  if (result === SaveButtonOnClickResult.SUCCESS) &#123;&#125;
+&#125;);
+</code></pre>
+<p>Using a URI to open a file allows continuous writing without time restrictions:  </p>
+<pre><code class="language-typescript">let file = await fs.open(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+</code></pre>
+<p>This requires corresponding permissions, which need to be defined in <code>modules.json5</code>:  </p>
+<pre><code class="language-json5">&#123;
+  &quot;name&quot;: &quot;ohos.permission.WRITE_MEDIA&quot;,
+  &quot;reason&quot;: &quot;$string:EntryAbility_desc&quot;,
+  &quot;usedScene&quot;: &#123;
+    &quot;abilities&quot;: [&quot;EntryAbility&quot;],
+    &quot;when&quot;: &quot;always&quot;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-Can-the-color-of-an-image-be-dynamically-modified-after-setting-a-local-resource-file-in-the-HarmonyOS-Image-component"><a href="#4-Can-the-color-of-an-image-be-dynamically-modified-after-setting-a-local-resource-file-in-the-HarmonyOS-Image-component" class="headerlink" title="4. Can the color of an image be dynamically modified after setting a local resource file in the HarmonyOS Image component?"></a>4. Can the color of an image be dynamically modified after setting a local resource file in the HarmonyOS Image component?</h4><p>Refer to the following document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-image-V5#colorfilter9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-image-V5#colorfilter9</a>  </p>
+<p><code>colorFilter(value: ColorFilter | DrawingColorFilter)</code><br>Sets a color filter effect for the image.<br>When this property is set, the <code>renderMode</code> property has no effect.  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter Name</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">value</td>
+<td align="left">ColorFilter | DrawingColorFilter</td>
+<td align="left">Yes</td>
+<td align="left">1. Sets a color filter effect for the image with a 4x5 RGBA transformation matrix.<br><br>The first row of the matrix represents the vector value of R (red), the second row represents G (green), the third row represents B (blue), the fourth row represents A (alpha), and the four rows represent the vector values of different RGBA components.<br><br>When the diagonal values of the matrix are 1 and the rest are 0, the original color of the image is maintained.<br><br><strong>Calculation rule:</strong><br><br>If the input filter matrix is:<br><br><img src="/../images/123a71ca10b754dc5ea030fc4ddddf2b_MD5.jpg"><br><br>The pixel is <code>[R, G, B, A]</code><br><br>The filtered color is <code>[R’, G’, B’, A’]</code><br><br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.04.26.png"><br><br>2. Starting from API Version 12, the <code>ColorFilter</code> type from <code>@ohos.graphics.drawing</code> is supported as a parameter.<br><br><strong>Note:</strong><br>For API Version 11 and earlier, this property is not supported for SVG image sources.<br>Starting from API Version 12, the <code>DrawingColorfilter</code> type in this interface is supported for use in meta services, where SVG image sources must have a <code>stroke</code> property.</td>
+</tr>
+</tbody></table>
+<h4 id="5-How-to-set-a-popup-to-display-only-on-the-current-page-in-HarmonyOS"><a href="#5-How-to-set-a-popup-to-display-only-on-the-current-page-in-HarmonyOS" class="headerlink" title="5. How to set a popup to display only on the current page in HarmonyOS?"></a>5. How to set a popup to display only on the current page in HarmonyOS?</h4><p>A popup is used as a notification prompt. When page A shows the popup and then navigates to page B, the popup still appears on page B. Can the popup be set to display only on page A?  </p>
+<p>The current behavior of popups is as described. You can use <code>CustomDialog</code> instead. Refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-common-components-custom-dialog-V5</a>  </p>
+<p><strong>Sample demo</strong>:  </p>
+<pre><code class="language-typescript">import router from &#39;@ohos.router&#39;;
+
+@CustomDialog
+export default struct UserPrivacyDialog &#123;
+  controller: CustomDialogController = new CustomDialogController(&#123; builder: &#39;&#39; &#125;);
+  cancel: Function = () =&gt; &#123;&#125;;
+  confirm: Function = () =&gt; &#123;&#125;;
+  visible: Visibility = Visibility.None;
+
+  build() &#123;
+    Column() &#123;
+      Text(&#39;I am a popup&#39;);
+
+      Button(&#39;jump&#39;)
+        .onClick(() =&gt; &#123;
+          router.pushUrl(&#123;
+            url: &#39;pages/Second&#39;
+          &#125;);
+        &#125;)
+        .backgroundColor(0xffffff)
+        .fontColor(Color.Red);
+    &#125;
+    .margin(&#123; top: 22 &#125;)
+    .justifyContent(FlexAlign.SpaceEvenly);
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  @State textValue: string = &#39;Hello World&#39;;
+  @State visible: Visibility = Visibility.None;
+
+  build() &#123;
+    Stack() &#123;
+      Row() &#123;
+        Column() &#123;
+          Button(&#39;click&#39;)
+            .onClick(() =&gt; &#123;
+              if (this.visible === Visibility.Visible) &#123;
+                this.visible = Visibility.None;
+              &#125; else &#123;
+                this.visible = Visibility.Visible;
+              &#125;
+            &#125;)
+            .backgroundColor(0x777474)
+            .fontColor(0x000000);
+        &#125;
+        .width(&#39;100%&#39;);
+      &#125;
+      .height(&#39;100%&#39;)
+      .backgroundColor(0x885555);
+
+      Text(&#39;&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.visible === Visibility.Visible) &#123;
+            this.visible = Visibility.None;
+          &#125; else &#123;
+            this.visible = Visibility.Visible;
+          &#125;
+        &#125;)
+        .width(&#39;100%&#39;)
+        .height(&#39;100%&#39;) // Transparency can be adjusted
+        .opacity(0.16)
+        .backgroundColor(0x000000)
+        .visibility(this.visible);
+
+      Column() &#123;
+        GridRow(&#123;
+          columns: &#123; xs: 1, sm: 4, md: 8, lg: 12 &#125;,
+          breakpoints: &#123;
+            value: [&quot;400vp&quot;, &quot;600vp&quot;, &quot;800vp&quot;],
+            reference: BreakpointsReference.WindowSize
+          &#125;,
+        &#125;) &#123;
+          GridCol(&#123;
+            span: &#123; xs: 1, sm: 2, md: 4, lg: 8 &#125;,
+            offset: &#123; xs: 0, sm: 1, md: 2, lg: 2 &#125;
+          &#125;) &#123;
+            Column() &#123;
+              Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
+                UserPrivacyDialog();
+              &#125;.margin(&#123; bottom: 10 &#125;);
+            &#125;
+            .backgroundColor(0xffffff)
+            .visibility(this.visible)
+            .clip(true)
+            .borderRadius(20);
+          &#125;
+        &#125;
+      &#125;.width(&#39;95%&#39;); // Set popup width
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>Refer to <code>componentUtils.getRectangleById</code>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentutils-V5#componentutilsgetrectanglebyid">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkui-componentutils-V5#componentutilsgetrectanglebyid</a>  </p>
+<p><code>getRectangleById(id: string): ComponentInfo</code><br>Obtains the component instance object by component ID and synchronously returns the obtained coordinates and size to the developer through the component instance object.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/425%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Feed-Stream-Image-Sizing-List-Component-Extension-Custom-Popups-Media-Listening-List-Item-Swapping/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1331,187 +1619,6 @@ struct BorderDemo &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/416%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Textbox-Focus-Acquisition-Custom-Component-Subcomponent-Addition-Floating-Button-Dialog-Button-Update-Variable-Name-Component/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/416%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Textbox-Focus-Acquisition-Custom-Component-Subcomponent-Addition-Floating-Button-Dialog-Button-Update-Variable-Name-Component/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】 Textbox Focus Acquisition, Custom Component Subcomponent Addition, Floating Button, Dialog Button Update, Variable Name Component</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 07:01:40 / Modified: 07:10:32" itemprop="dateCreated datePublished" datetime="2025-06-25T07:01:40+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="【Daily-HarmonyOS-Next-Knowledge】-Textbox-Focus-Acquisition-Custom-Component-Subcomponent-Addition-Floating-Button-Dialog-Button-Update-Variable-Name-Component"><a href="#【Daily-HarmonyOS-Next-Knowledge】-Textbox-Focus-Acquisition-Custom-Component-Subcomponent-Addition-Floating-Button-Dialog-Button-Update-Variable-Name-Component" class="headerlink" title="【Daily HarmonyOS Next Knowledge】 Textbox Focus Acquisition, Custom Component Subcomponent Addition, Floating Button, Dialog Button Update, Variable Name Component"></a>【Daily HarmonyOS Next Knowledge】 Textbox Focus Acquisition, Custom Component Subcomponent Addition, Floating Button, Dialog Button Update, Variable Name Component</h3><h4 id="1-Why-can’t-HarmonyOS-TextArea-automatically-focus-when-displayed"><a href="#1-Why-can’t-HarmonyOS-TextArea-automatically-focus-when-displayed" class="headerlink" title="1. Why can’t HarmonyOS TextArea automatically focus when displayed?"></a>1. Why can’t HarmonyOS TextArea automatically focus when displayed?</h4><p>Obtain focus through <code>requestFocus</code>. Refer to the demo below:  </p>
-<pre><code class="language-typescript">import inputMethod from &#39;@ohos.inputMethod&#39;;
-
-@Entry
-@Component
-export struct AsrPage &#123;
-  @State message: string = &#39;Hello World&#39;
-  @State show: boolean = false
-  inputMethodController = inputMethod.getController();
-  controller: TextInputController = new TextInputController()
-  inputId: string = &#39;ceshi&#39;
-  aboutToAppear(): void &#123;
-    let textConfig: inputMethod.TextConfig = &#123;
-      inputAttribute: &#123;
-        textInputType: 0,
-        enterKeyType: 1
-      &#125;
-    &#125;
-    this.inputMethodController.attach(false, textConfig)
-      .then(() =&gt; &#123;
-      &#125;)
-      .catch((reason: ESObject) =&gt; &#123;
-      &#125;)
-  &#125;
-  build() &#123;
-    NavDestination() &#123;
-      Column() &#123;
-        TextArea(&#123;
-          placeholder: &#39;&#39;,
-          text: &#39;&#39;
-        &#125;)
-          .width(&#39;100%&#39;)
-          .height(26)
-          .defaultFocus(true)
-          .visibility(this.show ? Visibility.Visible : Visibility.None)
-          .borderColor(&#39;#ff0000&#39;)
-          .backgroundColor(&#39;#ff0000&#39;)
-          .id(this.inputId)
-
-        Button(&#39;打开&#39;).onClick(() =&gt; &#123;
-          this.show = true
-          this.controller.caretPosition(this.message.length)
-          focusControl.requestFocus(this.inputId)
-          this.inputMethodController.showTextInput().then(() =&gt; &#123;
-          &#125;).catch((reason: ESObject) =&gt; &#123;
-
-          &#125;)
-
-        &#125;)
-        Button(&#39;关闭&#39;).onClick(() =&gt; &#123;
-          this.show = true
-          this.inputMethodController.hideTextInput().then(() =&gt; &#123;
-          &#125;).catch((reason: ESObject) =&gt; &#123;
-          &#125;)
-
-        &#125;)
-      &#125;.justifyContent(FlexAlign.Center).width(&#39;100%&#39;).height(&#39;100%&#39;)
-    &#125;.hideTitleBar(true)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="2-How-to-add-child-controls-to-a-HarmonyOS-custom-component-when-using-it"><a href="#2-How-to-add-child-controls-to-a-HarmonyOS-custom-component-when-using-it" class="headerlink" title="2. How to add child controls to a HarmonyOS custom component when using it?"></a>2. How to add child controls to a HarmonyOS custom component when using it?</h4><p>If you have customized a control and want to add controls inside it like using containers such as Row or Column, refer to the following example. You can pass subcomponents to the custom component via <code>builder</code>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-layout-V5#sizeresult10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-layout-V5#sizeresult10</a>  </p>
-<h4 id="3-Does-HarmonyOS-have-a-floatingActionButton-component"><a href="#3-Does-HarmonyOS-have-a-floatingActionButton-component" class="headerlink" title="3. Does HarmonyOS have a floatingActionButton component?"></a>3. Does HarmonyOS have a floatingActionButton component?</h4><p>There is no built-in <code>floatingActionButton</code> component. To achieve a floating button effect, you can customize it using the <code>Button()</code> component. Refer to the demo below:  </p>
-<pre><code class="language-typescript">// xxx.ets
-@Entry
-@Component
-struct HoverButtonExample &#123;
-  private arr: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  build() &#123;
-    Stack() &#123;
-      List(&#123; space: 20, initialIndex: 0 &#125;) &#123;
-        ForEach(this.arr, (item: number) =&gt; &#123;
-          ListItem() &#123;
-            Text(&#39;&#39; + item)
-              .width(&#39;100%&#39;).height(100).fontSize(16)
-              .textAlign(TextAlign.Center).borderRadius(10).backgroundColor(0xFFFFFF)
-          &#125;
-        &#125;, (item: number) =&gt; item.toString())
-      &#125;.width(&#39;90%&#39;)
-      Button() &#123;
-        Image($r(&#39;app.media.ic_public_add&#39;))
-          .width(50)
-          .height(50)
-      &#125;
-      .width(60)
-      .height(60)
-      .position(&#123; x: &#39;80%&#39;, y: 600 &#125;)
-      .shadow(&#123; radius: 10 &#125;)
-      .onClick(() =&gt; &#123;
-        // Operations to be executed
-      &#125;)
-    &#125;
-    .width(&#39;100%&#39;)
-    .height(&#39;100%&#39;)
-    .backgroundColor(0xDCDCDC)
-    .padding(&#123; top: 5 &#125;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-How-to-update-the-button-content-of-AlertDialog-in-HarmonyOS"><a href="#4-How-to-update-the-button-content-of-AlertDialog-in-HarmonyOS" class="headerlink" title="4. How to update the button content of AlertDialog in HarmonyOS?"></a>4. How to update the button content of AlertDialog in HarmonyOS?</h4><p>When the cancel button content passed to AlertDialog is set with a <code>@State</code> variable, it does not update and always displays the initial value.  </p>
-<p><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.04.16.png"><br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.04.16-1.png"></p>
-<p>AlertDialog does not support setting variables for the <code>value</code> of <code>primaryButton</code>. You can try customizing a pop-up window.<br>Refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5</a>  </p>
-<h4 id="5-How-to-use-variable-name-components-similar-to-React-in-HarmonyOS-ArkTS"><a href="#5-How-to-use-variable-name-components-similar-to-React-in-HarmonyOS-ArkTS" class="headerlink" title="5. How to use variable-name components (similar to React) in HarmonyOS ArkTS?"></a>5. How to use variable-name components (similar to React) in HarmonyOS ArkTS?</h4><p>In the following example, the subcomponent referenced in Row is a variable passed from outside, which may be View1 or View2. How to support syntax similar to the following:  </p>
-<pre><code class="language-typescript">@Prop private view;
-build() &#123;
-  Row() &#123;
-    view();
-  &#125;
-  .width(&#39;100%&#39;)
-  .height(&#39;100%&#39;)
-&#125;
-</code></pre>
-<p>Dynamic component loading can be achieved via <code>@builderParam</code>.<br>Refer to the official website example: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-builderparam-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-builderparam-V5</a>  </p>
-<p>When developers create a custom component and want to add specific functions to it (e.g., adding a click-to-navigate operation to a specified custom component), embedding event methods directly in the component will cause all instances of the custom component to gain the function. To solve this, ArkUI introduces the <code>@BuilderParam</code> decorator, which decorates variables pointing to <code>@Builder</code> methods (i.e., <code>@BuilderParam</code> is used to承接 <code>@Builder</code> functions). Developers can assign values to the <code>@BuilderParam</code>-decorated custom build function in different ways (e.g., parameter modification, trailing closure, arrow function borrowing) when initializing the custom component, and add specific functions to the component by calling <code>@BuilderParam</code> inside the custom component. This decorator is used to declare an element of any UI description, similar to a slot placeholder.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1581,13 +1688,13 @@ build() &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

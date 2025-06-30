@@ -149,6 +149,198 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/101%E3%80%90Daily-HarmonyOS-Knowledge%E3%80%91Manual-Scroller-Stop-Execute-Every-Second-Custom-Web-Keyboard-Inject-Styles-into-Web-Components-Safe-Area/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/101%E3%80%90Daily-HarmonyOS-Knowledge%E3%80%91Manual-Scroller-Stop-Execute-Every-Second-Custom-Web-Keyboard-Inject-Styles-into-Web-Components-Safe-Area/" class="post-title-link" itemprop="url">【Daily HarmonyOS Knowledge】Manual Scroller Stop, Execute Every Second, Custom Web Keyboard, Inject Styles into Web Components, Safe Area</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 08:18:12 / Modified: 09:50:03" itemprop="dateCreated datePublished" datetime="2025-06-27T08:18:12+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Knowledge-Scroller-Manual-Stop-Second-Execution-Web-Custom-Keyboard-Web-Component-Injection-Style-Safe-Area"><a href="#Daily-HarmonyOS-Knowledge-Scroller-Manual-Stop-Second-Execution-Web-Custom-Keyboard-Web-Component-Injection-Style-Safe-Area" class="headerlink" title="[Daily HarmonyOS Knowledge] Scroller Manual Stop, Second Execution, Web Custom Keyboard, Web Component Injection Style, Safe Area"></a>[Daily HarmonyOS Knowledge] Scroller Manual Stop, Second Execution, Web Custom Keyboard, Web Component Injection Style, Safe Area</h3><h4 id="1-Does-HarmonyOS-scroller-have-a-manual-stop-method"><a href="#1-Does-HarmonyOS-scroller-have-a-manual-stop-method" class="headerlink" title="1. Does HarmonyOS scroller have a manual stop method?"></a>1. Does HarmonyOS scroller have a manual stop method?</h4><p>You can use the scrollTo method to slide to the specified position.  </p>
+<pre><code>// demo.ets  
+import Curves from &#39;@ohos.curves&#39;  
+
+@Entry  
+@Component  
+struct ScrollExample &#123;  
+  scroller: Scroller = new Scroller()  
+  private arr: number[] = []  
+
+  aboutToAppear(): void &#123;  
+    for (let i = 0; i &lt; 100; i++) &#123;  
+      this.arr.push(i)  
+    &#125;  
+  &#125;  
+
+  build() &#123;  
+    Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;  
+
+      Scroll(this.scroller) &#123;  
+        Column() &#123;  
+          ForEach(this.arr, (item: number) =&gt; &#123;  
+            Text(item.toString())  
+              .width(&#39;90%&#39;)  
+              .height(150)  
+              .backgroundColor(0xFFFFFF)  
+              .borderRadius(15)  
+              .fontSize(16)  
+              .textAlign(TextAlign.Center)  
+              .margin(&#123; top: 10 &#125;)  
+          &#125;, (item: string) =&gt; item)  
+        &#125;.width(&#39;100%&#39;)  
+      &#125;  
+      .scrollable(ScrollDirection.Vertical) // Scroll direction is vertical  
+      .scrollBar(BarState.On) // Scroll bar is always visible  
+      .scrollBarColor(Color.Gray) // Scroll bar color  
+      .scrollBarWidth(10) // Scroll bar width  
+      .friction(0.6)  
+      .edgeEffect(EdgeEffect.Spring)  
+      .onScroll((xOffset: number, yOffset: number) =&gt; &#123;  
+        console.info(xOffset + &#39; &#39; + yOffset)  
+      &#125;)  
+      .onScrollEdge((side: Edge) =&gt; &#123;  
+        console.info(&#39;To the edge&#39;)  
+      &#125;)  
+      .onScrollStop(() =&gt; &#123;  
+        console.info(&#39;Scroll Stop&#39;)  
+      &#125;)  
+
+      Button(&#39;Interrupt and execute other logic&#39;)  
+        .height(&#39;5%&#39;)  
+        .onClick(() =&gt; &#123;  
+          let curve = Curves.interpolatingSpring(10, 1, 228, 30) // Create a stepped curve  
+          const yOffset: number = this.scroller.currentOffset().yOffset;  
+          this.scroller.scrollTo(&#123;  
+            xOffset: 0,  
+            yOffset: yOffset,  
+            // animation: &#123; duration: 1000, curve: curve, canOverScroll: true &#125;  
+          &#125;)  
+        &#125;)  
+        .margin(&#123; top: 110, left: 20 &#125;)  
+
+    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)  
+  &#125;  
+&#125;  
+</code></pre>
+<h4 id="2-HarmonyOS-function-that-executes-once-per-second"><a href="#2-HarmonyOS-function-that-executes-once-per-second" class="headerlink" title="2. HarmonyOS function that executes once per second?"></a>2. HarmonyOS function that executes once per second?</h4><p>Use setInterval to repeatedly call a function with a fixed time delay between each call. To delete the timer, manually call the clearInterval interface.  </p>
+<p>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V13/js-apis-timer-V13#setinterval">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V13/js-apis-timer-V13#setinterval</a>  </p>
+<p><code>setInterval(handler: Function | string, delay: number, ...arguments: any[]): number</code><br>Repeatedly calls a function with a fixed time delay between each call.<br>To delete the timer, manually call the clearInterval interface.  </p>
+<pre><code>setInterval(() =&gt; &#123;  
+  console.log(&#39;do every 1s.&#39;);  
+&#125;, 1000);  
+</code></pre>
+<h4 id="3-HarmonyOS-WebView-custom-keyboard-issue"><a href="#3-HarmonyOS-WebView-custom-keyboard-issue" class="headerlink" title="3. HarmonyOS WebView custom keyboard issue?"></a>3. HarmonyOS WebView custom keyboard issue?</h4><p>When using a custom keyboard in a loaded webview, how to handle the hiding and displaying of the system keyboard, as well as displaying the custom keyboard and processing cursor acquisition.  </p>
+<p>When using a custom keyboard, the system keyboard should be hidden to avoid conflicts. You can set the focusable property of the TextInput component to false to make the component non-focusable, so that the default system keyboard will not pop up. You can load the custom keyboard by displaying it in the <web> component. The specific implementation method is to create an HTML page containing the desired keys and use it as the src attribute value of the <web> component. When the user clicks on the component, the custom keyboard will pop up automatically. You can obtain the cursor position information by listening to keyboard events. In this way, you can dynamically adjust the cursor to the correct position according to the user’s operations during text editing.  </p>
+<p>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5#ZH-CN_TOPIC_0000001847049860__customkeyboard10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5#ZH-CN_TOPIC_0000001847049860__customkeyboard10</a>  </p>
+<h4 id="4-How-to-inject-styles-into-HTML-in-HarmonyOS-web-components"><a href="#4-How-to-inject-styles-into-HTML-in-HarmonyOS-web-components" class="headerlink" title="4. How to inject styles into HTML in HarmonyOS web components?"></a>4. How to inject styles into HTML in HarmonyOS web components?</h4><p>Refer to the demo to inject styles into the style tag:  </p>
+<pre><code>// ets  
+import web_webview from &#39;@ohos.web.webview&#39;;  
+
+@Entry  
+@Component  
+struct WebComponent &#123;  
+  webviewController: web_webview.WebviewController = new web_webview.WebviewController();  
+  private customStyle: string =  
+    &#39;html, body &#123;margin: 0; padding: 0; overflow: hidden; touch-action: none; background:#ace&#125;&#39;;  
+
+  aboutToAppear() &#123;  
+    // Configure Web to enable debug mode  
+    web_webview.WebviewController.setWebDebuggingAccess(true);  
+  &#125;  
+
+  build() &#123;  
+    Column() &#123;  
+
+      Button(&#39;style&#39;).onClick((event: ClickEvent) =&gt; &#123;  
+
+        this.webviewController.runJavaScript(`const head = document.head;  
+                                              console.log(head);  
+                                              const style = document.createElement(&#39;style&#39;);  
+                                              style.appendChild(document.createTextNode(&quot;$&#123;this.customStyle&#125;&quot;))  
+                                              head.appendChild(style)  
+        `)  
+      &#125;)  
+      Web(&#123; src: $rawfile(&#39;index.html&#39;), controller: this.webviewController &#125;).domStorageAccess(true)  
+    &#125;  
+  &#125;  
+&#125;  
+// html  
+&lt;!DOCTYPE html&gt;  
+&lt;html&gt;  
+&lt;head&gt;  
+
+&lt;/head&gt;  
+
+&lt;body&gt;  
+&lt;h1 id=&quot;text&quot;&gt;  
+    This is a test message. The default font is black. After calling the runJavaScript method, the font is green. After calling the runJavaScriptCodePassed method, the font is red.  
+&lt;/h1&gt;  
+&lt;/body&gt;  
+&lt;/html&gt;  
+</code></pre>
+<h4 id="5-HarmonyOS-safe-area-issue"><a href="#5-HarmonyOS-safe-area-issue" class="headerlink" title="5. HarmonyOS safe area issue?"></a>5. HarmonyOS safe area issue?</h4><p>When there is no tabbar, <code>.expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])</code> can indeed start from the top of the screen, but it fails when a tabbar is added. What is the solution?  </p>
+<p>Use immersive development to avoid the navigation bar.  </p>
+<p>Please refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-develop-apply-immersive-effects-V5#section202484117114">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-develop-apply-immersive-effects-V5#section202484117114</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/228-Daily-HarmonyOS-Next-Knowledge-Summary-of-Methods-for-Generating-QR-Codes-from-Strings-and-Images-Getting-Text-Line-Counts-and-Exiting-Edit-State-in-Input-Boxes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1165,142 +1357,6 @@ struct CustomDialogUser &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/219-Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/26/219-Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Routing Stack Issues, Image Rounding, Color Resource to Hex Conversion, Dataset Change Crash, Component Lifecycle</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-26 23:54:20 / Modified: 23:54:38" itemprop="dateCreated datePublished" datetime="2025-06-26T23:54:20+08:00">2025-06-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle"><a href="#Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Routing Stack Issues, Image Rounding, Color Resource to Hex Conversion, Dataset Change Crash, Component Lifecycle"></a>[Daily HarmonyOS Next Knowledge] Routing Stack Issues, Image Rounding, Color Resource to Hex Conversion, Dataset Change Crash, Component Lifecycle</h3><h4 id="1-When-the-HarmonyOS-app-is-sent-to-the-background-and-then-reopened-Navigation-returns-to-the-bottom-of-the-stack-and-rerenders"><a href="#1-When-the-HarmonyOS-app-is-sent-to-the-background-and-then-reopened-Navigation-returns-to-the-bottom-of-the-stack-and-rerenders" class="headerlink" title="1. When the HarmonyOS app is sent to the background and then reopened, Navigation returns to the bottom of the stack and rerenders?"></a>1. When the HarmonyOS app is sent to the background and then reopened, Navigation returns to the bottom of the stack and rerenders?</h4><p><strong>Possible Causes</strong><br>When using Navigation for routing, sending the app to the background and reopening it causes the page to return to the bottom of the stack and rerender. This occurs because:  </p>
-<ol>
-<li><strong>Navigation bar hiding</strong>: The Navigation component hides the navigation bar by default and only redisplays it when the top-of-stack element is popped. When the app enters the background, the navigation bar is hidden, and reopening requires redisplaying it, triggering rerendering.  </li>
-<li><strong>Stack management</strong>: The current page state is saved in the routing stack when the app is sent to the background. Reopening restores the state from the stack bottom, leading to rerendering.</li>
-</ol>
-<p><strong>Solutions</strong>  </p>
-<ol>
-<li><strong>Set hideTitleBar to false</strong>:  <ul>
-<li>In the Navigation component, set <code>hideTitleBar: false</code>.  </li>
-<li>Or set <code>hideTitleBar: false</code> in NavDestination components.</li>
-</ul>
-</li>
-<li><strong>Use pushDestinationByName</strong>:  <ul>
-<li>Push the current page to the stack using <code>pushDestinationByName</code> to keep it at the top.  </li>
-<li>Handle pop events with the <code>onPop</code> callback to avoid rerendering.</li>
-</ul>
-</li>
-</ol>
-<h4 id="2-How-to-set-rounded-corners-when-using-borderimage-in-HarmonyOS"><a href="#2-How-to-set-rounded-corners-when-using-borderimage-in-HarmonyOS" class="headerlink" title="2. How to set rounded corners when using borderimage in HarmonyOS?"></a>2. How to set rounded corners when using borderimage in HarmonyOS?</h4><p>Refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-border-image-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-border-image-V5</a>  </p>
-<p>Example of setting a gradient border via <code>borderImage</code>:  </p>
-<pre><code class="language-typescript">// xxx.ets
-@Entry
-@Component
-struct Index &#123;
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Text(&#39;This is gradient color.&#39;).textAlign(TextAlign.Center).height(50).width(200)
-          .borderImage(&#123;
-            source: &#123;
-              angle: 90,
-              direction: GradientDirection.Left,
-              colors: [[0xAEE1E1, 0.0], [0xD3E0DC, 0.3], [0xFCD1D1, 1.0]]
-            &#125;,
-            slice: &#123; top: 10, bottom: 10, left: 10, right: 10 &#125;,
-            width: &#123; top: &quot;10px&quot;, bottom: &quot;10px&quot;, left: &quot;10px&quot;, right: &quot;10px&quot; &#125;,
-            repeat: RepeatMode.Stretch,
-            fill: false
-          &#125;)
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="3-How-to-convert-ResourceColor-to-a-hexadecimal-string-in-HarmonyOS"><a href="#3-How-to-convert-ResourceColor-to-a-hexadecimal-string-in-HarmonyOS" class="headerlink" title="3. How to convert ResourceColor to a hexadecimal string in HarmonyOS?"></a>3. How to convert ResourceColor to a hexadecimal string in HarmonyOS?</h4><p>Convert the decimal value from <code>resourceManager.getColorSync</code> to hex:  </p>
-<pre><code class="language-typescript">let resource: resourceManager.Resource = &#123;
-  bundleName: &quot;com.example.helloworld&quot;,
-  moduleName: &quot;entry&quot;,
-  id: $r(&#39;app.color.start_window_background&#39;).id
-&#125;;
-let colorNumber = this.context.resourceManager.getColorSync(resource);
-let colorString = colorNumber.toString(16);
-console.log(colorString);
-</code></pre>
-<p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5#getcolorsync10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5#getcolorsync10</a>  </p>
-<h4 id="4-Crash-in-IDataSource’s-onDatasetChange-in-HarmonyOS-Error-message-onDatasetChange-cannot-be-used-with-other-interface"><a href="#4-Crash-in-IDataSource’s-onDatasetChange-in-HarmonyOS-Error-message-onDatasetChange-cannot-be-used-with-other-interface" class="headerlink" title="4. Crash in IDataSource’s onDatasetChange() in HarmonyOS: Error message: onDatasetChange cannot be used with other interface"></a>4. Crash in IDataSource’s onDatasetChange() in HarmonyOS: <code>Error message: onDatasetChange cannot be used with other interface</code></h4><p>When using <code>LazyForEach</code> with <code>onDatasetChange</code> for batch dataset modifications, this error occurs because <code>onDatasetChange</code> cannot be mixed with other data manipulation interfaces.  </p>
-<p><strong>Solution</strong>  </p>
-<ol>
-<li>Avoid including deletion operations in <code>onDatasetChange</code>. Use <code>onDataDelete</code> separately for deletions.  </li>
-<li>Split operations: For simultaneous add&#x2F;delete&#x2F;move operations, call <code>onDataAdd</code>, <code>onDataDelete</code>, <code>onDataMove</code>, etc., separately, then refresh with <code>onDataReloaded</code>.</li>
-</ol>
-<h4 id="5-How-to-perform-actions-when-a-page-is-displayed-or-hidden-in-HarmonyOS-e-g-play-on-show-pause-on-hide"><a href="#5-How-to-perform-actions-when-a-page-is-displayed-or-hidden-in-HarmonyOS-e-g-play-on-show-pause-on-hide" class="headerlink" title="5. How to perform actions when a page is displayed or hidden in HarmonyOS (e.g., play on show, pause on hide)?"></a>5. How to perform actions when a page is displayed or hidden in HarmonyOS (e.g., play on show, pause on hide)?</h4><p>Use <code>onPageShow</code> (triggered when the page is displayed) and <code>onPageHide</code> (triggered when the page is hidden).<br>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-lifecycle-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-lifecycle-V5</a>  </p>
-<p><strong>Notes</strong>:  </p>
-<ul>
-<li>Lifecycle callbacks are private and called by the framework, not manually.  </li>
-<li>Avoid reusing the same component node across multiple windows to prevent lifecycle inconsistencies.</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1370,13 +1426,13 @@ console.log(colorString);
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

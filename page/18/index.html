@@ -149,6 +149,114 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/121-Daily-HarmonyOS-Next-Knowledge-Dialog-Callback-Issues-Input-Area-Max-Lines-Web-Custom-Nodes-Icon-Library-Soft-Keyboard-Toggle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/121-Daily-HarmonyOS-Next-Knowledge-Dialog-Callback-Issues-Input-Area-Max-Lines-Web-Custom-Nodes-Icon-Library-Soft-Keyboard-Toggle/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Dialog Callback Issues, Input Area Max Lines, Web Custom Nodes, Icon Library, Soft Keyboard Toggle</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 09:56:23 / Modified: 09:56:39" itemprop="dateCreated datePublished" datetime="2025-06-27T09:56:23+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Dialog-Callback-Issues-Input-Area-Max-Lines-Web-Custom-Nodes-Icon-Library-Soft-Keyboard-Toggle"><a href="#Daily-HarmonyOS-Next-Knowledge-Dialog-Callback-Issues-Input-Area-Max-Lines-Web-Custom-Nodes-Icon-Library-Soft-Keyboard-Toggle" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Dialog Callback Issues, Input Area Max Lines, Web Custom Nodes, Icon Library, Soft Keyboard Toggle"></a>[Daily HarmonyOS Next Knowledge] Dialog Callback Issues, Input Area Max Lines, Web Custom Nodes, Icon Library, Soft Keyboard Toggle</h3><h4 id="1-HarmonyOS-Why-doesn’t-promptAction-openCustomDialog-contentNode-trigger-the-onWillDismiss-callback"><a href="#1-HarmonyOS-Why-doesn’t-promptAction-openCustomDialog-contentNode-trigger-the-onWillDismiss-callback" class="headerlink" title="1. HarmonyOS: Why doesn’t promptAction.openCustomDialog(contentNode) trigger the onWillDismiss callback?"></a>1. HarmonyOS: Why doesn’t promptAction.openCustomDialog(contentNode) trigger the onWillDismiss callback?</h4><p>Using promptAction.openCustomDialog(contentNode) fails to trigger the onWillDismiss callback.  </p>
+<ol>
+<li>When users close the dialog by clicking the overlay, swiping left&#x2F;right, pressing the back button, or hitting ESC on the keyboard, if this callback is registered, the dialog will not close immediately. In the callback function, you can obtain the operation type that triggered the close via <code>reason</code> to decide whether to allow closing based on the cause. Currently, the <code>reason</code> returned by the component does not support the <code>CLOSE_BUTTON</code> enumeration value.  </li>
+<li>You cannot intercept the onWillDismiss callback again within the onWillDismiss callback.</li>
+</ol>
+<p>Reference:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-alert-dialog-box-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-alert-dialog-box-V5</a>  </p>
+<h4 id="2-HarmonyOS-When-TextArea-sets-maxLines-3-why-does-it-continue-to-increase-in-height-beyond-3-lines"><a href="#2-HarmonyOS-When-TextArea-sets-maxLines-3-why-does-it-continue-to-increase-in-height-beyond-3-lines" class="headerlink" title="2. HarmonyOS: When TextArea sets maxLines(3), why does it continue to increase in height beyond 3 lines?"></a>2. HarmonyOS: When TextArea sets maxLines(3), why does it continue to increase in height beyond 3 lines?</h4><p>How to modify the code to achieve: default height is 3 lines when there is no input, and the input box scrolls when the content exceeds 10 lines.  </p>
+<p>Refer to the following code example:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">TextArea(&#123; placeholder: &quot;请输入手机号&quot; &#125;)</span><br><span class="line">  .width(300)</span><br><span class="line">  .placeholderColor(Color.Gray)</span><br><span class="line">  .placeholderFont(&#123; size: 20 &#125;)</span><br><span class="line">  .fontColor(Color.Black)</span><br><span class="line">  .fontSize(20)</span><br><span class="line">  .backgroundColor(Color.Orange)</span><br><span class="line">  .margin(&#123; top: 35, left: 25 &#125;)</span><br><span class="line">  .caretColor(Color.Green)</span><br><span class="line">  .maxLines(3)</span><br><span class="line">  .constraintSize(&#123; maxHeight: 90 &#125;)</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 3. HarmonyOS: In dynamic creation scenarios, after calling dispose on the custom node BuilderNode mounting a web component, will the originally bound webviewController also be unbound?  </span><br><span class="line">In this case, it will not be unbound.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4. HarmonyOS: Does the system have a built-in common icon library?  </span><br><span class="line">Reference link: https://developer.huawei.com/consumer/cn/design/harmonyos-icon/  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 5. HarmonyOS: How to manually open/close the system soft keyboard?  </span><br><span class="line">You can use focusControl.requestFocus to control the input box to gain focus, and the soft keyboard will automatically pop up after the component gains focus.  </span><br><span class="line"></span><br><span class="line">1. To hide the soft keyboard, make the TextInput lose focus, such as by transferring focus to another component. For example, provide a Button component and set it to gain focus when clicked. When the button is clicked, the TextInput loses focus, and the soft keyboard hides.  </span><br><span class="line">2. Use the focusContrl.requestFocus interface to make the specified component gain focus. Refer to the documentation: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-focus-V5  </span><br><span class="line"></span><br><span class="line">TextInput: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-textinput-V5  </span><br><span class="line"></span><br><span class="line">Note: Components like Text and Image are not focusable by default and cannot trigger focus events in this state.  </span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F; xxx.ets<br>@CustomDialog<br>struct CustomDialogExample {<br>  private focusKey &#x3D; ‘name_input’; &#x2F;&#x2F; Input box focus key<br>  controller?: CustomDialogController<br>  cancel: () &#x3D;&gt; void &#x3D; () &#x3D;&gt; {<br>  }<br>  confirm: () &#x3D;&gt; void &#x3D; () &#x3D;&gt; {<br>  }</p>
+<p>  &#x2F;&#x2F; onPageHide(): void {<br>  &#x2F;&#x2F;   focusControl.requestFocus(this.focusKey)<br>  &#x2F;&#x2F; }</p>
+<p>  build() {<br>    Column() {<br>      Text(‘这是自定义弹窗’)<br>        .fontSize(30)<br>        .height(100)</p>
+<pre><code>  Text(&#39;昵称&#39;)
+    .fontSize(20)
+    .margin(&#123; top: 10, bottom: 10 &#125;)
+  // .key(this.focusKey)
+  // .id(this.focusKey)
+
+  TextInput(&#123; placeholder: &#39;输入昵称&#39;,text:&#39;&#39;, &#125;)
+    .height(60)
+    .width(&#39;90%&#39;)
+    .defaultFocus(true)
+
+  Button(&#39;测试&#39;)
+    .key(this.focusKey)
+
+
+  Button(&#39;点我关闭弹窗&#39;)
+    .onClick(() =&gt; &#123;
+      if (this.controller != undefined) &#123;
+        this.controller.close()
+      &#125;
+    &#125;)
+    .margin(20)
+&#125;
+</code></pre>
+<p>  }<br>}<br>@Entry<br>@Component<br>struct CustomDialogUser {<br>  dialogController: CustomDialogController | null &#x3D; new CustomDialogController({<br>    builder: CustomDialogExample({<br>      cancel: ()&#x3D;&gt; { this.onCancel() },<br>      confirm: ()&#x3D;&gt; { this.onAccept() }<br>    }),<br>    cancel: this.existApp,<br>    autoCancel: true,<br>    onWillDismiss:(dismissDialogAction: DismissDialogAction)&#x3D;&gt; {<br>      console.info(“reason&#x3D;” + JSON.stringify(dismissDialogAction.reason))<br>      console.log(“dialog onWillDismiss”)<br>      if (dismissDialogAction.reason &#x3D;&#x3D; DismissReason.PRESS_BACK) {<br>        dismissDialogAction.dismiss()<br>      }<br>      if (dismissDialogAction.reason &#x3D;&#x3D; DismissReason.TOUCH_OUTSIDE) {<br>        dismissDialogAction.dismiss()<br>      }<br>    },<br>    alignment: DialogAlignment.Center,<br>    offset: { dx: 0, dy: -20 },<br>    customStyle: false,<br>    cornerRadius: 20,<br>    width: 300,<br>    height: 400,<br>    borderWidth: 1,<br>    borderStyle: BorderStyle.Dashed,&#x2F;&#x2F;使用borderStyle属性，需要和borderWidth属性一起使用<br>    borderColor: Color.Blue,&#x2F;&#x2F;使用borderColor属性，需要和borderWidth属性一起使用<br>    backgroundColor: Color.White,<br>    shadow: ({ radius: 20, color: Color.Grey, offsetX: 50, offsetY: 0}),<br>  })<br>  &#x2F;&#x2F; 在自定义组件即将析构销毁时将dialogController置空<br>  aboutToDisappear() {<br>    this.dialogController &#x3D; null &#x2F;&#x2F; 将dialogController置空<br>  }</p>
+<p>  onCancel() {<br>    console.info(‘Callback when the first button is clicked’)<br>  }</p>
+<p>  onAccept() {<br>    console.info(‘Callback when the second button is clicked’)<br>  }</p>
+<p>  existApp() {<br>    console.info(‘Click the callback in the blank area’)<br>  }</p>
+<p>  build() {<br>    Column() {<br>      Button(‘click me’)<br>        .onClick(() &#x3D;&gt; {<br>          if (this.dialogController !&#x3D; null) {<br>            this.dialogController.open()<br>          }<br>        }).backgroundColor(0x317aff)<br>    }.width(‘100%’).margin({ top: 5 })<br>  }<br>}<br>&#96;&#96;&#96;</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/120-Daily-HarmonyOS-Next-Knowledge-JSBridge-Communication-Input-Placeholder-Size-Book-Page-Turning-Effect-Web-Callback-Functions-Auto-Sliding-Carousel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -968,340 +1076,6 @@ struct TogglePage2 &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/111-Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/111-Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Web Page Height Acquisition, Action Menu Bottom Layout, Animation Issues, Web Cross-Origin Image Loading, System Dark Mode Immunity</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 08:38:46 / Modified: 08:39:01" itemprop="dateCreated datePublished" datetime="2025-06-27T08:38:46+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity"><a href="#Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Web Page Height Acquisition, Action Menu Bottom Layout, Animation Issues, Web Cross-Origin Image Loading, System Dark Mode Immunity"></a>[Daily HarmonyOS Next Knowledge] Web Page Height Acquisition, Action Menu Bottom Layout, Animation Issues, Web Cross-Origin Image Loading, System Dark Mode Immunity</h3><h4 id="1-HarmonyOS-Discrepancy-between-getPageHeight-and-actual-web-page-height-in-Web-control"><a href="#1-HarmonyOS-Discrepancy-between-getPageHeight-and-actual-web-page-height-in-Web-control" class="headerlink" title="1. HarmonyOS: Discrepancy between getPageHeight() and actual web page height in Web control?"></a>1. HarmonyOS: Discrepancy between getPageHeight() and actual web page height in Web control?</h4><p>Calling <code>getWebViewController().getPageHeight()</code> in the Web’s <code>onPageEnd()</code> method returns a height smaller than the actual web content height. Using <code>setTimeout(() =&gt; &#123; let webHeight1 = this.controller.getWebViewController().getPageHeight(); Logger.getInstance().error(&#39;Internal control height time&#39;, &#39; webHeight:&#39; + webHeight1 + &#39; webHeight:&#39; + vp2px(webHeight1)); &#125;, 200)</code> obtains the correct height. Is there a way to get the actual height without delay?  </p>
-<p><code>onPageEnd</code> is a callback when page loading completes, not when page rendering finishes, hence the height discrepancy. Use <code>onFirstMeaningfulPaint</code>:<br>Documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#ZH-CN_TOPIC_0000001847049744__onfirstmeaningfulpaint12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#ZH-CN_TOPIC_0000001847049744__onfirstmeaningfulpaint12</a>  </p>
-<h4 id="2-Does-HarmonyOS-promptAction-showActionMenu-support-bottom-layout"><a href="#2-Does-HarmonyOS-promptAction-showActionMenu-support-bottom-layout" class="headerlink" title="2. Does HarmonyOS promptAction.showActionMenu support bottom layout?"></a>2. Does HarmonyOS promptAction.showActionMenu support bottom layout?</h4><p>Does the <code>promptAction.showActionMenu</code> interface support pop-up layout at the bottom? The documentation does not mention alignment settings, and examples show centered layouts.  </p>
-<p>Reference demo:  </p>
-<pre><code class="language-typescript">import promptAction from &#39;@ohos.promptAction&#39;;
-import &#123; BusinessError &#125; from &#39;@ohos.base&#39;;
-
-function showActionMenu() &#123;
-  try &#123;
-    promptAction.showActionMenu(&#123;
-      title: &#39;Title Info&#39;,
-      buttons: [
-        &#123;
-          text: &#39;item1&#39;,
-          color: &#39;#666666&#39;
-        &#125;,
-        &#123;
-          text: &#39;item2&#39;,
-          color: &#39;#000000&#39;
-        &#125;,
-      ]
-    &#125;, (err, data) =&gt; &#123;
-      if (err) &#123;
-        console.info(&#39;showActionMenu err: &#39; + err);
-        return;
-      &#125;
-      console.info(&#39;showActionMenu success callback, click button: &#39; + data.index);
-    &#125;)
-  &#125; catch (error) &#123;
-    let message = (error as BusinessError).message;
-    let code = (error as BusinessError).code;
-    console.error(`showActionMenu args error code is $&#123;code&#125;, message is $&#123;message&#125;`);
-  &#125;
-&#125;
-
-@Entry
-@Component
-struct Index &#123;
-  @State message: string = &#39;Hello World&#39;;
-
-  build() &#123;
-    RelativeContainer() &#123;
-      Text(this.message)
-        .id(&#39;HelloWorld&#39;)
-        .fontSize(50)
-        .fontWeight(FontWeight.Bold)
-        .alignRules(&#123;
-          center: &#123; anchor: &#39;__container__&#39;, align: VerticalAlign.Center &#125;,
-          middle: &#123; anchor: &#39;__container__&#39;, align: HorizontalAlign.Center &#125;
-        &#125;)
-        .onClick(() =&gt; &#123;
-          showActionMenu();
-        &#125;)
-    &#125;
-    .height(&#39;100%&#39;)
-    .width(&#39;100%&#39;)
-  &#125;
-&#125;
-</code></pre>
-<h4 id="3-Must-HarmonyOS-animations-be-paired-with-State-decorated-variables-to-take-effect"><a href="#3-Must-HarmonyOS-animations-be-paired-with-State-decorated-variables-to-take-effect" class="headerlink" title="3. Must HarmonyOS animations be paired with @State-decorated variables to take effect?"></a>3. Must HarmonyOS animations be paired with @State-decorated variables to take effect?</h4><p>Generally, animations require <code>@State</code>-decorated variables. The following demo works with <code>Text().width(300).height(300).backgroundColor(Color.Black)</code>:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-export default struct ParticleStar &#123;
-  aboutToAppear(): void &#123;
-  &#125;
-
-  build() &#123;
-    Stack() &#123;
-      Text()
-        .width(300).height(300).backgroundColor(Color.Black);
-      Particle(&#123;
-        particles: [
-          &#123;
-            emitter: &#123;
-              particle: &#123;
-                type: ParticleType.POINT, // Particle type
-                config: &#123;
-                  radius: 10 // Dot radius
-                &#125;,
-                count: 500, // Total particles
-                lifetime: 10000 // Particle lifetime in ms
-              &#125;,
-              emitRate: 10, // Particles emitted per second
-              position: [200, 0],
-              shape: ParticleEmitterShape.RECTANGLE // Emitter shape
-            &#125;,
-            color: &#123;
-              range: [Color.Red, Color.Yellow], // Initial color range
-              updater: &#123;
-                type: ParticleUpdater.CURVE, // Change mode: curve
-                config: [
-                  &#123;
-                    from: Color.White, // Start value
-                    to: Color.Pink, // End value
-                    startMillis: 0, // Start time
-                    endMillis: 3000, // End time
-                    curve: Curve.EaseIn // Change curve
-                  &#125;,
-                  &#123;
-                    from: Color.Pink,
-                    to: Color.Orange,
-                    startMillis: 3000,
-                    endMillis: 5000,
-                    curve: Curve.EaseIn
-                  &#125;,
-                  &#123;
-                    from: Color.Orange,
-                    to: Color.Pink,
-                    startMillis: 5000,
-                    endMillis: 8000,
-                    curve: Curve.EaseIn
-                  &#125;,
-                ]
-              &#125;
-            &#125;,
-            opacity: &#123;
-              range: [0.0, 1.0], // Initial opacity range [0.0 to 1.0]
-              updater: &#123;
-                type: ParticleUpdater.CURVE, // Opacity change mode: curve
-                config: [
-                  &#123;
-                    from: 0.0,
-                    to: 1.0,
-                    startMillis: 0,
-                    endMillis: 3000,
-                    curve: Curve.EaseIn
-                  &#125;,
-                  &#123;
-                    from: 1.0,
-                    to: 0.0,
-                    startMillis: 5000,
-                    endMillis: 10000,
-                    curve: Curve.EaseIn
-                  &#125;
-                ]
-              &#125;
-            &#125;,
-            scale: &#123;
-              range: [0.0, 0.0],
-              updater: &#123;
-                type: ParticleUpdater.CURVE,
-                config: [
-                  &#123;
-                    from: 0.0,
-                    to: 0.5,
-                    startMillis: 0,
-                    endMillis: 3000,
-                    curve: Curve.EaseIn
-                  &#125;
-                ]
-              &#125;
-            &#125;,
-            acceleration: &#123;
-              // Acceleration configuration: magnitude and direction
-              speed: &#123;
-                range: [3, 9],
-                updater: &#123;
-                  type: ParticleUpdater.RANDOM,
-                  config: [1, 20]
-                &#125;
-              &#125;,
-              angle: &#123;
-                range: [90, 90]
-              &#125;
-            &#125;
-          &#125;
-        ]
-      &#125;).width(300).height(300);
-    &#125;.width(&quot;100%&quot;).height(&quot;100%&quot;).align(Alignment.Center);
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-HarmonyOS-Web-component-cannot-load-cross-origin-image-resources"><a href="#4-HarmonyOS-Web-component-cannot-load-cross-origin-image-resources" class="headerlink" title="4. HarmonyOS Web component cannot load cross-origin image resources?"></a>4. HarmonyOS Web component cannot load cross-origin image resources?</h4><p>When an app accesses a web page, some images fail to load due to cross-origin restrictions. How to resolve this?  </p>
-<p>For cross-origin issues, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5</a>  </p>
-<p>To enhance security, the ArkWeb kernel prohibits cross-origin requests from file or resource protocols. When loading local offline resources via the Web component, cross-origin access to file&#x2F;resource protocols is blocked. Two solutions:  </p>
-<h5 id="Method-1"><a href="#Method-1" class="headerlink" title="Method 1"></a>Method 1</h5><p>Use http&#x2F;https protocols instead of file&#x2F;resource protocols. Intercept and replace local resources using the Web component’s <code>onInterceptRequest</code> method to avoid CORS blocking.  </p>
-<h5 id="Method-2"><a href="#Method-2" class="headerlink" title="Method 2"></a>Method 2</h5><p>Set an allowed path list via <code>setPathAllowingUniversalAccess</code> to enable cross-origin access to local files via the file protocol. Path formats must comply with:  </p>
-<ol>
-<li>Application file directory (via <code>Context.filesDir</code>):  <ul>
-<li><code>/data/storage/el2/base/files/example</code>  </li>
-<li><code>/data/storage/el2/base/haps/entry/files/example</code></li>
-</ul>
-</li>
-<li>Application resource directory (via <code>Context.resourceDir</code>):  <ul>
-<li><code>/data/storage/el1/bundle/entry/resource/resfile</code>  </li>
-<li><code>/data/storage/el1/bundle/entry/resource/resfile/example</code></li>
-</ul>
-</li>
-</ol>
-<pre><code class="language-typescript">// main/ets/pages/Index.ets
-import &#123; webview &#125; from &#39;@kit.ArkWeb&#39;;
-import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
-
-@Entry
-@Component
-struct WebComponent &#123;
-  controller: WebviewController = new webview.WebviewController();
-
-  build() &#123;
-    Row() &#123;
-      Web(&#123; src: &quot;&quot;, controller: this.controller &#125;)
-        .onControllerAttached(() =&gt; &#123;
-          try &#123;
-            // Set allowed cross-origin paths
-            this.controller.setPathAllowingUniversalAccess([
-              getContext().resourceDir,
-              getContext().filesDir + &quot;/example&quot;
-            ]);
-            this.controller.loadUrl(&quot;file://&quot; + getContext().resourceDir + &quot;/index.html&quot;);
-          &#125; catch (error) &#123;
-            console.error(`ErrorCode: $&#123;(error as BusinessError).code&#125;,  Message: $&#123;(error as BusinessError).message&#125;`);
-          &#125;
-        &#125;)
-        .javaScriptAccess(true)
-        .fileAccess(true)
-        .domStorageAccess(true);
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<pre><code class="language-html">&lt;!-- main/resource/rawfile/index.html --&gt;
-&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
-
-&lt;head&gt;
-    &lt;meta charset=&quot;utf-8&quot;&gt;
-    &lt;title&gt;Demo&lt;/title&gt;
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover&quot;&gt;
-    &lt;script&gt;
-        function getFile() &#123;
-            var file = &quot;file:///data/storage/el1/bundle/entry/resources/resfile/js/script.js&quot;;
-            var xmlHttpReq = new XMLHttpRequest();
-            xmlHttpReq.onreadystatechange = function()&#123;
-                console.log(&quot;readyState:&quot; + xmlHttpReq.readyState);
-                console.log(&quot;status:&quot; + xmlHttpReq.status);
-                if(xmlHttpReq.readyState == 4)&#123;
-                    if (xmlHttpReq.status == 200) &#123;
-                        const element = document.getElementById(&#39;text&#39;);
-                        element.textContent = &quot;load &quot; + file + &quot; success&quot;;
-                    &#125; else &#123;
-                        const element = document.getElementById(&#39;text&#39;);
-                        element.textContent = &quot;load &quot; + file + &quot; failed&quot;;
-                    &#125;
-                &#125;
-            &#125;
-            xmlHttpReq.open(&quot;GET&quot;, file);
-            xmlHttpReq.send(null);
-        &#125;
-    &lt;/script&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-&lt;div class=&quot;page&quot;&gt;
-    &lt;button id=&quot;example&quot; onclick=&quot;getFile()&quot;&gt;stealFile&lt;/button&gt;
-&lt;/div&gt;
-&lt;div id=&quot;text&quot;&gt;&lt;/div&gt;
-&lt;/body&gt;
-
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-javascript">// main/resources/rawfile/js/script.js
-const body = document.body;
-const element = document.createElement(&#39;div&#39;);
-element.textContent = &#39;success&#39;;
-body.appendChild(element);
-</code></pre>
-<h4 id="5-HarmonyOS-How-to-prevent-adaptation-to-system-dark-mode"><a href="#5-HarmonyOS-How-to-prevent-adaptation-to-system-dark-mode" class="headerlink" title="5. HarmonyOS: How to prevent adaptation to system dark mode?"></a>5. HarmonyOS: How to prevent adaptation to system dark mode?</h4><p>To manually set light&#x2F;dark mode, refer to the official document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-light-dark-color-adaptation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-light-dark-color-adaptation-V5</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1371,13 +1145,13 @@ body.appendChild(element);
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

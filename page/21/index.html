@@ -149,6 +149,142 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/219-Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/26/219-Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Routing Stack Issues, Image Rounding, Color Resource to Hex Conversion, Dataset Change Crash, Component Lifecycle</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 23:54:20 / Modified: 23:54:38" itemprop="dateCreated datePublished" datetime="2025-06-26T23:54:20+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle"><a href="#Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Routing Stack Issues, Image Rounding, Color Resource to Hex Conversion, Dataset Change Crash, Component Lifecycle"></a>[Daily HarmonyOS Next Knowledge] Routing Stack Issues, Image Rounding, Color Resource to Hex Conversion, Dataset Change Crash, Component Lifecycle</h3><h4 id="1-When-the-HarmonyOS-app-is-sent-to-the-background-and-then-reopened-Navigation-returns-to-the-bottom-of-the-stack-and-rerenders"><a href="#1-When-the-HarmonyOS-app-is-sent-to-the-background-and-then-reopened-Navigation-returns-to-the-bottom-of-the-stack-and-rerenders" class="headerlink" title="1. When the HarmonyOS app is sent to the background and then reopened, Navigation returns to the bottom of the stack and rerenders?"></a>1. When the HarmonyOS app is sent to the background and then reopened, Navigation returns to the bottom of the stack and rerenders?</h4><p><strong>Possible Causes</strong><br>When using Navigation for routing, sending the app to the background and reopening it causes the page to return to the bottom of the stack and rerender. This occurs because:  </p>
+<ol>
+<li><strong>Navigation bar hiding</strong>: The Navigation component hides the navigation bar by default and only redisplays it when the top-of-stack element is popped. When the app enters the background, the navigation bar is hidden, and reopening requires redisplaying it, triggering rerendering.  </li>
+<li><strong>Stack management</strong>: The current page state is saved in the routing stack when the app is sent to the background. Reopening restores the state from the stack bottom, leading to rerendering.</li>
+</ol>
+<p><strong>Solutions</strong>  </p>
+<ol>
+<li><strong>Set hideTitleBar to false</strong>:  <ul>
+<li>In the Navigation component, set <code>hideTitleBar: false</code>.  </li>
+<li>Or set <code>hideTitleBar: false</code> in NavDestination components.</li>
+</ul>
+</li>
+<li><strong>Use pushDestinationByName</strong>:  <ul>
+<li>Push the current page to the stack using <code>pushDestinationByName</code> to keep it at the top.  </li>
+<li>Handle pop events with the <code>onPop</code> callback to avoid rerendering.</li>
+</ul>
+</li>
+</ol>
+<h4 id="2-How-to-set-rounded-corners-when-using-borderimage-in-HarmonyOS"><a href="#2-How-to-set-rounded-corners-when-using-borderimage-in-HarmonyOS" class="headerlink" title="2. How to set rounded corners when using borderimage in HarmonyOS?"></a>2. How to set rounded corners when using borderimage in HarmonyOS?</h4><p>Refer to the document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-border-image-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-border-image-V5</a>  </p>
+<p>Example of setting a gradient border via <code>borderImage</code>:  </p>
+<pre><code class="language-typescript">// xxx.ets
+@Entry
+@Component
+struct Index &#123;
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(&#39;This is gradient color.&#39;).textAlign(TextAlign.Center).height(50).width(200)
+          .borderImage(&#123;
+            source: &#123;
+              angle: 90,
+              direction: GradientDirection.Left,
+              colors: [[0xAEE1E1, 0.0], [0xD3E0DC, 0.3], [0xFCD1D1, 1.0]]
+            &#125;,
+            slice: &#123; top: 10, bottom: 10, left: 10, right: 10 &#125;,
+            width: &#123; top: &quot;10px&quot;, bottom: &quot;10px&quot;, left: &quot;10px&quot;, right: &quot;10px&quot; &#125;,
+            repeat: RepeatMode.Stretch,
+            fill: false
+          &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-How-to-convert-ResourceColor-to-a-hexadecimal-string-in-HarmonyOS"><a href="#3-How-to-convert-ResourceColor-to-a-hexadecimal-string-in-HarmonyOS" class="headerlink" title="3. How to convert ResourceColor to a hexadecimal string in HarmonyOS?"></a>3. How to convert ResourceColor to a hexadecimal string in HarmonyOS?</h4><p>Convert the decimal value from <code>resourceManager.getColorSync</code> to hex:  </p>
+<pre><code class="language-typescript">let resource: resourceManager.Resource = &#123;
+  bundleName: &quot;com.example.helloworld&quot;,
+  moduleName: &quot;entry&quot;,
+  id: $r(&#39;app.color.start_window_background&#39;).id
+&#125;;
+let colorNumber = this.context.resourceManager.getColorSync(resource);
+let colorString = colorNumber.toString(16);
+console.log(colorString);
+</code></pre>
+<p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5#getcolorsync10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5#getcolorsync10</a>  </p>
+<h4 id="4-Crash-in-IDataSource’s-onDatasetChange-in-HarmonyOS-Error-message-onDatasetChange-cannot-be-used-with-other-interface"><a href="#4-Crash-in-IDataSource’s-onDatasetChange-in-HarmonyOS-Error-message-onDatasetChange-cannot-be-used-with-other-interface" class="headerlink" title="4. Crash in IDataSource’s onDatasetChange() in HarmonyOS: Error message: onDatasetChange cannot be used with other interface"></a>4. Crash in IDataSource’s onDatasetChange() in HarmonyOS: <code>Error message: onDatasetChange cannot be used with other interface</code></h4><p>When using <code>LazyForEach</code> with <code>onDatasetChange</code> for batch dataset modifications, this error occurs because <code>onDatasetChange</code> cannot be mixed with other data manipulation interfaces.  </p>
+<p><strong>Solution</strong>  </p>
+<ol>
+<li>Avoid including deletion operations in <code>onDatasetChange</code>. Use <code>onDataDelete</code> separately for deletions.  </li>
+<li>Split operations: For simultaneous add&#x2F;delete&#x2F;move operations, call <code>onDataAdd</code>, <code>onDataDelete</code>, <code>onDataMove</code>, etc., separately, then refresh with <code>onDataReloaded</code>.</li>
+</ol>
+<h4 id="5-How-to-perform-actions-when-a-page-is-displayed-or-hidden-in-HarmonyOS-e-g-play-on-show-pause-on-hide"><a href="#5-How-to-perform-actions-when-a-page-is-displayed-or-hidden-in-HarmonyOS-e-g-play-on-show-pause-on-hide" class="headerlink" title="5. How to perform actions when a page is displayed or hidden in HarmonyOS (e.g., play on show, pause on hide)?"></a>5. How to perform actions when a page is displayed or hidden in HarmonyOS (e.g., play on show, pause on hide)?</h4><p>Use <code>onPageShow</code> (triggered when the page is displayed) and <code>onPageHide</code> (triggered when the page is hidden).<br>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-lifecycle-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-custom-component-lifecycle-V5</a>  </p>
+<p><strong>Notes</strong>:  </p>
+<ul>
+<li>Lifecycle callbacks are private and called by the framework, not manually.  </li>
+<li>Avoid reusing the same component node across multiple windows to prevent lifecycle inconsistencies.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/218-Daily-HarmonyOS-Next-Knowledge-Like-Animation-Implementation-Grid-Visible-Items-Refresh-Component-Code-Specifications-State-Variables/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1160,90 +1296,6 @@ function showCaptch() &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/209-Daily-HarmonyOS-Next-Knowledge-Pull-to-Refresh-Scroll-Nesting-Web-This-Keyword-Reference-Routing-Scheme-Input-Method-Occlusion/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/26/209-Daily-HarmonyOS-Next-Knowledge-Pull-to-Refresh-Scroll-Nesting-Web-This-Keyword-Reference-Routing-Scheme-Input-Method-Occlusion/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Pull-to-Refresh, Scroll Nesting Web, This Keyword Reference, Routing Scheme, Input Method Occlusion</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-26 23:14:15 / Modified: 23:14:31" itemprop="dateCreated datePublished" datetime="2025-06-26T23:14:15+08:00">2025-06-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Pull-to-Refresh-Scroll-Nesting-Web-This-Keyword-Reference-Routing-Scheme-Input-Method-Occlusion"><a href="#Daily-HarmonyOS-Next-Knowledge-Pull-to-Refresh-Scroll-Nesting-Web-This-Keyword-Reference-Routing-Scheme-Input-Method-Occlusion" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Pull-to-Refresh, Scroll Nesting Web, This Keyword Reference, Routing Scheme, Input Method Occlusion"></a>[Daily HarmonyOS Next Knowledge] Pull-to-Refresh, Scroll Nesting Web, This Keyword Reference, Routing Scheme, Input Method Occlusion</h3><h4 id="1-Does-HarmonyOS-have-a-pull-to-load-more-control-or-does-the-Refresh-component-support-automatic-bottom-triggered-loading"><a href="#1-Does-HarmonyOS-have-a-pull-to-load-more-control-or-does-the-Refresh-component-support-automatic-bottom-triggered-loading" class="headerlink" title="1. Does HarmonyOS have a pull-to-load-more control, or does the Refresh component support automatic bottom-triggered loading?"></a>1. Does HarmonyOS have a pull-to-load-more control, or does the Refresh component support automatic bottom-triggered loading?</h4><p>For pull-to-load-more functionality, refer to the documentation with relevant demos: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-layout-development-create-list-V5#ZH-CN_TOPIC_0000001884756518__%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0%E4%B8%8E%E4%B8%8A%E6%8B%89%E5%8A%A0%E8%BD%BD">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-layout-development-create-list-V5#ZH-CN_TOPIC_0000001884756518__%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0%E4%B8%8E%E4%B8%8A%E6%8B%89%E5%8A%A0%E8%BD%BD</a>  </p>
-<p>Pull-to-refresh and pull-to-load-more are common in mobile apps, such as content refresh and loading in news pages. Both operations work by responding to touch events, displaying a refresh&#x2F;loading view at the top&#x2F;bottom, and hiding it after completion.  </p>
-<p>Take pull-to-refresh as an example, implemented in three steps:  </p>
-<ul>
-<li>Listen for the finger-down event and record the initial position.  </li>
-<li>Listen for finger-movement events, calculate the displacement from the initial position (positive value for downward movement), and set a maximum allowable displacement.  </li>
-<li>Listen for the finger-up event. If the displacement reaches the maximum, trigger data loading, show the refresh view, and hide it after loading completes.</li>
-</ul>
-<h4 id="2-Display-issues-when-nesting-multiple-Web-components-in-a-Scroll-view-in-HarmonyOS"><a href="#2-Display-issues-when-nesting-multiple-Web-components-in-a-Scroll-view-in-HarmonyOS" class="headerlink" title="2. Display issues when nesting multiple Web components in a Scroll view in HarmonyOS?"></a>2. Display issues when nesting multiple Web components in a Scroll view in HarmonyOS?</h4><p>When using the Scroll component to nest two or more Web components for scrolling, the Web components cannot adapt to the height automatically:  </p>
-<ul>
-<li>Without setting the <code>height</code> of the Web component, no content is displayed.  </li>
-<li>Using <code>Web().layoutMode(WebLayoutMode.FIT_CONTENT)</code> does not display content.  </li>
-<li>Setting <code>Web().height(&#39;100%&#39;)</code> or <code>Web().height(&#39;80%&#39;)</code> displays content, but it either occupies too much space for short content or truncates long content.</li>
-</ul>
-<p>How to set the Web component to adapt to the height?<br>For nested scrolling with Web components, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-nested-scrolling-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-nested-scrolling-V5</a><br>For setting the Web layout mode via <code>layoutMode</code>, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#layoutmode11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#layoutmode11</a>  </p>
-<h4 id="3-When-a-Builder-function-is-passed-as-a-parameter-to-a-control-in-HarmonyOS-does-the-this-in-the-Builder’s-click-event-reference-the-original-this"><a href="#3-When-a-Builder-function-is-passed-as-a-parameter-to-a-control-in-HarmonyOS-does-the-this-in-the-Builder’s-click-event-reference-the-original-this" class="headerlink" title="3. When a Builder function is passed as a parameter to a control in HarmonyOS, does the this in the Builder’s click event reference the original this?"></a>3. When a Builder function is passed as a parameter to a control in HarmonyOS, does the <code>this</code> in the Builder’s click event reference the original <code>this</code>?</h4><p>In a Page, a control View is passed a built Builder function from the Page, but the <code>this</code> in the function’s <code>onClick</code> does not reference the Page (causing the title to not update).  </p>
-<p>Reference demo:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">CustomContainer</span> &#123;</span><br><span class="line">  <span class="meta">@Prop</span> <span class="attr">header</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="meta">@Builder</span> <span class="title function_">defaultBulder</span>(<span class="params"></span>)&#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@BuilderParam</span> <span class="attr">rightBuilder</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span> = <span class="variable language_">this</span>.<span class="property">defaultBulder</span></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">rightBuilder</span>()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">CustomContainerUser</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">text</span>: <span class="built_in">string</span> = <span class="string">&#x27;header&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">text</span>)</span><br><span class="line">      <span class="title class_">CustomContainer</span>(&#123; <span class="attr">header</span>: <span class="variable language_">this</span>.<span class="property">text</span> &#125;) &#123;</span><br><span class="line">        <span class="title class_">Column</span>() &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">rightBuilder</span>(<span class="string">&#x27;testA&#x27;</span>, <span class="string">&#x27;testB&#x27;</span>)</span><br><span class="line">        &#125;.<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Yellow</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">text</span> = <span class="string">&#x27;changeHeader&#x27;</span>;</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="meta">@Builder</span> <span class="title function_">rightBuilder</span>(<span class="params"><span class="attr">label1</span>: <span class="built_in">string</span>, <span class="attr">label2</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;右边按钮&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">text</span> = <span class="string">&#x27;点击了&#x27;</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;qqqq1=&#x27;</span>,<span class="variable language_">this</span>)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. Conflict between HarmonyOS NavDestination routing and full-modal pages?  </span></span><br><span class="line"><span class="string">When using the Navigation-NavDestination routing scheme, using `</span>bindContentCover<span class="string">` within a page to pop up a modal page causes lifecycle incompatibility:  </span></span><br><span class="line"><span class="string">- Popping up a full modal triggers the NavDestination&#x27;s `</span>onHidden<span class="string">` callback of the current page.  </span></span><br><span class="line"><span class="string">- Without using NavDestination, popping up a modal does not trigger the page&#x27;s `</span>onPageHide<span class="string">` callback.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span>bindContentCover<span class="string">` constructs a full-screen modal transition, hence triggering `</span>onHidden<span class="string">`. Refer to the NavDestination documentation: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navdestination-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. How to handle the input method covering interface buttons after popping up in HarmonyOS?  </span></span><br><span class="line"><span class="string">The login button is covered by the input panel when it pops up on the login page.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Reference demo:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">import</span> <span class="variable language_">window</span> <span class="keyword">from</span> <span class="string">&#x27;@ohos.window&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">screenHeight</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">aboutToAppear</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">getLastWindow</span>(<span class="title function_">getContext</span>(<span class="variable language_">this</span>)).<span class="title function_">then</span>(<span class="function"><span class="params">currentWindow</span> =&gt;</span>&#123;</span><br><span class="line">      <span class="keyword">let</span> property = currentWindow.<span class="title function_">getWindowProperties</span>();</span><br><span class="line">      <span class="keyword">let</span> avoidArea = currentWindow.<span class="title function_">getWindowAvoidArea</span>(<span class="variable language_">window</span>.<span class="property">AvoidAreaType</span>.<span class="property">TYPE_KEYBOARD</span>);</span><br><span class="line">      <span class="comment">// Initialize the display area height</span></span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">screenHeight</span> = <span class="title function_">px2vp</span>(property.<span class="property">windowRect</span>.<span class="property">height</span> - avoidArea.<span class="property">bottomRect</span>.<span class="property">height</span>);</span><br><span class="line">      <span class="comment">// Monitor soft keyboard pop-up and dismissal</span></span><br><span class="line">      currentWindow.<span class="title function_">on</span>(<span class="string">&#x27;avoidAreaChange&#x27;</span>, <span class="keyword">async</span> data =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (data.<span class="property">type</span> !== <span class="variable language_">window</span>.<span class="property">AvoidAreaType</span>.<span class="property">TYPE_KEYBOARD</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">screenHeight</span> = <span class="title function_">px2vp</span>(property.<span class="property">windowRect</span>.<span class="property">height</span> - data.<span class="property">area</span>.<span class="property">bottomRect</span>.<span class="property">height</span>);</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Text</span>(<span class="string">&#x27;请输入短信验证码&#x27;</span>)</span><br><span class="line">          .<span class="title function_">fontSize</span>(<span class="number">30</span>)</span><br><span class="line">          .<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="string">&#x27;50&#x27;</span> &#125;)</span><br><span class="line">        <span class="title class_">TextInput</span>()</span><br><span class="line">          .<span class="title function_">width</span>(<span class="string">&#x27;70%&#x27;</span>)</span><br><span class="line">          .<span class="title function_">height</span>(<span class="string">&#x27;150px&#x27;</span>)</span><br><span class="line">          .<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="string">&#x27;30&#x27;</span> &#125;)</span><br><span class="line">        <span class="title class_">Button</span>(<span class="string">&#x27;确定&#x27;</span>)</span><br><span class="line">          .<span class="title function_">width</span>(<span class="string">&#x27;70%&#x27;</span>)</span><br><span class="line">          .<span class="title function_">margin</span>(<span class="string">&#x27;20px&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>).<span class="title function_">height</span>(<span class="variable language_">this</span>.<span class="property">screenHeight</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1313,13 +1365,13 @@ function showCaptch() &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

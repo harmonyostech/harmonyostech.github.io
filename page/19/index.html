@@ -149,6 +149,340 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/111-Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/27/111-Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Web Page Height Acquisition, Action Menu Bottom Layout, Animation Issues, Web Cross-Origin Image Loading, System Dark Mode Immunity</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-27 08:38:46 / Modified: 08:39:01" itemprop="dateCreated datePublished" datetime="2025-06-27T08:38:46+08:00">2025-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity"><a href="#Daily-HarmonyOS-Next-Knowledge-Web-Page-Height-Acquisition-Action-Menu-Bottom-Layout-Animation-Issues-Web-Cross-Origin-Image-Loading-System-Dark-Mode-Immunity" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Web Page Height Acquisition, Action Menu Bottom Layout, Animation Issues, Web Cross-Origin Image Loading, System Dark Mode Immunity"></a>[Daily HarmonyOS Next Knowledge] Web Page Height Acquisition, Action Menu Bottom Layout, Animation Issues, Web Cross-Origin Image Loading, System Dark Mode Immunity</h3><h4 id="1-HarmonyOS-Discrepancy-between-getPageHeight-and-actual-web-page-height-in-Web-control"><a href="#1-HarmonyOS-Discrepancy-between-getPageHeight-and-actual-web-page-height-in-Web-control" class="headerlink" title="1. HarmonyOS: Discrepancy between getPageHeight() and actual web page height in Web control?"></a>1. HarmonyOS: Discrepancy between getPageHeight() and actual web page height in Web control?</h4><p>Calling <code>getWebViewController().getPageHeight()</code> in the Web’s <code>onPageEnd()</code> method returns a height smaller than the actual web content height. Using <code>setTimeout(() =&gt; &#123; let webHeight1 = this.controller.getWebViewController().getPageHeight(); Logger.getInstance().error(&#39;Internal control height time&#39;, &#39; webHeight:&#39; + webHeight1 + &#39; webHeight:&#39; + vp2px(webHeight1)); &#125;, 200)</code> obtains the correct height. Is there a way to get the actual height without delay?  </p>
+<p><code>onPageEnd</code> is a callback when page loading completes, not when page rendering finishes, hence the height discrepancy. Use <code>onFirstMeaningfulPaint</code>:<br>Documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#ZH-CN_TOPIC_0000001847049744__onfirstmeaningfulpaint12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#ZH-CN_TOPIC_0000001847049744__onfirstmeaningfulpaint12</a>  </p>
+<h4 id="2-Does-HarmonyOS-promptAction-showActionMenu-support-bottom-layout"><a href="#2-Does-HarmonyOS-promptAction-showActionMenu-support-bottom-layout" class="headerlink" title="2. Does HarmonyOS promptAction.showActionMenu support bottom layout?"></a>2. Does HarmonyOS promptAction.showActionMenu support bottom layout?</h4><p>Does the <code>promptAction.showActionMenu</code> interface support pop-up layout at the bottom? The documentation does not mention alignment settings, and examples show centered layouts.  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">import promptAction from &#39;@ohos.promptAction&#39;;
+import &#123; BusinessError &#125; from &#39;@ohos.base&#39;;
+
+function showActionMenu() &#123;
+  try &#123;
+    promptAction.showActionMenu(&#123;
+      title: &#39;Title Info&#39;,
+      buttons: [
+        &#123;
+          text: &#39;item1&#39;,
+          color: &#39;#666666&#39;
+        &#125;,
+        &#123;
+          text: &#39;item2&#39;,
+          color: &#39;#000000&#39;
+        &#125;,
+      ]
+    &#125;, (err, data) =&gt; &#123;
+      if (err) &#123;
+        console.info(&#39;showActionMenu err: &#39; + err);
+        return;
+      &#125;
+      console.info(&#39;showActionMenu success callback, click button: &#39; + data.index);
+    &#125;)
+  &#125; catch (error) &#123;
+    let message = (error as BusinessError).message;
+    let code = (error as BusinessError).code;
+    console.error(`showActionMenu args error code is $&#123;code&#125;, message is $&#123;message&#125;`);
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct Index &#123;
+  @State message: string = &#39;Hello World&#39;;
+
+  build() &#123;
+    RelativeContainer() &#123;
+      Text(this.message)
+        .id(&#39;HelloWorld&#39;)
+        .fontSize(50)
+        .fontWeight(FontWeight.Bold)
+        .alignRules(&#123;
+          center: &#123; anchor: &#39;__container__&#39;, align: VerticalAlign.Center &#125;,
+          middle: &#123; anchor: &#39;__container__&#39;, align: HorizontalAlign.Center &#125;
+        &#125;)
+        .onClick(() =&gt; &#123;
+          showActionMenu();
+        &#125;)
+    &#125;
+    .height(&#39;100%&#39;)
+    .width(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-Must-HarmonyOS-animations-be-paired-with-State-decorated-variables-to-take-effect"><a href="#3-Must-HarmonyOS-animations-be-paired-with-State-decorated-variables-to-take-effect" class="headerlink" title="3. Must HarmonyOS animations be paired with @State-decorated variables to take effect?"></a>3. Must HarmonyOS animations be paired with @State-decorated variables to take effect?</h4><p>Generally, animations require <code>@State</code>-decorated variables. The following demo works with <code>Text().width(300).height(300).backgroundColor(Color.Black)</code>:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+export default struct ParticleStar &#123;
+  aboutToAppear(): void &#123;
+  &#125;
+
+  build() &#123;
+    Stack() &#123;
+      Text()
+        .width(300).height(300).backgroundColor(Color.Black);
+      Particle(&#123;
+        particles: [
+          &#123;
+            emitter: &#123;
+              particle: &#123;
+                type: ParticleType.POINT, // Particle type
+                config: &#123;
+                  radius: 10 // Dot radius
+                &#125;,
+                count: 500, // Total particles
+                lifetime: 10000 // Particle lifetime in ms
+              &#125;,
+              emitRate: 10, // Particles emitted per second
+              position: [200, 0],
+              shape: ParticleEmitterShape.RECTANGLE // Emitter shape
+            &#125;,
+            color: &#123;
+              range: [Color.Red, Color.Yellow], // Initial color range
+              updater: &#123;
+                type: ParticleUpdater.CURVE, // Change mode: curve
+                config: [
+                  &#123;
+                    from: Color.White, // Start value
+                    to: Color.Pink, // End value
+                    startMillis: 0, // Start time
+                    endMillis: 3000, // End time
+                    curve: Curve.EaseIn // Change curve
+                  &#125;,
+                  &#123;
+                    from: Color.Pink,
+                    to: Color.Orange,
+                    startMillis: 3000,
+                    endMillis: 5000,
+                    curve: Curve.EaseIn
+                  &#125;,
+                  &#123;
+                    from: Color.Orange,
+                    to: Color.Pink,
+                    startMillis: 5000,
+                    endMillis: 8000,
+                    curve: Curve.EaseIn
+                  &#125;,
+                ]
+              &#125;
+            &#125;,
+            opacity: &#123;
+              range: [0.0, 1.0], // Initial opacity range [0.0 to 1.0]
+              updater: &#123;
+                type: ParticleUpdater.CURVE, // Opacity change mode: curve
+                config: [
+                  &#123;
+                    from: 0.0,
+                    to: 1.0,
+                    startMillis: 0,
+                    endMillis: 3000,
+                    curve: Curve.EaseIn
+                  &#125;,
+                  &#123;
+                    from: 1.0,
+                    to: 0.0,
+                    startMillis: 5000,
+                    endMillis: 10000,
+                    curve: Curve.EaseIn
+                  &#125;
+                ]
+              &#125;
+            &#125;,
+            scale: &#123;
+              range: [0.0, 0.0],
+              updater: &#123;
+                type: ParticleUpdater.CURVE,
+                config: [
+                  &#123;
+                    from: 0.0,
+                    to: 0.5,
+                    startMillis: 0,
+                    endMillis: 3000,
+                    curve: Curve.EaseIn
+                  &#125;
+                ]
+              &#125;
+            &#125;,
+            acceleration: &#123;
+              // Acceleration configuration: magnitude and direction
+              speed: &#123;
+                range: [3, 9],
+                updater: &#123;
+                  type: ParticleUpdater.RANDOM,
+                  config: [1, 20]
+                &#125;
+              &#125;,
+              angle: &#123;
+                range: [90, 90]
+              &#125;
+            &#125;
+          &#125;
+        ]
+      &#125;).width(300).height(300);
+    &#125;.width(&quot;100%&quot;).height(&quot;100%&quot;).align(Alignment.Center);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-HarmonyOS-Web-component-cannot-load-cross-origin-image-resources"><a href="#4-HarmonyOS-Web-component-cannot-load-cross-origin-image-resources" class="headerlink" title="4. HarmonyOS Web component cannot load cross-origin image resources?"></a>4. HarmonyOS Web component cannot load cross-origin image resources?</h4><p>When an app accesses a web page, some images fail to load due to cross-origin restrictions. How to resolve this?  </p>
+<p>For cross-origin issues, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/web-cross-origin-V5</a>  </p>
+<p>To enhance security, the ArkWeb kernel prohibits cross-origin requests from file or resource protocols. When loading local offline resources via the Web component, cross-origin access to file&#x2F;resource protocols is blocked. Two solutions:  </p>
+<h5 id="Method-1"><a href="#Method-1" class="headerlink" title="Method 1"></a>Method 1</h5><p>Use http&#x2F;https protocols instead of file&#x2F;resource protocols. Intercept and replace local resources using the Web component’s <code>onInterceptRequest</code> method to avoid CORS blocking.  </p>
+<h5 id="Method-2"><a href="#Method-2" class="headerlink" title="Method 2"></a>Method 2</h5><p>Set an allowed path list via <code>setPathAllowingUniversalAccess</code> to enable cross-origin access to local files via the file protocol. Path formats must comply with:  </p>
+<ol>
+<li>Application file directory (via <code>Context.filesDir</code>):  <ul>
+<li><code>/data/storage/el2/base/files/example</code>  </li>
+<li><code>/data/storage/el2/base/haps/entry/files/example</code></li>
+</ul>
+</li>
+<li>Application resource directory (via <code>Context.resourceDir</code>):  <ul>
+<li><code>/data/storage/el1/bundle/entry/resource/resfile</code>  </li>
+<li><code>/data/storage/el1/bundle/entry/resource/resfile/example</code></li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-typescript">// main/ets/pages/Index.ets
+import &#123; webview &#125; from &#39;@kit.ArkWeb&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+@Entry
+@Component
+struct WebComponent &#123;
+  controller: WebviewController = new webview.WebviewController();
+
+  build() &#123;
+    Row() &#123;
+      Web(&#123; src: &quot;&quot;, controller: this.controller &#125;)
+        .onControllerAttached(() =&gt; &#123;
+          try &#123;
+            // Set allowed cross-origin paths
+            this.controller.setPathAllowingUniversalAccess([
+              getContext().resourceDir,
+              getContext().filesDir + &quot;/example&quot;
+            ]);
+            this.controller.loadUrl(&quot;file://&quot; + getContext().resourceDir + &quot;/index.html&quot;);
+          &#125; catch (error) &#123;
+            console.error(`ErrorCode: $&#123;(error as BusinessError).code&#125;,  Message: $&#123;(error as BusinessError).message&#125;`);
+          &#125;
+        &#125;)
+        .javaScriptAccess(true)
+        .fileAccess(true)
+        .domStorageAccess(true);
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<pre><code class="language-html">&lt;!-- main/resource/rawfile/index.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;Demo&lt;/title&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover&quot;&gt;
+    &lt;script&gt;
+        function getFile() &#123;
+            var file = &quot;file:///data/storage/el1/bundle/entry/resources/resfile/js/script.js&quot;;
+            var xmlHttpReq = new XMLHttpRequest();
+            xmlHttpReq.onreadystatechange = function()&#123;
+                console.log(&quot;readyState:&quot; + xmlHttpReq.readyState);
+                console.log(&quot;status:&quot; + xmlHttpReq.status);
+                if(xmlHttpReq.readyState == 4)&#123;
+                    if (xmlHttpReq.status == 200) &#123;
+                        const element = document.getElementById(&#39;text&#39;);
+                        element.textContent = &quot;load &quot; + file + &quot; success&quot;;
+                    &#125; else &#123;
+                        const element = document.getElementById(&#39;text&#39;);
+                        element.textContent = &quot;load &quot; + file + &quot; failed&quot;;
+                    &#125;
+                &#125;
+            &#125;
+            xmlHttpReq.open(&quot;GET&quot;, file);
+            xmlHttpReq.send(null);
+        &#125;
+    &lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;div class=&quot;page&quot;&gt;
+    &lt;button id=&quot;example&quot; onclick=&quot;getFile()&quot;&gt;stealFile&lt;/button&gt;
+&lt;/div&gt;
+&lt;div id=&quot;text&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<pre><code class="language-javascript">// main/resources/rawfile/js/script.js
+const body = document.body;
+const element = document.createElement(&#39;div&#39;);
+element.textContent = &#39;success&#39;;
+body.appendChild(element);
+</code></pre>
+<h4 id="5-HarmonyOS-How-to-prevent-adaptation-to-system-dark-mode"><a href="#5-HarmonyOS-How-to-prevent-adaptation-to-system-dark-mode" class="headerlink" title="5. HarmonyOS: How to prevent adaptation to system dark mode?"></a>5. HarmonyOS: How to prevent adaptation to system dark mode?</h4><p>To manually set light&#x2F;dark mode, refer to the official document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-light-dark-color-adaptation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-light-dark-color-adaptation-V5</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/110-Daily-HarmonyOS-Next-Knowledge-Web-Network-Interception-Dialogs-Web-Redirects-Data-Scope-Multithreading/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1393,198 +1727,6 @@ Collapses ListItems in the EXPANDED state and sets a callback event.
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/27/101%E3%80%90Daily-HarmonyOS-Knowledge%E3%80%91Manual-Scroller-Stop-Execute-Every-Second-Custom-Web-Keyboard-Inject-Styles-into-Web-Components-Safe-Area/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/27/101%E3%80%90Daily-HarmonyOS-Knowledge%E3%80%91Manual-Scroller-Stop-Execute-Every-Second-Custom-Web-Keyboard-Inject-Styles-into-Web-Components-Safe-Area/" class="post-title-link" itemprop="url">【Daily HarmonyOS Knowledge】Manual Scroller Stop, Execute Every Second, Custom Web Keyboard, Inject Styles into Web Components, Safe Area</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-27 08:18:12 / Modified: 09:50:03" itemprop="dateCreated datePublished" datetime="2025-06-27T08:18:12+08:00">2025-06-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Knowledge-Scroller-Manual-Stop-Second-Execution-Web-Custom-Keyboard-Web-Component-Injection-Style-Safe-Area"><a href="#Daily-HarmonyOS-Knowledge-Scroller-Manual-Stop-Second-Execution-Web-Custom-Keyboard-Web-Component-Injection-Style-Safe-Area" class="headerlink" title="[Daily HarmonyOS Knowledge] Scroller Manual Stop, Second Execution, Web Custom Keyboard, Web Component Injection Style, Safe Area"></a>[Daily HarmonyOS Knowledge] Scroller Manual Stop, Second Execution, Web Custom Keyboard, Web Component Injection Style, Safe Area</h3><h4 id="1-Does-HarmonyOS-scroller-have-a-manual-stop-method"><a href="#1-Does-HarmonyOS-scroller-have-a-manual-stop-method" class="headerlink" title="1. Does HarmonyOS scroller have a manual stop method?"></a>1. Does HarmonyOS scroller have a manual stop method?</h4><p>You can use the scrollTo method to slide to the specified position.  </p>
-<pre><code>// demo.ets  
-import Curves from &#39;@ohos.curves&#39;  
-
-@Entry  
-@Component  
-struct ScrollExample &#123;  
-  scroller: Scroller = new Scroller()  
-  private arr: number[] = []  
-
-  aboutToAppear(): void &#123;  
-    for (let i = 0; i &lt; 100; i++) &#123;  
-      this.arr.push(i)  
-    &#125;  
-  &#125;  
-
-  build() &#123;  
-    Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;  
-
-      Scroll(this.scroller) &#123;  
-        Column() &#123;  
-          ForEach(this.arr, (item: number) =&gt; &#123;  
-            Text(item.toString())  
-              .width(&#39;90%&#39;)  
-              .height(150)  
-              .backgroundColor(0xFFFFFF)  
-              .borderRadius(15)  
-              .fontSize(16)  
-              .textAlign(TextAlign.Center)  
-              .margin(&#123; top: 10 &#125;)  
-          &#125;, (item: string) =&gt; item)  
-        &#125;.width(&#39;100%&#39;)  
-      &#125;  
-      .scrollable(ScrollDirection.Vertical) // Scroll direction is vertical  
-      .scrollBar(BarState.On) // Scroll bar is always visible  
-      .scrollBarColor(Color.Gray) // Scroll bar color  
-      .scrollBarWidth(10) // Scroll bar width  
-      .friction(0.6)  
-      .edgeEffect(EdgeEffect.Spring)  
-      .onScroll((xOffset: number, yOffset: number) =&gt; &#123;  
-        console.info(xOffset + &#39; &#39; + yOffset)  
-      &#125;)  
-      .onScrollEdge((side: Edge) =&gt; &#123;  
-        console.info(&#39;To the edge&#39;)  
-      &#125;)  
-      .onScrollStop(() =&gt; &#123;  
-        console.info(&#39;Scroll Stop&#39;)  
-      &#125;)  
-
-      Button(&#39;Interrupt and execute other logic&#39;)  
-        .height(&#39;5%&#39;)  
-        .onClick(() =&gt; &#123;  
-          let curve = Curves.interpolatingSpring(10, 1, 228, 30) // Create a stepped curve  
-          const yOffset: number = this.scroller.currentOffset().yOffset;  
-          this.scroller.scrollTo(&#123;  
-            xOffset: 0,  
-            yOffset: yOffset,  
-            // animation: &#123; duration: 1000, curve: curve, canOverScroll: true &#125;  
-          &#125;)  
-        &#125;)  
-        .margin(&#123; top: 110, left: 20 &#125;)  
-
-    &#125;.width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(0xDCDCDC)  
-  &#125;  
-&#125;  
-</code></pre>
-<h4 id="2-HarmonyOS-function-that-executes-once-per-second"><a href="#2-HarmonyOS-function-that-executes-once-per-second" class="headerlink" title="2. HarmonyOS function that executes once per second?"></a>2. HarmonyOS function that executes once per second?</h4><p>Use setInterval to repeatedly call a function with a fixed time delay between each call. To delete the timer, manually call the clearInterval interface.  </p>
-<p>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V13/js-apis-timer-V13#setinterval">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V13/js-apis-timer-V13#setinterval</a>  </p>
-<p><code>setInterval(handler: Function | string, delay: number, ...arguments: any[]): number</code><br>Repeatedly calls a function with a fixed time delay between each call.<br>To delete the timer, manually call the clearInterval interface.  </p>
-<pre><code>setInterval(() =&gt; &#123;  
-  console.log(&#39;do every 1s.&#39;);  
-&#125;, 1000);  
-</code></pre>
-<h4 id="3-HarmonyOS-WebView-custom-keyboard-issue"><a href="#3-HarmonyOS-WebView-custom-keyboard-issue" class="headerlink" title="3. HarmonyOS WebView custom keyboard issue?"></a>3. HarmonyOS WebView custom keyboard issue?</h4><p>When using a custom keyboard in a loaded webview, how to handle the hiding and displaying of the system keyboard, as well as displaying the custom keyboard and processing cursor acquisition.  </p>
-<p>When using a custom keyboard, the system keyboard should be hidden to avoid conflicts. You can set the focusable property of the TextInput component to false to make the component non-focusable, so that the default system keyboard will not pop up. You can load the custom keyboard by displaying it in the <web> component. The specific implementation method is to create an HTML page containing the desired keys and use it as the src attribute value of the <web> component. When the user clicks on the component, the custom keyboard will pop up automatically. You can obtain the cursor position information by listening to keyboard events. In this way, you can dynamically adjust the cursor to the correct position according to the user’s operations during text editing.  </p>
-<p>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5#ZH-CN_TOPIC_0000001847049860__customkeyboard10">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5#ZH-CN_TOPIC_0000001847049860__customkeyboard10</a>  </p>
-<h4 id="4-How-to-inject-styles-into-HTML-in-HarmonyOS-web-components"><a href="#4-How-to-inject-styles-into-HTML-in-HarmonyOS-web-components" class="headerlink" title="4. How to inject styles into HTML in HarmonyOS web components?"></a>4. How to inject styles into HTML in HarmonyOS web components?</h4><p>Refer to the demo to inject styles into the style tag:  </p>
-<pre><code>// ets  
-import web_webview from &#39;@ohos.web.webview&#39;;  
-
-@Entry  
-@Component  
-struct WebComponent &#123;  
-  webviewController: web_webview.WebviewController = new web_webview.WebviewController();  
-  private customStyle: string =  
-    &#39;html, body &#123;margin: 0; padding: 0; overflow: hidden; touch-action: none; background:#ace&#125;&#39;;  
-
-  aboutToAppear() &#123;  
-    // Configure Web to enable debug mode  
-    web_webview.WebviewController.setWebDebuggingAccess(true);  
-  &#125;  
-
-  build() &#123;  
-    Column() &#123;  
-
-      Button(&#39;style&#39;).onClick((event: ClickEvent) =&gt; &#123;  
-
-        this.webviewController.runJavaScript(`const head = document.head;  
-                                              console.log(head);  
-                                              const style = document.createElement(&#39;style&#39;);  
-                                              style.appendChild(document.createTextNode(&quot;$&#123;this.customStyle&#125;&quot;))  
-                                              head.appendChild(style)  
-        `)  
-      &#125;)  
-      Web(&#123; src: $rawfile(&#39;index.html&#39;), controller: this.webviewController &#125;).domStorageAccess(true)  
-    &#125;  
-  &#125;  
-&#125;  
-// html  
-&lt;!DOCTYPE html&gt;  
-&lt;html&gt;  
-&lt;head&gt;  
-
-&lt;/head&gt;  
-
-&lt;body&gt;  
-&lt;h1 id=&quot;text&quot;&gt;  
-    This is a test message. The default font is black. After calling the runJavaScript method, the font is green. After calling the runJavaScriptCodePassed method, the font is red.  
-&lt;/h1&gt;  
-&lt;/body&gt;  
-&lt;/html&gt;  
-</code></pre>
-<h4 id="5-HarmonyOS-safe-area-issue"><a href="#5-HarmonyOS-safe-area-issue" class="headerlink" title="5. HarmonyOS safe area issue?"></a>5. HarmonyOS safe area issue?</h4><p>When there is no tabbar, <code>.expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])</code> can indeed start from the top of the screen, but it fails when a tabbar is added. What is the solution?  </p>
-<p>Use immersive development to avoid the navigation bar.  </p>
-<p>Please refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-develop-apply-immersive-effects-V5#section202484117114">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-develop-apply-immersive-effects-V5#section202484117114</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1654,13 +1796,13 @@ struct WebComponent &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

@@ -149,6 +149,199 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41117-Daily-HarmonyOS-Next-Knowledge-Provider-Navigation-Return-Parameters-Privacy-Statement-Issues-Text-Judgment-Functions-Custom-hvigor-Plugins/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/41117-Daily-HarmonyOS-Next-Knowledge-Provider-Navigation-Return-Parameters-Privacy-Statement-Issues-Text-Judgment-Functions-Custom-hvigor-Plugins/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Provider, Navigation Return Parameters, Privacy Statement Issues, Text Judgment Functions, Custom hvigor Plugins</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:46:19 / Modified: 09:50:03" itemprop="dateCreated datePublished" datetime="2025-06-29T09:46:19+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Provider-Navigation-Return-Parameters-Privacy-Statement-Issues-Text-Judgment-Functions-Custom-hvigor-Plugins"><a href="#Daily-HarmonyOS-Next-Knowledge-Provider-Navigation-Return-Parameters-Privacy-Statement-Issues-Text-Judgment-Functions-Custom-hvigor-Plugins" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Provider, Navigation Return Parameters, Privacy Statement Issues, Text Judgment Functions, Custom hvigor Plugins"></a>[Daily HarmonyOS Next Knowledge] Provider, Navigation Return Parameters, Privacy Statement Issues, Text Judgment Functions, Custom hvigor Plugins</h1><h4 id="1-Data-interaction-mode-between-HarmonyOS-Provider-and-Consume"><a href="#1-Data-interaction-mode-between-HarmonyOS-Provider-and-Consume" class="headerlink" title="1. Data interaction mode between HarmonyOS @Provider and @Consume"></a>1. Data interaction mode between HarmonyOS @Provider and @Consume</h4><p>This only allows one-way transmission, meaning only an ancestor component can update the variable, while descendant components can only read it. If a descendant component needs to change the data variable, what are the solutions? Passing it back layer by layer to the ancestor is too complicated.  </p>
+<p>The @Provide and @Consume decorators enable two-way synchronization with descendant components without needing to pass data back layer by layer to the ancestor.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-provide-and-consume-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-provide-and-consume-V5</a>  </p>
+<p>@Provide and @Consume are used for two-way data synchronization with descendant components, suitable for scenarios where state data needs to be passed across multiple levels. Unlike the named parameter mechanism for parent-child components, @Provide and @Consume break free from parameter passing constraints to achieve cross-level transmission.  </p>
+<ul>
+<li>A variable decorated with @Provide in an ancestor component is “provided” to its descendants. This eliminates the need for developers to repeatedly pass variables between components.  </li>
+<li>Descendants use @Consume to obtain the variable provided by @Provide, establishing two-way data synchronization. Unlike @State&#x2F;@Link, @Provide&#x2F;@Consume can pass data across multiple parent-child component levels.  </li>
+<li>@Provide and @Consume can be bound via the same variable name or alias. It is recommended that they have the same type to avoid implicit type conversion causing unexpected application behavior.</li>
+</ul>
+<pre><code class="language-typescript">@Component
+struct CompD &#123;
+  // The @Consume-decorated variable binds to the @Provide-decorated variable in ancestor component CompA via the same attribute name
+  @Consume reviewVotes: number;
+
+  build() &#123;
+    Column() &#123;
+      Text(`reviewVotes($&#123;this.reviewVotes&#125;)`)
+      Button(`reviewVotes($&#123;this.reviewVotes&#125;), give +1`)
+        .onClick(() =&gt; this.reviewVotes += 1)
+    &#125;
+    .width(&#39;50%&#39;)
+  &#125;
+&#125;
+
+@Component
+struct CompC &#123;
+  build() &#123;
+    Row(&#123; space: 5 &#125;) &#123;
+      CompD()
+      CompD()
+    &#125;
+  &#125;
+&#125;
+
+@Component
+struct CompB &#123;
+  build() &#123;
+    CompC()
+  &#125;
+&#125;
+
+@Entry
+@Component
+struct CompA &#123;
+  // The @Provide-decorated variable reviewVotes is provided by the entry component CompA to its descendants
+  @Provide reviewVotes: number = 0;
+
+  build() &#123;
+    Column() &#123;
+      Button(`reviewVotes($&#123;this.reviewVotes&#125;), give +1`)
+        .onClick(() =&gt; this.reviewVotes += 1)
+      CompB()
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="2-How-to-obtain-return-parameters-when-using-Navigation-to-open-a-page-in-HarmonyOS"><a href="#2-How-to-obtain-return-parameters-when-using-Navigation-to-open-a-page-in-HarmonyOS" class="headerlink" title="2. How to obtain return parameters when using Navigation to open a page in HarmonyOS"></a>2. How to obtain return parameters when using Navigation to open a page in HarmonyOS</h4><p>Scenario: During a network request, if the session expires, a login page is triggered. After login, how to notify the previous network request (which has no UI) to resend the request. Each network request checks if the session is valid, and triggers login if expired.  </p>
+<p>Between Navigation pages, data is passed from the source page to the target page via the <code>params</code> attribute in the NavPathInfo object, and the target page’s return is handled via the <code>onPop</code> callback.<br><strong>Step 1</strong>: Construct a NavPathInfo object with parameters to pass to the target page.  </p>
+<ul>
+<li><code>params</code>: Encapsulates data for transmission (functions in objects cannot be passed). For supported parameters, refer to the guide.  </li>
+<li><code>onPop</code>: Callback when the target page triggers pop, using <code>PopInfo.info.param</code> to get the returned object.</li>
+</ul>
+<pre><code class="language-typescript">// Source page mainPage
+let loginParam: LoginParam = new LoginParam()
+// Construct pathInfo object
+let pathInfo: NavPathInfo = new NavPathInfo(&#39;loginPage&#39;, loginParam, (popInfo: PopInfo) =&gt; &#123;
+  let loginParam: LoginParam = popInfo.info.param as LoginParam;
+  ...
+&#125;)
+// Pass parameters to the target page
+this.pageStack.pushDestination(pathInfo, true);
+</code></pre>
+<p><strong>Step 2</strong>: The target page obtains parameters from the source page via <code>NavPathStack.getParamByIndex(0)</code>.  </p>
+<pre><code class="language-typescript">@Component
+export struct loginPageView &#123;
+  @Consume(&#39;pageInfo&#39;) pageStack: NavPathStack;
+
+  aboutToAppear(): void &#123;
+    this.loginParam = this.pageStack.getParamByIndex(0) as LoginParam;
+  &#125;
+  ...
+&#125;
+</code></pre>
+<p><strong>Step 3</strong>: The target page returns to the source page via <code>NavPathStack.pop</code>, using the <code>result</code> parameter to pass the object back.  </p>
+<pre><code class="language-typescript">@Component
+export struct loginPageView &#123;
+  @Consume(&#39;pageInfo&#39;) pageStack: NavPathStack;
+  // Object constructed by the page
+  private loginParam!: LoginParam;
+  ...
+  build() &#123;
+    NavDestination() &#123;
+      ...
+      Button(&#39;login&#39;).onClick(() =&gt; &#123;
+        // Return the object to the source page
+        this.pageStack.pop(this.loginParam, true)
+      &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="3-HarmonyOS-privacy-statement-consultation"><a href="#3-HarmonyOS-privacy-statement-consultation" class="headerlink" title="3. HarmonyOS privacy statement consultation"></a>3. HarmonyOS privacy statement consultation</h4><p>Point 10 of the release documentation (link below) states: “Provide a privacy statement link in the ‘Privacy Statement’ section.” Can we attach the statement content directly instead of providing a link?<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-releaseharmony-0000001933963166">https://developer.huawei.com/consumer/cn/doc/app/agc-help-releaseharmony-0000001933963166</a>  </p>
+<p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/50128#h1-1678351326517-0">https://developer.huawei.com/consumer/cn/doc/app/50128#h1-1678351326517-0</a><br>The document specifies that an APP privacy policy link must be submitted, which must exactly match the privacy policy within the APP.  </p>
+<p>When creating an app or updating its version, developers must submit a privacy policy link that fully aligns with the in-APP privacy policy. Update the link content promptly if the in-APP privacy policy is modified.  </p>
+<h4 id="4-How-to-make-HarmonyOS-Text-center-when-single-line-and-left-align-when-multi-line"><a href="#4-How-to-make-HarmonyOS-Text-center-when-single-line-and-left-align-when-multi-line" class="headerlink" title="4. How to make HarmonyOS Text center when single-line and left-align when multi-line"></a>4. How to make HarmonyOS Text center when single-line and left-align when multi-line</h4><p>Set different alignment styles by judging the number of lines.  </p>
+<p>To get the number of lines:<br>@ohos.measure returns the width and height of multi-line text but not the line count, which can be calculated based on business scenarios.<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-measure-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-measure-V5</a>  </p>
+<p>For text exceeding a specific line count (3 lines as an example), apply different styles (e.g., expand&#x2F;collapse).  </p>
+<ol>
+<li>Calculate the total text height:</li>
+</ol>
+<pre><code class="language-typescript">let textSize: SizeOptions = measure.measureTextSize(&#123; textContent: this.content, fontSize: 24, constraintWidth: 300 &#125;)
+</code></pre>
+<ol start="2">
+<li>Calculate the height with a width constraint and max lines (3 lines):</li>
+</ol>
+<pre><code class="language-typescript">let textSize2: SizeOptions = measure.measureTextSize(&#123; textContent: this.content, fontSize: 24, maxLines: 3, constraintWidth: 300 &#125;)
+</code></pre>
+<ol start="3">
+<li>If <code>textSize.height &gt; textSize2.height</code>, the text exceeds 3 lines. Perform business processing based on this judgment.</li>
+</ol>
+<h4 id="5-Custom-hvigor-plugin-issues"><a href="#5-Custom-hvigor-plugin-issues" class="headerlink" title="5. Custom hvigor plugin issues"></a>5. Custom hvigor plugin issues</h4><p>In the beta1 version, Node.js is no longer exposed externally, and hvigor code is hidden in the app package with a fixed version. When developing custom hvigor plugins, referencing hvigor code from public npm libraries may cause version inconsistencies with the app package. Will this cause problems?  </p>
+<p>For hvigor plugin development, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hvigor-plugin-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-hvigor-plugin-V5</a><br>Try to reference the hvigor version actually used in the project or the version documented.  </p>
+<p>Hvigor allows developers to implement custom plugins, define build logic, and share them. It mainly provides two plugin implementation methods:  </p>
+<ul>
+<li>Plugin development based on hvigorfile scripts.  </li>
+<li>Plugin development based on TypeScript projects.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41118-Daily-HarmonyOS-Next-Knowledge-Number-of-Worker-Threads-Determining-User-Permission-Decisions-Image-Upload-Type-Errors-Request-Lock-Release-Timing-H5-Issues/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1673,100 +1866,6 @@ struct tabTest &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41127-Daily-HarmonyOS-Next-Knowledge-Web-Height-Adaptation-Variable-Declaration-Specifications-Animation-Cancellation-Signature-Files-and-Package-Size-Optimization-related/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/41127-Daily-HarmonyOS-Next-Knowledge-Web-Height-Adaptation-Variable-Declaration-Specifications-Animation-Cancellation-Signature-Files-and-Package-Size-Optimization-related/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Web Height Adaptation, Variable Declaration Specifications, Animation Cancellation, Signature Files, and Package Size Optimization-related</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 09:34:25 / Modified: 09:36:44" itemprop="dateCreated datePublished" datetime="2025-06-29T09:34:25+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Knowledge-Web-Height-Adaptation-Variable-Declaration-Specifications-Animation-Cancellation-Signature-Files-and-Package-Size-Optimization-related"><a href="#Daily-HarmonyOS-Knowledge-Web-Height-Adaptation-Variable-Declaration-Specifications-Animation-Cancellation-Signature-Files-and-Package-Size-Optimization-related" class="headerlink" title="[Daily HarmonyOS Knowledge] Web Height Adaptation, Variable Declaration Specifications, Animation Cancellation, Signature Files, and Package Size Optimization-related"></a>[Daily HarmonyOS Knowledge] Web Height Adaptation, Variable Declaration Specifications, Animation Cancellation, Signature Files, and Package Size Optimization-related</h1><h4 id="1-How-to-Adapt-the-Height-of-a-HarmonyOS-Web-Page"><a href="#1-How-to-Adapt-the-Height-of-a-HarmonyOS-Web-Page" class="headerlink" title="1. How to Adapt the Height of a HarmonyOS Web Page?"></a>1. How to Adapt the Height of a HarmonyOS Web Page?</h4><p>When setting the height of a Web page to 100%, it is found that the height is inconsistent with that of the Web control. What needs to be set to make the page height consistent with the Web container height?</p>
-<p>Currently, only two web layout modes are supported, namely Web layout following the system WebLayoutMode.NONE and Web adaptive webpage layout based on page size WebLayoutMode.FIT_CONTENT. The default is WebLayoutMode.NONE mode. Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-tabcontent-V5#layoutmode10%E6%9E%9A%E4%B8%BE%E8%AF%B4%E6%98%8E">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-tabcontent-V5#layoutmode10%E6%9E%9A%E4%B8%BE%E8%AF%B4%E6%98%8E</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Web(&#123; src: $rawfile(&#x27;index.html&#x27;), controller: this.controller &#125;)</span><br><span class="line">  .width(CommonConstants.WIDTH_OR_HEIGHT)</span><br><span class="line">  .layoutMode(WebLayoutMode.FIT_CONTENT)</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-Does-HarmonyOS-ArkTS-have-relevant-specifications-for-variable-type-declaration"><a href="#2-Does-HarmonyOS-ArkTS-have-relevant-specifications-for-variable-type-declaration" class="headerlink" title="2. Does HarmonyOS ArkTS have relevant specifications for variable type declaration?"></a>2. Does HarmonyOS ArkTS have relevant specifications for variable type declaration?</h4><p>Is it necessary to add variable types when declaring variables? Are the requirements consistent for different types? For example:<br>Is let result &#x3D; ‘’ required to be written as let result: string &#x3D; ‘’?<br>Is const TEST_RESULT &#x3D; ‘ok’ required to be written as const TEST_RESULT: string &#x3D; ‘ok’?<br>Are there differences between member variables and temporary variables?</p>
-<p>Using let result &#x3D; ‘’; is sufficient, and the engine will infer the type based on the value. let and const are the same, and regardless of the type of variable, the type can be automatically inferred.</p>
-<h4 id="3-How-to-cancel-the-animateTo-or-animation-in-HarmonyOS"><a href="#3-How-to-cancel-the-animateTo-or-animation-in-HarmonyOS" class="headerlink" title="3. How to cancel the animateTo or animation in HarmonyOS?"></a>3. How to cancel the animateTo or animation in HarmonyOS?</h4><p>I didn’t see the relevant cancellation method in the document.</p>
-<p>If you need to interrupt the animation, you can refer to this demo, which sets an animation with a value of 0 to interrupt the previous animation.<br>Reference demo:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">@Entry</span><br><span class="line">struct Index &#123;</span><br><span class="line">  @State clickNumber: number = 0;</span><br><span class="line">  @State myScale: number = 1.0;</span><br><span class="line">  uiContext: UIContext | undefined = undefined;</span><br><span class="line">  imageIndex: number = 0</span><br><span class="line">  aboutToAppear() &#123;</span><br><span class="line">    this.uiContext = this.getUIContext?.();</span><br><span class="line">  &#125;</span><br><span class="line">  build() &#123;</span><br><span class="line">    Stack(&#123; alignContent: Alignment.TopEnd &#125;) &#123;</span><br><span class="line">      // Wooden fish picture</span><br><span class="line">      Image($r(&#x27;app.media.startIcon&#x27;))</span><br><span class="line">        .zIndex(2)</span><br><span class="line">        .width(200)</span><br><span class="line">        .height(200)</span><br><span class="line">        .margin(&#123; top: 300, right: 130 &#125;)</span><br><span class="line">        .scale(&#123; x: this.myScale, y: this.myScale &#125;)// .clickEffect(&#123;level:ClickEffectLevel.LIGHT,scale:0.5&#125;)</span><br><span class="line">        .onClick(() =&gt; &#123;</span><br><span class="line">          if (!this.uiContext) &#123;</span><br><span class="line">            return;</span><br><span class="line">          &#125;</span><br><span class="line">          // Set an animation with a display animation of 0 to interrupt the previous animation</span><br><span class="line">          animateTo(&#123; duration: 0, iterations: 1&#125;, () =&gt; &#123;</span><br><span class="line">            console.info(&#x27;this.dur0xxx---&#x27;, this.myScale)</span><br><span class="line">            this.myScale = 1;</span><br><span class="line">          &#125;)</span><br><span class="line">          animateTo(&#123; duration: 1500, iterations: 1 ,onFinish: () =&gt; &#123;</span><br><span class="line">            animateTo(&#123; duration: 1500, iterations: 1&#125;, () =&gt;&#123;</span><br><span class="line">              console.info(&#x27;this.dur2---&#x27;, this.myScale)</span><br><span class="line">              this.myScale = 1;</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;&#125;, () =&gt; &#123;</span><br><span class="line">            console.info(&#x27;this.dur1---&#x27;, this.myScale)</span><br><span class="line">            this.myScale = 0.8;</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;.backgroundColor(Color.Black)</span><br><span class="line">    .width(&#x27;100%&#x27;)</span><br><span class="line">    .height(&#x27;100%&#x27;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-How-to-configure-to-use-one-signature-file-in-debug-mode-and-another-in-release-mode-in-build-profile"><a href="#4-How-to-configure-to-use-one-signature-file-in-debug-mode-and-another-in-release-mode-in-build-profile" class="headerlink" title="4. How to configure to use one signature file in debug mode and another in release mode in build-profile?"></a>4. How to configure to use one signature file in debug mode and another in release mode in build-profile?</h4><p>In the project-level build-profile.json5 file, add customized products and use different signature certificates respectively.</p>
-<ol>
-<li>Configure the signature file</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;signingConfigs&quot;: [ &#123; &quot;name&quot;: &quot;default&quot;, &quot;type&quot;: &quot;HarmonyOS&quot;, &quot;material&quot;: &#123; &quot;certpath&quot;: &quot;&quot;, &quot;storePassword&quot;: &quot;&quot;, &quot;keyAlias&quot;: &quot;&quot;, &quot;keyPassword&quot;: &quot;&quot;, &quot;profile&quot;: &quot;b&quot;, &quot;signAlg&quot;: &quot;&quot;, &quot;storeFile&quot;: &quot;&quot; &#125; &#125;, &#123; &quot;name&quot;: &quot;useForRelease&quot;, &quot;type&quot;: &quot;HarmonyOS&quot;, &quot;material&quot;: &#123; &quot;certpath&quot;: &quot;&quot;, &quot;storePassword&quot;: &quot;&quot;, &quot;keyAlias&quot;: &quot;&quot;, &quot;keyPassword&quot;: &quot;&quot;, &quot;profile&quot;: &quot;b&quot;, &quot;signAlg&quot;: &quot;&quot;, &quot;storeFile&quot;: &quot;&quot; &#125; &#125;, &#123; &quot;name&quot;: &quot;useForDebug&quot;, &quot;type&quot;: &quot;HarmonyOS&quot;, &quot;material&quot;: &#123; &quot;certpath&quot;: &quot;&quot;, &quot;storePassword&quot;: &quot;&quot;, &quot;keyAlias&quot;: &quot;&quot;, &quot;keyPassword&quot;: &quot;&quot;, &quot;profile&quot;: &quot;b&quot;, &quot;signAlg&quot;: &quot;&quot;, &quot;storeFile&quot;: &quot;&quot; &#125; ] </span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>Configure</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;products&quot;: [ &#123; &quot;name&quot;: &quot;default&quot;, &quot;signingConfig&quot;: &quot;default&quot;, &quot;compatibleSdkVersion&quot;: &quot;5.0.0(12)&quot;, &quot;runtimeOS&quot;: &quot;HarmonyOS&quot;, &#125;, &#123; &quot;name&quot;: &quot;useForDebug&quot;, &quot;signingConfig&quot;: &quot;useForDebug&quot;, &quot;compatibleSdkVersion&quot;: &quot;5.0.0(12)&quot;, &quot;runtimeOS&quot;: &quot;HarmonyOS&quot;, &#125;, &#123; &quot;name&quot;: &quot;useForRelease&quot;, &quot;signingConfig&quot;: &quot;useForRelease&quot;, &quot;compatibleSdkVersion&quot;: &quot;5.0.0(12)&quot;, &quot;runtimeOS&quot;: &quot;HarmonyOS&quot;, &#125; ],</span><br></pre></td></tr></table></figure>
-<p>Click the Product button in the upper right corner. Select useForDebug in Product to choose the hap using the debug certificate, and select useForRelease-&gt;apply. The built APP will use the release certificate. Do not delete the default configuration item.</p>
-<ol start="3">
-<li>In the module, add the two parameters useForDebug and useForRelease to the applytoProducts attribute “modules”:</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ &#123; &quot;name&quot;: &quot;entry&quot;, &quot;srcPath&quot;: &quot;./entry&quot;, &quot;targets&quot;: [ &#123; &quot;name&quot;: &quot;default&quot;, &quot;applyToProducts&quot;: [ &quot;default&quot;, &quot;default_debug&quot;, &quot;default_realse&quot; ] &#125; ] &#125; ] </span><br></pre></td></tr></table></figure>
-
-<h4 id="5-What-is-the-difference-between-configuring-dependent-third-party-applications-in-the-global-configuration-oh-package-and-configuring-them-in-the-module’s-oh-package-and-will-it-affect-the-package-size"><a href="#5-What-is-the-difference-between-configuring-dependent-third-party-applications-in-the-global-configuration-oh-package-and-configuring-them-in-the-module’s-oh-package-and-will-it-affect-the-package-size" class="headerlink" title="5. What is the difference between configuring dependent third-party applications in the global configuration oh-package and configuring them in the module’s oh-package, and will it affect the package size?"></a>5. What is the difference between configuring dependent third-party applications in the global configuration oh-package and configuring them in the module’s oh-package, and will it affect the package size?</h4><p>Does configuring third-party library dependencies globally or in the module affect the package size?</p>
-<p>Configuring dependent third-party applications in the global oh-package can be used throughout the entire project, while configuring them in the module’s oh-package can only be used in that module. Therefore, global configuration will affect the package size of the entire project, while module configuration will only affect the package size of that module.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1836,13 +1935,13 @@ struct tabTest &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

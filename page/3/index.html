@@ -149,6 +149,303 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4804-Learn-HarmonyOS-Next-Knowledge-Every-Day-Push-and-UI-Layout/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/30/4804-Learn-HarmonyOS-Next-Knowledge-Every-Day-Push-and-UI-Layout/" class="post-title-link" itemprop="url">[Learn HarmonyOS Next Knowledge Every Day] Push and UI Layout</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 17:10:41 / Modified: 17:38:18" itemprop="dateCreated datePublished" datetime="2025-06-30T17:10:41+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Learn-HarmonyOS-Next-Knowledge-Every-Day-Push-and-UI-Layout"><a href="#Learn-HarmonyOS-Next-Knowledge-Every-Day-Push-and-UI-Layout" class="headerlink" title="[Learn HarmonyOS Next Knowledge Every Day] Push and UI Layout"></a>[Learn HarmonyOS Next Knowledge Every Day] Push and UI Layout</h1><h2 id="1-How-to-avoid-displaying-intermediate-transition-tab-pages-when-switching-Tab-component-pages"><a href="#1-How-to-avoid-displaying-intermediate-transition-tab-pages-when-switching-Tab-component-pages" class="headerlink" title="1. How to avoid displaying intermediate transition tab pages when switching Tab component pages?"></a>1. How to avoid displaying intermediate transition tab pages when switching Tab component pages?</h2><p>Currently, when clicking on a tab page across multiple pages, intermediate transition pages are displayed.  </p>
+<p>If animations are required, the specification mandates transitioning through pages 1, 2, 3, 4 sequentially. To hide intermediate transition pages, set <code>.animationDuration(0)</code>.  </p>
+<p><strong>Reference Code:</strong>  </p>
+<pre><code class="language-typescript">// xxx.ets
+@Entry
+@Component
+struct TabsExample &#123;
+  @State fontColor: string = &#39;#182431&#39;
+  @State selectedFontColor: string = &#39;#007DFF&#39;
+  @State currentIndex: number = 0
+  private controller: TabsController = new TabsController()
+
+  @Builder
+  tabBuilder(index: number, name: string) &#123;
+    Column() &#123;
+      Text(name)
+        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
+        .fontSize(16)
+        .fontWeight(this.currentIndex === index ? 500 : 400)
+        .lineHeight(22)
+        .margin(&#123; top: 17, bottom: 7 &#125;)
+      Divider()
+        .strokeWidth(2)
+        .color(&#39;#007DFF&#39;)
+        .opacity(this.currentIndex === index ? 1 : 0)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Tabs(&#123; barPosition: BarPosition.Start, index: this.currentIndex, controller: this.controller &#125;) &#123;
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#00CB87&#39;)
+        &#125;.tabBar(this.tabBuilder(0, &#39;green&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#007DFF&#39;)
+        &#125;.tabBar(this.tabBuilder(1, &#39;blue&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#FFBF00&#39;)
+        &#125;.tabBar(this.tabBuilder(2, &#39;yellow&#39;))
+
+        TabContent() &#123;
+          Column().width(&#39;100%&#39;).height(&#39;100%&#39;).backgroundColor(&#39;#E67C92&#39;)
+        &#125;.tabBar(this.tabBuilder(3, &#39;pink&#39;))
+      &#125;
+      .vertical(false)
+      .barMode(BarMode.Fixed)
+      .barWidth(360)
+      .barHeight(56)
+      // Set animation duration to 0 to avoid displaying intermediate transition pages
+      .animationDuration(0)
+      .onChange((index: number) =&gt; &#123;
+        this.currentIndex = index
+      &#125;)
+      .width(360)
+      .height(296)
+      .margin(&#123; top: 52 &#125;)
+      .backgroundColor(&#39;#F1F3F5&#39;)
+    &#125;.width(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h2 id="2-How-to-obtain-application-information-and-completely-exit-an-app"><a href="#2-How-to-obtain-application-information-and-completely-exit-an-app" class="headerlink" title="2. How to obtain application information and completely exit an app?"></a>2. How to obtain application information and completely exit an app?</h2><p><strong>Problem Scenarios:</strong>  </p>
+<ol>
+<li>How to obtain the app’s version name (e.g., the version specified in <code>oh-package.json5</code>)?  </li>
+<li>How to completely exit an app? Methods like <code>router.clear()</code> and <code>router.back()</code> do not fully terminate the app, as some background tasks may persist.</li>
+</ol>
+<p><strong>Solutions:</strong>  </p>
+<ol>
+<li><strong>Retrieve application information</strong> using <code>bundleManager</code>, which provides access to Ability information, ApplicationInfo, BundleInfo, etc.  </li>
+<li><strong>Completely exit the app</strong> by following the normal lifecycle of UIAbility. Use <code>killAllProcesses</code> under <code>ApplicationContext</code> only as a last resort (force-kills all app processes). For scenarios requiring app exit due to privacy policy rejection, use <code>terminateSelf</code> under <code>UIAbilityContext</code>.</li>
+</ol>
+<p><strong>Sample Code:</strong>  </p>
+<pre><code class="language-typescript">import &#123; bundleManager &#125; from &#39;@kit.AbilityKit&#39;;
+import &#123; BusinessError &#125; from &#39;@kit.BasicServicesKit&#39;;
+import &#123; DateUtil &#125; from &#39;../../utils/DateUtil&#39;;
+import &#123; common &#125; from &#39;@kit.AbilityKit&#39;;
+
+@Entry
+@Component
+struct CloseApp &#123;
+  @State message: string = &#39;App Info: &#39;
+  @State bundleInfo: bundleManager.BundleInfo | null = null
+  private context = getContext(this) as common.UIAbilityContext;
+
+  aboutToAppear(): void &#123;
+    this.getAppPackageInfo()
+  &#125;
+
+  /* Get app package information */
+  getAppPackageInfo() &#123;
+    let bundleFlags = bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_REQUESTED_PERMISSION;
+    try &#123;
+      this.bundleInfo = bundleManager.getBundleInfoForSelfSync(bundleFlags);
+      console.log(&#39;bundle-info&#39;, &#39;getBundleInfoForSelfSync successfully: %&#123;public&#125;s&#39;, JSON.stringify(this.bundleInfo))
+    &#125; catch (err) &#123;
+      let message = (err as BusinessError).message;
+      console.log(&#39;bundle-info&#39;, &#39;getBundleInfoForSelfSync failed: %&#123;public&#125;s&#39;, message);
+    &#125;
+  &#125;
+
+  closeApp() &#123;
+    this.context.terminateSelf()
+  &#125;
+
+  build() &#123;
+    Scroll() &#123;
+      Flex(&#123; direction: FlexDirection.Column, justifyContent: FlexAlign.Start &#125;) &#123;
+        Text(this.message)
+          .id(&#39;System&#39;)
+          .fontSize(20)
+          .fontWeight(FontWeight.Bold)
+          .margin(&#123;
+            bottom: 5
+          &#125;)
+          .alignRules(&#123;
+            center: &#123; anchor: &#39;__container__&#39;, align: VerticalAlign.Center &#125;,
+            middle: &#123; anchor: &#39;__container__&#39;, align: HorizontalAlign.Center &#125;
+          &#125;)
+
+        if (this.bundleInfo) &#123;
+          Column() &#123;
+            Row() &#123;
+              Text(&#39;App Package Name: &#39;)
+              Text(this.bundleInfo.name)
+            &#125;.width(&#39;100%&#39;)
+
+            Row() &#123;
+              Text(&#39;App Package Vendor: &#39;)
+              Text(this.bundleInfo.vendor)
+            &#125;.width(&#39;100%&#39;)
+
+            Row() &#123;
+              Text(&#39;App Package Version Code: &#39;)
+              Text(this.bundleInfo.versionCode.toString())
+            &#125;.width(&#39;100%&#39;)
+
+            Row() &#123;
+              Text(&#39;App Package Version Name: &#39;)
+              Text(this.bundleInfo.versionName)
+            &#125;.width(&#39;100%&#39;)
+
+            Row() &#123;
+              Text(&#39;App Target Version: &#39;)
+              Text(this.bundleInfo.targetVersion.toString())
+            &#125;.width(&#39;100%&#39;)
+
+            Row() &#123;
+              Text(&#39;App Target Version: &#39;)
+              Text(this.bundleInfo.targetVersion.toString())
+            &#125;.width(&#39;100%&#39;)
+
+            Row() &#123;
+              Text(&#39;App Installation Time: &#39;)
+              Text(`$&#123;this.bundleInfo.installTime.toString()&#125; -- $&#123;DateUtil.getFormatTimeStr(this.bundleInfo.installTime)&#125;`)
+                .fontSize(14)
+            &#125;.width(&#39;100%&#39;)
+
+            Row() &#123;
+              Text(&#39;App Update Time: &#39;)
+              Text(`$&#123;this.bundleInfo.updateTime.toString()&#125; -- $&#123;DateUtil.getFormatTimeStr(this.bundleInfo.updateTime)&#125;`)
+                .fontSize(14)
+            &#125;.width(&#39;100%&#39;)
+          &#125;
+        &#125;
+
+        Button(&#39;Exit App&#39;).width(&#39;100%&#39;).margin(&#123; top: 10 &#125;).onClick(() =&gt; &#123;
+          this.closeApp()
+        &#125;)
+      &#125;
+      .height(&#39;100%&#39;)
+      .width(&#39;100%&#39;)
+
+    &#125;
+    .padding(10)
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h2 id="3-Push-How-to-resolve-the-issue-where-the-push-image-API-reports-success-but-the-phone-does-not-receive-the-image"><a href="#3-Push-How-to-resolve-the-issue-where-the-push-image-API-reports-success-but-the-phone-does-not-receive-the-image" class="headerlink" title="3. [Push] How to resolve the issue where the push image API reports success but the phone does not receive the image?"></a>3. [Push] How to resolve the issue where the push image API reports success but the phone does not receive the image?</h2><p>The push API has limitations on image size. See <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/push-send-alert-V5#section62011739001">Notification Large Icon - Description</a>. Use images that meet the requirements.  </p>
+<p>Even if the cloud successfully sends the message, the device may not receive it due to:  </p>
+<ul>
+<li><strong>Expired tokens</strong>: Regenerate the token and resend the message.  </li>
+<li><strong>Disabled notifications</strong>: Ensure the device’s notification settings are enabled.  </li>
+<li><strong>App uninstalled</strong>: Verify the app is installed.  </li>
+<li><strong>Message frequency control</strong>: See <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/push-msg-freq-control-V5">Message Frequency Control</a>.</li>
+</ul>
+<h2 id="4-How-to-implement-click-event-passthrough-in-a-Stack-layout"><a href="#4-How-to-implement-click-event-passthrough-in-a-Stack-layout" class="headerlink" title="4. How to implement click event passthrough in a Stack layout?"></a>4. How to implement click event passthrough in a Stack layout?</h2><p><strong>Problem Scenario:</strong><br>After overlaying Stack layouts, how can a transparent page pass touch events to underlying views so that sibling components can also respond to events?  </p>
+<p><strong>Solution:</strong><br>Use the <code>hitTestBehavior</code> property to control event passthrough. Refer to the documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-gesture-events-multi-level-gesture-V5">Multi-level Gesture Handling</a>.  </p>
+<p><strong>Reference Code:</strong>  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct PageHitTestBehavior &#123;
+  @State message: string = &#39;Hello World&#39;;
+
+  build() &#123;
+    Stack() &#123;
+      Column() &#123;
+        Text(&#39;Lower Column&#39;)
+      &#125;
+      .onTouch(() =&gt; &#123;
+        console.log(&#39;Lower onTouch&#39;)
+      &#125;)
+      .width(&#39;50%&#39;)
+      .height(&#39;50%&#39;)
+      .backgroundColor(Color.Blue)
+
+      Column() &#123;
+        Text(&#39;Upper Column&#39;)
+      &#125;
+      .onTouch(() =&gt; &#123;
+        console.log(&#39;Upper onTouch&#39;)
+      &#125;)
+      // Set HitTestMode.Transparent to allow touch events to pass through to sibling components
+      .hitTestBehavior(HitTestMode.Transparent)
+      .width(&#39;50%&#39;)
+      .height(&#39;50%&#39;)
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h2 id="5-How-does-the-client-receive-push-“Alert-Messages-Notification-Messages-”-and-background-messages"><a href="#5-How-does-the-client-receive-push-“Alert-Messages-Notification-Messages-”-and-background-messages" class="headerlink" title="5. How does the client receive push “Alert Messages (Notification Messages)” and background messages?"></a>5. How does the client receive push “Alert Messages (Notification Messages)” and background messages?</h2><ul>
+<li><strong>Notification Messages</strong> (<code>push-type</code> 0): Data is accessible only after the user clicks the notification to enter the app. See <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/push-send-alert-V5">Sending Notification Messages</a>.  </li>
+<li><strong>Background Messages</strong>: These messages are received only when the app is running. If the app is not running, messages are cached and delivered when the app starts. They do not appear in the notification bar. Verify configuration in the <code>module.json5</code> file’s <code>skills</code> property. See <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/push-background-V5">Sending Background Messages</a>.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4803-Learn-HarmonyOS-Next-Knowledge-Every-Day-Network-related-Knowledge/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1689,226 +1986,6 @@ HarmonyOS&#39;s App Linking technology provides developers with a powerful and f
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/25630-HarmonyOS-Next-5-1-1-Beta1-Update-Notes-and-Adaptation-Guide/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/30/25630-HarmonyOS-Next-5-1-1-Beta1-Update-Notes-and-Adaptation-Guide/" class="post-title-link" itemprop="url">HarmonyOS Next 5.1.1 Beta1 Update Notes and Adaptation Guide</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-30 15:09:02 / Modified: 15:09:57" itemprop="dateCreated datePublished" datetime="2025-06-30T15:09:02+08:00">2025-06-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HarmonyOS-Next/" itemprop="url" rel="index"><span itemprop="name">HarmonyOS Next</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="HarmonyOS-Next-5-1-1-Beta1-Update-Notes-and-Adaptation-Guide"><a href="#HarmonyOS-Next-5-1-1-Beta1-Update-Notes-and-Adaptation-Guide" class="headerlink" title="HarmonyOS Next 5.1.1 Beta1 Update Notes and Adaptation Guide"></a>HarmonyOS Next 5.1.1 Beta1 Update Notes and Adaptation Guide</h2><p>On June 16, 2025, HarmonyOS was updated to 5.1.1 (19) Beta. Based on HarmonyOS 5.1.0 (18), HarmonyOS 5.1.1 (19) Beta1 further enhances ArkUI component capabilities, provides more details for component calls, especially in gesture-related component functions; strengthens map service capabilities to enrich map scenarios for developers; enhances Hitrace logging capabilities, and more.  </p>
-<h4 id="OS-Platform-Capabilities-Major-Updates-to-ArkUI-Development-Toolchain-Pop-up-Enhancements-Component-Upgrades-and-Multi-Device-Adaptation"><a href="#OS-Platform-Capabilities-Major-Updates-to-ArkUI-Development-Toolchain-Pop-up-Enhancements-Component-Upgrades-and-Multi-Device-Adaptation" class="headerlink" title="OS Platform Capabilities - Major Updates to ArkUI &amp; Development Toolchain: Pop-up Enhancements, Component Upgrades, and Multi-Device Adaptation"></a>OS Platform Capabilities - Major Updates to ArkUI &amp; Development Toolchain: Pop-up Enhancements, Component Upgrades, and Multi-Device Adaptation</h4><h5 id="I-Comprehensive-Upgrade-of-ArkUI-Pop-up-and-Interaction-Capabilities"><a href="#I-Comprehensive-Upgrade-of-ArkUI-Pop-up-and-Interaction-Capabilities" class="headerlink" title="I. Comprehensive Upgrade of ArkUI Pop-up and Interaction Capabilities"></a>I. Comprehensive Upgrade of ArkUI Pop-up and Interaction Capabilities</h5><ol>
-<li><p><strong>Optimized Pop-up Display Control</strong>  </p>
-<ul>
-<li>Supports customizing pop-up display order, border width, and color (API reference)  </li>
-<li>New side-swipe gesture to close ComponentContent under OverlayManager (API reference)  </li>
-<li>Allows setting transition animation effects between pop-up content and masks (API reference)</li>
-</ul>
-</li>
-<li><p><strong>Focus and Lifecycle Management</strong>  </p>
-<ul>
-<li>Supports configuring whether pop-ups acquire focus (API reference)  </li>
-<li>New <code>onNewParam</code> callback triggers the lifecycle when a single-instance page is置顶 (API reference)</li>
-</ul>
-</li>
-<li><p><strong>Deep Integration of XComponent</strong>  </p>
-<ul>
-<li>Native side can obtain XComponent node instances and register Surface lifecycle and input event callbacks (API reference)</li>
-</ul>
-</li>
-</ol>
-<h5 id="II-New-Functions-for-Layout-and-Components"><a href="#II-New-Functions-for-Layout-and-Components" class="headerlink" title="II. New Functions for Layout and Components"></a>II. New Functions for Layout and Components</h5><ol>
-<li><p><strong>Efficient Layout Components</strong>  </p>
-<ul>
-<li>New <code>LazyVGridLayout</code> for grid lazy loading (API reference)  </li>
-<li><code>Tabs</code> supports setting the maximum number of cached sub-components and caching modes (API reference)  </li>
-<li><code>List</code> component supports reverse layout from the end (API reference)</li>
-</ul>
-</li>
-<li><p><strong>Enhanced Swiper Interaction</strong>  </p>
-<ul>
-<li>Supports customizing numeric navigation indicators and arrow styles (API reference)  </li>
-<li>Allows adjusting navigation point spacing and bottom position (API reference)</li>
-</ul>
-</li>
-<li><p><strong>Optimizations for Other Components</strong>  </p>
-<ul>
-<li><code>Navigation</code> supports dynamically acquiring&#x2F;updating route stack information (API reference)  </li>
-<li>Attribute strings and RichEditor add paragraph spacing settings (API reference)</li>
-</ul>
-</li>
-</ol>
-<h5 id="III-Optimization-of-Interaction-and-Animation-Details"><a href="#III-Optimization-of-Interaction-and-Animation-Details" class="headerlink" title="III. Optimization of Interaction and Animation Details"></a>III. Optimization of Interaction and Animation Details</h5><ol>
-<li><p><strong>Input and Gesture Events</strong>  </p>
-<ul>
-<li>Key events support obtaining NumLock&#x2F;CapsLock&#x2F;ScrollLock status (API reference)  </li>
-<li>Pan gesture adds <code>onActionStart</code> event listening (API reference)  </li>
-<li>Drag and drop release supports delayed return of processing results (API reference)</li>
-</ul>
-</li>
-<li><p><strong>Enhanced Visual Performance</strong>  </p>
-<ul>
-<li>Background images support stretching adjustments via the <code>NODE_BACKGROUND_IMAGE_RESIZABLE_WITH_SLICE</code> attribute (API reference)</li>
-</ul>
-</li>
-</ol>
-<h5 id="IV-Multi-Device-and-Window-Management"><a href="#IV-Multi-Device-and-Window-Management" class="headerlink" title="IV. Multi-Device and Window Management"></a>IV. Multi-Device and Window Management</h5><ol>
-<li><strong>PC&#x2F;2in1 Device Adaptation</strong>  <ul>
-<li>New capability to switch between child and parent windows (API reference)  </li>
-<li>Screen attributes add display mode enumeration (API reference)</li>
-</ul>
-</li>
-</ol>
-<h5 id="V-Development-Toolchain-and-Capability-Expansion"><a href="#V-Development-Toolchain-and-Capability-Expansion" class="headerlink" title="V. Development Toolchain and Capability Expansion"></a>V. Development Toolchain and Capability Expansion</h5><h6 id="1-Performance-Analysis-Tools"><a href="#1-Performance-Analysis-Tools" class="headerlink" title="1. Performance Analysis Tools"></a>1. Performance Analysis Tools</h6><ul>
-<li>HiTraceMeter adds logging and trace APIs (guide)  </li>
-<li>The <code>hitrace</code> command supports the <code>--trace_level</code> parameter to set output thresholds (guide)</li>
-</ul>
-<h6 id="2-Hardware-and-AI-Capabilities"><a href="#2-Hardware-and-AI-Capabilities" class="headerlink" title="2. Hardware and AI Capabilities"></a>2. Hardware and AI Capabilities</h6><ul>
-<li><strong>Camera Kit</strong>: Supports querying camera macro functions (API reference)  </li>
-<li><strong>CANN Kit</strong>: Opens AscendC operator development for NPU programming (guide)</li>
-</ul>
-<h6 id="3-Key-Service-Upgrades"><a href="#3-Key-Service-Upgrades" class="headerlink" title="3. Key Service Upgrades"></a>3. Key Service Upgrades</h6><ul>
-<li><strong>Core Speech Kit</strong>: TTS adds tone download function (API reference)  </li>
-<li><strong>Device Security Kit</strong>: Supports obtaining information about scam applications (guide + API)  </li>
-<li><strong>Enterprise Data Guard Kit</strong>:  <ul>
-<li>New file-only write mode (API reference)  </li>
-<li>Supports custom file attribute tags (API reference)</li>
-</ul>
-</li>
-</ul>
-<h5 id="VI-Enhancement-of-Map-and-Navigation-Services"><a href="#VI-Enhancement-of-Map-and-Navigation-Services" class="headerlink" title="VI. Enhancement of Map and Navigation Services"></a>VI. Enhancement of Map and Navigation Services</h5><ul>
-<li><strong>Map Kit</strong>:  <ul>
-<li>Controls the visibility of mark text (guide)  </li>
-<li>Map logos support top&#x2F;bottom center layout (API reference)  </li>
-<li>New bus route planning and metric&#x2F;imperial scale switching (guide)  </li>
-<li>Indoor map function launched (guide)</li>
-</ul>
-</li>
-</ul>
-<h5 id="VII-Enterprise-Development-Support"><a href="#VII-Enterprise-Development-Support" class="headerlink" title="VII. Enterprise Development Support"></a>VII. Enterprise Development Support</h5><ul>
-<li><strong>MDM Kit</strong>: Supports Wi-Fi blacklist&#x2F;whitelist configuration (API reference)  </li>
-<li><strong>Payment Kit</strong>: Adds real-name verification and face authentication (guide)  </li>
-<li><strong>Pen Kit</strong>: Listens for stylus double-click&#x2F;pinch events (API reference)  </li>
-<li><strong>Scan Kit</strong>: Code generation adapts to 2in1 devices (guide)  </li>
-<li><strong>Vision Kit</strong>: Returns result codes when card recognition exits (API reference)</li>
-</ul>
-<h5 id="VIII-UI-Design-Tool-Expansion"><a href="#VIII-UI-Design-Tool-Expansion" class="headerlink" title="VIII. UI Design Tool Expansion"></a>VIII. UI Design Tool Expansion</h5><ul>
-<li><strong>UI Design Kit</strong>: Supports registering custom Symbols (guide + API)</li>
-</ul>
-<p><strong>📢 Developer Action Recommendations</strong><br>This update covers interaction experience, multi-device adaptation, and enterprise capabilities. Key focuses include:  </p>
-<ol>
-<li>Performance optimization of pop-ups and layout components  </li>
-<li>New scenario-based functions of map services  </li>
-<li>Opportunities for hardware acceleration and AI operator development</li>
-</ol>
-<blockquote>
-<p>For more details, refer to the API references and development guides for each module.  </p>
-</blockquote>
-<h4 id="DevEco-Studio-5-1-1-Beta1-5-1-1-420-New-and-Enhanced-Features"><a href="#DevEco-Studio-5-1-1-Beta1-5-1-1-420-New-and-Enhanced-Features" class="headerlink" title="DevEco Studio 5.1.1 Beta1 (5.1.1.420) New and Enhanced Features"></a>DevEco Studio 5.1.1 Beta1 (5.1.1.420) New and Enhanced Features</h4><h5 id="I-Core-Capability-Expansion-API-19-Project-Development-Support"><a href="#I-Core-Capability-Expansion-API-19-Project-Development-Support" class="headerlink" title="I. Core Capability Expansion: API 19 Project Development Support"></a>I. Core Capability Expansion: API 19 Project Development Support</h5><ul>
-<li><strong>New API 19 project adaptation</strong>: DevEco Studio now supports development projects based on API 19 to meet low-version compatibility needs.</li>
-</ul>
-<h5 id="II-Upgrade-of-Build-Configuration-Capabilities"><a href="#II-Upgrade-of-Build-Configuration-Capabilities" class="headerlink" title="II. Upgrade of Build Configuration Capabilities"></a>II. Upgrade of Build Configuration Capabilities</h5><h6 id="New-Project-Level-and-Module-Level-Configuration-Fields"><a href="#New-Project-Level-and-Module-Level-Configuration-Fields" class="headerlink" title="New Project-Level and Module-Level Configuration Fields"></a>New Project-Level and Module-Level Configuration Fields</h6><ul>
-<li><strong>build-profile.json5</strong> (project-level &amp; module-level):  <ul>
-<li>Add <code>generateSharedTgz</code> under <code>buildOption</code> to control whether to generate tgz packages when compiling HSP modules.  </li>
-<li>Add <code>ignoreResourcePattern</code> under <code>buildOption/resOptions</code> to filter file&#x2F;folder names in the <code>resources</code> directory or custom resource directories; matched items will not be packaged into the final product (specific configuration reference document).</li>
-</ul>
-</li>
-</ul>
-<h6 id="New-Optimized-Configurations-for-hvigor-config-json5"><a href="#New-Optimized-Configurations-for-hvigor-config-json5" class="headerlink" title="New Optimized Configurations for hvigor-config.json5"></a>New Optimized Configurations for hvigor-config.json5</h6><ul>
-<li><strong>properties field</strong>:  <ul>
-<li>Add <code>ohos.byteCodeHar.integratedOptimization</code> to specify whether to enable bytecode HAR integration behavior optimization.  </li>
-<li>Add <code>hvigor.incremental.optimization</code> to specify whether to enable task incremental judgment optimization.  </li>
-<li>Add <code>hvigor.task.schedule.optimization</code> to specify whether to enable task scheduling optimization (specific configuration reference document).</li>
-</ul>
-</li>
-</ul>
-<h5 id="III-Strengthened-Build-Analysis-and-Problem-Troubleshooting"><a href="#III-Strengthened-Build-Analysis-and-Problem-Troubleshooting" class="headerlink" title="III. Strengthened Build Analysis and Problem Troubleshooting"></a>III. Strengthened Build Analysis and Problem Troubleshooting</h5><ul>
-<li><strong>Build Analyzer memory monitoring</strong>: Supports viewing memory consumption during the build process to help developers locate build performance bottlenecks.  </li>
-<li><strong>Device connection problem troubleshooting</strong>: New device connection assistant function quickly diagnoses issues where devices cannot be recognized after connection.</li>
-</ul>
-<h5 id="IV-Improved-Development-and-Debugging-Efficiency"><a href="#IV-Improved-Development-and-Debugging-Efficiency" class="headerlink" title="IV. Improved Development and Debugging Efficiency"></a>IV. Improved Development and Debugging Efficiency</h5><h6 id="Enhanced-Hot-Reload-and-Asynchronous-Debugging"><a href="#Enhanced-Hot-Reload-and-Asynchronous-Debugging" class="headerlink" title="Enhanced Hot Reload and Asynchronous Debugging"></a>Enhanced Hot Reload and Asynchronous Debugging</h6><ul>
-<li><strong>Hot Reload support</strong>: Upgraded hot reloading capabilities now support hot restart operations, further improving preview efficiency after code changes.  </li>
-<li><strong>ArkTS asynchronous stack viewing</strong>: Supports viewing asynchronous function call stacks during ArkTS code debugging, simplifying the debugging process for asynchronous logic.</li>
-</ul>
-<h6 id="Optimized-Instrument-Test-Detection"><a href="#Optimized-Instrument-Test-Detection" class="headerlink" title="Optimized Instrument Test Detection"></a>Optimized Instrument Test Detection</h6><ul>
-<li><strong>ASan detection command-line support</strong>: Instrument Test can now enable the ASan (AddressSanitizer) memory detection tool via the command line to enhance code robustness verification during testing.</li>
-</ul>
-<h5 id="V-Version-Change-Description"><a href="#V-Version-Change-Description" class="headerlink" title="V. Version Change Description"></a>V. Version Change Description</h5><ul>
-<li><strong>Adjusted emulator login requirements</strong>:  <ul>
-<li>Starting from DevEco Studio 5.1.1 Beta, emulators require account login to use;  </li>
-<li>Emulators in version 5.1.0 and earlier can be used directly without login.</li>
-</ul>
-</li>
-</ul>
-<p><strong>📢 Developer Notes</strong>  </p>
-<ol>
-<li>If using HSP module compilation or resource filtering functions, update the <code>build-profile.json5</code> configuration promptly;  </li>
-<li>When enabling bytecode&#x2F;HAR optimization or task scheduling optimization, observe actual effects using build analysis tools;  </li>
-<li>Ensure account login before using the emulator to avoid affecting development and testing processes.</li>
-</ol>
-<blockquote>
-<p>For more detailed configuration and operation guides, refer to the official documentation links for the corresponding functions.</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1978,13 +2055,13 @@ HarmonyOS&#39;s App Linking technology provides developers with a powerful and f
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">343</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
