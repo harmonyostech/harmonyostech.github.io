@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc.1. How to use the ASON tool to implement conversion between Sendable types and JSON data?ASON suppo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc.">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/4819-Learn-HarmonyOS-Next-Knowledge-Daily-ASON-Tool-Custom-Tabbar-musl-Text-Abnormal-Truncation-etc/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc.1. How to use the ASON tool to implement conversion between Sendable types and JSON data?ASON suppo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-30T09:23:35.000Z">
+<meta property="article:modified_time" content="2025-06-30T09:23:50.141Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/4819-Learn-HarmonyOS-Next-Knowledge-Daily-ASON-Tool-Custom-Tabbar-musl-Text-Abnormal-Truncation-etc/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc. | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4819-Learn-HarmonyOS-Next-Knowledge-Daily-ASON-Tool-Custom-Tabbar-musl-Text-Abnormal-Truncation-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc.
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 17:23:35 / Modified: 17:23:50" itemprop="dateCreated datePublished" datetime="2025-06-30T17:23:35+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Learn-HarmonyOS-Next-Knowledge-Daily-ASON-Tool-Custom-Tabbar-musl-Text-Abnormal-Truncation-etc"><a href="#Learn-HarmonyOS-Next-Knowledge-Daily-ASON-Tool-Custom-Tabbar-musl-Text-Abnormal-Truncation-etc" class="headerlink" title="[Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc."></a>[Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc.</h1><h2 id="1-How-to-use-the-ASON-tool-to-implement-conversion-between-Sendable-types-and-JSON-data"><a href="#1-How-to-use-the-ASON-tool-to-implement-conversion-between-Sendable-types-and-JSON-data" class="headerlink" title="1. How to use the ASON tool to implement conversion between Sendable types and JSON data?"></a>1. How to use the ASON tool to implement conversion between Sendable types and JSON data?</h2><p>ASON supports developers in parsing JSON strings and generating shared data for cross-concurrency domain transmission. Meanwhile, ASON also supports converting shared data into JSON strings.  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import &#123; ArkTSUtils, collections, lang &#125; from &#x27;@kit.ArkTS&#x27;;</span><br><span class="line"></span><br><span class="line">// Parse JSON to Sendable data</span><br><span class="line">type ISendable = lang.ISendable;</span><br><span class="line">let jsonText = &#x27;&#123;&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30, &quot;city&quot;: &quot;ChongQing&quot;&#125;&#x27;;</span><br><span class="line">let obj = ArkTSUtils.ASON.parse(jsonText) as ISendable;</span><br><span class="line"></span><br><span class="line">// Serialize Sendable data to JSON</span><br><span class="line">let arr = new collections.Array(1, 2, 3);</span><br><span class="line">let str = ArkTSUtils.ASON.stringify(arr);</span><br><span class="line">```  </span><br><span class="line">Reference address: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-arkts-utils-V5#arktsutilsason  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 2. How to add other components to the tabBar in Tabs?  </span><br><span class="line">Currently, many Tabs components have a filter/more icon in the rightmost tabBar. However, the system Tabs component cannot add other components to the tabBar. Customization can be used to implement adding other components to the tabBar in Tabs.  </span><br></pre></td></tr></table></figure>
+<p>import componentUtils from ‘@ohos.arkui.componentUtils’;</p>
+<p>@Entry<br>@Component<br>struct TabsExample22 {<br>  @State tabArray: Array<number> &#x3D; [0, 1, 2]<br>  private controller: TabsController &#x3D; new TabsController()<br>  @State currentIndex: number &#x3D; 0<br>  @State animationDuration: number &#x3D; 300<br>  @State indicatorLeftMargin: number &#x3D; 0<br>  @State indicatorWidth: number &#x3D; 0<br>  private tabsWidth: number &#x3D; 0</p>
+<p>  &#x2F;&#x2F; Individual tab<br>  @Builder<br>  Tab(tabName: string, tabItem: number, tabIndex: number) {<br>    Row({ space: 20 }) {<br>      Text(tabName).fontSize(18)<br>        .fontColor(tabItem &#x3D;&#x3D;&#x3D; this.currentIndex ? Color.Red : Color.Black)<br>        .id(tabIndex.toString())<br>        .onAreaChange((oldValue: Area, newValue: Area) &#x3D;&gt; {<br>          if (this.currentIndex &#x3D;&#x3D;&#x3D; tabIndex &amp;&amp; (this.indicatorLeftMargin &#x3D;&#x3D;&#x3D; 0 || this.indicatorWidth &#x3D;&#x3D;&#x3D; 0)) {<br>            if (newValue.position.x !&#x3D; undefined) {<br>              let positionX &#x3D; Number.parseFloat(newValue.position.x.toString())<br>              this.indicatorLeftMargin &#x3D; Number.isNaN(positionX) ? 0 : positionX<br>            }<br>            let width &#x3D; Number.parseFloat(newValue.width.toString())<br>            this.indicatorWidth &#x3D; Number.isNaN(width) ? 0 : width<br>          }<br>        })<br>    }<br>    .justifyContent(FlexAlign.Center)<br>    .constraintSize({ minWidth: 35 })<br>    .width(80)<br>    .height(35)<br>    .borderRadius({ topLeft: 10, topRight: 10 })<br>    .onClick(() &#x3D;&gt; {<br>      this.controller.changeIndex(tabIndex)<br>      this.currentIndex &#x3D; tabIndex<br>    })</p>
+<p>  }</p>
+<p>  build() {<br>    Column() {<br>      &#x2F;&#x2F; Tab bar<br>      Stack({ alignContent: Alignment.TopStart }) {<br>        Scroll() {<br>          Row() {<br>            ForEach(this.tabArray, (item: number, index: number) &#x3D;&gt; {<br>              this.Tab(“页签 “ + item, item, index)<br>            })</p>
+<pre><code>        Text(&#39;+&#39;)
+          .width(36)
+          .height(50)
+          .fontSize(28)
+          .borderRadius(5)
+          .margin(&#123; left: 88 &#125;)
+          .padding(&#123; left: 5, bottom: 2 &#125;)
+      &#125;
+      .justifyContent(FlexAlign.Start)
+    &#125;
+    .align(Alignment.Start)
+    .scrollable(ScrollDirection.Horizontal)
+    .scrollBar(BarState.Off)
+    .width(&#39;100%&#39;)
+
+    Column()
+      .width(this.indicatorWidth)
+      .height(2)
+      .backgroundColor(Color.Red)
+      .borderRadius(2)
+      .margin(&#123; left: this.indicatorLeftMargin, top: 38 &#125;)
+  &#125;
+  .width(&#39;100%&#39;)
+
+  .width(&#39;100%&#39;)
+
+  // Tabs
+  Tabs(&#123; barPosition: BarPosition.Start, controller: this.controller &#125;) &#123;
+    ForEach(this.tabArray, (item: number, index: number) =&gt; &#123;
+      TabContent() &#123;
+        Text(&#39;我是页面 &#39; + item + &quot; 的内容&quot;)
+          .height(300)
+          .width(&#39;100%&#39;)
+          .fontSize(30)
+      &#125;
+      .backgroundColor(Color.Pink)
+    &#125;)
+  &#125;
+  .onAreaChange((oldValue: Area, newValue: Area) =&gt; &#123;
+    let width = Number.parseFloat(newValue.width.toString())
+    this.tabsWidth = Number.isNaN(width) ? 0 : width
+  &#125;)
+  .barWidth(&#39;100%&#39;)
+  .barHeight(0)
+  .width(&#39;100%&#39;)
+  .height(&#39;100%&#39;)
+  .backgroundColor(&#39;#F1F3F5&#39;)
+  .animationDuration(this.animationDuration)
+  .onChange((index: number) =&gt; &#123;
+    this.currentIndex = index // Listen to changes in index to switch tab content.
+  &#125;)
+  .onAnimationStart((index: number, targetIndex: number, event: TabsAnimationEvent) =&gt; &#123;
+    // Triggered when the switching animation starts. The underline slides with the page while the width fades.
+    this.currentIndex = targetIndex
+    let targetIndexInfo = this.getTextInfo(targetIndex)
+    this.startAnimateTo(this.animationDuration, targetIndexInfo.left, targetIndexInfo.width)
+  &#125;)
+  .onAnimationEnd((index: number, event: TabsAnimationEvent) =&gt; &#123;
+    // Triggered when the switching animation ends. The underline animation stops.
+    let currentIndicatorInfo = this.getCurrentIndicatorInfo(index, event)
+    this.startAnimateTo(0, currentIndicatorInfo.left, currentIndicatorInfo.width)
+  &#125;)
+  .onGestureSwipe((index: number, event: TabsAnimationEvent) =&gt; &#123;
+    // Triggered frame-by-frame during page swiping.
+    let currentIndicatorInfo = this.getCurrentIndicatorInfo(index, event)
+    this.currentIndex = currentIndicatorInfo.index
+    this.indicatorLeftMargin = currentIndicatorInfo.left
+    this.indicatorWidth = currentIndicatorInfo.width
+  &#125;)
+&#125;
+.height(&#39;100%&#39;)
+</code></pre>
+<p>  }</p>
+<p>  &#x2F;&#x2F; Get component size, position, translation, scaling, rotation, and affine matrix attribute information.<br>  private getTextInfo(index: number): Record&lt;string, number&gt; {<br>    let modePosition: componentUtils.ComponentInfo &#x3D; componentUtils.getRectangleById(index.toString());<br>    return { ‘left’: px2vp(modePosition.windowOffset.x), ‘width’: px2vp(modePosition.size.width) }<br>  }</p>
+<p>  private getCurrentIndicatorInfo(index: number, event: TabsAnimationEvent): Record&lt;string, number&gt; {<br>    let nextIndex &#x3D; index<br>    if (index &gt; 0 &amp;&amp; event.currentOffset &gt; 0) {<br>      nextIndex–<br>    } else if (index &lt; 3 &amp;&amp; event.currentOffset &lt; 0) {<br>      nextIndex++<br>    }<br>    let indexInfo &#x3D; this.getTextInfo(index)<br>    let nextIndexInfo &#x3D; this.getTextInfo(nextIndex)<br>    let swipeRatio &#x3D; Math.abs(event.currentOffset &#x2F; this.tabsWidth)<br>    let currentIndex &#x3D; swipeRatio &gt; 0.5 ? nextIndex : index &#x2F;&#x2F; When the page swipes more than half, the tabBar switches to the next page.<br>    let currentLeft &#x3D; indexInfo.left + (nextIndexInfo.left - indexInfo.left) * swipeRatio<br>    let currentWidth &#x3D; indexInfo.width + (nextIndexInfo.width - indexInfo.width) * swipeRatio<br>    return { ‘index’: currentIndex, ‘left’: currentLeft, ‘width’: currentWidth }<br>  }</p>
+<p>  private startAnimateTo(duration: number, leftMargin: number, width: number) {<br>    animateTo({<br>      duration: duration, &#x2F;&#x2F; Animation duration<br>      curve: Curve.Linear, &#x2F;&#x2F; Animation curve<br>      iterations: 1, &#x2F;&#x2F; Number of plays<br>      playMode: PlayMode.Normal, &#x2F;&#x2F; Animation mode<br>      onFinish: () &#x3D;&gt; {<br>        console.info(‘play end’)<br>      }<br>    }, () &#x3D;&gt; {<br>      this.indicatorLeftMargin &#x3D; leftMargin<br>      this.indicatorWidth &#x3D; width<br>    })<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">## 3. What is the support status of the C/musl library?  </span><br><span class="line">HarmonyOS uses musl as the C standard library. The musl library is a lightweight, fast, simple, and free open-source libc library. For detailed introduction, refer to the [musl official reference manual](https://musl.libc.org/manual.html). For differences between musl and glibc, refer to [musl vs glibc functional comparison](https://wiki.musl-libc.org/functional-differences-from-glibc.html).  </span><br><span class="line"></span><br><span class="line">**musl version numbers**:  </span><br><span class="line">- Starting from HarmonyOS 4.0, the version was upgraded to 1.2.3.  </span><br><span class="line">- Starting from HarmonyOS 5.0, the version was upgraded to 1.2.5.  </span><br><span class="line"></span><br><span class="line">**Supported capabilities**:  </span><br><span class="line">Provides header files and library function interfaces compatible with C99, C11, and POSIX standards, but not fully compatible.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 4. How to solve the abnormal ellipsis truncation when the Text component&#x27;s text content is a mix of Chinese, numbers, and English?  </span><br><span class="line">When using the Text component with content mixing Chinese, numbers, and English, setting TextOverFlow to show an ellipsis for overflowing text may cause abnormal truncation.  </span><br><span class="line"></span><br><span class="line">When the Text component sets the wordBreak(WordBreak.BREAK_ALL) property, for Non-CJK text, line breaks can be made between any two characters to achieve normal truncation.  </span><br></pre></td></tr></table></figure>
+<p>@Entry<br>@Component<br>struct Index {<br>  @State text: string &#x3D; ‘2年·VIP会员 3个月期·8GB·230mm·花漾粉’</p>
+<p>  build() {<br>    Column() {<br>      Text(this.text)<br>        .width(200)&#x2F;&#x2F; Set maximum width<br>        .maxLines(1)&#x2F;&#x2F; Single line display<br>        .textOverflow({ overflow: TextOverflow.Ellipsis })&#x2F;&#x2F; Show ellipsis for overflow<br>        .ellipsisMode(EllipsisMode.END)&#x2F;&#x2F; After setting word break rule to WordBreak.BREAK_ALL<br>        .wordBreak(WordBreak.BREAK_ALL)<br>        .textAlign(TextAlign.JUSTIFY)<br>        .backgroundColor(Color.Green)<br>        .fontSize(16)<br>        .fontColor(Color.Red)<br>    }<br>  }<br>}</p>
+<pre><code>
+
+## 5. What is the standard for HarmonyOS encoding and decoding interfaces?  
+encodeURIComponent is a built-in capability of TS. URI encoding is based on the RFC 3986 standard.
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/4818-Daily-HarmonyOS-Next-Knowledge-HAP-Installation-Failure-ArkTS-and-C-Array-Conversion-Gradient-Mask-Effect-etc/" rel="prev" title="[Daily HarmonyOS Next Knowledge] HAP Installation Failure, ArkTS and C++ Array Conversion, Gradient Mask Effect, etc.">
+      <i class="fa fa-chevron-left"></i> [Daily HarmonyOS Next Knowledge] HAP Installation Failure, ArkTS and C++ Array Conversion, Gradient Mask Effect, etc.
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/4820-Daily-HarmonyOS-Next-Knowledge-List-Collapse-Animation-Obfuscation-Issue-%E5%AE%9A%E4%BD%8D%EF%BC%8CbindPopup-Problems-etc/" rel="next" title="[Daily HarmonyOS Next Knowledge] List Collapse Animation, Obfuscation Issue 定位，bindPopup Problems, etc.">
+      [Daily HarmonyOS Next Knowledge] List Collapse Animation, Obfuscation Issue 定位，bindPopup Problems, etc. <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Learn-HarmonyOS-Next-Knowledge-Daily-ASON-Tool-Custom-Tabbar-musl-Text-Abnormal-Truncation-etc"><span class="nav-number">1.</span> <span class="nav-text">[Learn HarmonyOS Next Knowledge Daily] ASON Tool, Custom Tabbar, musl, Text Abnormal Truncation, etc.</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-How-to-use-the-ASON-tool-to-implement-conversion-between-Sendable-types-and-JSON-data"><span class="nav-number">1.1.</span> <span class="nav-text">1. How to use the ASON tool to implement conversion between Sendable types and JSON data?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

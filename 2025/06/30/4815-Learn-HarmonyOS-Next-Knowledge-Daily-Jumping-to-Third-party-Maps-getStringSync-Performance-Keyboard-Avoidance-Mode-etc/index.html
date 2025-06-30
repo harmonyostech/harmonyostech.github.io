@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc.1. Jumping to Third-party Map Navigation PagesSimilar to jumping to a map AP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc.">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/4815-Learn-HarmonyOS-Next-Knowledge-Daily-Jumping-to-Third-party-Maps-getStringSync-Performance-Keyboard-Avoidance-Mode-etc/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="[Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc.1. Jumping to Third-party Map Navigation PagesSimilar to jumping to a map AP">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-30T09:18:50.000Z">
+<meta property="article:modified_time" content="2025-06-30T09:31:07.058Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/4815-Learn-HarmonyOS-Next-Knowledge-Daily-Jumping-to-Third-party-Maps-getStringSync-Performance-Keyboard-Avoidance-Mode-etc/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc. | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/4815-Learn-HarmonyOS-Next-Knowledge-Daily-Jumping-to-Third-party-Maps-getStringSync-Performance-Keyboard-Avoidance-Mode-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc.
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 17:18:50 / Modified: 17:31:07" itemprop="dateCreated datePublished" datetime="2025-06-30T17:18:50+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Learn-HarmonyOS-Next-Knowledge-Daily-Jumping-to-Third-party-Maps-getStringSync-Performance-Keyboard-Avoidance-Mode-etc"><a href="#Learn-HarmonyOS-Next-Knowledge-Daily-Jumping-to-Third-party-Maps-getStringSync-Performance-Keyboard-Avoidance-Mode-etc" class="headerlink" title="[Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc."></a>[Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc.</h1><h2 id="1-Jumping-to-Third-party-Map-Navigation-Pages"><a href="#1-Jumping-to-Third-party-Map-Navigation-Pages" class="headerlink" title="1. Jumping to Third-party Map Navigation Pages"></a>1. Jumping to Third-party Map Navigation Pages</h2><p>Similar to jumping to a map APP navigation page in Android:  </p>
+<pre><code class="language-java">// Latitude and longitude of the destination and its name
+double destinationLat = 36.547901;
+double destinationLon = 104.258354;
+String destinationName = &quot;Destination Name&quot;;
+// Build the URI
+Uri uri = Uri.parse(&quot;amapuri://route/plan/?dlat=&quot; + destinationLat + &quot;&amp;dlon=&quot; + destinationLon + &quot;&amp;dname=&quot; + destinationName + &quot;&amp;dev=0&amp;t=0&quot;);
+// Create and start the intent
+Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+intent.addCategory(Intent.CATEGORY_DEFAULT);
+intent.setPackage(&quot;com.autonavi.minimap&quot;);
+if (intent.resolveActivity(getPackageManager()) != null) &#123;
+    startActivity(intent);
+&#125; else &#123;
+    // Prompt the user that Amap is not installed
+    Toast.makeText(this, &quot;Please install Amap first&quot;, Toast.LENGTH_LONG).show();
+&#125;
+</code></pre>
+<p>For jumping to Petal Maps, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/map-petalmaps-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/map-petalmaps-V5</a>  </p>
+<pre><code class="language-typescript">import &#123; common, Want &#125; from &#39;@kit.AbilityKit&#39;;
+let petalMapWant: Want = &#123;
+  bundleName: &#39;com.huawei.hmos.maps.app&#39;,
+  uri: &#39;maps://routes&#39;,
+  parameters: &#123;
+    linkSource: &#39;com.other.app&#39;,
+    destinationLatitude: 31.983015468224288,
+    destinationLongitude: 118.78058590757131,
+    destinationPoiId: &#39;2031694785326435456&#39;,
+    destinationName: &#39;南京(雨花)国际软件外包产业园&#39;
+  &#125;
+&#125;
+
+let context = getContext(this) as common.UIAbilityContext;
+context.startAbility(petalMapWant);
+</code></pre>
+<p>For jumping to Amap, refer to: <a target="_blank" rel="noopener" href="https://lbs.amap.com/api/amap-mobile/gettingstarted">https://lbs.amap.com/api/amap-mobile/gettingstarted</a>  </p>
+<pre><code class="language-typescript">let want: Want = &#123;
+  uri: &#39;amapuri://route/plan?sid=BGVIS1&amp;dlat=39.98848272&amp;dname=B&amp;slat=39.92848272&amp;dlon=116.47560823&amp;did=BGVIS2&amp;slon=116.39560823&amp;sname=A&amp;t=0&#39;
+&#125;
+// this.context: Typically obtained by calling getContext(this) as common.UIAbilityContext in a Component
+this.context.startAbility(want, (err: BusinessError) =&gt; &#123;
+  if (err.code) &#123;
+    // Handle business logic errors
+    console.error(`startAbility failed,code is $&#123;err.code&#125;,message is $&#123;err.message&#125;`);
+    return
+  &#125;
+  // Execute normal business logic
+  console.info(&#39;startAbility succeed&#39;)
+&#125;)
+</code></pre>
+<h2 id="2-Limiting-the-Maximum-Byte-Count-of-Input-Fields"><a href="#2-Limiting-the-Maximum-Byte-Count-of-Input-Fields" class="headerlink" title="2. Limiting the Maximum Byte Count of Input Fields"></a>2. Limiting the Maximum Byte Count of Input Fields</h2><p>The TextArea input field can set the maximum number of input characters via <code>maxLength</code>, but how to set the maximum number of input bytes? Since each character in UTF-8 occupies a different number of bytes and cannot be directly converted, Android EditText provides the <code>setFilters</code> method:  </p>
+<pre><code class="language-java">InputFilter[] inputFilters = new InputFilter[1];
+inputFilters[0] = new ByteLengthInputFilter(MSG_LENGTH_LIMIT_BYTES);
+mEditText.setFilters(inputFilters);
+
+public class ByteLengthInputFilter implements InputFilter &#123;
+  private final int mMax;
+  private final Charset mCharset;
+  private final CharsetDecoder mCharsetDecoder;
+
+...
+&#125;
+</code></pre>
+<p>HarmonyOS currently does not provide this mechanism, and we look forward to updates in future versions.  </p>
+<h2 id="3-Performance-Issues-with-getStringSync"><a href="#3-Performance-Issues-with-getStringSync" class="headerlink" title="3. Performance Issues with getStringSync"></a>3. Performance Issues with getStringSync</h2><p>Using the system-provided <code>getStringSync</code> is slightly time-consuming (taking several milliseconds). Must an asynchronous callback be used?  </p>
+<pre><code class="language-typescript">static getStringSync(context: common.Context | undefined, resource: Resource): string &#123;
+  let rscManager = (context ?? getContext() as common.UIAbilityContext).resourceManager;
+    return rscManager.getStringSync(resource)
+&#125;
+</code></pre>
+<p>Change it to <code>rscManager.getStringSync(resource.id)</code> to reduce the time to 40 microseconds.  </p>
+<h2 id="4-How-to-Set-the-Keyboard-Avoidance-Mode"><a href="#4-How-to-Set-the-Keyboard-Avoidance-Mode" class="headerlink" title="4. How to Set the Keyboard Avoidance Mode"></a>4. How to Set the Keyboard Avoidance Mode</h2><p>The keyboard avoidance mode can be set (default is <code>KeyboardAvoidMode.OFFSET</code>):  </p>
+<pre><code class="language-typescript">this.getUIContext().setKeyboardAvoidMode(KeyboardAvoidMode.RESIZE)
+</code></pre>
+<h2 id="5-Error-When-Calling-C-Methods-in-NAPI-Cannot-read-property-encodeLame-of-undefined"><a href="#5-Error-When-Calling-C-Methods-in-NAPI-Cannot-read-property-encodeLame-of-undefined" class="headerlink" title="5. Error When Calling C Methods in NAPI: Cannot read property encodeLame of undefined"></a>5. Error When Calling C Methods in NAPI: <code>Cannot read property encodeLame of undefined</code></h2><p>When creating a Native C++ module, running the Add Demo works fine, but after using a precompiled MP3 encoder SO, all NAPI method calls throw the error: <code>Cannot read property encodeLame of undefined</code>. The Add method works successfully without depending on the MP3 SO library. The MP3 SO library is intact:  </p>
+<pre><code class="language-bash">$ ls -la
+total 1648
+drwxr-xr-x@ 7 shen  staff     224  8 12 23:29 .
+drwxr-xr-x@ 6 shen  staff     192  8 12 23:29 ..
+-rw-r--r--@ 1 shen  staff  484466  8 12 23:29 libmp3lame.a
+-rwxr-xr-x@ 1 shen  staff    1007  8 12 23:29 libmp3lame.la
+lrwxr-xr-x@ 1 shen  staff      19  8 12 23:29 libmp3lame.so -&gt; libmp3lame.so.0.0.0
+lrwxr-xr-x@ 1 shen  staff      19  8 12 23:29 libmp3lame.so.0 -&gt; libmp3lame.so.0.0.0
+-rwxr-xr-x@ 1 shen  staff  348448  8 12 23:29 libmp3lame.so.0.0.0
+</code></pre>
+<p>Dependency configuration:  </p>
+<pre><code class="language-cmake">add_library(lame SHARED IMPORTED)
+set_target_properties(lame
+    PROPERTIES
+    IMPORTED_LOCATION $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/third_party/lame/libs/$&#123;OHOS_ARCH&#125;/libmp3lame.so)
+
+add_library(audio_engine SHARED napi_init.cpp)
+target_link_libraries(audio_engine PUBLIC libace_napi.z.so lame)
+</code></pre>
+<p><strong>Cause of the issue</strong>: Do not directly rename <code>libmp3lame.so.0.0.0</code> to <code>libmp3lame.so</code>; use <code>libmp3lame.so.0</code> instead. The current app’s SO is included in the IDE-side packaging, allowing the app to provide SO in the form of <code>libxxx.so.x</code>. If two SO versions need to be included, the real name and SO name must be the same, specified to the major version number <code>libxxx.x</code> (without <code>.y.z</code>). Therefore, <code>libxxx.so</code> is usable, and <code>libxxx.3.1</code> or <code>libxxx.so.3.1.0</code> should be renamed to <code>libxxx.x</code>. Then, reconfigure and compile in the CMakeLists.txt file.  </p>
+<p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-36-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-ndk-36-V5</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/4813-Learn-HarmonyOS-Next-Knowledge-Daily-SO-Library-Slimming-IDE-Memory-Configuration-Foreground-Background-Detection/" rel="prev" title="[Learn HarmonyOS Next Knowledge Daily] SO Library Slimming, IDE Memory Configuration, Foreground/Background Detection">
+      <i class="fa fa-chevron-left"></i> [Learn HarmonyOS Next Knowledge Daily] SO Library Slimming, IDE Memory Configuration, Foreground/Background Detection
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/4817-Daily-HarmonyOS-Next-Knowledge-Multiple-har-Dependencies-Specifying-Compilation-Architecture-Mutual-Calls-Between-ArkTS-and-C/" rel="next" title="[Daily HarmonyOS Next Knowledge] Multiple har Dependencies, Specifying Compilation Architecture, Mutual Calls Between ArkTS and C++">
+      [Daily HarmonyOS Next Knowledge] Multiple har Dependencies, Specifying Compilation Architecture, Mutual Calls Between ArkTS and C++ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Learn-HarmonyOS-Next-Knowledge-Daily-Jumping-to-Third-party-Maps-getStringSync-Performance-Keyboard-Avoidance-Mode-etc"><span class="nav-number">1.</span> <span class="nav-text">[Learn HarmonyOS Next Knowledge Daily] Jumping to Third-party Maps, getStringSync Performance, Keyboard Avoidance Mode, etc.</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Jumping-to-Third-party-Map-Navigation-Pages"><span class="nav-number">1.1.</span> <span class="nav-text">1. Jumping to Third-party Map Navigation Pages</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Limiting-the-Maximum-Byte-Count-of-Input-Fields"><span class="nav-number">1.2.</span> <span class="nav-text">2. Limiting the Maximum Byte Count of Input Fields</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Performance-Issues-with-getStringSync"><span class="nav-number">1.3.</span> <span class="nav-text">3. Performance Issues with getStringSync</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-How-to-Set-the-Keyboard-Avoidance-Mode"><span class="nav-number">1.4.</span> <span class="nav-text">4. How to Set the Keyboard Avoidance Mode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Error-When-Calling-C-Methods-in-NAPI-Cannot-read-property-encodeLame-of-undefined"><span class="nav-number">1.5.</span> <span class="nav-text">5. Error When Calling C Methods in NAPI: Cannot read property encodeLame of undefined</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
