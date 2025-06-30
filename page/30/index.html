@@ -149,6 +149,570 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Text-Content-Font-Half-screen-Routing-Input-Cursor-Movement-Monitoring-DidBuild/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Text-Content-Font-Half-screen-Routing-Input-Cursor-Movement-Monitoring-DidBuild/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Text Content Font, Half-screen Routing, Input Cursor Movement Monitoring, DidBuild</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-24 23:47:26 / Modified: 23:47:52" itemprop="dateCreated datePublished" datetime="2025-06-24T23:47:26+08:00">2025-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Text-Content-Font-Half-screen-Routing-Input-Cursor-Movement-Monitoring-DidBuild"><a href="#【Daily-HarmonyOS-Next-Knowledge】Text-Content-Font-Half-screen-Routing-Input-Cursor-Movement-Monitoring-DidBuild" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Text Content Font, Half-screen Routing, Input Cursor Movement Monitoring, DidBuild"></a>【Daily HarmonyOS Next Knowledge】Text Content Font, Half-screen Routing, Input Cursor Movement Monitoring, DidBuild</h3><h4 id="1-HarmonyOS-Text-content-not-displayed-when-using-fontFamily"><a href="#1-HarmonyOS-Text-content-not-displayed-when-using-fontFamily" class="headerlink" title="1. HarmonyOS Text content not displayed when using fontFamily?"></a>1. HarmonyOS Text content not displayed when using fontFamily?</h4><p>To globally use custom fonts in an app, register them via the <code>windowStage.loadContent</code> callback in the <code>onWindowStageCreate</code> lifecycle of the <code>EntryAbility.ets</code> file.  </p>
+<h4 id="2-How-to-open-a-half-screen-via-routing-in-HarmonyOS"><a href="#2-How-to-open-a-half-screen-via-routing-in-HarmonyOS" class="headerlink" title="2. How to open a half-screen via routing in HarmonyOS?"></a>2. How to open a half-screen via routing in HarmonyOS?</h4><p>In scenarios like live broadcast rooms or feed streams, clicking a button opens a half-screen container with an RNView. Clicking within RN opens a new half-screen, allowing multiple half-screens to be stacked. Routing simplifies this by abstracting the jump logic, eliminating the need for business parties to care about the entry point or write separate components for each scenario.  </p>
+<p>Use consistent component navigation with the <code>NavDestinationMode.DIALOG</code> display type:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-navigation-navigation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-navigation-navigation-V5</a>  </p>
+<h4 id="3-HarmonyOS-router-replaceUrl-issue"><a href="#3-HarmonyOS-router-replaceUrl-issue" class="headerlink" title="3. HarmonyOS router.replaceUrl issue?"></a>3. HarmonyOS router.replaceUrl issue?</h4><p>When page A uses <code>pushUrl</code> with <code>router.RouterMode.Single</code> to navigate to page B, and page B uses <code>replaceUrl</code> with <code>router.RouterMode.Single</code> to return to page A, clicking the back button in page A or the system back button may fail to navigate properly (e.g., returning directly to the desktop).  </p>
+<p><strong>Solution</strong>: Replace <code>router.replaceUrl()</code> with <code>router.pushUrl()</code>. <code>replaceUrl</code> replaces the current page and destroys the replaced page, while <code>pushUrl</code> maintains the page stack.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-router-V5#routerback">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-router-V5#routerback</a>  </p>
+<p><strong>Demo example</strong>:  </p>
+<pre><code class="language-typescript">// searchDetail.ets
+import &#123; router &#125; from &#39;@kit.ArkUI&#39;
+
+@Entry
+@Component
+struct searchDeatil &#123;
+  onPageHide(): void &#123;
+    router.clear() // Clear all historical pages, keeping only the current page at the stack top.
+  &#125;
+  @State message: string = &#39;Return&#39;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(&#39;Page B&#39;)
+        Button(this.message).fontSize(20).onClick(() =&gt; &#123;
+          router.replaceUrl(&#123;
+            url: &#39;pages/Index&#39;
+          &#125;, router.RouterMode.Single, (err) =&gt; &#123;
+            if (err) &#123;
+              console.error(`Invoke replaceUrl failed, code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+              return;
+            &#125;
+            console.info(&#39;Invoke replaceUrl succeeded.&#39;);
+          &#125;)
+        &#125;)
+      &#125;
+    &#125;
+  &#125;
+&#125;
+
+// index.ets
+import router from &#39;@ohos.router&#39;;
+@Entry
+@Component
+struct Index &#123;
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(&#39;Page A&#39;)
+        Button(&#39;Jump to B&#39;).onClick(() =&gt; &#123;
+          router.pushUrl(&#123;
+            url: &#39;pages/SearchDetail&#39; // Target URL
+          &#125;, router.RouterMode.Single, (err) =&gt; &#123;
+            if (err) &#123;
+              console.error(`Invoke replaceUrl failed, code is $&#123;err.code&#125;, message is $&#123;err.message&#125;`);
+              return;
+            &#125;
+            console.info(&#39;Invoke replaceUrl succeeded.&#39;);
+          &#125;)
+        &#125;)
+        Button(&#39;Return&#39;).onClick(() =&gt; &#123;
+          router.back()
+        &#125;)
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-HarmonyOS-input-cursor-movement-monitoring"><a href="#4-HarmonyOS-input-cursor-movement-monitoring" class="headerlink" title="4. HarmonyOS input cursor movement monitoring?"></a>4. HarmonyOS input cursor movement monitoring?</h4><p>When using a custom keyboard with <code>TextInput</code>, setting <code>maxLength</code>, and inputting beyond the limit, deleting characters may not trigger the <code>onChange</code> callback until excess inputs are cleared. Monitoring cursor movement to reset it to the end is needed.  </p>
+<p>Use the <code>@ohos.inputMethodEngine</code> service’s <code>KeyboardDelegate.on(&#39;cursorContextChange&#39;)</code> to subscribe to cursor events:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethodengine-V5#oncursorcontextchange">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethodengine-V5#oncursorcontextchange</a>  </p>
+<p><code>on(type: &#39;cursorContextChange&#39;, callback: (x: number, y: number, height: number) =&gt; void): void</code>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Parameter</th>
+<th align="left">Type</th>
+<th align="left">Required</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">type</td>
+<td align="left">string</td>
+<td align="left">Yes</td>
+<td align="left">Cursor change event, fixed as <code>&#39;cursorContextChange&#39;</code>.</td>
+</tr>
+<tr>
+<td align="left">callback</td>
+<td align="left"><code>(x: number, y: number, height: number) =&gt; void</code></td>
+<td align="left">Yes</td>
+<td align="left">Callback returning cursor info: <br>- <code>x</code>: X-coordinate of the cursor top <br>- <code>y</code>: Y-coordinate of the cursor top <br>- <code>height</code>: Cursor height</td>
+</tr>
+</tbody></table>
+<p><strong>Example</strong>:  </p>
+<pre><code class="language-typescript">try &#123;
+  inputMethodEngine.getKeyboardDelegate().on(&#39;cursorContextChange&#39;, (x: number, y: number, height: number) =&gt; &#123;
+    console.log(&#39;inputMethodEngine cursorContextChange x:&#39; + x);
+    console.log(&#39;inputMethodEngine cursorContextChange y:&#39; + y);
+    console.log(&#39;inputMethodEngine cursorContextChange height:&#39; + height);
+  &#125;);
+&#125; catch (err) &#123;
+  console.error(`Failed to cursorContextChange: $&#123;JSON.stringify(err)&#125;`);
+&#125;
+</code></pre>
+<h4 id="5-What-is-the-role-and-application-scenario-of-HarmonyOS-onDidBuild"><a href="#5-What-is-the-role-and-application-scenario-of-HarmonyOS-onDidBuild" class="headerlink" title="5. What is the role and application scenario of HarmonyOS onDidBuild?"></a>5. What is the role and application scenario of HarmonyOS onDidBuild?</h4><p>The <code>build()</code> method is for defining UI components, while <code>onDidBuild</code> runs after <code>build()</code> completes, making it suitable for non-UI logic (e.g.,埋点 (tracking), simple calculations). Avoid modifying components in <code>onDidBuild</code> since the UI structure is finalized. In contrast, <code>aboutToAppear</code> runs before <code>build()</code>.  </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Input Box Focus Color, Text Overflow Handling, Device-Aware Screen Rotation, Basic Control Encapsulation, Global Font Setting</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-24 23:45:36 / Modified: 23:46:06" itemprop="dateCreated datePublished" datetime="2025-06-24T23:45:36+08:00">2025-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Box Focus Color, Text Overflow Handling, Device-Aware Screen Rotation, Basic Control Encapsulation, Global Font Setting"></a>[Daily HarmonyOS Next Knowledge] Input Box Focus Color, Text Overflow Handling, Device-Aware Screen Rotation, Basic Control Encapsulation, Global Font Setting</h3><h4 id="1-Does-HarmonyOS-support-modifying-the-focus-cursor-color-for-input-boxes"><a href="#1-Does-HarmonyOS-support-modifying-the-focus-cursor-color-for-input-boxes" class="headerlink" title="1. Does HarmonyOS support modifying the focus cursor color for input boxes?"></a>1. Does HarmonyOS support modifying the focus cursor color for input boxes?</h4><ul>
+<li>RichEditor: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-richeditor-V5#ZH-CN_TOPIC_0000001930676557__caretcolor12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-richeditor-V5#ZH-CN_TOPIC_0000001930676557__caretcolor12</a>  </li>
+<li>TextInput: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-textinput-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-textinput-V5</a>  </li>
+<li>Search: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5</a></li>
+</ul>
+<h4 id="2-How-to-display-an-“ellipsis-more”-when-text-exceeds-the-limit-in-HarmonyOS"><a href="#2-How-to-display-an-“ellipsis-more”-when-text-exceeds-the-limit-in-HarmonyOS" class="headerlink" title="2. How to display an “ellipsis + more” when text exceeds the limit in HarmonyOS?"></a>2. How to display an “ellipsis + more” when text exceeds the limit in HarmonyOS?</h4><p>Control text overflow with <code>overflow: TextOverflow.Ellipsis</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-text-V5#textoverflow">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-text-V5#textoverflow</a>  </p>
+<p><code>textOverflow(value: &#123; overflow: TextOverflow &#125;)</code>  </p>
+<ul>
+<li>Sets the display mode for overflow text, truncating by character (e.g., words for English). To truncate by letter, use zero-width spaces (<code>\u200B</code>). From API version 11, combine with <code>wordBreak: WordBreak.BREAK_ALL</code> for letter-level truncation.  </li>
+<li>When <code>overflow</code> is set to <code>TextOverflow.None</code>, <code>TextOverflow.Clip</code>, or <code>TextOverflow.Ellipsis</code>, <code>maxLines</code> must be configured; otherwise, it fails. <code>TextOverflow.None</code> and <code>TextOverflow.Clip</code> have the same effect.  </li>
+<li>When <code>overflow</code> is set to <code>TextOverflow.MARQUEE</code>, text scrolls in a single line. <code>maxLines</code> and <code>copyOption</code> are ignored. <code>textAlign</code> works only when text is non-scrollable. The <code>clip</code> property defaults to <code>true</code> in marquee mode, and <code>CustomSpan</code> in attribute strings is unsupported.</li>
+</ul>
+<h4 id="3-How-to-enable-screen-rotation-based-on-device-settings-in-HarmonyOS"><a href="#3-How-to-enable-screen-rotation-based-on-device-settings-in-HarmonyOS" class="headerlink" title="3. How to enable screen rotation based on device settings in HarmonyOS?"></a>3. How to enable screen rotation based on device settings in HarmonyOS?</h4><p>Dynamically detect device types and configure auto-rotation support: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9</a>  </p>
+<p><code>setPreferredOrientation(orientation: Orientation, callback: AsyncCallback&lt;void&gt;): void</code>  </p>
+<ul>
+<li>Sets the main window’s display orientation with an async callback. Effective only on devices supporting sensor-driven rotation, not on 2-in-1 devices, free multi-window mode, or sub-windows.</li>
+</ul>
+<p>Use device information APIs to distinguish device types and enable auto-rotation accordingly:<br>Reference: <code>@ohos.distributedDeviceManager</code> (Device Management): <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-distributeddevicemanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-distributeddevicemanager-V5</a>  </p>
+<p>Key capabilities:  </p>
+<ul>
+<li>Register&#x2F;unregister device online&#x2F;offline listeners.  </li>
+<li>Discover nearby untrusted devices.  </li>
+<li>Authenticate&#x2F;取消认证设备.  </li>
+<li>Query trusted device lists.  </li>
+<li>Retrieve local device info (name, type, ID, etc.).</li>
+</ul>
+<h4 id="4-How-to-encapsulate-commonly-used-basic-controls-e-g-Button-Text-Column-in-HarmonyOS-projects"><a href="#4-How-to-encapsulate-commonly-used-basic-controls-e-g-Button-Text-Column-in-HarmonyOS-projects" class="headerlink" title="4. How to encapsulate commonly used basic controls (e.g., Button, Text, Column) in HarmonyOS projects?"></a>4. How to encapsulate commonly used basic controls (e.g., Button, Text, Column) in HarmonyOS projects?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-create-custom-components-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-create-custom-components-V5</a>  </p>
+<p>In ArkUI, UI elements are components: system-provided or developer-defined (custom components). Custom components enhance code reusability, separate business logic from UI, and facilitate version evolution.  </p>
+<p>Key features:  </p>
+<ul>
+<li><strong>Composability</strong>: Combine system components, properties, and methods.  </li>
+<li><strong>Reusability</strong>: Reuse custom components as instances in different parent components&#x2F;containers.  </li>
+<li><strong>Data-driven UI update</strong>: Modify state variables to trigger UI refreshes.</li>
+</ul>
+<h4 id="5-How-to-set-global-fonts-in-HarmonyOS"><a href="#5-How-to-set-global-fonts-in-HarmonyOS" class="headerlink" title="5. How to set global fonts in HarmonyOS?"></a>5. How to set global fonts in HarmonyOS?</h4><ul>
+<li><strong>Text components</strong>: Use <code>Text.Font.family</code> for custom fonts.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-types-V5#font">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-types-V5#font</a>  </li>
+<li><strong>Canvas</strong>: Does not support custom fonts. Use <code>RenderingContextSettings.font</code> with supported families (e.g., <code>&#39;sans-serif&#39;</code>, <code>&#39;serif&#39;</code>, <code>&#39;monospace&#39;</code>).<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-canvasrenderingcontext2d-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-canvasrenderingcontext2d-V5</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Pixel-Unit-Conversion-Dialog-Declaration-Issues-List-Nesting-Byte-Stream-to-Image-Builder-Function-State-Not-Triggering-UI-Changes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Pixel-Unit-Conversion-Dialog-Declaration-Issues-List-Nesting-Byte-Stream-to-Image-Builder-Function-State-Not-Triggering-UI-Changes/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Pixel Unit Conversion, Dialog Declaration Issues, List Nesting, Byte Stream to Image, Builder Function State Not Triggering UI Changes</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-24 23:44:24 / Modified: 23:44:49" itemprop="dateCreated datePublished" datetime="2025-06-24T23:44:24+08:00">2025-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Pixel-Unit-Conversion-Dialog-Declaration-Issues-List-Nesting-Byte-Stream-to-Image-Builder-Function-State-Not-Triggering-UI-Changes"><a href="#【Daily-HarmonyOS-Next-Knowledge】Pixel-Unit-Conversion-Dialog-Declaration-Issues-List-Nesting-Byte-Stream-to-Image-Builder-Function-State-Not-Triggering-UI-Changes" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Pixel Unit Conversion, Dialog Declaration Issues, List Nesting, Byte Stream to Image, Builder Function State Not Triggering UI Changes"></a>【Daily HarmonyOS Next Knowledge】Pixel Unit Conversion, Dialog Declaration Issues, List Nesting, Byte Stream to Image, Builder Function State Not Triggering UI Changes</h3><h4 id="1-Which-pixel-unit-should-be-used-in-HarmonyOS"><a href="#1-Which-pixel-unit-should-be-used-in-HarmonyOS" class="headerlink" title="1. Which pixel unit should be used in HarmonyOS?"></a>1. Which pixel unit should be used in HarmonyOS?</h4><p>The UI provides an image with 750 pixels. When developing, for a button with a width of 100px&#x2F;100dp, should we use <code>px2vp(100)</code>, <code>100/2 = 50vp</code>, or another approach?  </p>
+<p>For specific conversion between vp and px, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-pixel-units-V5#%E5%83%8F%E7%B4%A0%E5%8D%95%E4%BD%8D%E8%BD%AC%E6%8D%A2">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-pixel-units-V5#%E5%83%8F%E7%B4%A0%E5%8D%95%E4%BD%8D%E8%BD%AC%E6%8D%A2</a>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Interface</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>vp2px(value: number): number</code></td>
+<td align="left">Converts a value in vp units to px units.<br><br><strong>Note:</strong><br><br>Uses the virtual pixel ratio of the current UI instance’s screen by default. If the UI instance is not created, uses the default screen’s virtual pixel ratio.</td>
+</tr>
+<tr>
+<td align="left"><code>px2vp(value: number): number</code></td>
+<td align="left">Converts a value in px units to vp units.<br><br><strong>Note:</strong><br><br>Uses the virtual pixel ratio of the current UI instance’s screen by default. If the UI instance is not created, uses the default screen’s virtual pixel ratio.</td>
+</tr>
+<tr>
+<td align="left"><code>fp2px(value: number): number</code></td>
+<td align="left">Converts a value in fp units to px units.</td>
+</tr>
+<tr>
+<td align="left"><code>px2fp(value: number): number</code></td>
+<td align="left">Converts a value in px units to fp units.</td>
+</tr>
+<tr>
+<td align="left"><code>lpx2px(value: number): number</code></td>
+<td align="left">Converts a value in lpx units to px units.</td>
+</tr>
+<tr>
+<td align="left"><code>px2lpx(value: number): number</code></td>
+<td align="left">Converts a value in px units to lpx units.</td>
+</tr>
+</tbody></table>
+<h4 id="2-Why-can’t-CustomDialogController-be-declared-outside-a-Component-in-HarmonyOS"><a href="#2-Why-can’t-CustomDialogController-be-declared-outside-a-Component-in-HarmonyOS" class="headerlink" title="2. Why can’t CustomDialogController be declared outside a Component in HarmonyOS?"></a>2. Why can’t CustomDialogController be declared outside a Component in HarmonyOS?</h4><p>I want to create a project-wide LoadingDialog for convenient calling, such as <code>globalDialogController.show()</code>.  </p>
+<p>The custom dialog <code>CustomDialogController</code> is only valid when used as a member variable of <code>@CustomDialog</code> and <code>@Component</code> structs and assigned within the <code>@Component</code> struct. Use <code>promptAction.openCustomDialog</code> for dialog rendering instead of <code>CustomDialogController</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5</a>  </p>
+<h4 id="3-Can-the-HarmonyOS-List-component-not-be-nested-with-the-Grid-component"><a href="#3-Can-the-HarmonyOS-List-component-not-be-nested-with-the-Grid-component" class="headerlink" title="3. Can the HarmonyOS List component not be nested with the Grid component?"></a>3. Can the HarmonyOS List component not be nested with the Grid component?</h4><p>Rendering Grid components within ListItem of the List component is invalid.  </p>
+<p>Sample code for testing:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index6</span> &#123;</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">List</span>() &#123;</span><br><span class="line">          <span class="title class_">ListItem</span>() &#123;</span><br><span class="line">            <span class="title class_">Text</span>(<span class="string">&quot;I am a ListItem&quot;</span>)</span><br><span class="line">          &#125;.<span class="title function_">height</span>(<span class="number">200</span>)</span><br><span class="line">          <span class="title class_">ListItem</span>() &#123;</span><br><span class="line">            <span class="title class_">Grid</span>() &#123;</span><br><span class="line">              <span class="title class_">ForEach</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>], <span class="function">(<span class="params"><span class="attr">item</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="title class_">GridItem</span>() &#123;</span><br><span class="line">                  <span class="title class_">Column</span>() &#123;</span><br><span class="line">                    <span class="title class_">Text</span>(<span class="string">`number:<span class="subst">$&#123;item&#125;</span>`</span>)</span><br><span class="line">                  &#125;</span><br><span class="line">                  .<span class="title function_">backgroundColor</span>(<span class="string">`#87<span class="subst">$&#123;item&#125;</span>`</span>)</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">            .<span class="title function_">rowsTemplate</span>(<span class="string">&#x27;1fr 1fr 1fr 1fr 1fr&#x27;</span>)</span><br><span class="line">            .<span class="title function_">columnsTemplate</span>(<span class="string">&#x27;1fr 1fr 1fr 1fr 1fr&#x27;</span>)</span><br><span class="line">            .<span class="title function_">rowsGap</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">columnsGap</span>(<span class="number">20</span>)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="string">&quot;#987&quot;</span>)</span><br><span class="line">          &#125;.<span class="title function_">height</span>(<span class="number">200</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="4-How-to-display-image-data-in-byte-format-in-an-Image-component-in-HarmonyOS"><a href="#4-How-to-display-image-data-in-byte-format-in-an-Image-component-in-HarmonyOS" class="headerlink" title="4. How to display image data in byte[] format in an Image component in HarmonyOS?"></a>4. How to display image data in byte[] format in an Image component in HarmonyOS?</h4><p>Convert the buffer to a PixelMap and then load it. Example:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> imageSource = image.<span class="title function_">createImageSource</span>(buffer)</span><br><span class="line"><span class="keyword">let</span> options = &#123;</span><br><span class="line">  <span class="attr">alphaType</span>: <span class="number">0</span>,                    <span class="comment">// Transparency</span></span><br><span class="line">  <span class="attr">editable</span>: <span class="literal">false</span>,                 <span class="comment">// Editable status</span></span><br><span class="line">  <span class="attr">pixelFormat</span>: <span class="number">3</span>,                  <span class="comment">// Pixel format</span></span><br><span class="line">  <span class="attr">scaleMode</span>: <span class="number">1</span>,                    <span class="comment">// Scaling mode</span></span><br><span class="line">  <span class="attr">size</span>: &#123; <span class="attr">height</span>: <span class="number">100</span>, <span class="attr">width</span>: <span class="number">100</span> &#125; <span class="comment">// Created image size</span></span><br><span class="line">&#125;</span><br><span class="line">imageSource.<span class="title function_">createPixelMap</span>(options).<span class="title function_">then</span>(<span class="function">(<span class="params">pixelMap</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">image</span> = pixelMap</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="5-Why-doesn’t-the-state-variable-received-by-a-HarmonyOS-Builder-function-trigger-internal-UI-changes"><a href="#5-Why-doesn’t-the-state-variable-received-by-a-HarmonyOS-Builder-function-trigger-internal-UI-changes" class="headerlink" title="5. Why doesn’t the state variable received by a HarmonyOS @Builder function trigger internal UI changes?"></a>5. Why doesn’t the state variable received by a HarmonyOS @Builder function trigger internal UI changes?</h4><p>The ChangePinPage interface invokes a custom keyboard. Modifying <code>currentKeyboardType</code> (keyboard type) in the custom keyboard’s button component to switch between Chinese and English keyboards does not update the value of <code>Text($\&#123;$$.currentKeyboardType&#125;)</code> in CustomKeyboard.ets.  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// xxxModel.ets</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Tmp</span> &#123;</span><br><span class="line">  <span class="attr">inputController</span>: <span class="title class_">TextInputController</span>;</span><br><span class="line">  <span class="attr">currentKeyboardType</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="attr">inputController</span>: <span class="title class_">TextInputController</span>, <span class="attr">currentKeyboardType</span>: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">inputController</span> = inputController;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">currentKeyboardType</span> = currentKeyboardType</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"># <span class="title class_">ChangePinPage</span>.<span class="property">ets</span>:</span><br><span class="line"><span class="meta">@Provide</span> <span class="attr">currentKeyboardType</span>: <span class="built_in">number</span> = <span class="title class_">Const</span>.<span class="property">KEYBOARD_TYPE_NUMBER</span>; </span><br><span class="line">...</span><br><span class="line"><span class="title class_">TextInput</span>()</span><br><span class="line">.<span class="title function_">customKeyboard</span>(<span class="title class_">KeyBoardWindow</span>(<span class="keyword">new</span> <span class="title class_">Tmp</span>(<span class="variable language_">this</span>.<span class="property">oldPinController</span>, <span class="variable language_">this</span>.<span class="property">currentKeyboardType</span>)))</span><br><span class="line"># <span class="title class_">CustomKeyboard</span>.<span class="property">ets</span>:</span><br><span class="line"><span class="meta">@Builder</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">KeyBoardWindow</span>(<span class="params"><span class="attr">$$</span>: <span class="title class_">Tmp</span></span>) &#123;</span><br><span class="line">  <span class="title class_">Column</span>() &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Image</span>($r(<span class="string">&quot;app.media.ic_keyboard_down&quot;</span>))<span class="comment">// &quot;Collapse&quot; icon in the title row</span></span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          $$.<span class="property">inputController</span>.<span class="title function_">stopEditing</span>()</span><br><span class="line">        &#125;)</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">`<span class="subst">$&#123;$$.currentKeyboardType&#125;</span>`</span>)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// xxxChild.ets ...</span></span><br><span class="line"><span class="meta">@Consume</span> <span class="attr">currentKeyboardType</span>: <span class="built_in">number</span>;</span><br><span class="line">...</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">currentKeyboardType</span> = <span class="number">2</span>;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">For global @Builder custom build functions using reference passing, if placed within Navigation()&#x27;s menus, state variable changes will not trigger UI refresh in the @Builder method.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">When passing parameters by reference, the parameters can be state variables, and state variable changes will trigger UI refresh in the @Builder method.  </span></span><br><span class="line"><span class="string">Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-builder-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Related demo:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Builder</span> <span class="keyword">function</span> <span class="title function_">ABuilder</span>(<span class="params"><span class="attr">$$</span>: &#123; paramA1: <span class="built_in">string</span> &#125;</span>) &#123;</span><br><span class="line">  <span class="title class_">Row</span>() &#123;</span><br><span class="line">    <span class="title class_">Text</span>(<span class="string">`UseStateVarByReference: <span class="subst">$&#123;$$.paramA1&#125;</span> `</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Parent</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">label</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello&#x27;</span>;</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="comment">// When calling ABuilder in the Parent component, pass this.label by reference to ABuilder</span></span><br><span class="line">      <span class="title class_">ABuilder</span>(&#123; <span class="attr">paramA1</span>: <span class="variable language_">this</span>.<span class="property">label</span> &#125;)</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Click me&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// After clicking &quot;Click me&quot;, the UI refreshes from &quot;Hello&quot; to &quot;ArkUI&quot;</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">label</span> = <span class="string">&#x27;ArkUI&#x27;</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Global-Prompts-Text-Size-Changes-Tab-Subpage-Lifecycle-Routing-Parameter-Acquisition-State-Monitoring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Global-Prompts-Text-Size-Changes-Tab-Subpage-Lifecycle-Routing-Parameter-Acquisition-State-Monitoring/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Global Prompts, Text Size Changes, Tab Subpage Lifecycle, Routing Parameter Acquisition, State Monitoring</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-24 23:42:37 / Modified: 23:43:04" itemprop="dateCreated datePublished" datetime="2025-06-24T23:42:37+08:00">2025-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Global-Prompts-Text-Size-Changes-Tab-Subpage-Lifecycle-Routing-Parameter-Acquisition-State-Monitoring"><a href="#Daily-HarmonyOS-Next-Knowledge-Global-Prompts-Text-Size-Changes-Tab-Subpage-Lifecycle-Routing-Parameter-Acquisition-State-Monitoring" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Global Prompts, Text Size Changes, Tab Subpage Lifecycle, Routing Parameter Acquisition, State Monitoring"></a>[Daily HarmonyOS Next Knowledge] Global Prompts, Text Size Changes, Tab Subpage Lifecycle, Routing Parameter Acquisition, State Monitoring</h3><h4 id="1-Does-HarmonyOS-support-a-global-toast-like-pop-up-window-that-allows-custom-layouts-and-entry-exit-animations"><a href="#1-Does-HarmonyOS-support-a-global-toast-like-pop-up-window-that-allows-custom-layouts-and-entry-exit-animations" class="headerlink" title="1. Does HarmonyOS support a global toast-like pop-up window that allows custom layouts and entry&#x2F;exit animations?"></a>1. Does HarmonyOS support a global toast-like pop-up window that allows custom layouts and entry&#x2F;exit animations?</h4><p>Is there a pop-up window similar to a global toast that supports custom layouts and entry&#x2F;exit animations?<br>Since the default toast has limited customization, it is recommended to use <code>promptAction.openCustomDialog</code> to implement a transparent toast-like effect with custom layouts.<br><strong>Reference Documentation</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5#promptactionopencustomdialog11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5#promptactionopencustomdialog11</a>  </p>
+<p><code>openCustomDialog(options: CustomDialogOptions): Promise&lt;number&gt;</code>  </p>
+<ul>
+<li>Opens a custom pop-up window.  </li>
+<li>Currently, <code>isModal = true</code> and <code>showInSubWindow = true</code> cannot be used simultaneously.  </li>
+<li>The pop-up width in portrait mode defaults to <code>window width - left/right margin (16vp, 40vp for 2-in-1 devices)</code>, with a maximum default width of 400vp.</li>
+</ul>
+<h4 id="2-How-to-convert-the-component-size-obtained-via-the-onSizeChange-interface-to-pixels-in-HarmonyOS"><a href="#2-How-to-convert-the-component-size-obtained-via-the-onSizeChange-interface-to-pixels-in-HarmonyOS" class="headerlink" title="2. How to convert the component size obtained via the onSizeChange interface to pixels in HarmonyOS?"></a>2. How to convert the component size obtained via the <code>onSizeChange</code> interface to pixels in HarmonyOS?</h4><p>When obtaining the component size through the <code>onSizeChange</code> interface, how to convert the <code>sizeoptions</code> to pixels?<br><strong>Reference for pixel unit conversion</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-pixel-units-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-pixel-units-V5</a><br>ArkUI provides 4 pixel units, with <code>vp</code> as the base unit.  </p>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">px</td>
+<td align="left">Physical screen pixel unit.</td>
+</tr>
+<tr>
+<td align="left">vp</td>
+<td align="left">Density-related pixel unit, converted to physical pixels based on screen density. Default unit when no unit is specified. <br><br><strong>Note</strong>: The vp-to-px ratio depends on screen density.</td>
+</tr>
+<tr>
+<td align="left">fp</td>
+<td align="left">Font pixel unit, similar to vp but adapts to system font size settings.</td>
+</tr>
+<tr>
+<td align="left">lpx</td>
+<td align="left">Logical pixel unit relative to the viewport, calculated as <code>actual screen width / logical width (configured by designWidth)</code>. The default <code>designWidth</code> is 720. For a screen with 1440 physical pixels, 1lpx equals 2px when <code>designWidth = 720</code>.</td>
+</tr>
+</tbody></table>
+<h4 id="3-When-loading-multiple-entry-pages-via-Tab-in-HarmonyOS-why-are-the-lifecycle-methods-onPageShow-and-onPageHide-not-called-for-tab-subpages"><a href="#3-When-loading-multiple-entry-pages-via-Tab-in-HarmonyOS-why-are-the-lifecycle-methods-onPageShow-and-onPageHide-not-called-for-tab-subpages" class="headerlink" title="3. When loading multiple @entry pages via Tab in HarmonyOS, why are the lifecycle methods onPageShow and onPageHide not called for tab subpages?"></a>3. When loading multiple @entry pages via Tab in HarmonyOS, why are the lifecycle methods <code>onPageShow</code> and <code>onPageHide</code> not called for tab subpages?</h4><p><code>onPageShow</code> and <code>onPageHide</code> are page-level lifecycle methods, but <code>TabContent</code> is a subcomponent and does not trigger these lifecycles. To implement monitoring, use the <code>@Watch</code> decorator: change the watched variable in the tab click callback and implement monitoring in the subcomponent.<br><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-watch-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-watch-V5</a>  </p>
+<h4 id="4-How-to-convert-the-type-of-results-from-getParamByName-in-HarmonyOS"><a href="#4-How-to-convert-the-type-of-results-from-getParamByName-in-HarmonyOS" class="headerlink" title="4. How to convert the type of results from getParamByName in HarmonyOS?"></a>4. How to convert the type of results from <code>getParamByName</code> in HarmonyOS?</h4><p>When passing parameters between components via Navigation, <code>getParamByName</code> returns <code>Array&lt;unknown&gt;</code>. Even if a string is passed, type casting (e.g., <code>as string</code>) fails.<br><strong>Solution</strong>: Use <code>String(XXX.getParamByName())</code> to cast the unknown type to a string.  </p>
+<h4 id="5-In-HarmonyOS-state-management-how-can-watch-monitor-a-specific-property-within-an-observed-class-object"><a href="#5-In-HarmonyOS-state-management-how-can-watch-monitor-a-specific-property-within-an-observed-class-object" class="headerlink" title="5. In HarmonyOS state management, how can @watch monitor a specific property within an observed class object?"></a>5. In HarmonyOS state management, how can <code>@watch</code> monitor a specific property within an observed class object?</h4><p>Currently, <code>@watch</code> can only monitor a single property. If there is a class <code>A</code> decorated with <code>@observe</code>, how to monitor only the <code>a</code> property of <code>A</code>?<br><strong>Reference</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-new-observedv2-and-trace-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-new-observedv2-and-trace-V5</a><br>To enhance state management for nested object properties, use the <code>@ObservedV2</code> and <code>@Trace</code> decorators:  </p>
+<ul>
+<li><code>@ObservedV2</code> and <code>@Trace</code> enable direct monitoring of nested property changes, a core capability of State Management V2.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】Page Parameter Passing, Popup Disable Blank Click to Close, Two-way Binding Data Error, Destroy Custom Components, Image Blur Setting</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-24 23:40:44 / Modified: 23:41:09" itemprop="dateCreated datePublished" datetime="2025-06-24T23:40:44+08:00">2025-06-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting"><a href="#【Daily-HarmonyOS-Next-Knowledge】Page-Parameter-Passing-Popup-Disable-Blank-Click-to-Close-Two-way-Binding-Data-Error-Destroy-Custom-Components-Image-Blur-Setting" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Page Parameter Passing, Popup Disable Blank Click to Close, Two-way Binding Data Error, Destroy Custom Components, Image Blur Setting"></a>【Daily HarmonyOS Next Knowledge】Page Parameter Passing, Popup Disable Blank Click to Close, Two-way Binding Data Error, Destroy Custom Components, Image Blur Setting</h3><h4 id="1-How-to-pass-parameters-to-the-corresponding-Page-when-using-window-setUIContent-in-HarmonyOS"><a href="#1-How-to-pass-parameters-to-the-corresponding-Page-when-using-window-setUIContent-in-HarmonyOS" class="headerlink" title="1. How to pass parameters to the corresponding Page when using window.setUIContent in HarmonyOS?"></a>1. How to pass parameters to the corresponding Page when using window.setUIContent in HarmonyOS?</h4><p>How to pass parameters to WindowContent through window.setUIContent?  </p>
+<p>Try the following interface: <code>loadContent(path: string, storage: LocalStorage): Promise&lt;void&gt;</code>. This loads specific page content for the window based on the path of a page in the current project and passes state attributes to the loaded page via LocalStorage using a Promise asynchronous callback.<br>Specific documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#loadcontent9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#loadcontent9</a>  </p>
+<h4 id="2-How-to-disable-the-function-of-closing-a-custom-popup-by-clicking-the-blank-area-in-HarmonyOS"><a href="#2-How-to-disable-the-function-of-closing-a-custom-popup-by-clicking-the-blank-area-in-HarmonyOS" class="headerlink" title="2. How to disable the function of closing a custom popup by clicking the blank area in HarmonyOS?"></a>2. How to disable the function of closing a custom popup by clicking the blank area in HarmonyOS?</h4><p>Reference documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5#ZH-CN_TOPIC_0000001884757698__basedialogoptions11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-promptaction-V5#ZH-CN_TOPIC_0000001884757698__basedialogoptions11</a>  </p>
+<h4 id="3-Compilation-error-occurs-when-using-two-way-binding-with-the-Slider-component-in-an-HSP-package-in-HarmonyOS"><a href="#3-Compilation-error-occurs-when-using-two-way-binding-with-the-Slider-component-in-an-HSP-package-in-HarmonyOS" class="headerlink" title="3. Compilation error occurs when using $$ two-way binding with the Slider component in an HSP package in HarmonyOS?"></a>3. Compilation error occurs when using <code>$$</code> two-way binding with the Slider component in an HSP package in HarmonyOS?</h4><p>In an HSP package page, using two-way data binding with the Slider component throws a compilation error <code>Cannot find name &#39;this&#39;</code>. This works normally in a HAP package. The page code is as follows:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">SliderPage</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">value</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">RelativeContainer</span>() &#123;</span><br><span class="line">      <span class="comment">// Using $$ two-way binding here causes a compilation error</span></span><br><span class="line">      <span class="title class_">Slider</span>(&#123; <span class="attr">value</span>: $$this.<span class="property">value</span>, <span class="attr">step</span>: <span class="number">0.01</span> &#125;)</span><br><span class="line">        .<span class="title function_">id</span>(<span class="string">&#x27;slider&#x27;</span>)</span><br><span class="line">        .<span class="title function_">alignRules</span>(&#123;</span><br><span class="line">          <span class="attr">center</span>: &#123; <span class="attr">anchor</span>: <span class="string">&#x27;__container__&#x27;</span>, <span class="attr">align</span>: <span class="title class_">VerticalAlign</span>.<span class="property">Center</span> &#125;,</span><br><span class="line">          <span class="attr">middle</span>: &#123; <span class="attr">anchor</span>: <span class="string">&#x27;__container__&#x27;</span>, <span class="attr">align</span>: <span class="title class_">HorizontalAlign</span>.<span class="property">Center</span> &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">blockSize</span>(&#123; <span class="attr">width</span>: <span class="string">&#x27;20&#x27;</span>, <span class="attr">height</span>: <span class="string">&#x27;20&#x27;</span> &#125;)</span><br><span class="line">        .<span class="title function_">onChange</span>(<span class="function">(<span class="params">value, mode</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (mode === <span class="title class_">SliderChangeMode</span>.<span class="property">End</span>) &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;end&#x27;</span>)</span><br><span class="line">            <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;settimeout&#x27;</span>)</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">value</span> = <span class="number">90</span></span><br><span class="line">              <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`this.value <span class="subst">$&#123;<span class="variable language_">this</span>.value&#125;</span>`</span>)</span><br><span class="line">            &#125;, <span class="number">1000</span>)</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Variables decorated with @State do not require `</span>$$<span class="string">` operation—use `</span><span class="variable language_">this</span>.<span class="property">value</span><span class="string">` directly. Remove the `</span>$$<span class="string">` attempt or use @Link.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. How to actively destroy a custom component in HarmonyOS?  </span></span><br><span class="line"><span class="string">How to actively destroy a custom component? Add a destruction method `</span>destroy<span class="string">` to the component. How to implement this method to destroy the component itself?  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Demo</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">switch</span>: <span class="built_in">boolean</span> = <span class="literal">true</span></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Hello World&#x27;</span>)</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">        .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">switch</span> = !<span class="variable language_">this</span>.<span class="property">switch</span></span><br><span class="line">        &#125;)</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">switch</span>) &#123;</span><br><span class="line">        <span class="title class_">Child</span>(&#123; <span class="attr">message</span>: <span class="keyword">new</span> <span class="title class_">Message</span>(<span class="string">&#x27;Child&#x27;</span>) &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Refer to the lifecycle and deletion of custom components: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84%E5%88%A0%E9%99%A4  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">A component will be deleted if:  </span></span><br><span class="line"><span class="string">- The branch of an if statement changes.  </span></span><br><span class="line"><span class="string">- The number of elements in a ForEach loop changes.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Before deletion, the `</span>aboutToDisappear<span class="string">` lifecycle function is called, marking that the node will be destroyed. ArkUI&#x27;s node deletion mechanism:  </span></span><br><span class="line"><span class="string">- Backend nodes are directly removed from the component tree and destroyed.  </span></span><br><span class="line"><span class="string">- Frontend nodes are dereferenced and garbage-collected by the JS virtual machine when no references remain.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Custom components and their variables are deleted. If they have synchronized variables (e.g., @Link, @Prop, @StorageLink), they are unregistered from the synchronization source.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Note**: Avoid using `</span><span class="keyword">async</span>/<span class="keyword">await</span><span class="string">` in `</span>aboutToDisappear<span class="string">`. Asynchronous operations (Promises or callback methods) in `</span>aboutToDisappear<span class="string">` keep the component in the Promise closure until the callback completes, preventing garbage collection.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. How to set Gaussian blur for an Image in HarmonyOS?  </span></span><br><span class="line"><span class="string">Reference demo:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="title class_">Text</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">  .<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">  .<span class="title function_">height</span>(<span class="string">&#x27;30%&#x27;</span>)</span><br><span class="line">  .<span class="title function_">fontSize</span>(<span class="number">20</span>)</span><br><span class="line">  .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">  .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">  .<span class="title function_">backdropBlur</span>(<span class="number">50</span>) <span class="comment">// Apply blur to the background</span></span><br><span class="line">  .<span class="title function_">backgroundImage</span>($r(<span class="string">&#x27;app.media.image1&#x27;</span>))</span><br><span class="line">  .<span class="title function_">backgroundImageSize</span>(&#123; <span class="attr">width</span>: <span class="number">400</span>, <span class="attr">height</span>: <span class="number">300</span> &#125;)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Listening-to-Returns-in-HSP-Title-Being-Pushed-Up-List-Swipe-Parameters-Canvas-Text-Alignment-Build-Parameter-Crash/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1065,749 +1629,10 @@ notificationManager.publish(notificationRequest, (err: BusinessError) =&gt; &#12
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/HarmonyOS%20Next%20IM%20Combat:%20Functional%20Anomaly%20of%20Event%20Cancellation%20Caused%20by%20Dual%20Navigation%20Lifecycles/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/24/HarmonyOS%20Next%20IM%20Combat:%20Functional%20Anomaly%20of%20Event%20Cancellation%20Caused%20by%20Dual%20Navigation%20Lifecycles/" class="post-title-link" itemprop="url">HarmonyOS Next IM Combat: Functional Anomaly of Event Cancellation Caused by Dual Navigation Lifecycles</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-24 15:09:32 / Modified: 16:09:29" itemprop="dateCreated datePublished" datetime="2025-06-24T15:09:32+08:00">2025-06-24</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HarmonyOS-Next-IM-Combat-Functional-Anomaly-of-Event-Cancellation-Caused-by-Dual-Navigation-Lifecycles"><a href="#HarmonyOS-Next-IM-Combat-Functional-Anomaly-of-Event-Cancellation-Caused-by-Dual-Navigation-Lifecycles" class="headerlink" title="HarmonyOS Next IM Combat: Functional Anomaly of Event Cancellation Caused by Dual Navigation Lifecycles"></a>HarmonyOS Next IM Combat: Functional Anomaly of Event Cancellation Caused by Dual Navigation Lifecycles</h1><h4 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h4><p>Users of the IM application’s chat page reported being unable to view large images by clicking on them. Code review showed that the large image click used the <code>ohos.events.emitter</code> event mechanism. Further investigation revealed that events were emitted but not consumed. Logs indicated successful event registration, but no event reception.  </p>
-<h4 id="Problem-Diagnosis"><a href="#Problem-Diagnosis" class="headerlink" title="Problem Diagnosis"></a>Problem Diagnosis</h4><p>Further analysis showed the issue consistently occurred when cold-starting the app by clicking a notification, while hot-starting via a push notification worked normally. Both company apps integrated HarmonyOS’s PushKit to receive notifications when backgrounded or closed, but only one exhibited the problem.  </p>
-<p>Log analysis revealed that cold-starting the app from a notification and entering the chat page triggered one <code>aboutToAppear</code> and one proactive <code>aboutToDisappear</code> in the chat page. Further inspection showed the chat page’s lifecycle was executed twice: Chat Page 1 <code>aboutToAppear</code> → Chat Page 2 <code>aboutToAppear</code> → Chat Page 2 <code>aboutToDisappear</code>.  </p>
-<p>Initially suspected to relate to PushKit, the hypothesis was dismissed when the other app functioned normally. Clicking a notification triggers navigation to the chat page via <code>onNewWant</code>. Expert consultation suggested the issue might stem from multiple <code>Navigation</code> instances in the app.  </p>
-<p>Code review revealed that after a cold start, the app did not immediately navigate to the chat page in <code>onNewWant</code> but waited for the home page to load, then navigated to the chat page in the home page’s <code>aboutToAppear</code>. The app loads a splash screen in <code>onWindowStageCreate</code>, navigates from the splash screen’s <code>aboutToAppear</code> to the home page, and then from the home page’s <code>aboutToAppear</code> to the chat page. The splash screen and home page are two <code>Navigation</code> instances sharing a <code>NavPathStack</code>.  </p>
-<p>Understanding <code>Navigation</code> lifecycles: As a routing container, <code>Navigation</code> lifecycles are hosted on <code>NavDestination</code> components, exposed as component events. Lifecycles fall into three categories: custom component lifecycles, universal component lifecycles, and proprietary lifecycles. <code>aboutToAppear</code> and <code>aboutToDisappear</code> are custom component lifecycles (for the custom component wrapping <code>NavDestination</code>), while <code>onAppear</code> and <code>onDisappear</code> are universal component lifecycles. The remaining lifecycles are unique to <code>NavDestination</code>.  </p>
-<p>Lifecycle timeline:<br><img src="/../images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9A%E5%8F%8CNavigation%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%BC%95%E8%B5%B7%E7%9A%84%E4%BA%8B%E4%BB%B6%E8%A2%AB%E5%8F%96%E6%B6%88%E5%8A%9F%E8%83%BD%E5%BC%82%E5%B8%B8%E9%97%AE%E9%A2%98.png" alt="text"></p>
-<ul>
-<li><strong>aboutToAppear</strong>: Executed after creating a custom component and before its <code>build()</code> function (before <code>NavDestination</code> creation). Allows modifying state variables, which take effect in the subsequent <code>build()</code> execution.  </li>
-<li><strong>onWillAppear</strong>: Executed after <code>NavDestination</code> creation and before mounting to the component tree. State changes here take effect in the current frame.  </li>
-<li><strong>onAppear</strong>: Universal lifecycle event triggered when <code>NavDestination</code> mounts to the component tree.  </li>
-<li><strong>onWillShow</strong>: Executed before <code>NavDestination</code> is layout-displayed (not triggered when the app switches to the foreground).  </li>
-<li><strong>onShown</strong>: Executed after <code>NavDestination</code> is layout-displayed, indicating layout completion.  </li>
-<li><strong>onActive</strong>: Triggered when <code>NavDestination</code> is active (at the stack top and operable, with no special components obscuring it).  </li>
-<li><strong>onWillHide</strong>: Executed before <code>NavDestination</code> is hidden (not triggered when the app switches to the background).  </li>
-<li><strong>onInactive</strong>: Triggered when <code>NavDestination</code> is inactive (not at the stack top or obscured by special components when at the stack top).  </li>
-<li><strong>onHidden</strong>: Executed after <code>NavDestination</code> is hidden (when a new page is pushed, the top page is popped, or the app switches to the background).  </li>
-<li><strong>onWillDisappear</strong>: Executed before <code>NavDestination</code> is destroyed. If there is a transition animation, it triggers before the animation (when the top page is popped).  </li>
-<li><strong>onDisappear</strong>: Universal lifecycle event triggered when <code>NavDestination</code> is unmounted and destroyed from the component tree.  </li>
-<li><strong>aboutToDisappear</strong>: Executed before a custom component is destructed; state variable modifications are prohibited.</li>
-</ul>
-<p>The lifecycle when navigating from Page A to Page B is: A <code>aboutToAppear</code> → B <code>aboutToAppear</code> → A <code>aboutToDisappear</code>.  </p>
-<p>The root cause was identified: When navigating to the chat page in the home page’s <code>aboutToAppear</code>, the splash screen’s <code>aboutToDisappear</code> had not completed, leaving both <code>Navigation</code> instances active. This caused the chat page to execute <code>aboutToAppear</code> twice. After the splash screen’s <code>aboutToDisappear</code>, the second chat page instance was automatically <code>aboutToDisappear</code>ed, canceling event subscriptions.  </p>
-<h4 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h4><p>After identifying the problem, the fix involved adding a 20ms delay to the chat page navigation, resolving the issue. A more elegant solution is to navigate to the chat page after the splash screen’s <code>aboutDisappear</code> or modify the splash screen to a non-<code>Navigation</code> structure.  </p>
-<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>Step-by-step troubleshooting revealed the root cause: Cold-starting the app with two <code>Navigation</code> components (splash screen and home page) sharing a <code>NavPathStack</code> caused the chat page to be repeatedly created and destroyed when navigating from the home page’s <code>aboutToAppear</code> before the splash screen’s <code>aboutToDisappear</code> completed. This invalidated event subscriptions (as the second page instance did not register event consumption logic). Solutions include delaying navigation, adjusting navigation timing until the splash screen is destroyed, or restructuring the splash screen as a non-<code>Navigation</code> to eliminate multi-<code>Navigation</code> coexistence. This case highlights the complexity of <code>Navigation</code> lifecycle management in HarmonyOS, emphasizing the need to strictly follow component mounting&#x2F;unmounting order in multi-page navigation to avoid lifecycle conflicts.  </p>
-<blockquote>
-<p>Reference: Component Navigation (Navigation) (Recommended): <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-navigation-navigation#%E9%A1%B5%E9%9D%A2%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts-navigation-navigation#%E9%A1%B5%E9%9D%A2%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F</a>  </p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/HarmonyOS%20Next%20IM%20Combat:%20Sharing%20the%20Optimization%20Process%20for%20Slow%20Database%20Queries/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/24/HarmonyOS%20Next%20IM%20Combat:%20Sharing%20the%20Optimization%20Process%20for%20Slow%20Database%20Queries/" class="post-title-link" itemprop="url">HarmonyOS Next IM Combat: Sharing the Optimization Process for Slow Database Queries</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-24 14:09:32 / Modified: 15:03:00" itemprop="dateCreated datePublished" datetime="2025-06-24T14:09:32+08:00">2025-06-24</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="HarmonyOS-Next-IM-Combat-Sharing-the-Optimization-Process-for-Slow-Database-Queries"><a href="#HarmonyOS-Next-IM-Combat-Sharing-the-Optimization-Process-for-Slow-Database-Queries" class="headerlink" title="HarmonyOS Next IM Combat: Sharing the Optimization Process for Slow Database Queries"></a>HarmonyOS Next IM Combat: Sharing the Optimization Process for Slow Database Queries</h1><h4 id="1-Background-Introduction"><a href="#1-Background-Introduction" class="headerlink" title="1. Background Introduction"></a>1. Background Introduction</h4><p>In the development of IMSDK, the client uses a relational database to store data such as conversations, users, and messages. Initially, when developing consumer (C-end) applications, no issues were found. However, this year, when business (B-end) users started using the application, they reported lags and message delays. Through troubleshooting, it was found that B-end users have more conversations and messages, leading to slower database queries. Since previous operations were all performed on the main thread, this caused application lags and delays. This article shares the problems encountered during the entire optimization process, problem-solving approaches, and final effects.  </p>
-<h4 id="2-Introduction-to-HarmonyOS-Next-Relational-Database"><a href="#2-Introduction-to-HarmonyOS-Next-Relational-Database" class="headerlink" title="2. Introduction to HarmonyOS Next Relational Database"></a>2. Introduction to HarmonyOS Next Relational Database</h4><p>The HarmonyOS Next relational database is based on the SQLite component, suitable for scenarios requiring storage of data with complex relationships. For example, a user’s conversation information needs to include the conversation name, type, ID, etc., while chat information in conversations needs to include message IDs, types, contents, etc. Due to the strong correspondence between data elements—with complexity higher than key-value data—a relational database is required for persistent storage.  </p>
-<p>The relational database provides universal operation interfaces for applications, using SQLite as the underlying persistent storage engine. It supports database features of SQLite, including but not limited to transactions, indexes, views, triggers, foreign keys, parameterized queries, and precompiled SQL statements.  </p>
-<p>To implement data persistence using a relational database, a RdbStore must be obtained, which includes operations such as database creation, table creation, and version upgrades&#x2F;downgrades. Sample code is as follows:  </p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; relationalStore &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.ArkData&#x27;</span>; <span class="comment">// Import the module</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">UIAbility</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.AbilityKit&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">BusinessError</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.BasicServicesKit&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="variable language_">window</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.ArkUI&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// This example is implemented in an Ability, but users can also use it in other reasonable scenarios</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">EntryAbility</span> <span class="keyword">extends</span> <span class="title class_ inherited__">UIAbility</span> &#123;</span><br><span class="line">  <span class="title function_">onWindowStageCreate</span>(<span class="params"><span class="attr">windowStage</span>: <span class="variable language_">window</span>.<span class="title class_">WindowStage</span></span>) &#123;</span><br><span class="line">    <span class="comment">// If a tokenizer is desired, call isStorageTypeSupported to check if the desired tokenizer is supported on the current platform.</span></span><br><span class="line">    <span class="keyword">let</span> tokenType = relationalStore.<span class="property">Tokenizer</span>.<span class="property">ICU_TOKENIZER</span>;</span><br><span class="line">    <span class="keyword">let</span> tokenTypeSupported = relationalStore.<span class="title function_">isTokenizerSupported</span>(tokenType);</span><br><span class="line">    <span class="keyword">if</span> (!tokenTypeSupported) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`ICU_TOKENIZER is not supported on this platform.`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">STORE_CONFIG</span>: relationalStore.<span class="property">StoreConfig</span> = &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;RdbTest.db&#x27;</span>, <span class="comment">// Database file name</span></span><br><span class="line">      <span class="attr">securityLevel</span>: relationalStore.<span class="property">SecurityLevel</span>.<span class="property">S3</span>, <span class="comment">// Database security level</span></span><br><span class="line">      <span class="attr">encrypt</span>: <span class="literal">false</span>, <span class="comment">// Optional parameter to specify if the database is encrypted (default: not encrypted)</span></span><br><span class="line">      <span class="attr">customDir</span>: <span class="string">&#x27;customDir/subCustomDir&#x27;</span>, <span class="comment">// Optional parameter for the database custom path. The database will be created in the directory structure: context.databaseDir + &#x27;/rdb/&#x27; + customDir, where context.databaseDir is the app sandbox path, &#x27;/rdb/&#x27; indicates a relational database, and customDir is the custom path. If this parameter is not provided, the RdbStore instance is created in the app sandbox directory by default.</span></span><br><span class="line">      <span class="attr">isReadOnly</span>: <span class="literal">false</span>, <span class="comment">// Optional parameter to specify if the database is opened in read-only mode (default: false, readable and writable). When true, only data reading is allowed; write operations will return error code 801.</span></span><br><span class="line">      <span class="attr">tokenizer</span>: tokenType <span class="comment">// Optional parameter to specify the tokenizer used in full-text search (FTS) scenarios. If not provided, only English tokenization is supported in FTS, not other languages.</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Determine the database version and perform upgrade/downgrade operations if it does not match</span></span><br><span class="line">    <span class="comment">// Assume the current database version is 3, with table structure: EMPLOYEE (NAME, AGE, SALARY, CODES, IDENTITY)</span></span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">SQL_CREATE_TABLE</span> = <span class="string">&#x27;CREATE TABLE IF NOT EXISTS EMPLOYEE (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT NOT NULL, AGE INTEGER, SALARY REAL, CODES BLOB, IDENTITY UNLIMITED INT)&#x27;</span>; <span class="comment">// Table creation SQL statement, where IDENTITY is a bigint type specified as UNLIMITED INT in SQL</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    relationalStore.<span class="title function_">getRdbStore</span>(<span class="variable language_">this</span>.<span class="property">context</span>, <span class="variable constant_">STORE_CONFIG</span>, <span class="function">(<span class="params">err, store</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to get RdbStore. Code:<span class="subst">$&#123;err.code&#125;</span>, message:<span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Succeeded in getting RdbStore.&#x27;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      <span class="comment">// When the database is created, the default version is 0</span></span><br><span class="line">      <span class="keyword">if</span> (store.<span class="property">version</span> === <span class="number">0</span>) &#123;</span><br><span class="line">        store.<span class="title function_">executeSql</span>(<span class="variable constant_">SQL_CREATE_TABLE</span>) <span class="comment">// Create the data table for subsequent insert operations</span></span><br><span class="line">          .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">// Set the database version to an integer greater than 0</span></span><br><span class="line">            store.<span class="property">version</span> = <span class="number">3</span>;</span><br><span class="line">          &#125;)</span><br><span class="line">          .<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to executeSql. Code:<span class="subst">$&#123;err.code&#125;</span>, message:<span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      <span class="comment">// If the database version is not 0 and does not match the current version, upgrade/downgrade operations are required</span></span><br><span class="line">      <span class="comment">// When the database exists and is assumed to be version 1 (e.g., the app upgrades to the current version, requiring the database to upgrade from version 1 to 2)</span></span><br><span class="line">      <span class="keyword">if</span> (store.<span class="property">version</span> === <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// version = 1: Table structure: EMPLOYEE (NAME, SALARY, CODES, ADDRESS) =&gt; version = 2: Table structure: EMPLOYEE (NAME, AGE, SALARY, CODES, ADDRESS)</span></span><br><span class="line">        store.<span class="title function_">executeSql</span>(<span class="string">&#x27;ALTER TABLE EMPLOYEE ADD COLUMN AGE INTEGER&#x27;</span>)</span><br><span class="line">          .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            store.<span class="property">version</span> = <span class="number">2</span>;</span><br><span class="line">          &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to executeSql. Code:<span class="subst">$&#123;err.code&#125;</span>, message:<span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      <span class="comment">// When the database exists and is assumed to be version 2 (e.g., the app upgrades to the current version, requiring the database to upgrade from version 2 to 3)</span></span><br><span class="line">      <span class="keyword">if</span> (store.<span class="property">version</span> === <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="comment">// version = 2: Table structure: EMPLOYEE (NAME, AGE, SALARY, CODES, ADDRESS) =&gt; version = 3: Table structure: EMPLOYEE (NAME, AGE, SALARY, CODES)</span></span><br><span class="line">        store.<span class="title function_">executeSql</span>(<span class="string">&#x27;ALTER TABLE EMPLOYEE DROP COLUMN ADDRESS&#x27;</span>)</span><br><span class="line">          .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            store.<span class="property">version</span> = <span class="number">3</span>;</span><br><span class="line">          &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to executeSql. Code:<span class="subst">$&#123;err.code&#125;</span>, message:<span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Ensure that after obtaining the RdbStore instance and completing data table creation, perform database operations such as insert, delete, update, and query</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">HarmonyOS Next provides `</span>relationalStore<span class="string">` for database operations, but in CRUD (Create, Read, Update, Delete) operations, we generally implement a layer of encapsulation to convert database result sets to actual objects.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 3. Introduction to ORM Frameworks  </span></span><br><span class="line"><span class="string">HarmonyOS Next provides the `</span>dataORM<span class="string">` library for data relationship mapping. `</span>dataORM<span class="string">` is a lightweight ORM (Object-Relational Mapping) library that simplifies local database operations, offering high database access performance and low memory consumption. It supports features such as multi-threading, chain calls, backup, upgrade, caching, etc. Designed to be lightweight, fast, and easy to use, it helps developers quickly build high-performance applications. However, `</span>dataORM<span class="string">` has some limitations (e.g., no support for composite primary keys in database tables), and the official maintenance of this library has been discontinued.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Later, ByteDance open-sourced `</span>rdbStore<span class="string">`, which performs database operations in the form of DTO (Data Transfer Object) objects. It encapsulates capabilities such as database creation and automatic upgrade, database predicate construction, query result deserialization, and quality optimization, enabling simple and efficient database operations. In terms of operation and maintenance, it features comprehensive unit testing, quality data tracking and reporting, full-link logging, etc. Due to issues encountered in database upgrades, we switched to `</span>rdbStore<span class="string">` for data relationship mapping.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. Multi-Threading Optimization  </span></span><br><span class="line"><span class="string">In scenarios with large data volumes, querying data may cause long processing times or even application freezes. General recommendations include:  </span></span><br><span class="line"><span class="string">- Limit single query data volume to no more than 5,000 records.  </span></span><br><span class="line"><span class="string">- Perform queries in a TaskPool.  </span></span><br><span class="line"><span class="string">- Keep SQL statement concatenation concise.  </span></span><br><span class="line"><span class="string">- Implement reasonable batch querying.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">When the number of user conversations reached a certain level, due to a join query involving 50 columns after expansion, the query took 6-7 seconds, causing severe application lags and even freeze exceptions. Therefore, complex and time-consuming queries were moved to child threads.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>ts</span><br><span class="line"><span class="meta">@Concurrent</span>  </span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getConvDetailObservableThread</span>(<span class="params"><span class="attr">context</span>: <span class="title class_">Context</span>, <span class="attr">param</span>: <span class="title class_">Param</span>, <span class="attr">convId</span>: <span class="built_in">number</span></span>): <span class="title class_">Promise</span>&lt;<span class="title class_">ConvBean</span> | <span class="literal">undefined</span>&gt; &#123;  </span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;ConvImpl&#x27;</span>, <span class="string">&quot;getConvDetailObservableThread,convId=&quot;</span> + convId);  </span><br><span class="line">  <span class="comment">// Store parameters, context, etc., in the thread</span></span><br><span class="line">  <span class="keyword">await</span> <span class="title class_">DBManager</span>.<span class="title function_">getInstance</span>().<span class="title function_">initDB</span>();  </span><br><span class="line">  <span class="keyword">const</span> conv = <span class="keyword">await</span> <span class="title class_">DBManager</span>.<span class="title function_">getInstance</span>()  </span><br><span class="line">    .<span class="title function_">getConvDaoHelper</span>()  </span><br><span class="line">    .<span class="title function_">getConvById</span>(convId);  </span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = <span class="keyword">await</span> taskpool.<span class="title function_">execute</span>(getConvDetailObservableThread,  </span><br><span class="line">  context,</span><br><span class="line">  param,</span><br><span class="line">  convId);</span><br></pre></td></tr></table></figure>
-
-
-<p>By default, data transfer between threads uses a copy method. For ultimate performance, it can be changed to the <code>Sendable</code> method.  </p>
-<h4 id="5-Optimization-for-Slow-Data-Queries"><a href="#5-Optimization-for-Slow-Data-Queries" class="headerlink" title="5. Optimization for Slow Data Queries"></a>5. Optimization for Slow Data Queries</h4><p>Although the lag was basically resolved after the above optimizations, the issue of long query times persisted. The first entry into the conversation list took 7-8 seconds, resulting in poor user experience. Additionally, a strange phenomenon occurred: the Mac version simulator took tens of milliseconds, while real devices took 6-7 seconds.  </p>
-<p>Analyzing the query process step by step, since it involved a join query, using <code>relationalStore</code> interfaces for direct query execution was fast, but the process of <code>resultSet.goToNextRow()</code> in the result set was time-consuming.  </p>
-<p>Initially, traversal read data row by column: <code>resultSet.getLong(resultSet.getColumnIndex(&#39;unreadMsgCount&#39;));</code>. The official API12 provided the <code>getRow</code> interface, which can read an entire column at once. After switching to the <code>getRow</code> method, the query time was optimized from 7-8 seconds to 700-800 milliseconds—ten times faster.  </p>
-<p>In API18, a new <code>getRows</code> interface was added, which can read all specified rows directly, yielding even better results.  </p>
-<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>This article focuses on the optimization process for database query lags caused by large conversation and message data volumes among B-end users in IMSDK development based on HarmonyOS Next. It first introduces the SQLite-based features of the HarmonyOS Next relational database, including transactions, indexes, and other functions, as well as the usage of RdbStore. It then compares two ORM frameworks, <code>dataORM</code> and <code>rdbStore</code>, and switches to the more efficient <code>rdbStore</code> due to <code>dataORM</code> being discontinued and upgrade-related issues.  </p>
-<p>In terms of performance optimization, a multi-threading solution moves complex queries to child threads to avoid main thread blocking, while adhering to principles such as limiting single query data to under 5,000 records and concise SQL concatenation. For query latency issues, analysis revealed low result set traversal efficiency, which was improved by using HarmonyOS-provided new interfaces like <code>getRow</code> and <code>getRows</code>, reducing query time from 7-8 seconds to 700-800 milliseconds and significantly enhancing data reading efficiency. This optimization not only resolves application lags and message delays but also provides referable practical experience for database operations in large data volume scenarios on the HarmonyOS platform.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-So-Dynamic-Library-Crash-Issues-Caused-by-Worker-Threads/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-So-Dynamic-Library-Crash-Issues-Caused-by-Worker-Threads/" class="post-title-link" itemprop="url">HarmonyOS Next IM Practical Combat: Handling So Dynamic Library Crash Issues Caused by Worker Threads</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2025-06-08 17:15:15" itemprop="dateCreated datePublished" datetime="2025-06-08T17:15:15+08:00">2025-06-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-06-24 16:09:14" itemprop="dateModified" datetime="2025-06-24T16:09:14+08:00">2025-06-24</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h4><p>After the IM SDK for HarmonyOS Next was integrated into the application and launched, many users reported significant app lag, particularly those with a large number of conversations and messages. Due to design flaws in the SDK’s logic, receiving a message triggered a full refresh of the conversation list, which involved querying the entire database. This operation was time-consuming when there were many conversations and was originally performed on the main thread, causing the app to freeze.</p>
-<p>To address this issue, we decided to leverage HarmonyOS’s Worker threads. We introduced two worker threads during app initialization: one for fetching the conversation list and another for message retrieval. This approach aimed to offload database operations from the main thread. Workers were chosen because these operations are complex, involve multiple tasks, and require background thread support.</p>
-<h4 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h4><p>After creating the worker thread as per the standard procedure and starting it during SDK initialization:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">syncConfigWorkerInstance</span> = <span class="keyword">new</span> worker.<span class="title class_">ThreadWorker</span>(<span class="string">&quot;../workers/SyncConfigAndConvWorker.ets&quot;</span>);  </span><br><span class="line"><span class="variable language_">this</span>.<span class="property">syncConfigWorkerInstance</span>.<span class="property">onmessage</span> = <span class="title function_">async</span> (event) =&gt; &#123;</span><br><span class="line">  <span class="comment">// Event handler</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>The application crashed or froze immediately after starting the worker, even though the worker thread itself did nothing. The crash occurred in a C++ shared library (<code>.so</code>) unrelated to the worker’s logic, which was puzzling:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Timestamp: 2025-05-07 17:12:54:794</span><br><span class="line">Tid: 8025, Name: beike.imsdk.tob</span><br><span class="line">#00 pc 00000000001b6344 /system/lib/ld-musl-aarch64.so.1(fcf57c313493609e8c78a5f07477c358)</span><br><span class="line">#01 pc 00000000001b834c /system/lib/ld-musl-aarch64.so.1(pthread_cond_timedwait+188)(fcf57c313493609e8c78a5f07477c358)</span><br><span class="line">#02 pc 00000000000c430c /data/storage/el1/bundle/libs/arm64/libc++_shared.so(std::__n1::condition_variable::wait(std::__n1::unique_lock&lt;std::__n1::mutex&gt;&amp;)+20)(cdf97be9396a35e8f4806f252f90a11320d26ec6)</span><br><span class="line">#03 pc 00000000000c4e9c /data/storage/el1/bundle/libs/arm64/libc++_shared.so(std::__n1::__assoc_sub_state::__sub_wait(std::__n1::unique_lock&lt;std::__n1::mutex&gt;&amp;)+48)(cdf97be9396a35e8f4806f252f90a11320d26ec6)</span><br><span class="line">#04 pc 00000000000447f4 /data/storage/el1/bundle/libs/arm64/libmarsstn.so(4ed6d779cb9585f42f228dfc8a706399ce60a56f)</span><br><span class="line">#05 pc 0000000000044344 /data/storage/el1/bundle/libs/arm64/libmarsstn.so(4ed6d779cb9585f42f228dfc8a706399ce60a56f)</span><br><span class="line">#06 pc 00000000000d7cf0 /data/storage/el1/bundle/libs/arm64/libmarsstn.so(4ed6d779cb9585f42f228dfc8a706399ce60a56f)</span><br><span class="line">#07 pc 000000000006983c /data/storage/el1/bundle/libs/arm64/libmarsstn.so(4ed6d779cb9585f42f228dfc8a706399ce60a56f)</span><br></pre></td></tr></table></figure>
-
-<h4 id="Problem-Diagnosis"><a href="#Problem-Diagnosis" class="headerlink" title="Problem Diagnosis"></a>Problem Diagnosis</h4><p>Initially, the crash was reproducible in a specific scenario but later became random. Disabling the dynamic library initialization or the worker thread resolved the issue. To identify the root cause, we enabled multithreading detection on a physical device:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdc shell param <span class="built_in">set</span> persist.ark.properties 0x107c</span><br></pre></td></tr></table></figure>
-
-<p>After rebooting the device and reproducing the crash, we obtained the following details:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Process name: com.beike.imsdk.tob</span><br><span class="line">Process life time: 34s</span><br><span class="line">Reason: Signal: SIGABRT(SI_TKILL)@0x01317b4e00004e2a from: 20010:20020046</span><br><span class="line">LastFatalMessage: [(ark_native_reference.cpp:117)(Get)] param env is not equal to its owner</span><br><span class="line">Fault thread info:</span><br><span class="line">Tid: 20010, Name: kou.imsdk.tob</span><br><span class="line">#00 pc 0000000000199e1c /system/lib/ld-musl-aarch64.so.1(raise+228)(6b9883f518515f73e093bce9a89a2548)</span><br><span class="line">#01 pc 0000000000146f8c /system/lib/ld-musl-aarch64.so.1(abort+20)(6b9883f518515f73e093bce9a89a2548)</span><br><span class="line">#02 pc 0000000000056fac /system/lib64/platformsdk/libace_napi.z.so(ArkNativeReference::Get(NativeEngine*)+476)(edf034e044dbf26f955142c343577527)</span><br><span class="line">#03 pc 000000000005f0a0 /system/lib64/platformsdk/libace_napi.z.so(napi_get_reference_value+48)(edf034e044dbf26f955142c343577527)</span><br><span class="line">#04 pc 00000000000ea354 /data/storage/el1/bundle/libs/arm64/libmarsstn.so(160beef25288e9539a33ed6f307aa362ceb17fc1)</span><br><span class="line">#05 pc 0000000000070754 /system/lib64/platformsdk/libace_napi.z.so(NativeSafeAsyncWork::ProcessAsyncHandle()+596)</span><br></pre></td></tr></table></figure>
-
-<p>Using the <code>addr2line</code> tool, we traced the crash to the <code>napi_get_reference_value</code> call in <code>libmarsstn.so</code>, where the <code>env</code> parameter was invalid.</p>
-<p>Further investigation revealed that the <code>env</code> was cached from the main thread during SO initialization (performed on the main thread). Adding logs confirmed that the crash occurred when the main thread used this cached <code>env</code>, which had been overwritten by a worker thread:</p>
-<p><img src="/../images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9AWorker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E5%BC%95%E8%B5%B7%E7%9A%84so%E5%8A%A8%E6%80%81%E5%BA%93%E5%B4%A9%E6%BA%83%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86.png" alt="text"></p>
-<p>Logs showed that the <code>napi_module_register</code> function in the SO library was being called from worker threads, overwriting the cached <code>mainEnv_</code> (a singleton in C++). </p>
-<p>In HarmonyOS Next, Worker threads are isolated with their own memory spaces, similar to separate processes. Each Worker thread loads the SO library independently, leading to multiple initializations.</p>
-<h4 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h4><p>To resolve the issue, we ensured that <code>mainEnv_</code> is initialized only once, during the first call from the main thread. We used <code>std::atomic</code> for thread-safe initialization:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">bool</span>&gt; flag&#123;<span class="literal">false</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> expected = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">if</span> (flag.<span class="built_in">compare_exchange_strong</span>(expected, <span class="literal">true</span>)) &#123;</span><br><span class="line">    napi_status status;</span><br><span class="line">    <span class="type">int32_t</span> ret;</span><br><span class="line">    <span class="keyword">auto</span> context = MarsNapiManager::<span class="built_in">getInstance</span>();</span><br><span class="line">    <span class="keyword">if</span> (context) &#123;</span><br><span class="line">        context-&gt;mainEnv_ = env;</span><br><span class="line">        context-&gt;mainThreadId = std::this_thread::<span class="built_in">get_id</span>();</span><br><span class="line">        <span class="keyword">auto</span> marsNapi = context-&gt;<span class="built_in">getMarsNapi</span>();</span><br><span class="line">        marsNapi-&gt;<span class="built_in">Export</span>(env, exports);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">xdebug2</span>(TSF<span class="string">&quot;napi--&gt;initXComponent not first&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="Another-Multithreading-Issue"><a href="#Another-Multithreading-Issue" class="headerlink" title="Another Multithreading Issue"></a>Another Multithreading Issue</h4><p>When passing SDK configuration parameters to the worker thread using HarmonyOS Next’s Sendable mechanism, the application crashed with the error:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: Cannot set sendable property with mismatched type</span><br></pre></td></tr></table></figure>
-
-<p>The crash occurred during <code>postMessage</code>. Initially, we serialized the object to JSON to bypass the issue. Further investigation revealed that the demo used class instances (which implemented Sendable), while the app used Record objects, which lacked Sendable implementation.</p>
-<h4 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h4><p>This case highlights critical differences between HarmonyOS Next’s Worker threads and traditional thread models: each Worker thread loads SO libraries independently, causing the main thread’s <code>env</code> cached in C++ singletons to be overwritten. Key findings:</p>
-<ol>
-<li><strong>Root Cause</strong>: The main thread’s cached <code>env</code> (<code>mainEnv_</code>) was overwritten by worker threads during <code>napi_module_register</code>, leading to invalid <code>env</code> usage in <code>napi_get_reference_value</code>.</li>
-<li><strong>Thread Characteristics</strong>: Worker threads have strong memory isolation, similar to separate processes, causing SO libraries to be reloaded.</li>
-<li><strong>Solution</strong>: Use <code>std::atomic</code> to ensure <code>mainEnv_</code> is initialized only once on the main thread, with <code>compare_exchange_strong</code> for thread safety.</li>
-<li><strong>Derived Issue</strong>: Cross-thread data transfer must strictly follow the Sendable protocol; non-Sendable objects (e.g., Record) should be serialized to JSON.</li>
-</ol>
-<p>This case underscores two critical considerations in HarmonyOS multithreading: <strong>thread safety during SO library initialization</strong> and <strong>strict adherence to cross-thread data transfer protocols</strong>.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-Logical-Error-Bugs-Caused-by-the-Lack-of-await-in-Asynchronous-Operations/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-Logical-Error-Bugs-Caused-by-the-Lack-of-await-in-Asynchronous-Operations/" class="post-title-link" itemprop="url">HarmonyOS Next IM Practical Combat: Handling Logical Error Bugs Caused by the Lack of await in Asynchronous Operations</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2025-06-08 17:09:32" itemprop="dateCreated datePublished" datetime="2025-06-08T17:09:32+08:00">2025-06-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-06-24 15:55:34" itemprop="dateModified" datetime="2025-06-24T15:55:34+08:00">2025-06-24</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h4><p>During the development of IMSDK, the logic is extremely intricate. Take the message retrieval logic as an example: first, retrieve the hot message list by sequence number, then process the messages by iterating through their contents and handling different message types accordingly. Insert the final messages into the message table. If a message initiates a new conversation, insert the conversation information into the conversation table, user information into the user table and user member table, etc. Finally, notify the UI to update with new messages. Many network requests and database operations are asynchronous. In this entire process, numerous asynchronous operations must complete before the next step can proceed. Often, developers inadvertently forget to use <code>await</code>, leading to inexplicable logical bugs.</p>
-<p>When such bugs occur, it is challenging to pinpoint the root cause based solely on the symptoms. Developers must reexamine the logic to check for missing <code>await</code> statements. This approach is not only inefficient but also prone to oversight. Is there a better solution?</p>
-<h4 id="Enter-Code-Linter"><a href="#Enter-Code-Linter" class="headerlink" title="Enter Code Linter"></a>Enter Code Linter</h4><p>This is where Code Linter comes in handy. It scans your code to help identify potential issues. Run Code Linter before each code submission to check for possible risks.</p>
-<h5 id="Using-Code-Linter"><a href="#Using-Code-Linter" class="headerlink" title="Using Code Linter"></a>Using Code Linter</h5><p>Create a <code>code-linter.json</code> file in the root directory of your project with the following configuration format:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span>  </span><br><span class="line">  <span class="attr">&quot;files&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>  </span><br><span class="line">    <span class="string">&quot;**/*.ets&quot;</span>  </span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span>  </span><br><span class="line">  <span class="attr">&quot;ignore&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>  </span><br><span class="line">    <span class="string">&quot;**/src/ohosTest/**/*&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="string">&quot;**/src/test/**/*&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="string">&quot;**/src/mock/**/*&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="string">&quot;**/node_modules/**/*&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="string">&quot;**/oh_modules/**/*&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="string">&quot;**/build/**/*&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="string">&quot;**/.preview/**/*&quot;</span>  </span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span>  </span><br><span class="line">  <span class="attr">&quot;ruleSet&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>  </span><br><span class="line">    <span class="string">&quot;plugin:@performance/recommended&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="string">&quot;plugin:@typescript-eslint/recommended&quot;</span>  </span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span>  </span><br><span class="line">  <span class="attr">&quot;rules&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span>  </span><br><span class="line">    <span class="attr">&quot;@typescript-eslint/return-await&quot;</span><span class="punctuation">:</span> <span class="string">&quot;error&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="attr">&quot;@typescript-eslint/require-await&quot;</span><span class="punctuation">:</span> <span class="string">&quot;error&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="attr">&quot;@typescript-eslint/await-thenable&quot;</span><span class="punctuation">:</span> <span class="string">&quot;error&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">    <span class="attr">&quot;@typescript-eslint/promise-function-async&quot;</span><span class="punctuation">:</span> <span class="string">&quot;error&quot;</span>  </span><br><span class="line">  <span class="punctuation">&#125;</span>  </span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>This configuration has three main sections:</p>
-<ul>
-<li><strong>files</strong>: Specifies which files to inspect (typically all <code>.ets</code> files).</li>
-<li><strong>ignore</strong>: Lists files to exclude (e.g., build artifacts, test files).</li>
-<li><strong>ruleSet</strong>: Aggregates rule collections (performance recommendations and general rules in this example).</li>
-<li><strong>rules</strong>: Defines specific linting rules.</li>
-</ul>
-<p>After configuration, right-click on the module to be inspected in your IDE, then select <strong>Code Linter &gt; Full Linter</strong>:<br><img src="/../images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9A%E5%BC%82%E6%AD%A5%E7%BC%BA%E4%B9%8Fawait%E5%AF%BC%E8%87%B4%E7%9A%84%E9%80%BB%E8%BE%91%E9%94%99%E8%AF%AFBug%E5%A4%84%E7%90%86.png"></p>
-<p>The inspection results will appear in the Code Linter output:<br><img src="/../images/HarmonyOS%20Next%20IM%E5%AE%9E%E6%88%98%EF%BC%9A%E5%BC%82%E6%AD%A5%E7%BC%BA%E4%B9%8Fawait%E5%AF%BC%E8%87%B4%E7%9A%84%E9%80%BB%E8%BE%91%E9%94%99%E8%AF%AFBug%E5%A4%84%E7%90%86-1.png"></p>
-<p>Modify the non-compliant code based on these results.</p>
-<h5 id="Introduction-to-Asynchronous-Rules"><a href="#Introduction-to-Asynchronous-Rules" class="headerlink" title="Introduction to Asynchronous Rules"></a>Introduction to Asynchronous Rules</h5><p>We use three asynchronous-specific Code Linter rules:</p>
-<h6 id="promise-function-async"><a href="#promise-function-async" class="headerlink" title="promise-function-async"></a>promise-function-async</h6><p>The <code>@typescript-eslint/promise-function-async</code> rule mandates that any function or method returning a <code>Promise</code> must be marked as <code>async</code>. This ensures that functions either:</p>
-<ul>
-<li>Return a rejected promise, or</li>
-<li>Throw an <code>Error</code> object.</li>
-</ul>
-<p>In contrast, non-<code>async</code> functions returning <code>Promise</code> can technically do both, complicating error handling. This rule simplifies code by eliminating the need to handle both cases.</p>
-<p>Key benefits of <code>promise-function-async</code>:</p>
-<ol>
-<li><strong>Improves code clarity</strong>: Explicitly marks Promise-returning functions.</li>
-<li><strong>Prevents common errors</strong>: Avoids overlooked asynchronous operations.</li>
-<li><strong>Standardizes code style</strong>: Ensures consistent declaration of Promise-returning functions.</li>
-<li><strong>Simplifies error handling</strong>: Leverages <code>async</code> function’s automatic error propagation.</li>
-<li><strong>Enhances type safety</strong>: Validates asynchronous behavior through TypeScript’s type system.</li>
-</ol>
-<p>Correct usage examples (all Promise-returning functions are marked <code>async</code>):</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">arrowFunctionReturnsPromise</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">functionReturnsPromise</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Explicit return type including non-Promise allows non-async function</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">functionReturnsUnionWithPromiseExplicitly</span>(<span class="params"></span></span><br><span class="line"><span class="params">  <span class="attr">p</span>: <span class="built_in">boolean</span></span></span><br><span class="line"><span class="params"></span>): <span class="built_in">string</span> | <span class="title class_">Promise</span>&lt;<span class="built_in">string</span>&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> p ? <span class="string">&#x27;value&#x27;</span> : <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">functionReturnsUnionWithPromiseImplicitly</span>(<span class="params"><span class="attr">p</span>: <span class="built_in">boolean</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> p ? <span class="string">&#x27;value&#x27;</span> : <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Non-compliant examples:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">arrowFunctionReturnsPromise</span> = (<span class="params"></span>) =&gt; <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">functionReturnsPromise</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">functionReturnsUnionWithPromiseImplicitly</span>(<span class="params"><span class="attr">p</span>: <span class="built_in">boolean</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> p ? <span class="string">&#x27;value&#x27;</span> : <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Full documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide_promise-function-async-V5">Promise Function Async Rule</a></p>
-<h6 id="await-thenable"><a href="#await-thenable" class="headerlink" title="await-thenable"></a>await-thenable</h6><p>The <code>@typescript-eslint/await-thenable</code> rule prohibits using the <code>await</code> keyword on non-“Thenable” values. A “Thenable” object has a <code>.then()</code> method (e.g., <code>Promise</code>).</p>
-<p>Correct usage:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; test &#125;;</span><br></pre></td></tr></table></figure>
-
-<p>Non-compliant code:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="string">&#x27;value&#x27;</span>; <span class="comment">// Error: &#x27;value&#x27; is not a Thenable</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; test &#125;;</span><br></pre></td></tr></table></figure>
-
-<p>Full documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide_await-thenable-V5">Await Thenable Rule</a></p>
-<h6 id="require-await"><a href="#require-await" class="headerlink" title="require-await"></a>require-await</h6><p>The <code>@typescript-eslint/require-await</code> rule is critical. It mandates that <code>async</code> functions must contain at least one <code>await</code> expression.</p>
-<p>Key objectives:</p>
-<ol>
-<li><strong>Prevent misuse</strong>: Avoid <code>await</code> on non-asynchronous values, which is often a mistake.</li>
-<li><strong>Improve clarity</strong>: Ensure <code>await</code> is used only for genuine asynchronous operations.</li>
-<li><strong>Optimize performance</strong>: Eliminate unnecessary asynchronous overhead (microtask queue).</li>
-<li><strong>Enhance type safety</strong>: Detect invalid <code>await</code> usage via TypeScript types.</li>
-</ol>
-<p>Example of missing <code>await</code>:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">doSomething</span>(<span class="params"></span>): <span class="title class_">Promise</span>&lt;<span class="built_in">void</span>&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">doSomething</span>(); <span class="comment">// Linter error: Missing `await`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>The linter flags <code>foo()</code> for missing <code>await</code>, helping uncover potential bugs.</p>
-<p>Full documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide_require-await-V5">Require Await Rule</a></p>
-<h6 id="return-await"><a href="#return-await" class="headerlink" title="return-await"></a>return-await</h6><p>The <code>@typescript-eslint/return-await</code> rule dictates when to use <code>await</code> in <code>return</code> statements of <code>async</code> functions.</p>
-<p>In <code>async</code> functions, both <code>return await promise;</code> and <code>return promise;</code> are valid, but <code>return await</code> offers advantages:</p>
-<ul>
-<li>Improves stack trace readability.</li>
-<li>Captures promise rejections in <code>try...catch</code> blocks.</li>
-<li>Has negligible performance impact.</li>
-</ul>
-<p>This rule enforces consistent handling of returned promises with four configurations:</p>
-<ul>
-<li><strong>never</strong>: Prohibit <code>await</code> on returned promises.</li>
-<li><strong>error-handling-correctness-only</strong>: Require <code>await</code> in error-handling contexts (e.g., <code>try</code>&#x2F;<code>catch</code> blocks).</li>
-<li><strong>in-try-catch</strong>: Require <code>await</code> in error-handling; prohibit elsewhere.</li>
-<li><strong>always</strong>: Always use <code>await</code> when returning promises.</li>
-</ul>
-<p>The rule distinguishes between “normal contexts” and “error-handling contexts”:</p>
-<ul>
-<li><strong>Error-handling contexts</strong>: Use <code>return await</code> to ensure <code>catch</code>&#x2F;<code>finally</code> blocks execute correctly (e.g., inside <code>try</code>&#x2F;<code>catch</code>).</li>
-<li><strong>Normal contexts</strong>: Style preference; direct <code>return promise</code> is acceptable.</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Normal Context (Style)</th>
-<th>Error-Handling Context (Bug Prevention)</th>
-<th>Recommended?</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>always</code></td>
-<td><code>return await</code></td>
-<td><code>return await</code></td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td><code>in-try-catch</code></td>
-<td><code>return promise</code></td>
-<td><code>return await</code></td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td><code>error-handling-only</code></td>
-<td>No preference</td>
-<td><code>return await</code></td>
-<td>🟡 Okay</td>
-</tr>
-<tr>
-<td><code>never</code></td>
-<td><code>return promise</code></td>
-<td><code>return promise</code> (⚠️ Risky)</td>
-<td>❌ Deprecated</td>
-</tr>
-</tbody></table>
-<p>Example requiring <code>return await</code> in <code>try...catch</code>:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">validInTryCatch1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;try&#x27;</span>); <span class="comment">// Linter error: Missing `await`</span></span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="string">&#x27;catch&#x27;</span>); <span class="comment">// Linter error: Missing `await`</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Best practices:</p>
-<ol>
-<li>Use <code>&quot;in-try-catch&quot;</code> for a balanced approach.</li>
-<li>Always use <code>return await</code> inside <code>try-catch</code> blocks.</li>
-<li>Return promises directly elsewhere.</li>
-<li>Avoid redundant <code>await</code> where error handling isn’t needed.</li>
-</ol>
-<p>Full documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide_return-await-V5">Return Await Rule</a></p>
-<h6 id="no-floating-promises"><a href="#no-floating-promises" class="headerlink" title="no-floating-promises"></a>no-floating-promises</h6><p>The <code>@typescript-eslint/no-floating-promises</code> rule ensures proper handling of Promise expressions. A “floating promise” is one created without error handling, leading to silent failures, incorrect execution order, or uncaught rejections.</p>
-<p>The rule flags unhandled Promise expressions unless they are:</p>
-<ul>
-<li>Handled with <code>.then(onFulfilled, onRejected)</code>.</li>
-<li>Caught with <code>.catch()</code>.</li>
-<li>Awaited with <code>await</code>.</li>
-<li>Returned from a function.</li>
-<li>Explicitly ignored with <code>void</code>.</li>
-</ul>
-<p>It also detects unhandled Promises in arrays. Use Promise combinators like <code>Promise.all()</code> to handle them collectively.</p>
-<p>Examples of unhandled promises:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> promise = <span class="keyword">new</span> <span class="title class_">Promise</span>&lt;<span class="built_in">string</span>&gt;(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">resolve</span>(<span class="string">&#x27;value&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;finish&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">  promise; <span class="comment">// Linter error: Unhandled promise</span></span><br><span class="line">  <span class="title class_">Promise</span>.<span class="title function_">reject</span>(<span class="string">&#x27;value&#x27;</span>).<span class="title function_">catch</span>(); <span class="comment">// Linter error: Empty catch</span></span><br><span class="line">  <span class="keyword">await</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(<span class="string">&#x27;value&#x27;</span>).<span class="title function_">finally</span>(); <span class="comment">// Linter error: No catch</span></span><br><span class="line">  [<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>].<span class="title function_">map</span>(<span class="keyword">async</span> x =&gt; x + <span class="string">&#x27;1&#x27;</span>); <span class="comment">// Linter error: Unhandled Promise array</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Key benefits:</p>
-<ol>
-<li><strong>Prevent silent failures</strong>: Ensure Promise rejections aren’t ignored.</li>
-<li><strong>Improve reliability</strong>: Force explicit error handling.</li>
-<li><strong>Simplify debugging</strong>: Trace all asynchronous errors.</li>
-<li><strong>Enhance maintainability</strong>: Clarify asynchronous data flow.</li>
-</ol>
-<p>Full documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide_no-floating-promises-V5">No Floating Promises Rule</a></p>
-<h6 id="no-misused-promises"><a href="#no-misused-promises" class="headerlink" title="no-misused-promises"></a>no-misused-promises</h6><p>The <code>@typescript-eslint/no-misused-promises</code> rule prevents Promise misuse in non-asynchronous contexts, ensuring Promises are used only where appropriate.</p>
-<p>Core objectives:</p>
-<ol>
-<li><strong>Block conditional misuse</strong>: Flag Promises used directly in conditions (e.g., <code>if (promise)</code>).</li>
-<li><strong>Prevent logical operator misuse</strong>: Prohibit Promises in <code>&amp;&amp;</code>, <code>||</code>, <code>??</code> operations.</li>
-<li><strong>Ensure correct callbacks</strong>: Prevent async callbacks in synchronous contexts (e.g., <code>forEach</code>).</li>
-<li><strong>Protect void return types</strong>: Block Promises in functions expected to return <code>void</code> (e.g., event handlers).</li>
-</ol>
-<p>Problem scenarios and fixes:</p>
-<p><strong>Scenario 1: Conditional misuse</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ Error: Using Promise directly in condition</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_">fetchUserData</span>()) &#123; </span><br><span class="line">  <span class="comment">// Always executes (Promise is always truthy)</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Fetching user data...&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ Correct: Resolve Promise first</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">checkUser</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> userData = <span class="keyword">await</span> <span class="title function_">fetchUserData</span>();</span><br><span class="line">  <span class="keyword">if</span> (userData) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;User data loaded&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Scenario 2: Logical operator misuse</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ Error: Using Promise in logical operator</span></span><br><span class="line"><span class="keyword">const</span> config = <span class="title function_">loadConfig</span>() || defaultConfig; <span class="comment">// Always uses loadConfig()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ Correct: Resolve Promise before comparison</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getConfig</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> loadedConfig = <span class="keyword">await</span> <span class="title function_">loadConfig</span>();</span><br><span class="line">  <span class="keyword">return</span> loadedConfig ?? defaultConfig;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Scenario 3: Callback misuse</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ Error: Async callback in array method</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="title function_">forEach</span>(<span class="title function_">async</span> (id) =&gt; &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">deleteRecord</span>(id); <span class="comment">// Unintended concurrency</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ Correct: Sequential processing with for...of</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">deleteRecords</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> id <span class="keyword">of</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]) &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">deleteRecord</span>(id);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ Correct: Parallel processing with Promise.all</span></span><br><span class="line"><span class="keyword">await</span> <span class="title class_">Promise</span>.<span class="title function_">all</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].<span class="title function_">map</span>(<span class="function"><span class="params">id</span> =&gt;</span> <span class="title function_">deleteRecord</span>(id)));</span><br></pre></td></tr></table></figure>
-
-<p><strong>Scenario 4: Void return type misuse</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ Error: Returning Promise from event handler</span></span><br><span class="line"><span class="keyword">const</span> button = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;submit&#x27;</span>);</span><br><span class="line">button.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">submitForm</span>(); <span class="comment">// Event handlers should return void</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ Correct: Explicitly ignore Promise</span></span><br><span class="line">button.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">void</span> <span class="title function_">submitForm</span>(); <span class="comment">// Indicate Promise is intentionally unhandled</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ Correct: Handle errors with async/await</span></span><br><span class="line">button.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="title function_">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">submitForm</span>();</span><br><span class="line">  &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">    <span class="title function_">showError</span>(error);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>Full documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide_no-misused-promises-V5">No Misused Promises Rule</a></p>
-<h4 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h4><p>This article addressed issues caused by improper asynchronous operations in HarmonyOS development. By leveraging five specific Code Linter rules, we can effectively mitigate problems related to missing <code>await</code> keywords and other asynchronous pitfalls.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-Module-Uninitialized-Exceptions-in-Worker-Threads/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/08/HarmonyOS-Next-IM-Practical-Combat-Handling-Module-Uninitialized-Exceptions-in-Worker-Threads/" class="post-title-link" itemprop="url">HarmonyOS Next IM Practical Combat: Handling Module Uninitialized Exceptions in Worker Threads</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-08 16:59:39 / Modified: 17:14:24" itemprop="dateCreated datePublished" datetime="2025-06-08T16:59:39+08:00">2025-06-08</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h4><p>During the development of the instant messaging (IM) SDK, users reported issues such as delayed message reception and page卡顿 (freezing) when opening interfaces. Since IM involves numerous network requests and database operations, all of which were previously handled on the main thread, heavy I&#x2F;O operations caused app卡顿 and frame drops when there were many chat messages or sessions. Initially, the design considered using multi-threading mechanisms like HarmonyOS-provided Worker and TaskPool, but due to time constraints and complex logic, the non-shared memory multi-threading approach had high refactoring costs. Now that the production environment has hit a bottleneck, resolving this through multi-threading has become imperative.  </p>
-<h4 id="Implementation-Approach"><a href="#Implementation-Approach" class="headerlink" title="Implementation Approach"></a>Implementation Approach</h4><p>The message reception mechanism uses a combination of push and pull. When new messages arrive, they are delivered to the client via long connections, and the client then requests specific message content via HTTP. On Android and iOS, daemon threads are employed: a dedicated thread for pulling new messages, which triggers the message-pulling interface when events occur and blocks to wait when no events are present.  </p>
-<h5 id="Selection-Between-Worker-and-TaskPool"><a href="#Selection-Between-Worker-and-TaskPool" class="headerlink" title="Selection Between Worker and TaskPool"></a>Selection Between Worker and TaskPool</h5><p>The memory-sharing concurrency model refers to multiple threads executing tasks simultaneously while relying on and having access to the same memory. Threads must抢占 (compete for) and lock memory usage before accessing it, with threads that fail to acquire the lock waiting for others to release it. Common concurrency models include memory-sharing and message-communication-based models. The Actor concurrency model is a typical example of the latter, widely adopted because it eliminates complex lock-handling for developers and offers high concurrency. Currently, ArkTS provides two concurrency capabilities—TaskPool and Worker—both based on the Actor model.  </p>
-<p>In the Actor model, each thread is an independent Actor with its own isolated memory. Actors trigger each other’s behaviors through message-passing and cannot directly access each other’s memory. Compared to memory-sharing models, the Actor model isolates memory between threads, eliminating thread contention for shared resources. This allows developers to avoid memory-locking issues and improves development efficiency.  </p>
-<p>The following diagram illustrates how to solve the producer-consumer problem using a memory-sharing model:<br><img src="/../images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png" alt="alt text"> </p>
-<p>The example below briefly demonstrates using the Actor-based TaskPool concurrency capability to solve the producer-consumer problem:<br><img src="/../images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98.png" alt="alt text"> </p>
-<p>In the Actor model, threads do not share memory and must use inter-thread communication to pass tasks and results. Non-shared memory threads are analogous to traditional system processes, with independent memory and high inter-thread interaction costs.  </p>
-<p>TaskPool and Worker provide multi-threaded environments for applications to handle time-consuming computational or intensive tasks, preventing task blocking on the main thread and improving system performance and resource utilization.  </p>
-<p>A comparison of TaskPool and Worker implementation characteristics is as follows:  </p>
-<table>
-<thead>
-<tr>
-<th align="left">Implementation</th>
-<th align="left">TaskPool</th>
-<th align="left">Worker</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">Memory Model</td>
-<td align="left">Thread-isolated, no shared memory.</td>
-<td align="left">Thread-isolated, no shared memory.</td>
-</tr>
-<tr>
-<td align="left">Parameter Passing</td>
-<td align="left">Uses structured cloning for serialization&#x2F;deserialization.<br><br>Supports ArrayBuffer transfer and SharedArrayBuffer sharing.</td>
-<td align="left">Same as TaskPool.</td>
-</tr>
-<tr>
-<td align="left">Argument Handling</td>
-<td align="left">Directly passed, no encapsulation needed (transfer by default).</td>
-<td align="left">Requires encapsulating messages as the sole parameter.</td>
-</tr>
-<tr>
-<td align="left">Method Invocation</td>
-<td align="left">Methods are directly passed for invocation.</td>
-<td align="left">Messages must be parsed in the Worker thread to invoke corresponding methods.</td>
-</tr>
-<tr>
-<td align="left">Return Values</td>
-<td align="left">Asynchronous calls return values by default.</td>
-<td align="left">Messages must be actively sent and parsed in <code>onmessage</code> for assignment.</td>
-</tr>
-<tr>
-<td align="left">Lifecycle</td>
-<td align="left">Self-managed; no need to monitor task load.</td>
-<td align="left">Developers manage Worker count and lifecycle.</td>
-</tr>
-<tr>
-<td align="left">Max Pool Size</td>
-<td align="left">Automatically managed; no configuration required.</td>
-<td align="left">Up to 64 Workers per process (limited by memory).</td>
-</tr>
-<tr>
-<td align="left">Task Duration Limit</td>
-<td align="left">3 minutes (excluding async operations like I&#x2F;O). Long tasks have no limit.</td>
-<td align="left">No limit.</td>
-</tr>
-<tr>
-<td align="left">Priority Configuration</td>
-<td align="left">Supports setting task priorities.</td>
-<td align="left">Does not support.</td>
-</tr>
-<tr>
-<td align="left">Task Cancellation</td>
-<td align="left">Supports canceling pending tasks.</td>
-<td align="left">Does not support.</td>
-</tr>
-<tr>
-<td align="left">Thread Reuse</td>
-<td align="left">Supports.</td>
-<td align="left">Does not support.</td>
-</tr>
-<tr>
-<td align="left">Delayed Execution</td>
-<td align="left">Supports.</td>
-<td align="left">Does not support.</td>
-</tr>
-<tr>
-<td align="left">Task Dependencies</td>
-<td align="left">Supports.</td>
-<td align="left">Does not support.</td>
-</tr>
-<tr>
-<td align="left">Serial Queues</td>
-<td align="left">Supports.</td>
-<td align="left">Does not support.</td>
-</tr>
-<tr>
-<td align="left">Task Groups</td>
-<td align="left">Supports.</td>
-<td align="left">Does not support.</td>
-</tr>
-</tbody></table>
-<p>TaskPool’s worker threads bind to system scheduling priorities and support load balancing (automatic scaling), whereas Worker requires manual creation, incurs creation overhead, and lacks priority settings. Thus, TaskPool outperforms Worker in performance, and the official recommendation is to use TaskPool for most scenarios.  </p>
-<p>TaskPool focuses on independent tasks, with no need to manage thread lifecycles (超长任务 (ultra-long tasks &gt;3 minutes, excluding long tasks) are auto-recycled by the system). Worker focuses on thread persistence, requiring developers to actively manage lifecycles.  </p>
-<p>Common use cases and recommendations:  </p>
-<ul>
-<li><strong>Tasks longer than 3 minutes</strong> (excluding async I&#x2F;O): e.g., 1-hour background CPU-intensive prediction model training → use Worker.  </li>
-<li><strong>Dependent synchronous tasks</strong>: e.g., scenarios requiring persistent handles (each handle is unique and must be preserved for operations) → use Worker.  </li>
-<li><strong>Priority-based tasks</strong>: e.g., gallery histogram rendering (background calculations affect UI performance, requiring high priority) → use TaskPool.  </li>
-<li><strong>Frequent task cancellation</strong>: e.g., large image browsing in galleries (canceling cached tasks when sliding) → use TaskPool.  </li>
-<li><strong>Massive or distributed tasks</strong>: e.g., bulk database writes in large apps (difficult to manage with Worker) → use TaskPool.</li>
-</ul>
-<p>For our requirement to implement a daemon-like thread, we use Worker to manually manage thread lifecycles.  </p>
-<h5 id="Implementing-a-Daemon-Thread-with-Worker"><a href="#Implementing-a-Daemon-Thread-with-Worker" class="headerlink" title="Implementing a Daemon Thread with Worker"></a>Implementing a Daemon Thread with Worker</h5><p>DevEco Studio supports one-click Worker generation. In the {moduleName} directory, right-click &gt; New &gt; Worker to auto-generate template files and configurations. We create <code>MsgSyncWorker</code> as follows:  </p>
-<pre><code class="language-typescript">// worker.ets  
-import &#123; ErrorEvent, MessageEvents, ThreadWorkerGlobalScope, worker &#125; from &#39;@kit.ArkTS&#39;;  
-
-const workerPort: ThreadWorkerGlobalScope = worker.workerPort;  
-
-// Register onmessage callback: triggered when the Worker receives messages from the main thread via postMessage, executed in the Worker thread  
-workerPort.onmessage = (e: MessageEvents) =&gt; &#123;  
-  let data: string = e.data;  
-  console.info(&#39;workerPort onmessage is: &#39;, data);  
-
-  // Send messages to the main thread  
-  workerPort.postMessage(&#39;2&#39;);  
-&#125;;  
-
-// Register onmessageerror callback: triggered for unserializable messages  
-workerPort.onmessageerror = () =&gt; &#123;  
-  console.info(&#39;workerPort onmessageerror&#39;);  
-&#125;;  
-
-// Register onerror callback: triggered on Worker execution errors  
-workerPort.onerror = (err: ErrorEvent) =&gt; &#123;  
-  console.info(&#39;workerPort onerror err is: &#39;, err.message);  
-&#125;;  
-</code></pre>
-<p>The IDE-generated Worker includes default callback implementations. Key steps involve registering <code>onmessage</code> to receive main thread commands (executed in the child thread) and using <code>workerPort.postMessage</code> to send replies.  </p>
-<p>Next, start the Worker in the main thread:  </p>
-<pre><code class="language-typescript">// Create a Worker instance  
-let workerInstance = new worker.ThreadWorker(&#39;entry/ets/workers/worker.ets&#39;);  
-
-// Register onmessage callback: triggered when the main thread receives messages from the Worker  
-workerInstance.onmessage = (e: MessageEvents) =&gt; &#123;  
-  let data: string = e.data;  
-  console.info(&quot;workerInstance onmessage is: &quot;, data);  
-&#125;;  
-
-// Register onerror callback: triggered on Worker errors  
-workerInstance.onerror = (err: ErrorEvent) =&gt; &#123;  
-  console.info(&quot;workerInstance onerror message is: &quot; + err.message);  
-&#125;;  
-
-// Register onmessageerror callback: triggered for unserializable messages  
-workerInstance.onmessageerror = () =&gt; &#123;  
-  console.info(&#39;workerInstance onmessageerror&#39;);  
-&#125;;  
-
-// Register onexit callback: triggered when the Worker is destroyed  
-workerInstance.onexit = (e: number) =&gt; &#123;  
-  // Exit code 0 for normal termination, 1 for errors  
-  console.info(&quot;workerInstance onexit code is: &quot;, e);  
-&#125;;  
-
-// Send a message to the Worker thread  
-workerInstance.postMessage(&#39;1&#39;);  
-</code></pre>
-<h4 id="Issues-Encountered"><a href="#Issues-Encountered" class="headerlink" title="Issues Encountered"></a>Issues Encountered</h4><p>Due to memory isolation between threads in HarmonyOS, database and network singleton classes initialized on the main thread needed re-initialization in the Worker. However, initializing the database caused a crash with the error: <strong>Error message: UserDaoHelper is not initialized</strong>.  </p>
-<p><code>UserDaoHelper</code> is a singleton, and the crash occurred before calling <code>getInstance</code>, indicating a failure to import the module.  </p>
-<h5 id="Root-Cause-Analysis"><a href="#Root-Cause-Analysis" class="headerlink" title="Root Cause Analysis"></a>Root Cause Analysis</h5><p>The “module not initialized” error stemmed from circular dependencies between modules. Circular dependencies can cause runtime initialization failures, as seen in the example below. Before executing <code>index.ets</code>, the dependent <code>page.ets</code> runs first, which in turn depends on <code>foo</code> exported by <code>index.ets</code>. Since <code>index.ets</code> has not executed yet, <code>foo</code> is uninitialized, leading to a runtime exception.  </p>
-<pre><code class="language-typescript">// index.ets  
-import &#123; bar &#125; from &#39;./page&#39;;  
-export function foo() &#123;  
-  bar();  
-&#125;  
-
-// page.ets  
-import &#123; foo &#125; from &#39;./index&#39;;  
-export function bar() &#123;  
-  foo();  
-&#125;  
-bar();  
-</code></pre>
-<h5 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h5><p>Use DevEco Studio’s Code Linter to identify circular dependencies and refactor the code:  </p>
-<ol>
-<li>Create a <code>code-linter.json5</code> configuration file in the project root with:</li>
-</ol>
-<pre><code class="language-json5">&#123;  
-  &quot;files&quot;: [  
-    &quot;**/*.js&quot;,  
-    &quot;**/*.ts&quot;,  
-    &quot;**/*.ets&quot;  
-  ],  
-  &quot;rules&quot;: &#123;  
-    &quot;@security/no-cycle&quot;: &quot;error&quot; // Enable circular dependency checking  
-  &#125;  
-&#125;  
-</code></pre>
-<ol start="2">
-<li>Right-click the project root in the workspace and select <strong>Code Linter &gt; Full Linter</strong> to perform a full code scan.<br><img src="/../images/HarmonyOS%20Next%20Worker%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%A8%A1%E5%9D%97%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98-2.png" alt="alt text"></li>
-<li>Refactor the code based on the linter’s circular dependency warnings to eliminate the issue.</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/29/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><span class="page-number current">30</span>
+    <a class="extend prev" rel="prev" href="/page/29/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/">31</a><a class="extend next" rel="next" href="/page/31/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1873,7 +1698,7 @@ bar();
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">300</span>
+          <span class="site-state-item-count">305</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

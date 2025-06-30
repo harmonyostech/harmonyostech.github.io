@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"harmonyostech.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color &amp; Bubble Radius, Dynamic Attributes, Scan UI Implementation1. HarmonyOS popup component offset after page content switching?1234">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color &amp; Bubble Radius, Dynamic Attributes, Scan UI Implementation">
+<meta property="og:url" content="https://harmonyostech.github.io/2025/06/30/628%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Component-Offset-Popup-Arrow-Color-Bubble-Radius-Dynamic-Attributes-Scan-UI-Implementation/index.html">
+<meta property="og:site_name" content="HarmonyOS NEXT Knowledge Charging Station">
+<meta property="og:description" content="【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color &amp; Bubble Radius, Dynamic Attributes, Scan UI Implementation1. HarmonyOS popup component offset after page content switching?1234">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-30T00:41:40.000Z">
+<meta property="article:modified_time" content="2025-06-30T00:44:37.118Z">
+<meta property="article:author" content="Qingkouwei">
+<meta property="article:tag" content="HarmonyOS Next">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://harmonyostech.github.io/2025/06/30/628%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Component-Offset-Popup-Arrow-Color-Bubble-Radius-Dynamic-Attributes-Scan-UI-Implementation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color & Bubble Radius, Dynamic Attributes, Scan UI Implementation | HarmonyOS NEXT Knowledge Charging Station</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HarmonyOS NEXT Knowledge Charging Station</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Analysis of Core Technologies and Application Scenarios of HarmonyOS NEXT</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/30/628%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Component-Offset-Popup-Arrow-Color-Bubble-Radius-Dynamic-Attributes-Scan-UI-Implementation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color & Bubble Radius, Dynamic Attributes, Scan UI Implementation
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-30 08:41:40 / Modified: 08:44:37" itemprop="dateCreated datePublished" datetime="2025-06-30T08:41:40+08:00">2025-06-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="【Daily-HarmonyOS-Next-Knowledge】Component-Offset-Popup-Arrow-Color-Bubble-Radius-Dynamic-Attributes-Scan-UI-Implementation"><a href="#【Daily-HarmonyOS-Next-Knowledge】Component-Offset-Popup-Arrow-Color-Bubble-Radius-Dynamic-Attributes-Scan-UI-Implementation" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color &amp; Bubble Radius, Dynamic Attributes, Scan UI Implementation"></a>【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color &amp; Bubble Radius, Dynamic Attributes, Scan UI Implementation</h3><h4 id="1-HarmonyOS-popup-component-offset-after-page-content-switching"><a href="#1-HarmonyOS-popup-component-offset-after-page-content-switching" class="headerlink" title="1. HarmonyOS popup component offset after page content switching?"></a>1. HarmonyOS popup component offset after page content switching?</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> dataItem &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">price</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">price2</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">dataSource</span>: <span class="title class_">Array</span>&lt;dataItem&gt; = [</span><br><span class="line">    &#123; <span class="attr">title</span>: <span class="string">&#x27;AAAAAA&#x27;</span>, <span class="attr">price</span>: <span class="number">100</span>, <span class="attr">price2</span>: <span class="number">111</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">title</span>: <span class="string">&#x27;BBBBBB&#x27;</span>, <span class="attr">price</span>: <span class="number">299</span>, <span class="attr">price2</span>: <span class="number">398</span> &#125;</span><br><span class="line">  ];</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">index</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">qty</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">qty2</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">total</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">total2</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">showModal</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">showPopup</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">showPopup2</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">handleClick</span>(<span class="params"><span class="attr">type</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">type</span> === <span class="string">&#x27;minus&#x27;</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">qty</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">qty</span> -= <span class="number">1</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">total</span> = <span class="variable language_">this</span>.<span class="property">qty</span> * <span class="variable language_">this</span>.<span class="property">dataSource</span>[<span class="variable language_">this</span>.<span class="property">index</span>].<span class="property">price</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">showPopup</span> = <span class="variable language_">this</span>.<span class="property">qty</span> &gt; <span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">type</span> === <span class="string">&#x27;add&#x27;</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">qty</span> += <span class="number">1</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">total</span> = <span class="variable language_">this</span>.<span class="property">qty</span> * <span class="variable language_">this</span>.<span class="property">dataSource</span>[<span class="variable language_">this</span>.<span class="property">index</span>].<span class="property">price</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">showPopup</span> = <span class="variable language_">this</span>.<span class="property">qty</span> &gt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">handleClick2</span>(<span class="params"><span class="attr">type</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">type</span> === <span class="string">&#x27;minus&#x27;</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">qty2</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">qty2</span> -= <span class="number">1</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">total2</span> = <span class="variable language_">this</span>.<span class="property">qty2</span> * <span class="variable language_">this</span>.<span class="property">dataSource</span>[<span class="variable language_">this</span>.<span class="property">index</span>].<span class="property">price2</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">showPopup2</span> = <span class="variable language_">this</span>.<span class="property">qty2</span> &gt; <span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">type</span> === <span class="string">&#x27;add&#x27;</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">qty2</span> += <span class="number">1</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">total2</span> = <span class="variable language_">this</span>.<span class="property">qty2</span> * <span class="variable language_">this</span>.<span class="property">dataSource</span>[<span class="variable language_">this</span>.<span class="property">index</span>].<span class="property">price2</span>;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">showPopup2</span> = <span class="variable language_">this</span>.<span class="property">qty2</span> &gt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Builder</span></span><br><span class="line">  <span class="title function_">modalBuilder</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">ForEach</span>(<span class="variable language_">this</span>.<span class="property">dataSource</span>, <span class="function">(<span class="params"><span class="attr">item</span>: dataItem, <span class="attr">index</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">Text</span>(item.<span class="property">title</span>)</span><br><span class="line">          .<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">          .<span class="title function_">height</span>(<span class="number">50</span>)</span><br><span class="line">          .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">          .<span class="title function_">border</span>(&#123; <span class="attr">width</span>: <span class="number">1</span> &#125;)</span><br><span class="line">          .<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="number">10</span> &#125;)</span><br><span class="line">          .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">index</span> = index;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">total</span> = <span class="variable language_">this</span>.<span class="property">qty</span> * <span class="variable language_">this</span>.<span class="property">dataSource</span>[<span class="variable language_">this</span>.<span class="property">index</span>].<span class="property">price</span>;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">total2</span> = <span class="variable language_">this</span>.<span class="property">qty2</span> * <span class="variable language_">this</span>.<span class="property">dataSource</span>[<span class="variable language_">this</span>.<span class="property">index</span>].<span class="property">price2</span>;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">showModal</span> = <span class="literal">false</span>;</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;, <span class="function">(<span class="params"><span class="attr">item</span>: dataItem, <span class="attr">index</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> item.<span class="property">title</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">padding</span>(&#123; <span class="attr">top</span>: <span class="number">100</span> &#125;)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Builder</span></span><br><span class="line">  <span class="title function_">popupBuilder</span>(<span class="params"><span class="attr">type</span>: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="title class_">String</span>(<span class="keyword">type</span> === <span class="number">1</span> ? <span class="variable language_">this</span>.<span class="property">total</span> : <span class="variable language_">this</span>.<span class="property">total2</span>))</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">11</span>)</span><br><span class="line">        .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">        .<span class="title function_">padding</span>(&#123;</span><br><span class="line">          <span class="attr">top</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">bottom</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">left</span>: <span class="number">12</span>,</span><br><span class="line">          <span class="attr">right</span>: <span class="number">12</span></span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Row</span>() &#123;</span><br><span class="line">        <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">dataSource</span>[<span class="variable language_">this</span>.<span class="property">index</span>].<span class="property">title</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">height</span>(<span class="number">50</span>)</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">      .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">Center</span>)</span><br><span class="line">      .<span class="title function_">border</span>(&#123; <span class="attr">width</span>: <span class="number">1</span> &#125;)</span><br><span class="line">      .<span class="title function_">bindSheet</span>(<span class="variable language_">this</span>.<span class="property">showModal</span>, <span class="variable language_">this</span>.<span class="title function_">modalBuilder</span>(), &#123;</span><br><span class="line">        <span class="attr">height</span>: <span class="number">300</span>,</span><br><span class="line">        <span class="attr">dragBar</span>: <span class="literal">false</span></span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">showModal</span> = !<span class="variable language_">this</span>.<span class="property">showModal</span>;</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Row</span>() &#123;</span><br><span class="line">          <span class="title class_">Text</span>(<span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">            .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">            .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> <span class="variable language_">this</span>.<span class="title function_">handleClick</span>(<span class="string">&#x27;minus&#x27;</span>))</span><br><span class="line">          <span class="title class_">Text</span>(<span class="title class_">String</span>(<span class="variable language_">this</span>.<span class="property">total</span>))</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">border</span>(&#123; <span class="attr">width</span>: <span class="number">1</span>, <span class="attr">color</span>: <span class="title class_">Color</span>.<span class="property">Red</span> &#125;)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="number">60</span>)</span><br><span class="line">            .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">          <span class="title class_">Text</span>(<span class="string">&#x27;+&#x27;</span>)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">            .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">            .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> <span class="variable language_">this</span>.<span class="title function_">handleClick</span>(<span class="string">&#x27;add&#x27;</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="number">20</span> &#125;)</span><br><span class="line">        .<span class="title function_">bindPopup</span>(<span class="variable language_">this</span>.<span class="property">showPopup</span>, &#123;</span><br><span class="line">          <span class="attr">builder</span>: <span class="variable language_">this</span>.<span class="title function_">popupBuilder</span>(<span class="number">1</span>),</span><br><span class="line">          <span class="attr">popupColor</span>: <span class="title class_">Color</span>.<span class="property">Black</span>,</span><br><span class="line">          <span class="attr">placement</span>: <span class="title class_">Placement</span>.<span class="property">Top</span>,</span><br><span class="line">          <span class="attr">autoCancel</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="attr">radius</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">mask</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="attr">arrowWidth</span>: <span class="number">8</span>,</span><br><span class="line">          <span class="attr">arrowHeight</span>: <span class="number">6</span>,</span><br><span class="line">          <span class="attr">shadow</span>: <span class="title class_">ShadowStyle</span>.<span class="property">OUTER_DEFAULT_XS</span></span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">        <span class="title class_">Row</span>() &#123;</span><br><span class="line">          <span class="title class_">Text</span>(<span class="string">&#x27;-&#x27;</span>)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">            .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">            .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> <span class="variable language_">this</span>.<span class="title function_">handleClick2</span>(<span class="string">&#x27;minus&#x27;</span>))</span><br><span class="line">          <span class="title class_">Text</span>(<span class="title class_">String</span>(<span class="variable language_">this</span>.<span class="property">total2</span>))</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">border</span>(&#123; <span class="attr">width</span>: <span class="number">1</span>, <span class="attr">color</span>: <span class="title class_">Color</span>.<span class="property">Red</span> &#125;)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="number">60</span>)</span><br><span class="line">            .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">          <span class="title class_">Text</span>(<span class="string">&#x27;+&#x27;</span>)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">            .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">            .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> <span class="variable language_">this</span>.<span class="title function_">handleClick2</span>(<span class="string">&#x27;add&#x27;</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">bindPopup</span>(<span class="variable language_">this</span>.<span class="property">showPopup2</span>, &#123;</span><br><span class="line">          <span class="attr">builder</span>: <span class="variable language_">this</span>.<span class="title function_">popupBuilder</span>(<span class="number">2</span>),</span><br><span class="line">          <span class="attr">popupColor</span>: <span class="title class_">Color</span>.<span class="property">Black</span>,</span><br><span class="line">          <span class="attr">placement</span>: <span class="title class_">Placement</span>.<span class="property">Top</span>,</span><br><span class="line">          <span class="attr">autoCancel</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="attr">radius</span>: <span class="number">1</span>,</span><br><span class="line">          <span class="attr">mask</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="attr">arrowWidth</span>: <span class="number">8</span>,</span><br><span class="line">          <span class="attr">arrowHeight</span>: <span class="number">6</span>,</span><br><span class="line">          <span class="attr">shadow</span>: <span class="title class_">ShadowStyle</span>.<span class="property">OUTER_DEFAULT_XS</span></span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">alignItems</span>(<span class="title class_">HorizontalAlign</span>.<span class="property">Start</span>)</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      .<span class="title function_">padding</span>(<span class="number">20</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">padding</span>(&#123; <span class="attr">top</span>: <span class="number">50</span> &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="2-How-to-set-arrow-color-and-bubble-content-radius-when-using-HarmonyOS-bindPopup"><a href="#2-How-to-set-arrow-color-and-bubble-content-radius-when-using-HarmonyOS-bindPopup" class="headerlink" title="2. How to set arrow color and bubble content radius when using HarmonyOS bindPopup?"></a>2. How to set arrow color and bubble content radius when using HarmonyOS bindPopup?</h4><ul>
+<li><code>radius: &#39;10vp&#39;</code> &#x2F;&#x2F; Set bubble corner radius  </li>
+<li><code>backgroundBlurStyle: BlurStyle.NONE</code> &#x2F;&#x2F; Set arrow color, associated with the <code>popupColor</code> attribute</li>
+</ul>
+<p><strong>Demo reference</strong>:  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">BindPopupDemo</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">customPopup</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Builder</span></span><br><span class="line">  <span class="title function_">popupBuilder</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">2</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Row</span>().<span class="title function_">width</span>(<span class="number">64</span>)</span><br><span class="line">        .<span class="title function_">height</span>(<span class="number">64</span>)</span><br><span class="line">        .<span class="title function_">backgroundColor</span>(<span class="number">0x409eff</span>)</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;Popup&#x27;</span>)</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">10</span>)</span><br><span class="line">        .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">SpaceAround</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="number">100</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="number">100</span>)</span><br><span class="line">    .<span class="title function_">padding</span>(<span class="number">5</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Builder</span></span><br><span class="line">  <span class="title function_">customBubbleInstructionBuilder</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Stack</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>() &#123;</span><br><span class="line">        <span class="title class_">Span</span>(<span class="string">&quot;2021年12月20日-2022月1日30日每人限购8件  已购买3件，还可购5件&quot;</span>).<span class="title function_">fontSize</span>(<span class="number">12</span>)</span><br><span class="line">        <span class="title class_">Span</span>(<span class="string">&quot; 已购买3件，还可购5件&quot;</span>).<span class="title function_">fontSize</span>(<span class="number">14</span>)</span><br><span class="line">      &#125;.<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">      .<span class="title function_">maxLines</span>(<span class="number">2</span>).<span class="title function_">textOverflow</span>(&#123; <span class="attr">overflow</span>: <span class="title class_">TextOverflow</span>.<span class="property">Ellipsis</span> &#125;).<span class="title function_">ellipsisMode</span>(<span class="title class_">EllipsisMode</span>.<span class="property">END</span>)</span><br><span class="line">    &#125;.<span class="title function_">backgroundColor</span>(<span class="number">0x409eff</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="number">100</span>)</span><br><span class="line">    .<span class="title function_">padding</span>(&#123;</span><br><span class="line">      <span class="attr">left</span>: <span class="number">12</span>,</span><br><span class="line">      <span class="attr">right</span>: <span class="number">12</span>,</span><br><span class="line">      <span class="attr">top</span>: <span class="number">18</span>,</span><br><span class="line">      <span class="attr">bottom</span>: <span class="number">8</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;click&#x27;</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">customPopup</span> = !<span class="variable language_">this</span>.<span class="property">customPopup</span>;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">backgroundColor</span>(<span class="number">0xf56c6c</span>)</span><br><span class="line">        .<span class="title function_">bindPopup</span>(<span class="variable language_">this</span>.<span class="property">customPopup</span>, &#123;</span><br><span class="line">          <span class="attr">builder</span>: <span class="variable language_">this</span>.<span class="property">customBubbleInstructionBuilder</span>,</span><br><span class="line">          <span class="attr">placement</span>: <span class="title class_">Placement</span>.<span class="property">Top</span>,</span><br><span class="line">          <span class="attr">maskColor</span>: <span class="number">0x33000000</span>,</span><br><span class="line">          <span class="attr">popupColor</span>: <span class="number">0xf56c6c</span>,</span><br><span class="line">          <span class="attr">enableArrow</span>: <span class="literal">true</span>,</span><br><span class="line">          <span class="attr">radius</span>: <span class="string">&#x27;10vp&#x27;</span>,</span><br><span class="line">          <span class="attr">backgroundBlurStyle</span>: <span class="title class_">BlurStyle</span>.<span class="property">NONE</span>,</span><br><span class="line">          <span class="attr">onStateChange</span>: <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!e.<span class="property">isVisible</span>) &#123;</span><br><span class="line">              <span class="variable language_">this</span>.<span class="property">customPopup</span> = <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">Center</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="number">437</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-Usage-of-HarmonyOS-NativeXComponent"><a href="#3-Usage-of-HarmonyOS-NativeXComponent" class="headerlink" title="3. Usage of HarmonyOS NativeXComponent?"></a>3. Usage of HarmonyOS NativeXComponent?</h4><p><strong>Reference document</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/_o_h___native_x_component-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/_o_h___native_x_component-V5</a>  </p>
+<p>Native XComponent describes the surface and touch events held by ArkUI XComponent, which can be used for EGL&#x2F;OpenGLES and media data input, and displayed on ArkUI XComponent.  </p>
+<h4 id="4-HarmonyOS-new-TextAttribute-causes-a-crash-with-the-error-“TextAttribute-is-not-defined”"><a href="#4-HarmonyOS-new-TextAttribute-causes-a-crash-with-the-error-“TextAttribute-is-not-defined”" class="headerlink" title="4. HarmonyOS new TextAttribute() causes a crash with the error “TextAttribute is not defined”?"></a>4. HarmonyOS new TextAttribute() causes a crash with the error “TextAttribute is not defined”?</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">export</span> struct <span class="title class_">IconFontView</span> &#123;</span><br><span class="line">  <span class="meta">@Prop</span> <span class="attr">content</span>: <span class="built_in">string</span> | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line">  <span class="meta">@Prop</span> <span class="attr">iconModifier</span>: <span class="title class_">TextAttribute</span> = <span class="keyword">new</span> <span class="title class_">TextAttribute</span>();</span><br><span class="line"> <span class="keyword">private</span> <span class="attr">textModifier</span>: <span class="title class_">TextModifier</span> = <span class="keyword">new</span> <span class="title class_">TextModifier</span>(<span class="variable language_">this</span>.<span class="property">iconModifier</span>);</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string">The above code compiles successfully but errors at runtime.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Incorrect usage of TextAttribute. Modify as follows (refer to documentation for usage):**  </span></span><br><span class="line"><span class="string">Document link: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-attribute-modifier-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Refer to the usage of buttonAttribute:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyButtonModifier</span> <span class="keyword">implements</span> <span class="title class_">AttributeModifier</span>&lt;<span class="title class_">ButtonAttribute</span>&gt; &#123;</span><br><span class="line">  <span class="attr">isDark</span>: <span class="built_in">boolean</span> = <span class="literal">false</span></span><br><span class="line">  <span class="title function_">applyNormalAttribute</span>(<span class="attr">instance</span>: <span class="title class_">ButtonAttribute</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">isDark</span>) &#123;</span><br><span class="line">      instance.<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      instance.<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct attributeDemo &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">modifier</span>: <span class="title class_">MyButtonModifier</span> = <span class="keyword">new</span> <span class="title class_">MyButtonModifier</span>()</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Button</span>(<span class="string">&quot;Button&quot;</span>)</span><br><span class="line">          .<span class="title function_">attributeModifier</span>(<span class="variable language_">this</span>.<span class="property">modifier</span>)</span><br><span class="line">          .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">modifier</span>.<span class="property">isDark</span> = !<span class="variable language_">this</span>.<span class="property">modifier</span>.<span class="property">isDark</span></span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="5-How-to-implement-HarmonyOS-ArkTS-scan-UI"><a href="#5-How-to-implement-HarmonyOS-ArkTS-scan-UI" class="headerlink" title="5. How to implement HarmonyOS ArkTS scan UI?"></a>5. How to implement HarmonyOS ArkTS scan UI?</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Page240419172038091</span>_bak &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="attr">settings</span>: <span class="title class_">RenderingContextSettings</span> = <span class="keyword">new</span> <span class="title class_">RenderingContextSettings</span>(<span class="literal">true</span>)</span><br><span class="line">  <span class="keyword">private</span> <span class="attr">context</span>: <span class="title class_">CanvasRenderingContext2D</span> = <span class="keyword">new</span> <span class="title class_">CanvasRenderingContext2D</span>(<span class="variable language_">this</span>.<span class="property">settings</span>)</span><br><span class="line">  <span class="keyword">private</span> <span class="attr">screenCenterX</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">screenCenterY</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">sCanLineY</span>: <span class="built_in">number</span> = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Stack</span>(&#123; <span class="attr">alignContent</span>: <span class="title class_">Alignment</span>.<span class="property">Center</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Image</span>($r(<span class="string">&quot;app.media.bg&quot;</span>)).<span class="title function_">width</span>(<span class="number">200</span>)</span><br><span class="line">      <span class="title class_">Canvas</span>(<span class="variable language_">this</span>.<span class="property">context</span>).<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>).<span class="title function_">height</span>(<span class="string">&quot;100%&quot;</span>).<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Transparent</span>).<span class="title function_">onReady</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> canvasWidth = <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">width</span></span><br><span class="line">        <span class="keyword">let</span> canvasHeight = <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">height</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">screenCenterX</span> = canvasWidth / <span class="number">2</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">screenCenterY</span> = canvasHeight / <span class="number">2</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">fillStyle</span> = <span class="string">&quot;#80000000&quot;</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">beginPath</span>()</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">moveTo</span>(<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">lineTo</span>(<span class="number">0</span>, <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">height</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">lineTo</span>(<span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">width</span>, <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">height</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">lineTo</span>(<span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">width</span>, <span class="number">0</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">lineTo</span>(<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">fill</span>()</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">clearRect</span>(<span class="variable language_">this</span>.<span class="property">screenCenterX</span> - <span class="number">100</span>, <span class="variable language_">this</span>.<span class="property">screenCenterY</span> - <span class="number">100</span>, <span class="number">200</span>, <span class="number">200</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">beginPath</span>();</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">moveTo</span>(<span class="variable language_">this</span>.<span class="property">screenCenterX</span>, <span class="variable language_">this</span>.<span class="property">screenCenterY</span>)</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">fillStyle</span> = <span class="string">&quot;#802ac327&quot;</span>;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">fillRect</span>(<span class="variable language_">this</span>.<span class="property">screenCenterX</span> - <span class="number">100</span>, <span class="variable language_">this</span>.<span class="property">screenCenterY</span> - <span class="number">100</span>, <span class="number">200</span>, <span class="number">2</span>)</span><br><span class="line">        <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">clearRect</span>(<span class="variable language_">this</span>.<span class="property">screenCenterX</span> - <span class="number">100</span>, <span class="variable language_">this</span>.<span class="property">screenCenterY</span> - <span class="number">100</span>, <span class="number">200</span>, <span class="number">200</span>)</span><br><span class="line">          <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">sCanLineY</span> &gt; <span class="number">197</span>) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">sCanLineY</span> = <span class="number">0</span></span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">sCanLineY</span>++</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">context</span>.<span class="title function_">fillRect</span>(<span class="variable language_">this</span>.<span class="property">screenCenterX</span> - <span class="number">100</span>, <span class="variable language_">this</span>.<span class="property">screenCenterY</span> - <span class="number">100</span> + <span class="variable language_">this</span>.<span class="property">sCanLineY</span>, <span class="number">200</span>, <span class="number">2</span>)</span><br><span class="line">        &#125;, <span class="number">8</span>)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;.<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>).<span class="title function_">height</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HarmonyOS-Next/" rel="tag"># HarmonyOS Next</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/30/627%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Area-Change-Issues-Navigation-Jumps-Input-Box-Special-Symbol-Filtering-Inserting-Builders-in-Constructors/" rel="prev" title="【Daily HarmonyOS Next Knowledge】 Area Change Issues, Navigation Jumps, Input Box Special Symbol Filtering, Inserting Builders in Constructors">
+      <i class="fa fa-chevron-left"></i> 【Daily HarmonyOS Next Knowledge】 Area Change Issues, Navigation Jumps, Input Box Special Symbol Filtering, Inserting Builders in Constructors
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/30/629%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Dark-Mode-Status-Bar-Span-Combination-with-Different-Font-Sizes-Font-Modification-Image-Component-Color-Adjustment-Founder-Fonts/" rel="next" title="【Daily HarmonyOS Next Knowledge】Dark Mode Status Bar, Span Combination with Different Font Sizes, Font Modification, Image Component Color Adjustment, Founder Fonts">
+      【Daily HarmonyOS Next Knowledge】Dark Mode Status Bar, Span Combination with Different Font Sizes, Font Modification, Image Component Color Adjustment, Founder Fonts <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91Component-Offset-Popup-Arrow-Color-Bubble-Radius-Dynamic-Attributes-Scan-UI-Implementation"><span class="nav-number">1.</span> <span class="nav-text">【Daily HarmonyOS Next Knowledge】Component Offset, Popup Arrow Color &amp; Bubble Radius, Dynamic Attributes, Scan UI Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-HarmonyOS-popup-component-offset-after-page-content-switching"><span class="nav-number">1.1.</span> <span class="nav-text">1. HarmonyOS popup component offset after page content switching?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-to-set-arrow-color-and-bubble-content-radius-when-using-HarmonyOS-bindPopup"><span class="nav-number">1.2.</span> <span class="nav-text">2. How to set arrow color and bubble content radius when using HarmonyOS bindPopup?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Usage-of-HarmonyOS-NativeXComponent"><span class="nav-number">1.3.</span> <span class="nav-text">3. Usage of HarmonyOS NativeXComponent?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-HarmonyOS-new-TextAttribute-causes-a-crash-with-the-error-%E2%80%9CTextAttribute-is-not-defined%E2%80%9D"><span class="nav-number">1.4.</span> <span class="nav-text">4. HarmonyOS new TextAttribute() causes a crash with the error “TextAttribute is not defined”?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-How-to-implement-HarmonyOS-ArkTS-scan-UI"><span class="nav-number">1.5.</span> <span class="nav-text">5. How to implement HarmonyOS ArkTS scan UI?</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Qingkouwei</p>
+  <div class="site-description" itemprop="description">Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">305</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingkouwei</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

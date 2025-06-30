@@ -149,6 +149,725 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/499-Daily-HarmonyOS-Next-Knowledge-Open-Testing-Guidelines-Socket-Disconnection-during-Screen-Off-phAccessHelper-Interfaces-Vibration-Capabilities-FFRT-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/499-Daily-HarmonyOS-Next-Knowledge-Open-Testing-Guidelines-Socket-Disconnection-during-Screen-Off-phAccessHelper-Interfaces-Vibration-Capabilities-FFRT-etc/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Open Testing Guidelines, Socket Disconnection during Screen Off, phAccessHelper Interfaces, Vibration Capabilities, FFRT, etc.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 11:08:17 / Modified: 11:19:26" itemprop="dateCreated datePublished" datetime="2025-06-29T11:08:17+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Open-Testing-Guidelines-Socket-Disconnection-during-Screen-Off-phAccessHelper-Interfaces-Vibration-Capabilities-FFRT-etc"><a href="#Daily-HarmonyOS-Next-Knowledge-Open-Testing-Guidelines-Socket-Disconnection-during-Screen-Off-phAccessHelper-Interfaces-Vibration-Capabilities-FFRT-etc" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Open Testing Guidelines, Socket Disconnection during Screen Off, phAccessHelper Interfaces, Vibration Capabilities, FFRT, etc."></a>[Daily HarmonyOS Next Knowledge] Open Testing Guidelines, Socket Disconnection during Screen Off, phAccessHelper Interfaces, Vibration Capabilities, FFRT, etc.</h1><h2 id="1-Where-can-I-find-HarmonyOS-open-testing-guidelines-and-what-are-the-restrictions-on-the-number-of-participants"><a href="#1-Where-can-I-find-HarmonyOS-open-testing-guidelines-and-what-are-the-restrictions-on-the-number-of-participants" class="headerlink" title="1. Where can I find HarmonyOS open testing guidelines, and what are the restrictions on the number of participants?"></a>1. Where can I find HarmonyOS open testing guidelines, and what are the restrictions on the number of participants?</h2><p>Reference URLs for guidelines:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/app/agc-help-open-test-0000001100318776">Open Testing</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/AppGallery-connect-Guides/agc-betatest-introduction-0000001071477284">Service Introduction</a></li>
+</ul>
+<p>Specific participant limits as described in the documentation: “Open testing supports no manual review to improve release efficiency. However, this method can invite up to 100 test users. For other restrictions, see Usage Limits.”  </p>
+<h2 id="2-Socket-disconnection-issue-after-HarmonyOS-screen-off"><a href="#2-Socket-disconnection-issue-after-HarmonyOS-screen-off" class="headerlink" title="2. Socket disconnection issue after HarmonyOS screen off"></a>2. Socket disconnection issue after HarmonyOS screen off</h2><p>On a real device, the socket disconnects when the screen is off. If the screen is turned on within 1 minute, the socket can send and receive data normally. When the screen is off for about 3-4 minutes, <code>tcp.send</code> does not report an error and sends successfully, but <code>tcp.on(&#39;message&#39;, (value: socket.SocketMessageInfo) =&gt; &#123;&#125;</code> does not respond. After the screen is off for a long time, calling <code>tcp.send</code> prompts the socket is disconnected, and it works normally after reconnection. How to handle the situation where the socket is not disconnected but cannot receive data after about 3-4 minutes of screen off?  </p>
+<p>The issue may be caused by not saving the client socket. Refer to the following example to resolve it:<br>Define an array to add the client socket when a connection is established, preventing it from being recycled and causing data reception failure. The code is as follows:  </p>
+<pre><code class="language-typescript">// Define an array to store client connections
+let tcpConnectArray: socket.TCPSocketConnection[] = [];
+tcpServer.on(&quot;connect&quot;, (client: socket.TCPSocketConnection) =&gt; &#123;
+  // Save the client socket
+  tcpConnectArray.push(client);
+  // Subscribe to events of the TCPSocketConnection object.
+  client.on(&quot;close&quot;, () =&gt; &#123;
+    console.log(&quot;on close success&quot;);
+  &#125;);
+  client.on(&quot;message&quot;, (value: SocketInfo) =&gt; &#123;
+    // Data reception is highly likely to fail here
+    let buffer = value.message;
+    let dataView = new DataView(buffer);
+    let str = &quot;&quot;;
+    for (let i = 0; i &lt; dataView.byteLength; ++i) &#123;
+      str += String.fromCharCode(dataView.getUint8(i));
+    &#125;
+    console.log(&quot;received message–:&quot; + str);
+  &#125;);
+</code></pre>
+<h2 id="3-What-image-types-does-the-phAccessHelper-createAsset-interface-support-for-the-extension"><a href="#3-What-image-types-does-the-phAccessHelper-createAsset-interface-support-for-the-extension" class="headerlink" title="3. What image types does the phAccessHelper.createAsset interface support for the extension?"></a>3. What image types does the phAccessHelper.createAsset interface support for the extension?</h2><p>Currently supported image types include JPEG, PNG, GIF, RAW, WebP, BMP, SVG, and ICO.<br>Reference link: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/image-decoding-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/image-decoding-V5</a>  </p>
+<h2 id="4-Does-HarmonyOS-support-infinite-vibration-and-selecting-indices-for-repeating-patterns"><a href="#4-Does-HarmonyOS-support-infinite-vibration-and-selecting-indices-for-repeating-patterns" class="headerlink" title="4. Does HarmonyOS support infinite vibration and selecting indices for repeating patterns?"></a>4. Does HarmonyOS support infinite vibration and selecting indices for repeating patterns?</h2><p>Is there a ready-made API in HarmonyOS Next to achieve infinite vibration and repeat a specific vibration sequence?  </p>
+<p>The <code>setInterval</code> function combined with <code>@ohos.vibrator</code> can implement infinite vibration.  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">import vibrator from &#39;@ohos.vibrator&#39;;
+import &#123; BusinessError &#125; from &#39;@ohos.base&#39;;
+import List from &#39;@ohos.util.List&#39;;
+
+@Entry
+@Component
+struct Index13 &#123;
+  @State message: string = &#39;Hello World&#39;;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message)
+          .fontSize(50)
+          .fontWeight(FontWeight.Bold).onClick(()=&gt;&#123;
+          try &#123;
+            setInterval(() =&gt; &#123;
+              vibrator.startVibration(&#123;
+                type: &#39;time&#39;,
+                duration: 1000,
+              &#125;, &#123;
+                id: 0,
+                usage: &#39;alarm&#39;
+              &#125;, (error: BusinessError) =&gt; &#123;
+                if (error) &#123;
+                  console.error(`Failed to start vibration. Code: $&#123;error.code&#125;, message: $&#123;error.message&#125;`);
+                  return;
+                &#125;
+                console.info(&#39;Succeed in starting vibration&#39;);
+              &#125;);
+            &#125;, 1000);
+          &#125; catch (err) &#123;
+            let e: BusinessError = err as BusinessError;
+            console.error(`An unexpected error occurred. Code: $&#123;e.code&#125;, message: $&#123;e.message&#125;`);
+          &#125;
+        &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<p>Reference documents:  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-timer-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-timer-V5</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-vibrator-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-vibrator-V5</a></li>
+</ul>
+<p><strong>Note</strong>: To use <code>@ohos.vibrator</code>, configure the <code>ohos.permission.VIBRATE</code> permission in the configuration file.  </p>
+<h2 id="5-Are-there-any-FFRT-demos-available"><a href="#5-Are-there-any-FFRT-demos-available" class="headerlink" title="5. Are there any FFRT demos available?"></a>5. Are there any FFRT demos available?</h2><p>The Function Flow programming model is a concurrency programming model based on tasks and data-driven approaches, allowing developers to describe applications through tasks and their dependency relationships. FFRT (Function Flow Runtime) is a software runtime library that supports the Function Flow programming model, used to schedule and execute applications developed based on this model. Through the Function Flow programming model and FFRT, developers can focus on application functionality, while FFRT automatically schedules and executes tasks in parallel at runtime based on task dependency status and available execution resources.  </p>
+<p>FFRT example demo documentation: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony/resourceschedule_ffrt/blob/master/docs/user_guide.md#%E6%A0%B7%E4%BE%8B">https://gitee.com/openharmony/resourceschedule_ffrt/blob/master/docs/user_guide.md#%E6%A0%B7%E4%BE%8B</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4910-Daily-HarmonyOS-Next-Knowledge-MetaServices-IDE-Configuration-HDC-Commands-Asset-Store-Kit-Features-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4910-Daily-HarmonyOS-Next-Knowledge-MetaServices-IDE-Configuration-HDC-Commands-Asset-Store-Kit-Features-etc/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] MetaServices, IDE Configuration, HDC Commands, Asset Store Kit Features, etc.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 11:07:38 / Modified: 11:07:49" itemprop="dateCreated datePublished" datetime="2025-06-29T11:07:38+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-MetaServices-IDE-Configuration-HDC-Commands-Asset-Store-Kit-Features-etc"><a href="#Daily-HarmonyOS-Next-Knowledge-MetaServices-IDE-Configuration-HDC-Commands-Asset-Store-Kit-Features-etc" class="headerlink" title="[Daily HarmonyOS Next Knowledge] MetaServices, IDE Configuration, HDC Commands, Asset Store Kit Features, etc."></a>[Daily HarmonyOS Next Knowledge] MetaServices, IDE Configuration, HDC Commands, Asset Store Kit Features, etc.</h1><h2 id="1-How-to-obtain-the-user’s-current-location-address-information-in-a-MetaService"><a href="#1-How-to-obtain-the-user’s-current-location-address-information-in-a-MetaService" class="headerlink" title="1. How to obtain the user’s current location address information in a MetaService?"></a>1. How to obtain the user’s current location address information in a MetaService?</h2><p>The location information obtained in a MetaService does not return the address, only latitude and longitude. The API for reverse geocoding latitude and longitude to an address is not supported in MetaServices. Here’s how to obtain the user’s address information:  </p>
+<p>Use MapKit to get address information based on latitude and longitude:  </p>
+<pre><code class="language-typescript">let requestInfo: geoLocationManager.CurrentLocationRequest = &#123;
+  &#39;priority&#39;: geoLocationManager.LocationRequestPriority.FIRST_FIX, 
+  &#39;scenario&#39;: geoLocationManager.LocationRequestScenario.UNSET,
+  &#39;maxAccuracy&#39;: 0
+&#125;;
+
+let locationChange = async (err: BusinessError, location: geoLocationManager.Location): Promise&lt;void&gt; =&gt; &#123;
+  if (err) &#123;
+    console.log(&#39;locationChanger: err=&#39; + JSON.stringify(err));
+  &#125;
+  if (location) &#123;
+    console.log(&#39;locationChanger: location=&#39; + JSON.stringify(location));
+    let position: mapCommon.LatLng = &#123;
+      latitude: location.latitude,
+      longitude: location.longitude
+    &#125;;
+    try &#123;
+      const res = await site.nearbySearch(&#123;
+        location: position
+      &#125;);
+      console.log(JSON.stringify(res));
+    &#125; catch (e) &#123;
+      console.log(e);
+    &#125;
+  &#125;
+&#125;;
+
+try &#123;
+  geoLocationManager.getCurrentLocation(requestInfo, locationChange);
+&#125; catch (err) &#123;
+  console.error(&quot;errCode:&quot; + (err as BusinessError).code + &quot;, errMessage:&quot; + (err as BusinessError).message);
+&#125;
+</code></pre>
+<h2 id="2-Issue-with-file-and-folder-sorting-in-the-HarmonyOS-development-tool’s-Resource-Explorer"><a href="#2-Issue-with-file-and-folder-sorting-in-the-HarmonyOS-development-tool’s-Resource-Explorer" class="headerlink" title="2. Issue with file and folder sorting in the HarmonyOS development tool’s Resource Explorer?"></a>2. Issue with file and folder sorting in the HarmonyOS development tool’s Resource Explorer?</h2><p>The file and folder sorting in the Resource Explorer has changed to alphabetical order. How to revert to the initial default sorting?  </p>
+<ol>
+<li>Press <code>Shift+Shift</code> on the keyboard.  </li>
+<li>Click to search for <strong>Tree Appearance</strong>, select the first matching item to modify the sorting.</li>
+</ol>
+<h2 id="3-The-IDE-is-configured-for-automatic-signing-and-the-signature-file-exists-but-running-the-app-prompts-“No-signature-file”"><a href="#3-The-IDE-is-configured-for-automatic-signing-and-the-signature-file-exists-but-running-the-app-prompts-“No-signature-file”" class="headerlink" title="3. The IDE is configured for automatic signing, and the signature file exists, but running the app prompts “No signature file”?"></a>3. The IDE is configured for automatic signing, and the signature file exists, but running the app prompts “No signature file”?</h2><ol>
+<li>Open <strong>Project Structure</strong> &gt; <strong>Signing Config</strong> to view the configured signature file directory.  </li>
+<li>Delete the original signature directory files, reselect <strong>Automatically generate signature</strong>, and sign again.</li>
+</ol>
+<h2 id="4-How-to-install-hdc-commands-for-HarmonyOS"><a href="#4-How-to-install-hdc-commands-for-HarmonyOS" class="headerlink" title="4. How to install hdc commands for HarmonyOS?"></a>4. How to install hdc commands for HarmonyOS?</h2><p>To debug WebView content, hdc (OpenHarmony Device Connector) commands are required to connect to devices or emulators. How to download and install the latest hdc command-line tool?  </p>
+<ul>
+<li><strong>hdc Overview</strong>: hdc is a command-line tool for developers to debug real devices.  </li>
+<li><strong>Location</strong>: The hdc tool is located in <code>&#123;SDK directory&#125;/toolchains</code>.  </li>
+<li><strong>Environment Variable Configuration</strong>: Refer to <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/hdc-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/hdc-V5</a>.</li>
+</ul>
+<h2 id="5-What-are-the-features-of-Asset-Store-Kit"><a href="#5-What-are-the-features-of-Asset-Store-Kit" class="headerlink" title="5. What are the features of Asset Store Kit?"></a>5. What are the features of Asset Store Kit?</h2><p>After manually migrating (cloning) phone data to another device, will data in the Asset Store Kit be synchronized to the new device?  </p>
+<p>Key features of Asset Store Kit:  </p>
+<ol>
+<li>Data is inaccessible to other apps, only accessible by the business that wrote the critical assets.  </li>
+<li>No cross-device synchronization is supported.  </li>
+<li>Supported devices: phones, tablets, and PCs.</li>
+</ol>
+<p><strong>Conclusion</strong>: Data in Asset Store Kit cannot be synchronized to other devices.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4923-Daily-HarmonyOS-Next-Knowledge-File-Reading-Writing-Screen-Width-and-Brightness-Scan-Permissions-Encoder-Issues-WLAN-Settings/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4923-Daily-HarmonyOS-Next-Knowledge-File-Reading-Writing-Screen-Width-and-Brightness-Scan-Permissions-Encoder-Issues-WLAN-Settings/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] File Reading/Writing, Screen Width and Brightness, Scan Permissions, Encoder Issues, WLAN Settings</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 11:06:55 / Modified: 11:19:32" itemprop="dateCreated datePublished" datetime="2025-06-29T11:06:55+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-File-Reading-Writing-Screen-Width-and-Brightness-Scan-Permissions-Encoder-Issues-WLAN-Settings"><a href="#Daily-HarmonyOS-Next-Knowledge-File-Reading-Writing-Screen-Width-and-Brightness-Scan-Permissions-Encoder-Issues-WLAN-Settings" class="headerlink" title="[Daily HarmonyOS Next Knowledge] File Reading&#x2F;Writing, Screen Width and Brightness, Scan Permissions, Encoder Issues, WLAN Settings"></a>[Daily HarmonyOS Next Knowledge] File Reading&#x2F;Writing, Screen Width and Brightness, Scan Permissions, Encoder Issues, WLAN Settings</h1><h2 id="1-Why-can’t-I-read-file-content-or-does-the-program-crash-when-operating-files-according-to-the-documentation"><a href="#1-Why-can’t-I-read-file-content-or-does-the-program-crash-when-operating-files-according-to-the-documentation" class="headerlink" title="1. Why can’t I read file content or does the program crash when operating files according to the documentation?"></a>1. Why can’t I read file content or does the program crash when operating files according to the documentation?</h2><p>When writing to or reading from a file as per the documentation, the content cannot be read, or the program crashes.  </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">createFile</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// Get the application file path</span></span><br><span class="line">  <span class="keyword">let</span> context = <span class="title function_">getContext</span>(<span class="variable language_">this</span>) <span class="keyword">as</span> common.<span class="property">UIAbilityContext</span>;</span><br><span class="line">  <span class="keyword">let</span> filesDir = context.<span class="property">filesDir</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Create and open a file</span></span><br><span class="line">  <span class="keyword">let</span> file = fs.<span class="title function_">openSync</span>(filesDir + <span class="string">&#x27;/test.txt&#x27;</span>, fs.<span class="property">OpenMode</span>.<span class="property">READ_WRITE</span> | fs.<span class="property">OpenMode</span>.<span class="property">CREATE</span>);</span><br><span class="line">  <span class="comment">// Write content to the file</span></span><br><span class="line">  <span class="keyword">let</span> content = <span class="string">&quot;static&quot;</span>;</span><br><span class="line">  <span class="comment">// ... (original code continues)</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Explanation**:  </span></span><br><span class="line"><span class="string">The `</span><span class="keyword">static</span><span class="string">` keyword in C/C++ indicates that a local variable should retain its value between function calls. However, in this context, it&#x27;s part of a string. The crash occurs at `</span><span class="built_in">decodeURIComponent</span>(<span class="built_in">escape</span>(s))<span class="string">` due to invalid Unicode characters.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Modified code**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">createFile</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> context = <span class="title function_">getContext</span>(<span class="variable language_">this</span>) <span class="keyword">as</span> common.<span class="property">UIAbilityContext</span>;</span><br><span class="line">  <span class="keyword">let</span> filesDir = context.<span class="property">filesDir</span>;</span><br><span class="line">  <span class="keyword">let</span> file = fs.<span class="title function_">openSync</span>(filesDir + <span class="string">&#x27;/test.txt&#x27;</span>, fs.<span class="property">OpenMode</span>.<span class="property">READ_WRITE</span> | fs.<span class="property">OpenMode</span>.<span class="property">CREATE</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Corrected content without mixed code comments</span></span><br><span class="line">  <span class="keyword">let</span> content = <span class="string">&quot;static is used to retain local variable values between function calls...&quot;</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> writeLen = fs.<span class="title function_">writeSync</span>(file.<span class="property">fd</span>, content);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&quot;Written length: &quot;</span> + writeLen);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> buf = <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>(<span class="number">4096</span>);</span><br><span class="line">  <span class="keyword">let</span> readLen = fs.<span class="title function_">readSync</span>(file.<span class="property">fd</span>, buf, &#123; <span class="attr">offset</span>: <span class="number">0</span> &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Properly convert ArrayBuffer to string</span></span><br><span class="line">  <span class="keyword">let</span> s = <span class="keyword">new</span> <span class="title class_">TextDecoder</span>().<span class="title function_">decode</span>(<span class="keyword">new</span> <span class="title class_">Uint8Array</span>(buf.<span class="title function_">slice</span>(<span class="number">0</span>, readLen)));</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&quot;File content: &quot;</span> + s);</span><br><span class="line">  </span><br><span class="line">  fs.<span class="title function_">closeSync</span>(file);</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**File operation utility class**:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">getFilesDir</span>(<span class="params"></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> context = <span class="title function_">getContext</span>(<span class="variable language_">this</span>) <span class="keyword">as</span> common.<span class="property">UIAbilityContext</span>;</span><br><span class="line">  <span class="keyword">return</span> context.<span class="property">filesDir</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">getCacheDir</span>(<span class="params"></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> context = <span class="title function_">getContext</span>(<span class="variable language_">this</span>) <span class="keyword">as</span> common.<span class="property">UIAbilityContext</span>;</span><br><span class="line">  <span class="keyword">return</span> context.<span class="property">cacheDir</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">writeFile</span>(<span class="params"><span class="attr">fileName</span>: <span class="built_in">string</span>, <span class="attr">content</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> file = fs.<span class="title function_">openSync</span>(<span class="title function_">getFilesDir</span>() + <span class="string">&quot;/&quot;</span> + fileName, fs.<span class="property">OpenMode</span>.<span class="property">READ_WRITE</span> | fs.<span class="property">OpenMode</span>.<span class="property">CREATE</span>);</span><br><span class="line">  <span class="keyword">let</span> writeLen = fs.<span class="title function_">writeSync</span>(file.<span class="property">fd</span>, content);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&quot;Written length: &quot;</span> + writeLen);</span><br><span class="line">  fs.<span class="title function_">closeSync</span>(file);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">readFile</span>(<span class="params"><span class="attr">fileName</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> srcFile = fs.<span class="title function_">openSync</span>(<span class="title function_">getFilesDir</span>() + <span class="string">&quot;/&quot;</span> + fileName, fs.<span class="property">OpenMode</span>.<span class="property">READ</span>);</span><br><span class="line">  <span class="keyword">let</span> bufSize = <span class="number">4096</span>;</span><br><span class="line">  <span class="keyword">let</span> buf = <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>(bufSize);</span><br><span class="line">  <span class="keyword">let</span> readLen = fs.<span class="title function_">readSync</span>(srcFile.<span class="property">fd</span>, buf);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Properly handle read data</span></span><br><span class="line">  <span class="keyword">let</span> content = <span class="keyword">new</span> <span class="title class_">TextDecoder</span>().<span class="title function_">decode</span>(<span class="keyword">new</span> <span class="title class_">Uint8Array</span>(buf.<span class="title function_">slice</span>(<span class="number">0</span>, readLen)));</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;File content: &quot;</span> + content);</span><br><span class="line">  </span><br><span class="line">  fs.<span class="title function_">closeSync</span>(srcFile);</span><br><span class="line">  <span class="keyword">return</span> content;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Asynchronous file reading with streams</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">readIOFile</span>(<span class="params"><span class="attr">fileName</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> inputStream = fs.<span class="title function_">createStreamSync</span>(<span class="title function_">getFilesDir</span>() + <span class="string">&#x27;/&#x27;</span> + fileName, <span class="string">&#x27;r&#x27;</span>);</span><br><span class="line">  <span class="keyword">let</span> content = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">let</span> bufSize = <span class="number">4096</span>;</span><br><span class="line">  <span class="keyword">let</span> buf = <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>(bufSize);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> readLen = <span class="keyword">await</span> inputStream.<span class="title function_">read</span>(buf);</span><br><span class="line">  <span class="keyword">while</span> (readLen &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    content += <span class="keyword">new</span> <span class="title class_">TextDecoder</span>().<span class="title function_">decode</span>(<span class="keyword">new</span> <span class="title class_">Uint8Array</span>(buf.<span class="title function_">slice</span>(<span class="number">0</span>, readLen)));</span><br><span class="line">    readLen = <span class="keyword">await</span> inputStream.<span class="title function_">read</span>(buf);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;File content: &quot;</span> + content);</span><br><span class="line">  inputStream.<span class="title function_">closeSync</span>();</span><br><span class="line">  <span class="keyword">return</span> content;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Issue**: When calling `</span><span class="title function_">readFile</span>()<span class="string">`, `</span>s<span class="string">` is always empty.  </span></span><br><span class="line"><span class="string">**Reason**: The original code used `</span><span class="title class_">String</span>.<span class="property">fromCodePoint</span>.<span class="title function_">apply</span>(<span class="literal">null</span>, <span class="keyword">new</span> <span class="title class_">Uint8Array</span>(buf))<span class="string">`, which mishandles binary data. Use `</span><span class="title class_">TextDecoder</span><span class="string">` instead.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Reference**: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/app-file-access-management-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">## 2. How to get and set screen brightness in HarmonyOS?  </span></span><br><span class="line"><span class="string">The module `</span><span class="meta">@ohos</span>.<span class="property">brightness</span><span class="string">` cannot be found.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Solutions**:  </span></span><br><span class="line"><span class="string">- **Get screen brightness**: Use `</span><span class="title class_">Settings</span>.<span class="property">System</span>.<span class="title function_">getInt</span>()<span class="string">` with `</span><span class="variable constant_">SCREEN_BRIGHTNESS</span><span class="string">`.  </span></span><br><span class="line"><span class="string">  Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-settings-V5  </span></span><br><span class="line"><span class="string">- **Set screen brightness**: Use `</span>windowProperties.<span class="title function_">setBrightness</span>()<span class="string">`.  </span></span><br><span class="line"><span class="string">  Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Note**: Set brightness to `</span>-<span class="number">1</span><span class="string">` to restore the system default when exiting the page.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">## 3. Why isn&#x27;t the authorization prompt displayed when calling the system scan function?  </span></span><br><span class="line"><span class="string">The default scan interface requires pre-authorization for camera permissions. When calling the API, the camera permission is not re-requested, but a privacy notice is shown.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Reference**: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/scan-scanbarcode-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">## 4. Encoder BufferQueue error  </span></span><br><span class="line"><span class="string">**Error log**:  </span></span><br></pre></td></tr></table></figure>
+<p>E C01401&#x2F;Bufferqueue: … width or height is 0 … Alloc failed …</p>
+<pre><code>
+**Code context**:  
+Following the Surface mode in https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/video-encoding-V5, using OpenGL buffer mode:  
+1. Obtain `nativeWindow` via `OH_VideoEncoder_GetSurface`.  
+2. Create an EGL surface with `eglCreateWindowSurface`.  
+3. Swap buffers with the camera texture, but encounter BufferQueue errors.  
+
+**Possible causes**:  
+- Width or height parameters are not properly initialized (0 values).  
+- Incompatible EGL context or surface configuration.  
+
+**Solution**: Ensure valid dimensions (width/height &gt; 0) when configuring the encoder and EGL surface.  
+
+
+## 5. Error &quot;No app supports this file type&quot; when jumping to WLAN settings without network  
+**Original code** (no longer working):  
+```typescript
+&#123;
+  bundleName: &#39;com.example.xxx.settings&#39;,
+  abilityName: &#39;com.example.xxx.settings.MainAbility&#39;,
+  uri: &#39;application_info_entry&#39;
+&#125;
+</code></pre>
+<p><strong>Solution</strong>:<br>Update the URI to <code>wifi_entry</code>:  </p>
+<pre><code class="language-typescript">&#123;
+  bundleName: &#39;com.ohos.settings&#39;,
+  abilityName: &#39;com.ohos.settings.MainAbility&#39;,
+  uri: &#39;wifi_entry&#39;
+&#125;
+</code></pre>
+<p><strong>Reason</strong>: Implicit URI jumps to settings pages have been updated. Use the dedicated <code>wifi_entry</code> URI for WLAN settings.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4924-Daily-HarmonyOS-Next-Knowledge-Enabling-Network-in-Emulator-Long-Running-Tasks-Compatibility-Testing-Support-Frame-Drop-Location-Accessing-Raw-Files-in-SO-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4924-Daily-HarmonyOS-Next-Knowledge-Enabling-Network-in-Emulator-Long-Running-Tasks-Compatibility-Testing-Support-Frame-Drop-Location-Accessing-Raw-Files-in-SO-etc/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Enabling Network in Emulator, Long-Running Tasks, Compatibility Testing Support, Frame Drop Location, Accessing Raw Files in SO, etc.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 11:04:55 / Modified: 11:06:25" itemprop="dateCreated datePublished" datetime="2025-06-29T11:04:55+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Enabling-Network-in-Emulator-Long-Running-Tasks-Compatibility-Testing-Support-Frame-Drop-Location-Accessing-Raw-Files-in-SO-etc"><a href="#Daily-HarmonyOS-Next-Knowledge-Enabling-Network-in-Emulator-Long-Running-Tasks-Compatibility-Testing-Support-Frame-Drop-Location-Accessing-Raw-Files-in-SO-etc" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Enabling Network in Emulator, Long-Running Tasks, Compatibility Testing Support, Frame Drop Location, Accessing Raw Files in SO, etc."></a>[Daily HarmonyOS Next Knowledge] Enabling Network in Emulator, Long-Running Tasks, Compatibility Testing Support, Frame Drop Location, Accessing Raw Files in SO, etc.</h1><h2 id="1-How-to-enable-network-in-the-emulator"><a href="#1-How-to-enable-network-in-the-emulator" class="headerlink" title="1. How to enable network in the emulator?"></a>1. How to enable network in the emulator?</h2><p>The emulator uses the computer’s network and can access the internet without a proxy.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.24.png"></p>
+<h2 id="2-Why-is-the-app-killed-shortly-after-locking-the-screen-after-creating-a-child-window"><a href="#2-Why-is-the-app-killed-shortly-after-locking-the-screen-after-creating-a-child-window" class="headerlink" title="2. Why is the app killed shortly after locking the screen after creating a child window?"></a>2. Why is the app killed shortly after locking the screen after creating a child window?</h2><p>Long-running tasks must be enabled to keep the app alive when the screen is locked or the app is sent to the background.  </p>
+<p>If an app needs to perform user-perceivable long-term tasks in the background after being sent to the background, such as playing music or navigation, it can apply for a long-running task to prevent the system from suspending the app’s process and causing functional anomalies.  </p>
+<p>After applying for a long-running task, the system performs corresponding checks to ensure the app is executing the task. There will also be a notification in the notification bar associated with the long-running task. If the user deletes this notification, the system will automatically stop the long-running task.  </p>
+<p><strong>Types of Long-Running Tasks</strong>  </p>
+<table>
+<thead>
+<tr>
+<th>Parameter Name</th>
+<th>Description</th>
+<th>Configuration Item</th>
+<th>Scenario Examples</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATA_TRANSFER</td>
+<td>Data transfer</td>
+<td>dataTransfer</td>
+<td>Downloading large files in the background, such as browser downloads.</td>
+</tr>
+<tr>
+<td>AUDIO_PLAYBACK</td>
+<td>Audio&#x2F;video playback</td>
+<td>audioPlayback</td>
+<td>Music apps playing music in the background. <br><br><strong>Supported in meta-services.</strong></td>
+</tr>
+<tr>
+<td>AUDIO_RECORDING</td>
+<td>Recording</td>
+<td>audioRecording</td>
+<td>Recorders recording in the background.</td>
+</tr>
+<tr>
+<td>LOCATION</td>
+<td>Location navigation</td>
+<td>location</td>
+<td>Navigation apps providing navigation in the background.</td>
+</tr>
+<tr>
+<td>BLUETOOTH_INTERACTION</td>
+<td>Bluetooth-related</td>
+<td>bluetoothInteraction</td>
+<td>Transferring files via Bluetooth.</td>
+</tr>
+<tr>
+<td>MULTI_DEVICE_CONNECTION</td>
+<td>Multi-device interconnection</td>
+<td>multiDeviceConnection</td>
+<td>Distributed service connections. <br><br><strong>Supported in meta-services.</strong></td>
+</tr>
+<tr>
+<td>TASK_KEEPING</td>
+<td>Computational tasks (only available for 2IN1)</td>
+<td>taskKeeping</td>
+<td>Antivirus software.</td>
+</tr>
+</tbody></table>
+<p>Reference Documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5</a>  </p>
+<h2 id="3-Does-HarmonyOS-provide-compatibility-testing-support-and-is-it收费"><a href="#3-Does-HarmonyOS-provide-compatibility-testing-support-and-is-it收费" class="headerlink" title="3. Does HarmonyOS provide compatibility testing support, and is it收费?"></a>3. Does HarmonyOS provide compatibility testing support, and is it收费?</h2><p>Before an app is published to the app market, developers can provide the app package to Huawei for testing and acceptance, which is currently free of charge.  </p>
+<p>Reference Documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/app-compatibility-testing">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/app-compatibility-testing</a>  </p>
+<h2 id="4-How-to-check-if-certain-components-are-continuously-updating-measuring-or-rendering-in-HarmonyOS"><a href="#4-How-to-check-if-certain-components-are-continuously-updating-measuring-or-rendering-in-HarmonyOS" class="headerlink" title="4. How to check if certain components are continuously updating, measuring, or rendering in HarmonyOS?"></a>4. How to check if certain components are continuously updating, measuring, or rendering in HarmonyOS?</h2><p>How to use the profile tool or hilog to identify components that are being continuously drawn and measured?  </p>
+<p>Drag the mouse on the timeline to select the time period to view.<br>The details section shows the drawing statistics for custom and system components during the recorded period, including the number of draws, total time, minimum time, average time, maximum time, and time standard deviation. Frequent refreshes can be identified by the number of draws.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.09.24-1.png"><br>Refer to the documentation: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-insight-session-frame-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-insight-session-frame-V5</a>  </p>
+<h2 id="5-How-can-third-party-SO-libraries-access-raw-files-in-HarmonyOS"><a href="#5-How-can-third-party-SO-libraries-access-raw-files-in-HarmonyOS" class="headerlink" title="5. How can third-party SO libraries access raw files in HarmonyOS?"></a>5. How can third-party SO libraries access raw files in HarmonyOS?</h2><p>Third-party SO libraries typically access files using absolute or relative paths. However, after a HAP package is installed, raw files are not extracted, and there is no direct way to access them. Are third-party SO libraries unable to directly access raw files in this case?  </p>
+<p>Resources under the rawfile directory are packaged into a HAP file without exposing file paths, and there is no API to obtain the absolute path of these files. To access raw files, use the <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-resource-manager-V5">getRawFileContentSync</a> interface.  </p>
+<p><strong>Native Side</strong>: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/rawfile-guidelines-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/rawfile-guidelines-V5</a>  </p>
+<p>If you need to access rawfile resources via the sandbox path or absolute path, you must first copy the resources from the rawfile directory to the app’s sandbox directory.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4925-Daily-HarmonyOS-Next-Knowledge-Advertising-ID-NFC-Mobile-Top-Up-CSS-Support-Syntax-PC-Emulator-Interaction-SO-Hot-Update-etc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4925-Daily-HarmonyOS-Next-Knowledge-Advertising-ID-NFC-Mobile-Top-Up-CSS-Support-Syntax-PC-Emulator-Interaction-SO-Hot-Update-etc/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Advertising ID, NFC Mobile Top-Up, CSS Support Syntax, PC-Emulator Interaction, SO Hot Update, etc.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 11:03:39 / Modified: 11:04:19" itemprop="dateCreated datePublished" datetime="2025-06-29T11:03:39+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Advertising-ID-NFC-Mobile-Top-Up-CSS-Support-Syntax-PC-Emulator-Interaction-SO-Hot-Update-etc"><a href="#Daily-HarmonyOS-Next-Knowledge-Advertising-ID-NFC-Mobile-Top-Up-CSS-Support-Syntax-PC-Emulator-Interaction-SO-Hot-Update-etc" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Advertising ID, NFC Mobile Top-Up, CSS Support Syntax, PC-Emulator Interaction, SO Hot Update, etc."></a>[Daily HarmonyOS Next Knowledge] Advertising ID, NFC Mobile Top-Up, CSS Support Syntax, PC-Emulator Interaction, SO Hot Update, etc.</h1><h2 id="1-Why-does-the-HarmonyOS-prototype-return-an-Oaid-of-00000000-0000-0000-0000-000000000000-upon-successful-acquisition"><a href="#1-Why-does-the-HarmonyOS-prototype-return-an-Oaid-of-00000000-0000-0000-0000-000000000000-upon-successful-acquisition" class="headerlink" title="1. Why does the HarmonyOS prototype return an Oaid of 00000000-0000-0000-0000-000000000000 upon successful acquisition?"></a>1. Why does the HarmonyOS prototype return an Oaid of 00000000-0000-0000-0000-000000000000 upon successful acquisition?</h2><p>A dynamic authorization pop-up must be triggered when requesting authorization. Check if the authorization pop-up was not triggered.<br>Refer to the following code and documentation:  </p>
+<pre><code class="language-typescript">// ets
+import identifier from &#39;@ohos.identifier.oaid&#39;;
+import hilog from &#39;@ohos.hilog&#39;;
+import &#123; BusinessError &#125; from &#39;@ohos.base&#39;;
+import abilityAccessCtrl from &#39;@ohos.abilityAccessCtrl&#39;;
+import common from &#39;@ohos.app.ability.common&#39;;
+
+@Entry
+@Component
+struct deviceDemo001 &#123;
+
+  build() &#123;
+    Column() &#123;
+      Text(&#39;测试&#39;)
+        .width(&#39;100%&#39;)
+        .backgroundColor(&#39;#131313&#39;)
+        .height(50)
+        .fontColor(Color.White)
+        .onClick(()=&gt;&#123;
+          const atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
+          try &#123;
+            let context = getContext(this) as common.UIAbilityContext;
+            atManager.requestPermissionsFromUser(context, [&quot;ohos.permission.APP_TRACKING_CONSENT&quot;]).then((data) =&gt; &#123;
+              if (data.authResults[0] == 0) &#123;
+                              identifier.getOAID((err: BusinessError, data: string) =&gt; &#123;
+                  if (err.code) &#123;
+                    hilog.error(0x0000, &#39;testTag&#39;, &#39;%&#123;public&#125;s&#39;, `get oaid failed, error: $&#123;err.code&#125; $&#123;err.message&#125;`);
+                  &#125; else &#123;
+                    const oaid: string = data;
+                                     &#125;
+                &#125;);
+              &#125; else &#123;
+                            &#125;
+            &#125;).catch((err: BusinessError) =&gt; &#123;
+          
+            &#125;)
+          &#125; catch(err) &#123;
+             &#125;
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>Reference document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/oaid-service-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/oaid-service-V5</a>  </p>
+<p><strong>Open Anonymous Device Identifier (OAID)</strong>: A non-permanent device identifier that enables personalized advertising while protecting user data privacy. Third-party monitoring platforms can also provide conversion attribution analysis to advertisers based on OAID.<br>Developers of media apps, advertising platforms, and third-party monitoring platforms can obtain the OAID on the device for personalized ad recommendation or ad conversion attribution analysis.  </p>
+<p>OAID is a 32-bit UUID-like identifier generated by Huawei’s proprietary algorithm, formatted as xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.<br><strong>OAID characteristics</strong>:  </p>
+<ul>
+<li>Device-level identifier: The same OAID is obtained by different apps on the same device.  </li>
+<li>Acquisition is affected by the “Cross-App Association Access Permission” switch:  <ul>
+<li>When the switch is on, the app obtains a valid non-all-zero OAID.  </li>
+<li>When the switch is off, the app can only obtain an all-zero OAID.</li>
+</ul>
+</li>
+<li>The OAID is generated for the first time when the first app on the device enables the “Cross-App Association Access Permission” switch.</li>
+</ul>
+<h2 id="2-How-to-implement-mobile-card-top-up-via-NFC-in-HarmonyOS"><a href="#2-How-to-implement-mobile-card-top-up-via-NFC-in-HarmonyOS" class="headerlink" title="2. How to implement mobile card top-up via NFC in HarmonyOS?"></a>2. How to implement mobile card top-up via NFC in HarmonyOS?</h2><p>Required capabilities: Using the NFC adapter to establish connections, send and receive data. The corresponding business scenario is using the NFC antenna to top up transit cards, involving NFC reading&#x2F;writing of CPU cards based on the ISO-14443-4 protocol specification.  </p>
+<p><strong>Standard NFC-Tag tag.TagInfo demo</strong>:  </p>
+<pre><code class="language-typescript">import tag from &#39;@ohos.nfc.tag&#39;;
+import UIAbility from &#39;@ohos.app.ability.UIAbility&#39;;
+import AbilityConstant from &#39;@ohos.app.ability.AbilityConstant&#39;;
+import Want from &#39;@ohos.app.ability.Want&#39;
+
+export default class EntryAbility extends UIAbility &#123;
+  onCreate(want : Want, launchParam: AbilityConstant.LaunchParam) &#123;
+    // add other code here...
+
+    // want is initialized by nfc service, contains tag info for this found tag
+    let tagInfo : tag.TagInfo | null = null;
+    try &#123;
+      tagInfo = tag.getTagInfo(want);
+    &#125; catch (error) &#123;
+      console.error(&quot;tag.getTagInfo catched error: &quot; + error);
+    &#125;
+    if (tagInfo == null || tagInfo == undefined) &#123;
+      console.log(&quot;no TagInfo to be created, ignore it.&quot;);
+      return;
+    &#125;
+
+    // get the supported technologies for this found tag.
+    let isNfcATag = false;
+    let isIsoDepTag = false;
+    for (let i = 0; i &lt; tagInfo.technology.length; i++) &#123;
+      if (tagInfo.technology[i] == tag.NFC_A) &#123;
+        isNfcATag = true;
+      &#125;
+
+      if (tagInfo.technology[i] == tag.ISO_DEP) &#123;
+        isIsoDepTag = true;
+      &#125;
+      // also check for technology: tag.NFC_B/NFC_F/NFC_V/NDEF/MIFARE_CLASSIC/MIFARE_ULTRALIGHT/NDEF_FORMATABLE
+    &#125;
+
+    // use NfcA APIs to access the found tag.
+    if (isNfcATag) &#123;
+      let nfcA : tag.NfcATag | null = null;
+      try &#123;
+        nfcA = tag.getNfcATag(tagInfo);
+      &#125; catch (error) &#123;
+        console.error(&quot;tag.getNfcATag catched error: &quot; + error);
+      &#125;
+      // other code to read or write this found tag.
+    &#125;
+
+    // use getIsoDep APIs to access the found tag.
+    if (isIsoDepTag) &#123;
+      let isoDep : tag.IsoDepTag | null = null;
+      try &#123;
+        isoDep = tag.getIsoDep(tagInfo);
+      &#125; catch (error) &#123;
+        console.error(&quot;tag.getIsoDep catched error: &quot; + error);
+      &#125;
+      // other code to read or write this found tag.
+    &#125;
+    // use the same code to handle for &quot;NfcA/NfcB/NfcF/NfcV/Ndef/MifareClassic/MifareUL/NdefFormatable&quot;.
+  &#125;
+&#125;
+</code></pre>
+<h2 id="3-Why-do-some-CSS-syntaxes-in-HarmonyOS-show-red-error-markers"><a href="#3-Why-do-some-CSS-syntaxes-in-HarmonyOS-show-red-error-markers" class="headerlink" title="3. Why do some CSS syntaxes in HarmonyOS show red error markers?"></a>3. Why do some CSS syntaxes in HarmonyOS show red error markers?</h2><p>This occurs in CSS files after packaging a web application.  </p>
+<p>The IDE currently only supports basic CSS syntax, causing red error markers when the project is opened. Testing shows that although errors are marked, they do not affect normal app usage.<br>Refer to the supported CSS syntax: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/js-framework-syntax-css-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/js-framework-syntax-css-V5</a>  </p>
+<h2 id="4-How-to-paste-content-from-the-PC-system-clipboard-to-the-emulator"><a href="#4-How-to-paste-content-from-the-PC-system-clipboard-to-the-emulator" class="headerlink" title="4. How to paste content from the PC system clipboard to the emulator?"></a>4. How to paste content from the PC system clipboard to the emulator?</h2><ol>
+<li><strong>Overall approach</strong>: Access a PC-side web page from the emulator to enable text copy-paste.  </li>
+<li><strong>Start a web server on the PC</strong>:  <ul>
+<li><strong>Use an existing web server</strong>: Place the text file to be copied under the web server.  </li>
+<li><strong>macOS (recommended, with built-in Apache)</strong>:  <ol>
+<li>Start the service: Execute <code>sudo apachectl start</code> in the terminal. Visit <a target="_blank" rel="noopener" href="http://127.0.0.1/">http://127.0.0.1</a> in a PC browser; “It works!” indicates success.  </li>
+<li>Modify the text: The Apache root directory is <code>/Library/WebServer/Documents</code>. Create <code>test.html</code> with the text, copy it to this directory, and access <a target="_blank" rel="noopener" href="http://127.0.0.1/test.html">http://127.0.0.1/test.html</a> on the PC.</li>
+</ol>
+</li>
+<li><strong>Windows (use nginx)</strong>:  <ol>
+<li>The nginx root directory is <code>nginx/html</code>, with the default home page <code>index.html</code>. Modify the text content directly.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="5-Inquiry-about-ArkTS-and-SO-hot-update-in-HarmonyOS"><a href="#5-Inquiry-about-ArkTS-and-SO-hot-update-in-HarmonyOS" class="headerlink" title="5. Inquiry about ArkTS and SO hot update in HarmonyOS"></a>5. Inquiry about ArkTS and SO hot update in HarmonyOS</h2><p>In Android, many apps require hot updates, typically via two schemes:  </p>
+<ol>
+<li>Differential updates for Java code, SO code, and resource files.  </li>
+<li>Runtime loading of external SO files via hook mechanisms.</li>
+</ol>
+<p>Does HarmonyOS have similar mechanisms, especially for loading SO files from outside the package? This is intended to fix bugs in released packages that require modifying ArkTS or C&#x2F;C++ code without replacing the entire package.  </p>
+<p><strong>Response</strong>: Based on HarmonyOS’ unified app distribution ecosystem rules, quick hotfixes via patches are not provided. Such requirements are addressed through efficient review and app version update mechanisms.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4926-Daily-HarmonyOS-Next-Knowledge-Importing-cardEmulation-Custom-Decorators-CallState-Status-Code-Order-KV-Configuration-Signature-File-Setup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -938,491 +1657,10 @@ struct Index &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4101-Daily-HarmonyOS-Next-Knowledge-Charles-Packet-Capture-Lock-File-Handling-WebView-Component-NFC-Related-Issues-CallMethod-Failures/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/4101-Daily-HarmonyOS-Next-Knowledge-Charles-Packet-Capture-Lock-File-Handling-WebView-Component-NFC-Related-Issues-CallMethod-Failures/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Charles Packet Capture, Lock File Handling, WebView Component, NFC-Related Issues, CallMethod Failures</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 10:36:31 / Modified: 10:36:45" itemprop="dateCreated datePublished" datetime="2025-06-29T10:36:31+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-Charles-Packet-Capture-Lock-File-Handling-WebView-Component-NFC-Related-Issues-CallMethod-Failures"><a href="#Daily-HarmonyOS-Next-Knowledge-Charles-Packet-Capture-Lock-File-Handling-WebView-Component-NFC-Related-Issues-CallMethod-Failures" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Charles Packet Capture, Lock File Handling, WebView Component, NFC-Related Issues, CallMethod Failures"></a>[Daily HarmonyOS Next Knowledge] Charles Packet Capture, Lock File Handling, WebView Component, NFC-Related Issues, CallMethod Failures</h1><h2 id="1-How-to-Use-Charles-for-Packet-Capture-in-HarmonyOS"><a href="#1-How-to-Use-Charles-for-Packet-Capture-in-HarmonyOS" class="headerlink" title="1. How to Use Charles for Packet Capture in HarmonyOS?"></a>1. How to Use Charles for Packet Capture in HarmonyOS?</h2><p>Steps to use Charles for packet capture in the HarmonyOS operating system:  </p>
-<h3 id="Configure-Proxy-Settings-in-Charles"><a href="#Configure-Proxy-Settings-in-Charles" class="headerlink" title="Configure Proxy Settings in Charles"></a>Configure Proxy Settings in Charles</h3><ol>
-<li>In Charles, navigate to <strong>Proxy</strong> → <strong>Proxy Settings</strong>.  </li>
-<li>Set the proxy port (e.g., 8888; other ports are acceptable) and enable <strong>Enable transparent HTTP proxying</strong>.  </li>
-<li>To find your computer’s IP address, go to <strong>Help</strong> → <strong>Local IP Address</strong> or use the <code>ipconfig</code> command in CMD.</li>
-</ol>
-<h3 id="Configure-Phone-Proxy"><a href="#Configure-Phone-Proxy" class="headerlink" title="Configure Phone Proxy"></a>Configure Phone Proxy</h3><ol>
-<li>Select the connected Wi-Fi network, right-click, and choose <strong>Modify Network</strong>.  </li>
-<li>Enable <strong>Show Advanced Options</strong>, enter the server hostname (your computer’s IP) and port, then save.</li>
-</ol>
-<h3 id="Install-SSL-Certificate"><a href="#Install-SSL-Certificate" class="headerlink" title="Install SSL Certificate"></a>Install SSL Certificate</h3><ol>
-<li>On your computer, go to <strong>Help</strong> → <strong>SSL Proxying</strong> → <strong>Install Charles Root Certificate</strong>.  </li>
-<li>If your system requires authentication, enter your credentials and follow the prompts to install the certificate.</li>
-</ol>
-<h3 id="Configure-SSL-Capture-Domains"><a href="#Configure-SSL-Capture-Domains" class="headerlink" title="Configure SSL Capture Domains"></a>Configure SSL Capture Domains</h3><ol>
-<li>In Charles, go to <strong>Proxy</strong> → <strong>SSL Proxying Settings…</strong> and enable <strong>Enable SSL Proxying</strong>.  </li>
-<li>Set the <strong>Host</strong> field to <code>&quot;*&quot;</code> (use a specific domain if needed) and port <code>443</code>.</li>
-</ol>
-<h3 id="Start-Capturing"><a href="#Start-Capturing" class="headerlink" title="Start Capturing"></a>Start Capturing</h3><p>After completing these steps, Charles will capture network traffic from your phone. Ensure both devices are on the same network and developer options are enabled on the phone to install and trust the Charles certificate.  </p>
-<h2 id="2-How-to-Handle-Files-That-Are-Automatically-Modified-or-Updated-When-the-Project-Is-Used-on-Different-Computers"><a href="#2-How-to-Handle-Files-That-Are-Automatically-Modified-or-Updated-When-the-Project-Is-Used-on-Different-Computers" class="headerlink" title="2. How to Handle Files That Are Automatically Modified or Updated When the Project Is Used on Different Computers?"></a>2. How to Handle Files That Are Automatically Modified or Updated When the Project Is Used on Different Computers?</h2><p>Files that are automatically modified or updated:  </p>
-<ul>
-<li><code>build-profile.json5</code>  </li>
-<li><code>harmony/oh-package-lock.json5</code>  </li>
-<li><code>harmony/entry/oh-package-lock.json5</code>  </li>
-<li><code>yarn.lock</code></li>
-</ul>
-<p><strong>Issue</strong>: <code>yarn install</code> fails unless <code>yarn.lock</code> is deleted. This is due to version mismatches between the lock file and local dependencies.  </p>
-<p><strong>Explanation</strong>:  </p>
-<ul>
-<li>The three JSON5 files may differ between computers but do not affect the project. They can be ignored in Git.  </li>
-<li><code>yarn.lock</code> locks dependency versions to ensure consistency. Conflicts occur when:  <ul>
-<li>Dependencies are updated without updating the lock file.  </li>
-<li>Developers use different versions of dependencies.</li>
-</ul>
-</li>
-</ul>
-<p><strong>Solutions</strong>:  </p>
-<ol>
-<li><strong>Recommended</strong>: Commit <code>yarn.lock</code> to ensure all developers use identical dependency versions. Resolve conflicts by updating the lock file (<code>yarn install</code>).  </li>
-<li>Specify exact versions in <code>package.json</code> and update them regularly.  </li>
-<li>Manually reconcile <code>yarn.lock</code> with local dependencies after pulling changes.</li>
-</ol>
-<h2 id="3-How-to-Determine-When-a-URL-Has-Successfully-Loaded-in-the-Web-Component"><a href="#3-How-to-Determine-When-a-URL-Has-Successfully-Loaded-in-the-Web-Component" class="headerlink" title="3. How to Determine When a URL Has Successfully Loaded in the Web Component?"></a>3. How to Determine When a URL Has Successfully Loaded in the Web Component?</h2><p>For the Web component:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Web</span>(&#123; <span class="attr">src</span>: <span class="variable language_">this</span>.<span class="property">url</span>, <span class="attr">controller</span>: <span class="variable language_">this</span>.<span class="property">controller</span> &#125;)</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string">Use the `</span>onPageEnd<span class="string">` callback to detect successful page loads.  </span></span><br><span class="line"><span class="string">Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">## 4. Module `</span><span class="meta">@ohos</span>.<span class="property">nfc</span>.<span class="property">controller</span><span class="string">` Does Not Exist and Cannot Be Imported?  </span></span><br><span class="line"><span class="string">**Error**:  </span></span><br></pre></td></tr></table></figure>
-<p>The default system capabilities of devices phone, tablet, 2in1 do not include SystemCapability.Communication.NFC.Core. Configure the capabilities in syscap.json. <ArkTSCheck></p>
-<pre><code>
-**Solution**:  
-1. If your device exceeds the default system capabilities, configure custom SysCap in `syscap.json`.  
-   Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references/syscap-0000001774120846#ZH-CN_TOPIC_0000001813657848__syscap%E5%BC%80%E5%8F%91%E6%8C%87%E5%AF%BC  
-2. Restart DevEco Studio after configuration for changes to take effect.  
-
-**System Capabilities and APIs**:  
-![[【每日学点鸿蒙知识】24.10.01.png]]  
-![[【每日学点鸿蒙知识】24.10.01-1.png]]  
-
-**Devices and Supported Capability Sets**:  
-![[【每日学点鸿蒙知识】24.10.01-2.png]]  
-
-**Device-SDK Capability Mapping**:  
-![[【每日学点鸿蒙知识】24.10.01-3.png]]  
-
-
-## 5. `aki::Value::CallMethod` Fails in HarmonyOS?  
-**TS Class Definition**:  
-```typescript
-export class XavAudioOutputConfig &#123;
-  bitrate: EXavAudioBitrate = EXavAudioBitrate.kbps128;
-&#125;
-
-export class XavCompileConfig &#123;
-  audioConfig: XavAudioOutputConfig;
-  metadata: string = &#39;&#39;;
-
-  constructor() &#123;
-    this.audioConfig = new XavAudioOutputConfig();
-  &#125;
-&#125;
-</code></pre>
-<p><strong>C++ Code That Causes a Crash</strong>:  </p>
-<pre><code class="language-cpp">static void LogCompileInfo(napi_value config)
-&#123;
-  auto compileConfig = aki::Value(config);
-  auto audioConfig = compileConfig.CallMethod(&quot;audioConfig&quot;); // Fails here
-&#125;
-</code></pre>
-<p><strong>Reason</strong>:<br><code>audioConfig</code> is an object, not a method. <code>CallMethod</code> is used to invoke JavaScript methods, not access properties.  </p>
-<p><strong>Solution</strong>:<br>Access <code>audioConfig</code> as a property, not a method. The exact implementation depends on the AKI API for property access.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4102-Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/4102-Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] AVCodec, SmartPerf Tool, Web Component Loading, Keyboard Show/Hide Listening, Asset Store Kit</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 10:35:05 / Modified: 10:35:24" itemprop="dateCreated datePublished" datetime="2025-06-29T10:35:05+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit"><a href="#Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit" class="headerlink" title="[Daily HarmonyOS Next Knowledge] AVCodec, SmartPerf Tool, Web Component Loading, Keyboard Show&#x2F;Hide Listening, Asset Store Kit"></a>[Daily HarmonyOS Next Knowledge] AVCodec, SmartPerf Tool, Web Component Loading, Keyboard Show&#x2F;Hide Listening, Asset Store Kit</h1><h2 id="1-AVCodec-Hardware-Decoding-Consultation"><a href="#1-AVCodec-Hardware-Decoding-Consultation" class="headerlink" title="1. AVCodec Hardware Decoding Consultation"></a>1. AVCodec Hardware Decoding Consultation</h2><p>When adapting video playback hardware decoding, refer to the demo: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony-sig/ohos_videocompressor/blob/master/videoCompressor/src/main/cpp/video/decoder/VideoDec.cpp">https://gitee.com/openharmony-sig/ohos_videocompressor/blob/master/videoCompressor/src/main/cpp/video/decoder/VideoDec.cpp</a>  </p>
-<p><strong>Question</strong>:  </p>
-<pre><code class="language-cpp">int32_t VideoDec::SetOutputSurface()
-&#123;
-  return OH_VideoDecoder_SetSurface(vdec_, mutexManager-&gt;nativeWindow);
-&#125;
-</code></pre>
-<p>How is <code>nativeWindow</code> obtained or created? The demo does not show this process.  </p>
-<p><strong>Answer</strong>:<br>The JS layer registers callbacks. When an Xcomponent appears in the UI layer, the <code>OnSurfaceCreateCB</code> callback is triggered, and the <code>OHNativeWindow *</code> is stored in the singleton class <code>plugin_manager</code> for direct retrieval during use.<br>Refer to the demo: <a target="_blank" rel="noopener" href="https://gitee.com/kairen-13/AVCodecSample">https://gitee.com/kairen-13/AVCodecSample</a>  </p>
-<h2 id="2-When-using-SmartPerf-to-collect-performance-data-in-HarmonyOS-the-process-ends-immediately-after-executing-the-start-command-with-a-specific-package-name"><a href="#2-When-using-SmartPerf-to-collect-performance-data-in-HarmonyOS-the-process-ends-immediately-after-executing-the-start-command-with-a-specific-package-name" class="headerlink" title="2. When using SmartPerf to collect performance data in HarmonyOS, the process ends immediately after executing the start command with a specific package name"></a>2. When using SmartPerf to collect performance data in HarmonyOS, the process ends immediately after executing the start command with a specific package name</h2><p><strong>Issue</strong>:<br>When collecting performance data with SmartPerf, executing the command <code>SP_daemon -start -PKG yylx.danmaku.bili -c</code> causes the process to end immediately, with the log <code>command exec finished!</code>.  </p>
-<p><strong>Explanation</strong>:<br>After executing the <code>start</code> command, data collection begins. The log <code>command exec finish</code> only indicates the start of collection, not an automatic termination. Collection continues until <code>SP_daemon -stop</code> is executed, generating a CSV file path for exporting collected data.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/smartperf-guidelines-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/smartperf-guidelines-V5</a>  </p>
-<h2 id="3-Web-component-fails-to-load-URL-content"><a href="#3-Web-component-fails-to-load-URL-content" class="headerlink" title="3. Web component fails to load URL content"></a>3. Web component fails to load URL content</h2><p><strong>Troubleshooting Steps</strong>:  </p>
-<ol>
-<li>Check if the <code>ohos.permission.INTERNET</code> permission is configured in <code>module.json5</code>:</li>
-</ol>
-<pre><code class="language-json">&quot;module&quot;: &#123; &quot;requestPermissions&quot;: [ &#123;&quot;name&quot;: &quot;ohos.permission.INTERNET&quot;&#125; ] &#125; 
-</code></pre>
-<ol start="2">
-<li>If the permission is set but the page still does not display, verify that <code>domStorageAccess</code> is set to <code>true</code>.</li>
-</ol>
-<h2 id="4-InputMethodController-on-sendKeyboardStatus-fails-to-listen-for-keyboard-show-hide-events"><a href="#4-InputMethodController-on-sendKeyboardStatus-fails-to-listen-for-keyboard-show-hide-events" class="headerlink" title="4. InputMethodController.on(&#39;sendKeyboardStatus&#39;) fails to listen for keyboard show&#x2F;hide events"></a>4. <code>InputMethodController.on(&#39;sendKeyboardStatus&#39;)</code> fails to listen for keyboard show&#x2F;hide events</h2><p><strong>Issue</strong>:<br>Subscribing to soft keyboard events via <code>InputMethodController</code> as per the official documentation does not trigger callbacks:  </p>
-<pre><code class="language-typescript">try &#123;
-  inputMethodController.on(&#39;sendKeyboardStatus&#39;, (keyboardStatus: inputMethod.KeyboardStatus) =&gt; &#123;
-    console.log(`Succeeded in subscribing sendKeyboardStatus, keyboardStatus: $&#123;keyboardStatus&#125;`);
-  &#125;);
-&#125; catch(err) &#123;
-  console.error(`Failed to subscribe sendKeyboardStatus: $&#123;JSON.stringify(err)&#125;`);
-&#125;
-</code></pre>
-<p>No console output occurs when the soft keyboard shows&#x2F;hides.  </p>
-<p><strong>Solutions</strong>:<br><strong>Option 1</strong>: Use the input method framework module (<code>@ohos.inputMethod</code>) to listen for soft keyboard status via <code>inputMethodController.on(&#39;sendKeyboardStatus&#39;, callback)</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5</a>  </p>
-<p><strong>Option 2</strong>: Use the window module (<code>@ohos.window</code>) to listen for soft keyboard height changes via <code>Window.on(&#39;keyboardHeightChange&#39;)</code> to determine the keyboard status.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5</a>  </p>
-<p><strong>Sample Code</strong>:  </p>
-<pre><code class="language-typescript">let windowClass: window.Window | undefined = undefined;
-try &#123;
-  window.getLastWindow(this.context, (err: BusinessError, data) =&gt; &#123;
-    const errCode: number = err.code;
-    if (errCode) &#123;
-      console.error(&#39;Failed to obtain the top window. Cause: &#39; + JSON.stringify(err));
-      return;
-    &#125;
-    windowClass = data;
-    console.info(&#39;Succeeded in obtaining the top window. Data: &#39; + JSON.stringify(data));
-
-    windowClass.on(&#39;avoidAreaChange&#39;, (data) =&gt; &#123;
-      console.info(&#39;Succeeded in enabling the listener for system avoid area changes. type:&#39; + JSON.stringify(data.type) + &#39;, area: &#39; + JSON.stringify(data.area));
-    &#125;);
-  &#125;);
-&#125; catch (exception) &#123;
-  console.error(&#39;Failed to obtain the top window. Cause: &#39; + JSON.stringify(exception));
-&#125;
-</code></pre>
-<h2 id="5-When-will-key-assets-in-Asset-Store-Kit-be-lost"><a href="#5-When-will-key-assets-in-Asset-Store-Kit-be-lost" class="headerlink" title="5. When will key assets in Asset Store Kit be lost?"></a>5. When will key assets in Asset Store Kit be lost?</h2><p>Key assets will be destroyed in the following scenarios:  </p>
-<ul>
-<li>Application uninstallation  </li>
-<li>User deletion of assets  </li>
-<li>Device factory reset  </li>
-<li>Device flashing</li>
-</ul>
-<p><strong>Note</strong>: The translation maintains technical terms and code structures while ensuring readability in English. For specialized APIs and modules, official documentation terminology is prioritized.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4103-Daily-HarmonyOS-Next-Knowledge-Sandbox-Directory-Image-Compression-characteristicsArray-gm-crypto-National-Cryptography-Encryption-Decryption-Notification-Permissions/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/4103-Daily-HarmonyOS-Next-Knowledge-Sandbox-Directory-Image-Compression-characteristicsArray-gm-crypto-National-Cryptography-Encryption-Decryption-Notification-Permissions/" class="post-title-link" itemprop="url">4103[Daily HarmonyOS Next Knowledge] Sandbox Directory, Image Compression, characteristicsArray, gm-crypto National Cryptography Encryption/Decryption, Notification Permissions</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2025-06-29 10:34:08" itemprop="dateCreated datePublished" datetime="2025-06-29T10:34:08+08:00">2025-06-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4104-Daily-HarmonyOS-Next-Knowledge-DevEco-HDC-Errors-C-Database-Calls-Testing-Tools-codegen/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/4104-Daily-HarmonyOS-Next-Knowledge-DevEco-HDC-Errors-C-Database-Calls-Testing-Tools-codegen/" class="post-title-link" itemprop="url">4104[Daily HarmonyOS Next Knowledge] DevEco, HDC Errors, C Database Calls, Testing Tools, codegen</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2025-06-29 10:33:22" itemprop="dateCreated datePublished" datetime="2025-06-29T10:33:22+08:00">2025-06-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4105-Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/4105-Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 10:32:40 / Modified: 10:32:59" itemprop="dateCreated datePublished" datetime="2025-06-29T10:32:40+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow"><a href="#Daily-HarmonyOS-Next-Knowledge-Long-Running-Tasks-Profiler-Allocation-Event-Subscription-getTagInfo-NativeWindow" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow"></a>[Daily HarmonyOS Next Knowledge] Long-Running Tasks, Profiler Allocation, Event Subscription, getTagInfo, NativeWindow</h1><h2 id="1-Error-occurs-when-using-long-running-tasks-in-HarmonyOS"><a href="#1-Error-occurs-when-using-long-running-tasks-in-HarmonyOS" class="headerlink" title="1. Error occurs when using long-running tasks in HarmonyOS?"></a>1. Error occurs when using long-running tasks in HarmonyOS?</h2><p><strong>Steps to start a long-running task as per official documentation</strong>:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">startContinuousTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="attr">wantAgentInfo</span>: wantAgent.<span class="property">WantAgentInfo</span> = &#123;</span><br><span class="line">    <span class="comment">// List of actions to execute when the notification is clicked</span></span><br><span class="line">    <span class="comment">// Add the bundleName and abilityName of the app to be launched</span></span><br><span class="line">    <span class="attr">wants</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">bundleName</span>: <span class="string">&quot;com.xxxx.xxxx.news&quot;</span>,</span><br><span class="line">        <span class="attr">abilityName</span>: <span class="string">&quot;com.xxxx.xxxx.news.EntryAbility&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// Specify that the action after clicking the notification is to launch an ability</span></span><br><span class="line">    <span class="attr">actionType</span>: wantAgent.<span class="property">OperationType</span>.<span class="property">START_ABILITY</span>,</span><br><span class="line">    <span class="comment">// A private value defined by the user</span></span><br><span class="line">    <span class="attr">requestCode</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="comment">// Execution properties of the action after clicking the notification</span></span><br><span class="line">    <span class="attr">wantAgentFlags</span>: [wantAgent.<span class="property">WantAgentFlags</span>.<span class="property">UPDATE_PRESENT_FLAG</span>]</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get the WantAgent object via the getWantAgent method in the wantAgent module</span></span><br><span class="line">  wantAgent.<span class="title function_">getWantAgent</span>(wantAgentInfo).<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="attr">wantAgentObj</span>: <span class="title class_">WantAgent</span></span>) =&gt;</span> &#123;</span><br><span class="line">    backgroundTaskManager.<span class="title function_">startBackgroundRunning</span>(<span class="title function_">getContext</span>(),</span><br><span class="line">      backgroundTaskManager.<span class="property">BackgroundMode</span>.<span class="property">AUDIO_RECORDING</span>, wantAgentObj).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">`Succeeded in operationing startBackgroundRunning.`</span>);</span><br><span class="line">    &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to operation startBackgroundRunning. Code is <span class="subst">$&#123;err.code&#125;</span>, message is <span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">stopContinuousTask</span>(<span class="params"></span>) &#123;</span><br><span class="line">  backgroundTaskManager.<span class="title function_">stopBackgroundRunning</span>(<span class="title function_">getContext</span>()).<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">`Succeeded in operationing stopBackgroundRunning.`</span>);</span><br><span class="line">  &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params"><span class="attr">err</span>: <span class="title class_">BusinessError</span></span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`Failed to operation stopBackgroundRunning. Code is <span class="subst">$&#123;err.code&#125;</span>, message is <span class="subst">$&#123;err.message&#125;</span>`</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Error when calling `</span>stopContinuousTask<span class="string">`**:  </span></span><br></pre></td></tr></table></figure>
-<p>Failed to operation stopBackgroundRunning. Code is 9800005, message is BussinessError 9800005: Continuous Task verification failed. The application has not applied for a continuous task.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**Reason**:  </span><br><span class="line">Long-running tasks have constraints and limitations. Under runtime restrictions, if an app applies for a long-running task but does not actually execute the corresponding task or the task has ended, the system will manage the app.  </span><br><span class="line">**Explanation**:  </span><br><span class="line">After applying for a long-running task, the system checks within 5 seconds whether the app executes the task. If not, the task is terminated immediately, and calling `stopContinuousTask` will trigger this error.  </span><br><span class="line">**Constraints and limitations**:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/continuous-task-V5#%E7%BA%A6%E6%9D%9F%E4%B8%8E%E9%99%90%E5%88%B6  </span><br><span class="line"></span><br><span class="line">- **Application restrictions**:  </span><br><span class="line">  - In the Stage model, only UIAbility can apply for long-running tasks.  </span><br><span class="line">  - In the FA model, only ServiceAbility can apply for long-running tasks.  </span><br><span class="line">- **Quantity restrictions**:  </span><br><span class="line">  - One UIAbility (or ServiceAbility in the FA model) can only apply for one long-running task at a time. A new task can only be applied for after the previous one ends. If an app needs multiple long-running tasks, it must create multiple UIAbilities.  </span><br><span class="line">  - After a UIAbility in an app applies for a long-running task, all processes in the app will not be suspended.  </span><br><span class="line">- **Runtime restrictions**:  </span><br><span class="line">  - **Scenario 1**: If an app applies for a long-running task but does not execute it or the task ends, the system will manage the app. For example, if the app applies for AUDIO_PLAYBACK (audio/video playback) but does not actually play music, the long-running task will be canceled.  </span><br><span class="line">  - **Scenario 2**: If an app executes a long-running task without applying for the corresponding type, the system will manage the app. For example, if the app only applies for AUDIO_PLAYBACK but also performs recording (AUDIO_RECORDING), the system will intervene.  </span><br><span class="line">  - **Scenario 3**: If the background load of the process running the long-running task持续 exceeds the typical load of the applied type, the system will manage the app.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 2. The ArkTS Allocation lane is missing in the profiler allocation view?  </span><br><span class="line">**Issue**:  </span><br><span class="line">The ArkTS Allocation lane is missing in the profiler allocation view (only Memory and Native Allocation lanes are present).  </span><br><span class="line"></span><br><span class="line">**Solution**:  </span><br><span class="line">The ArkTS Allocation lane needs to be enabled in the Snapshot template. Use Snapshot to analyze ArkTS memory leaks and Allocation to analyze native memory leaks.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 3. If multiple pages in HarmonyOS subscribe to the same event, will unsubscribing after the previous page is destroyed affect the events of other pages?  </span><br><span class="line">**Reference for emitter usage**:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-emitter-V5  </span><br><span class="line"></span><br><span class="line">**Note**:  </span><br><span class="line">The callback added in `on` and the callback used in `off` must be the same instance. Otherwise, all subscriptions will be canceled.  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 4. Error occurs when calling `getTagInfo` for NFC in a HarmonyOS app?  </span><br><span class="line">**Code to declare `want`**:  </span><br><span class="line">```typescript</span><br><span class="line">let want: Want = &#123;</span><br><span class="line">  deviceId: &#x27;&#x27;, // Empty deviceId indicates the local device</span><br><span class="line">  bundleName: &#x27;com.example.wht_app&#x27;,</span><br><span class="line">  abilityName: &#x27;EntryAbility&#x27;,</span><br><span class="line">  moduleName: &#x27;entry&#x27; // moduleName is optional</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// Then call getTagInfo</span><br><span class="line">try &#123;</span><br><span class="line">  tagInfo = tag.getTagInfo(want);</span><br><span class="line">&#125; catch (error) &#123;</span><br><span class="line">  console.log(&#x27;手机NFC功能报错&#x27;, &quot;tag.getTagInfo catched error: &quot; + error)</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">**Error on real device**:  </span><br></pre></td></tr></table></figure>
-<p>tag.getTagInfo catched error: Error: Parameter error. The parameter number is invalid.</p>
-<pre><code>
-**Reason**:  
-According to the official documentation, the `Want` parameter must be obtained from the parameters of the system&#39;s `onCreate` entry function when distributing the ability.  
-**Reference**:  
-https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/nfc-tag-access-guide-V5  
-
-
-## 5. How to create and destroy NativeWindow in HarmonyOS?  
-**Question**:  
-After registering callbacks for NativeWindow, when are `OnSurfaceCreated` and `OnSurfaceDestroyed` triggered, and how to trigger these callbacks manually?  
-
-**Reference**:  
-`https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/_o_h___native_x_component-V5#onsurfacecreated`
-</code></pre>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1488,7 +1726,7 @@ After registering callbacks for NativeWindow, when are `OnSurfaceCreated` and `O
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">300</span>
+          <span class="site-state-item-count">305</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
