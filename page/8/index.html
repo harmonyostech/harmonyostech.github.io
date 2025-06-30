@@ -149,6 +149,184 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41012-Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/41012-Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Stress Testing, Web Component Interceptor, NFC Switch Status, Location Capability, and Supported Third-party Libraries for RN</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:26:17 / Modified: 11:19:37" itemprop="dateCreated datePublished" datetime="2025-06-29T10:26:17+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN"><a href="#Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Stress Testing, Web Component Interceptor, NFC Switch Status, Location Capability, and Supported Third-party Libraries for RN"></a>[Daily HarmonyOS Next Knowledge] Stress Testing, Web Component Interceptor, NFC Switch Status, Location Capability, and Supported Third-party Libraries for RN</h1><h2 id="1-Does-HarmonyOS’-Wukong-support-running-Python-scripts-for-stress-or-regular-testing"><a href="#1-Does-HarmonyOS’-Wukong-support-running-Python-scripts-for-stress-or-regular-testing" class="headerlink" title="1. Does HarmonyOS’ Wukong support running Python scripts for stress or regular testing?"></a>1. Does HarmonyOS’ Wukong support running Python scripts for stress or regular testing?</h2><ol>
+<li>Python scripts can call the hdc command to execute <code>hdc shell wukong XXX</code>.  </li>
+<li>Wukong only supports stability stress testing. For general testing, it is recommended to use the arkxtest testing framework.</li>
+</ol>
+<h2 id="2-How-to-handle-custom-WebHeader-during-page-navigation-in-Web-components"><a href="#2-How-to-handle-custom-WebHeader-during-page-navigation-in-Web-components" class="headerlink" title="2. How to handle custom WebHeader during page navigation in Web components?"></a>2. How to handle custom WebHeader during page navigation in Web components?</h2><p>If many businesses are implemented using H5, the httpHeader during page loading may include information such as user details and the current app theme. In HarmonyOS, the header can be added via <code>loadUrl</code> for the first webpage load, but it cannot be added during subsequent page navigations. What solutions are available for this scenario? Attempts to intercept requests using <code>onInterceptRequest</code> and send requests with headers via HTTP have been ineffective.  </p>
+<p>For setting webHeader when using webview in ArkTS, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#geolocationpermissions">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#geolocationpermissions</a>  </p>
+<p>Requests can be intercepted using the web component’s <code>onInterceptRequest</code> method.<br><strong>Sample code</strong>:  </p>
+<pre><code class="language-typescript">import web_webview from &#39;@ohos.web.webview&#39;;
+@Entry
+@Component
+struct WebComponent &#123;
+  controller: web_webview.WebviewController = new web_webview.WebviewController();
+  build() &#123;
+    Column() &#123;
+      Web(&#123; src: $rawfile(&#39;i.html&#39;), controller: this.controller &#125;)
+        .onInterceptRequest((event) =&gt; &#123;
+          if (event) &#123;
+            console.log(&#39;urldddd:&#39; + event.request.getRequestUrl());
+          &#125;
+          return null;
+        &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p><strong>HTML code</strong>:  </p>
+<pre><code class="language-html">&lt;html&gt;
+&lt;head&gt;
+  &lt;script src=&quot;https://xxx.com/vue/dist/vue.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;https://xxx.com/vue-router/dist/vue-router.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;app&quot;&gt;
+    &lt;h1&gt;Vue Router Example&lt;/h1&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;router-link to=&quot;/&quot;&gt;Home&lt;/router-link&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;router-link to=&quot;/about&quot;&gt;About&lt;/router-link&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;router-view&gt;&lt;/router-view&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    // Define two components
+    var Home = &#123; template: &#39;&lt;div&gt;&lt;h2&gt;This is the home page&lt;/h2&gt;&lt;p&gt;Welcome to my website&lt;/p&gt;&lt;/div&gt;&#39; &#125;;
+    var About = &#123; template: &#39;&lt;div&gt;&lt;h2&gt;This is the about page&lt;/h2&gt;&lt;p&gt;Bing is an intelligent search engine that helps you find the information you need&lt;/p&gt;&lt;/div&gt;&#39; &#125;;
+    // Create a router instance
+    var router = new VueRouter(&#123;
+      // Define routing rules
+      routes: [
+        &#123; path: &#39;/&#39;, component: Home &#125;,
+        &#123; path: &#39;/about&#39;, component: About &#125;
+      ]
+    &#125;);
+    // Create and mount the root instance
+    var app = new Vue(&#123; el: &#39;#app&#39;, router: router &#125;);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="3-How-to-determine-the-switch-status-of-the-system-NFC-in-HarmonyOS"><a href="#3-How-to-determine-the-switch-status-of-the-system-NFC-in-HarmonyOS" class="headerlink" title="3. How to determine the switch status of the system NFC in HarmonyOS?"></a>3. How to determine the switch status of the system NFC in HarmonyOS?</h2><p>The current NFC status can be queried, and changes in the NFC status can be monitored. Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-nfccontroller-V5#nfcstate">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-nfccontroller-V5#nfcstate</a>  </p>
+<p>Testing verifies that <code>controller.isNfcOpen()</code> returns the correct value.<br><strong>Demo</strong>:  </p>
+<pre><code class="language-typescript">import controller from &#39;@ohos.nfc.controller&#39;;
+
+@Entry
+@Component
+struct TestNetConnectionPage &#123;
+  @State monitorNfcState: string = &#39;&#39;;
+  @State queryNfcState: string = &#39;&#39;;
+  @State isNfcOpen: boolean = false;
+
+  aboutToAppear(): void &#123;
+    if (canIUse(&quot;SystemCapability.Communication.NFC.Core&quot;)) &#123;
+      controller.on(&quot;nfcStateChange&quot;, state =&gt; &#123;
+        this.monitorNfcState = state.toString();
+      &#125;);
+    &#125;
+  &#125;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Row() &#123;
+          Text(&#39;Monitor NFC status:&#39;).width(&#39;50%&#39;);
+          Text(this.monitorNfcState).width(&#39;50%&#39;);
+        &#125;.alignSelf(ItemAlign.Start);
+
+        if (canIUse(&quot;SystemCapability.Communication.NFC.Core&quot;)) &#123;
+          Row() &#123;
+            Button(&#39;Query NFC status:&#39;).width(&#39;50%&#39;).onClick(() =&gt; &#123;
+              this.queryNfcState = controller.getNfcState().toString();
+            &#125;);
+            Text(this.queryNfcState).width(&#39;50%&#39;);
+          &#125;.alignSelf(ItemAlign.Start);
+        &#125;
+
+        if (canIUse(&quot;SystemCapability.Communication.NFC.Core&quot;)) &#123;
+          Row() &#123;
+            Button(&#39;Check NFC switch:&#39;).width(&#39;50%&#39;).onClick(() =&gt; &#123;
+              this.isNfcOpen = controller.isNfcOpen();
+            &#125;);
+            Text(this.isNfcOpen + &#39;&#39;).width(&#39;50%&#39;);
+          &#125;.alignSelf(ItemAlign.Start);
+        &#125;
+      &#125;
+      .width(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h2 id="4-Regarding-location-capabilities-in-HarmonyOS-are-there-any-free-kits-available"><a href="#4-Regarding-location-capabilities-in-HarmonyOS-are-there-any-free-kits-available" class="headerlink" title="4. Regarding location capabilities in HarmonyOS, are there any free kits available?"></a>4. Regarding location capabilities in HarmonyOS, are there any free kits available?</h2><p>For location services, refer to the following document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/HMSCore-Guides/harmonyos-location-develop-steps-0000001168458553">https://developer.huawei.com/consumer/cn/doc/HMSCore-Guides/harmonyos-location-develop-steps-0000001168458553</a>  </p>
+<h2 id="5-Which-third-party-RN-libraries-are-currently-supported-in-HarmonyOS"><a href="#5-Which-third-party-RN-libraries-are-currently-supported-in-HarmonyOS" class="headerlink" title="5. Which third-party RN libraries are currently supported in HarmonyOS?"></a>5. Which third-party RN libraries are currently supported in HarmonyOS?</h2><p>Currently supported adapted RN third-party libraries: <a target="_blank" rel="noopener" href="https://github.com/orgs/react-native-oh-library/repositories?language=&sort=&type=all">https://github.com/orgs/react-native-oh-library/repositories?language=&amp;sort=&amp;type=all</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41013-Daily-HarmonyOS-Next-Knowledge-Network-Availability-Interface-UDID-Error-Local-Notification-JSON-to-Map-Conversion-Hyper-V-Installation-on-Windows-10/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1048,97 +1226,6 @@ Reference: https://developer.huawei.com/consumer/cn/doc/app/agc-help-harmonyos-i
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41023-Daily-HarmonyOS-Next-Knowledge-Static-Variable-Initialization-Custom-Dialog-Attributes-Floating-Menu-Invocation-Multi-Account-Management-Enterprise-App-Release/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/41023-Daily-HarmonyOS-Next-Knowledge-Static-Variable-Initialization-Custom-Dialog-Attributes-Floating-Menu-Invocation-Multi-Account-Management-Enterprise-App-Release/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Static Variable Initialization, Custom Dialog Attributes, Floating Menu Invocation, Multi-Account Management, Enterprise App Release</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 10:13:16 / Modified: 10:13:39" itemprop="dateCreated datePublished" datetime="2025-06-29T10:13:16+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-Static-Variable-Initialization-Custom-Dialog-Attributes-Floating-Menu-Invocation-Multi-Account-Management-Enterprise-App-Release"><a href="#Daily-HarmonyOS-Next-Knowledge-Static-Variable-Initialization-Custom-Dialog-Attributes-Floating-Menu-Invocation-Multi-Account-Management-Enterprise-App-Release" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Static Variable Initialization, Custom Dialog Attributes, Floating Menu Invocation, Multi-Account Management, Enterprise App Release"></a>[Daily HarmonyOS Next Knowledge] Static Variable Initialization, Custom Dialog Attributes, Floating Menu Invocation, Multi-Account Management, Enterprise App Release</h1><h4 id="1-HarmonyOS-Defining-an-environment-variable-enum-with-static-causes-an-uninitialized-prompt"><a href="#1-HarmonyOS-Defining-an-environment-variable-enum-with-static-causes-an-uninitialized-prompt" class="headerlink" title="1. HarmonyOS: Defining an environment variable enum with static causes an uninitialized prompt"></a>1. HarmonyOS: Defining an environment variable enum with static causes an uninitialized prompt</h4><p>When defining an environment variable enum decorated with <code>static</code>, an uninitialized prompt appears. How to use static to initialize environment variables within a class?  </p>
-<p>The variable can only be used after importing the defined <code>Environment</code>:  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// Model.Configs.ets</span><br><span class="line">import &#123; Environment &#125; from &#x27;./InterfaceTest&#x27;</span><br><span class="line">export class Configs &#123;</span><br><span class="line">  static environment: Environment = Environment.preRelease</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Model.InterfaceTest.ets</span><br><span class="line">export enum Environment&#123;</span><br><span class="line">  preRelease = 1</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">#### 2. How to call custom attributes in HarmonyOS custom dialogs?  </span><br><span class="line">For a custom privacy policy `customdialog` pop-up on the welcome page, how to center it (currently defaulting to the bottom)?  </span><br><span class="line"></span><br><span class="line">Configure `alignment: DialogAlignment`; refer to the document:  </span><br><span class="line">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5  </span><br><span class="line"></span><br><span class="line">#### 3. How to invoke the HarmonyOS menu floating window?  </span><br><span class="line">A business-encapsulated `TitleBar` component accepts `Resource`-type icons and exposes `iconClick` events. The official API `.bindMenu(this.MyMenu)` is inapplicable here. Are there alternative approaches?  </span><br><span class="line"></span><br><span class="line">**Demo**:  </span><br></pre></td></tr></table></figure>
-<ol>
-<li>TitleBar.ets<br>export default struct TitleBar {<br>  @Prop title:  string &#x3D; “”;<br>  @Prop icon: Resource | string &#x3D; “”;<br>  iconClick?: (() &#x3D;&gt; void);<br>  backClick?: (() &#x3D;&gt; void);</li>
-</ol>
-<p>  build() {<br>  }<br>}</p>
-<ol start="2">
-<li>Business usage<br>TitleBar({<br>  title: this.label,<br>  icon: $r(‘app.media.sort_icon’),<br>  iconClick: () &#x3D;&gt; {</li>
-</ol>
-<p>  },<br>  backClick: () &#x3D;&gt; {<br>    router.back()<br>  }<br>})</p>
-<pre><code>
-Set the trigger mode of the custom menu via the `responseType` parameter in the `bindContextMenu` attribute; refer to the document:  
-https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-menu-V5  
-
-#### 4. HarmonyOS app project configuration: Can project and app management under an account support multi-account management?  
-Refer to the document on team accounts to set permissions for corresponding sub-accounts based on actual needs:  
-https://developer.huawei.com/consumer/cn/doc/app/agc-help-account-overview-0000001146516647  
-![](../images/【每日学点鸿蒙知识】24.10.23.png)
-
-#### 5. For HarmonyOS enterprise apps published internally, if applied for上架 (release), can enterprise apps and released versions overwrite each other during installation?  
-Enterprise apps and AppGallery apps must have different package names and are not the same app, so upgrades between them are impossible. For gray-scale release needs, check if invitation testing suits your requirements:  
-https://developer.huawei.com/consumer/cn/doc/app/agc-help-harmonyos-testapp-0000001873653977
-</code></pre>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1208,7 +1295,7 @@ https://developer.huawei.com/consumer/cn/doc/app/agc-help-harmonyos-testapp-0000
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

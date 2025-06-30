@@ -149,6 +149,116 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/527-Daily-HarmonyOS-Next-Knowledge-Responding-to-Back-Events-Screen-Rotation-Checking-Screen-Recording-Actively-Opening-Interfaces-Screen-Brightness-Issues/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/527-Daily-HarmonyOS-Next-Knowledge-Responding-to-Back-Events-Screen-Rotation-Checking-Screen-Recording-Actively-Opening-Interfaces-Screen-Brightness-Issues/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Responding to Back Events, Screen Rotation, Checking Screen Recording, Actively Opening Interfaces, Screen Brightness Issues</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 10:16:45 / Modified: 10:17:01" itemprop="dateCreated datePublished" datetime="2025-06-25T10:16:45+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Responding-to-Back-Events-Screen-Rotation-Checking-Screen-Recording-Actively-Opening-Interfaces-Screen-Brightness-Issues"><a href="#Daily-HarmonyOS-Next-Knowledge-Responding-to-Back-Events-Screen-Rotation-Checking-Screen-Recording-Actively-Opening-Interfaces-Screen-Brightness-Issues" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Responding to Back Events, Screen Rotation, Checking Screen Recording, Actively Opening Interfaces, Screen Brightness Issues"></a>[Daily HarmonyOS Next Knowledge] Responding to Back Events, Screen Rotation, Checking Screen Recording, Actively Opening Interfaces, Screen Brightness Issues</h3><h4 id="1-How-to-create-a-Window-in-HarmonyOS-that-can-respond-to-back-events-and-allow-click-events-to-penetrate"><a href="#1-How-to-create-a-Window-in-HarmonyOS-that-can-respond-to-back-events-and-allow-click-events-to-penetrate" class="headerlink" title="1. How to create a Window in HarmonyOS that can respond to back events and allow click events to penetrate?"></a>1. How to create a Window in HarmonyOS that can respond to back events and allow click events to penetrate?</h4><p>I want to create a custom View to display Toast or pop-ups above all pages. When showing a Toast, all operations should pass through the Toast’s page. Currently, using a custom Window to load the page, but events in the Window-created page cannot penetrate, and click events are unresponsive.  </p>
+<p><strong>Solution</strong>: Use <code>sub_windowClass.setWindowTouchable(false)</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#ZH-CN_TOPIC_0000001884757714__setwindowtouchable9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#ZH-CN_TOPIC_0000001884757714__setwindowtouchable9</a>  </p>
+<h4 id="2-When-using-setPreferredOrientation-for-screen-rotation-in-HarmonyOS-the-interface-returns-success-before-the-screen-rotates-even-the-status-bar-hasn’t-adjusted-yet"><a href="#2-When-using-setPreferredOrientation-for-screen-rotation-in-HarmonyOS-the-interface-returns-success-before-the-screen-rotates-even-the-status-bar-hasn’t-adjusted-yet" class="headerlink" title="2. When using setPreferredOrientation for screen rotation in HarmonyOS, the interface returns success before the screen rotates (even the status bar hasn’t adjusted yet)?"></a>2. When using setPreferredOrientation for screen rotation in HarmonyOS, the interface returns success before the screen rotates (even the status bar hasn’t adjusted yet)?</h4><p><code>setPreferredOrientation</code> calls the callback before rotation completes. This interface only issues a rotation command and callbacks immediately after issuance.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9</a>  </p>
+<p><strong>Explanation</strong>: Screen rotation involves an animation with variable duration. The success callback is issued once the command is sent, not after the animation finishes. Rotation animations can be interrupted: if a new rotation command is received before the previous animation ends, the prior animation is canceled.  </p>
+<h4 id="3-How-to-detect-screen-recording-or-screen-sharing-on-HarmonyOS-devices"><a href="#3-How-to-detect-screen-recording-or-screen-sharing-on-HarmonyOS-devices" class="headerlink" title="3. How to detect screen recording or screen sharing on HarmonyOS devices?"></a>3. How to detect screen recording or screen sharing on HarmonyOS devices?</h4><p>Can we detect if the built-in screen recording function is active or if the device is sharing its screen (e.g., in enterprise meetings)?  </p>
+<p><strong>Solution</strong>: Monitor changes in screen capture, casting, and recording status.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-display-V5#ZH-CN_TOPIC_0000001930756769__displayoncapturestatuschange12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-display-V5#ZH-CN_TOPIC_0000001930756769__displayoncapturestatuschange12</a>  </p>
+<h4 id="4-How-to-actively-open-an-interface-dialog-via-an-API-in-HarmonyOS"><a href="#4-How-to-actively-open-an-interface-dialog-via-an-API-in-HarmonyOS" class="headerlink" title="4. How to actively open an interface&#x2F;dialog via an API in HarmonyOS?"></a>4. How to actively open an interface&#x2F;dialog via an API in HarmonyOS?</h4><p>Currently, the <code>new</code> interface syntax is unsupported. Instead, use implementation classes or <code>@State</code>-typed variables, with specific display and interaction logic handled by the caller through class implementation.<br><strong>Reference demo</strong>:  </p>
+<pre><code class="language-typescript">export interface Month &#123;
+  month: string; // Specific year and month
+  num: number;   // Month number
+  days: number[]; // Dates of the month
+  lunarDays: string[]; // Lunar dates
+  year: number;  // Year
+&#125;
+
+class myMonth implements Month &#123;
+  month: string = &#39;&#39;;
+  num: number = 0;
+  days: number[] = [111];
+  lunarDays: string[] = [&#39;1&#39;];
+  year: number = 1;
+&#125;
+
+@AppRouter(&#123; name: &quot;highlyloadedcomponentrender/MainPage&quot; &#125;)
+@Component
+export struct MainPage &#123;
+  @State mymount: Month = &#123;
+    month: &#39;&#39;,
+    num: 0,
+    days: [],
+    lunarDays: [],
+    year: 0
+  &#125;;
+  private month = new myMonth();
+  // ...
+&#125;
+</code></pre>
+<h4 id="5-Inconsistent-brightness-causes-poor-experience-in-HarmonyOS"><a href="#5-Inconsistent-brightness-causes-poor-experience-in-HarmonyOS" class="headerlink" title="5. Inconsistent brightness causes poor experience in HarmonyOS?"></a>5. Inconsistent brightness causes poor experience in HarmonyOS?</h4><p>After setting the brightness within an app window, returning to the home screen restores the system brightness. If the app’s brightness differs significantly from the system’s, the sudden change is noticeable.  </p>
+<p><strong>Solutions</strong>:  </p>
+<ul>
+<li>Get screen brightness: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-settings-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-settings-V5</a>  </li>
+<li>When exiting the page, reset the screen to the previous brightness (default brightness). Set the value to <code>-1</code> to use the default brightness.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/526-Daily-HarmonyOS-Next-Knowledge-Splash-Screen-Desktop-Shortcut-Menu-HAR-Package-View-Display-Screen-Recording-Prohibition-Full-Screen-Video-Playback-Switch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1231,94 +1341,6 @@ struct AnimationPage &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/517-Daily-HarmonyOS-Next-Knowledge-Routing-Singleton-Pattern-Routing-Warnings-Verification-Code-Popups-Custom-Routing-Table-Implementation-Querying-Screen-Orientation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/517-Daily-HarmonyOS-Next-Knowledge-Routing-Singleton-Pattern-Routing-Warnings-Verification-Code-Popups-Custom-Routing-Table-Implementation-Querying-Screen-Orientation/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Routing Singleton Pattern, Routing Warnings, Verification Code Popups, Custom Routing Table Implementation, Querying Screen Orientation</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 09:47:17 / Modified: 09:47:51" itemprop="dateCreated datePublished" datetime="2025-06-25T09:47:17+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Routing-Singleton-Pattern-Routing-Warnings-Verification-Code-Popups-Custom-Routing-Table-Implementation-Querying-Screen-Orientation"><a href="#Daily-HarmonyOS-Next-Knowledge-Routing-Singleton-Pattern-Routing-Warnings-Verification-Code-Popups-Custom-Routing-Table-Implementation-Querying-Screen-Orientation" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Routing Singleton Pattern, Routing Warnings, Verification Code Popups, Custom Routing Table Implementation, Querying Screen Orientation"></a>[Daily HarmonyOS Next Knowledge] Routing Singleton Pattern, Routing Warnings, Verification Code Popups, Custom Routing Table Implementation, Querying Screen Orientation</h3><h4 id="1-Is-there-a-way-in-HarmonyOS-Navigation-to-implement-a-singleton-pattern-similar-to-RouterMode-in-Router"><a href="#1-Is-there-a-way-in-HarmonyOS-Navigation-to-implement-a-singleton-pattern-similar-to-RouterMode-in-Router" class="headerlink" title="1. Is there a way in HarmonyOS Navigation to implement a singleton pattern similar to RouterMode in Router?"></a>1. Is there a way in HarmonyOS Navigation to implement a singleton pattern similar to RouterMode in Router?</h4><p>Reference demo:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">pushPathsingleTask</span>(<span class="attr">info</span>: <span class="title class_">NavPathInfo</span>, <span class="attr">animated</span>?: <span class="built_in">boolean</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">pageArray</span> = [];</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">pageArray</span> = <span class="variable language_">this</span>.<span class="property">pageInfos</span>.<span class="title function_">getIndexByName</span>(info.<span class="property">name</span>);</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">pageArray</span>.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">pageInfos</span>.<span class="title function_">pushPath</span>(info, animated);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">pageInfos</span>.<span class="title function_">popToIndex</span>(<span class="variable language_">this</span>.<span class="property">pageArray</span>.<span class="title function_">pop</span>(), animated);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-HarmonyOS-Warning-when-using-routeName-Is-there-an-alternative"><a href="#2-HarmonyOS-Warning-when-using-routeName-Is-there-an-alternative" class="headerlink" title="2. HarmonyOS: Warning when using routeName. Is there an alternative?"></a>2. HarmonyOS: Warning when using routeName. Is there an alternative?</h4><p><code>@Entry(&#123; routeName: ‘JLShowPrivacyPage’ &#125;)</code><br>Alert: <em>“It’s not a recommended way to export struct with @Entry decorator, which may cause ACE Engine error in component preview mode”</em>  </p>
-<p><strong>Question</strong>: Will this warning cause exceptions during actual use? If so, what’s the alternative?<br><strong>Answer</strong>: This warning can be ignored. It may cause exceptions only in preview mode, but works fine on real devices.  </p>
-<h4 id="3-HarmonyOS-Demo-for-preventing-SMS-verification-code-abuse-with-image-captcha-or-slider-verification"><a href="#3-HarmonyOS-Demo-for-preventing-SMS-verification-code-abuse-with-image-captcha-or-slider-verification" class="headerlink" title="3. HarmonyOS: Demo for preventing SMS verification code abuse with image captcha or slider verification?"></a>3. HarmonyOS: Demo for preventing SMS verification code abuse with image captcha or slider verification?</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> promptAction <span class="keyword">from</span> <span class="string">&#x27;@ohos.promptAction&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">customDialogId</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">let</span> sliderValue = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Builder</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">customDialogBuilder</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title class_">Column</span>() &#123;</span><br><span class="line">    <span class="title class_">Row</span>(&#123; <span class="attr">space</span>: <span class="number">20</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;安全验证&#x27;</span>)</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">26</span>)</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;80%&#x27;</span>)</span><br><span class="line">        .<span class="title function_">height</span>(<span class="number">60</span>)</span><br><span class="line">        .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">        .<span class="title function_">lineHeight</span>(<span class="number">60</span>);</span><br><span class="line">      <span class="title class_">Image</span>($r(<span class="string">&#x27;app.media.error&#x27;</span>))</span><br><span class="line">        .<span class="title function_">width</span>(<span class="number">26</span>)</span><br><span class="line">        .<span class="title function_">height</span>(<span class="number">26</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          promptAction.<span class="title function_">closeCustomDialog</span>(customDialogId);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="number">16</span> &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="title class_">Stack</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&quot;请滑到最右端&quot;</span>)</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">20</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          promptAction.<span class="title function_">closeCustomDialog</span>(customDialogId);</span><br><span class="line">        &#125;);</span><br><span class="line">      <span class="title class_">Slider</span>(&#123; <span class="attr">style</span>: <span class="title class_">SliderStyle</span>.<span class="property">InSet</span>, <span class="attr">value</span>: sliderValue &#125;)</span><br><span class="line">        .<span class="title function_">trackColor</span>(<span class="string">&#x27;rgba(40,40,40,0.5)&#x27;</span>)</span><br><span class="line">        .<span class="title function_">selectedColor</span>(<span class="string">&#x27;rgba(200,200,200,1)&#x27;</span>)</span><br><span class="line">        .<span class="title function_">trackThickness</span>(<span class="number">66</span>)</span><br><span class="line">        .<span class="title function_">blockStyle</span>(&#123; <span class="attr">type</span>: <span class="title class_">SliderBlockType</span>.<span class="property">IMAGE</span>, <span class="attr">image</span>: $r(<span class="string">&#x27;app.media.arrow&#x27;</span>) &#125;)</span><br><span class="line">        .<span class="title function_">onChange</span>(<span class="function">(<span class="params"><span class="attr">value</span>: <span class="built_in">number</span>, <span class="attr">mode</span>: <span class="title class_">SliderChangeMode</span></span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (value === <span class="number">100</span>) &#123;</span><br><span class="line">            promptAction.<span class="title function_">closeCustomDialog</span>(customDialogId);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="number">90</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;80%&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  .<span class="title function_">height</span>(<span class="number">220</span>)</span><br><span class="line">  .<span class="title function_">padding</span>(<span class="number">5</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;获取验证码&#x27;</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Button</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">          .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">          .<span class="title function_">padding</span>(<span class="number">16</span>)</span><br><span class="line">          .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            promptAction.<span class="title function_">openCustomDialog</span>(&#123;</span><br><span class="line">              <span class="attr">builder</span>: customDialogBuilder.<span class="title function_">bind</span>(<span class="variable language_">this</span>)</span><br><span class="line">            &#125;).<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="attr">dialogId</span>: <span class="built_in">number</span></span>) =&gt;</span> &#123;</span><br><span class="line">              customDialogId = dialogId;</span><br><span class="line">            &#125;);</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="4-HarmonyOS-Complete-demo-for-custom-routing-tables-and-dynamic-routing"><a href="#4-HarmonyOS-Complete-demo-for-custom-routing-tables-and-dynamic-routing" class="headerlink" title="4. HarmonyOS: Complete demo for custom routing tables and dynamic routing?"></a>4. HarmonyOS: Complete demo for custom routing tables and dynamic routing?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/samples/#section11434169191">App Navigation Design</a>  </p>
-<h4 id="5-HarmonyOS-Query-current-screen-orientation-portrait-landscape"><a href="#5-HarmonyOS-Query-current-screen-orientation-portrait-landscape" class="headerlink" title="5. HarmonyOS: Query current screen orientation (portrait&#x2F;landscape)?"></a>5. HarmonyOS: Query current screen orientation (portrait&#x2F;landscape)?</h4><p><strong>1. Listen for orientation changes</strong>:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> listener = mediaquery.<span class="title function_">matchMediaSync</span>(<span class="string">&#x27;(orientation: landscape)&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>2. Query current orientation</strong>:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">orientation</span>: <span class="built_in">number</span> = display.<span class="title function_">getDefaultDisplaySync</span>().<span class="property">orientation</span>;</span><br><span class="line"><span class="keyword">switch</span> (orientation) &#123;</span><br><span class="line">  <span class="keyword">case</span> display.<span class="property">Orientation</span>.<span class="property">PORTRAIT</span>:</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">status</span> = <span class="string">&#x27;竖屏&#x27;</span>;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> display.<span class="property">Orientation</span>.<span class="property">LANDSCAPE</span>:</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">status</span> = <span class="string">&#x27;横屏&#x27;</span>;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> display.<span class="property">Orientation</span>.<span class="property">PORTRAIT_INVERTED</span>:</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">status</span> = <span class="string">&#x27;反向竖屏&#x27;</span>;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> display.<span class="property">Orientation</span>.<span class="property">LANDSCAPE_INVERTED</span>:</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">status</span> = <span class="string">&#x27;反向横屏&#x27;</span>;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">  <span class="attr">default</span>:</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">status</span> = <span class="string">&#x27;不知道&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Additional methods</strong>:  </p>
-<ul>
-<li>Use <code>display.on(&#39;windowSizeChange&#39;)</code> to listen for screen changes.  </li>
-<li>Configure <code>orientation: auto_rotation</code> in <code>module.json5</code> for auto-rotation.  </li>
-<li>Dynamically set orientation with <code>window.setPreferredOrientation</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-display-V5">Display API</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1388,7 +1410,7 @@ struct AnimationPage &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

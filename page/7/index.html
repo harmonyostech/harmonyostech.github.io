@@ -149,6 +149,133 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4102-Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/4102-Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] AVCodec, SmartPerf Tool, Web Component Loading, Keyboard Show/Hide Listening, Asset Store Kit</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 10:35:05 / Modified: 11:19:33" itemprop="dateCreated datePublished" datetime="2025-06-29T10:35:05+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit"><a href="#Daily-HarmonyOS-Next-Knowledge-AVCodec-SmartPerf-Tool-Web-Component-Loading-Keyboard-Show-Hide-Listening-Asset-Store-Kit" class="headerlink" title="[Daily HarmonyOS Next Knowledge] AVCodec, SmartPerf Tool, Web Component Loading, Keyboard Show&#x2F;Hide Listening, Asset Store Kit"></a>[Daily HarmonyOS Next Knowledge] AVCodec, SmartPerf Tool, Web Component Loading, Keyboard Show&#x2F;Hide Listening, Asset Store Kit</h1><h2 id="1-AVCodec-Hardware-Decoding-Consultation"><a href="#1-AVCodec-Hardware-Decoding-Consultation" class="headerlink" title="1. AVCodec Hardware Decoding Consultation"></a>1. AVCodec Hardware Decoding Consultation</h2><p>When adapting video playback hardware decoding, refer to the demo: <a target="_blank" rel="noopener" href="https://gitee.com/openharmony-sig/ohos_videocompressor/blob/master/videoCompressor/src/main/cpp/video/decoder/VideoDec.cpp">https://gitee.com/openharmony-sig/ohos_videocompressor/blob/master/videoCompressor/src/main/cpp/video/decoder/VideoDec.cpp</a>  </p>
+<p><strong>Question</strong>:  </p>
+<pre><code class="language-cpp">int32_t VideoDec::SetOutputSurface()
+&#123;
+  return OH_VideoDecoder_SetSurface(vdec_, mutexManager-&gt;nativeWindow);
+&#125;
+</code></pre>
+<p>How is <code>nativeWindow</code> obtained or created? The demo does not show this process.  </p>
+<p><strong>Answer</strong>:<br>The JS layer registers callbacks. When an Xcomponent appears in the UI layer, the <code>OnSurfaceCreateCB</code> callback is triggered, and the <code>OHNativeWindow *</code> is stored in the singleton class <code>plugin_manager</code> for direct retrieval during use.<br>Refer to the demo: <a target="_blank" rel="noopener" href="https://gitee.com/kairen-13/AVCodecSample">https://gitee.com/kairen-13/AVCodecSample</a>  </p>
+<h2 id="2-When-using-SmartPerf-to-collect-performance-data-in-HarmonyOS-the-process-ends-immediately-after-executing-the-start-command-with-a-specific-package-name"><a href="#2-When-using-SmartPerf-to-collect-performance-data-in-HarmonyOS-the-process-ends-immediately-after-executing-the-start-command-with-a-specific-package-name" class="headerlink" title="2. When using SmartPerf to collect performance data in HarmonyOS, the process ends immediately after executing the start command with a specific package name"></a>2. When using SmartPerf to collect performance data in HarmonyOS, the process ends immediately after executing the start command with a specific package name</h2><p><strong>Issue</strong>:<br>When collecting performance data with SmartPerf, executing the command <code>SP_daemon -start -PKG yylx.danmaku.bili -c</code> causes the process to end immediately, with the log <code>command exec finished!</code>.  </p>
+<p><strong>Explanation</strong>:<br>After executing the <code>start</code> command, data collection begins. The log <code>command exec finish</code> only indicates the start of collection, not an automatic termination. Collection continues until <code>SP_daemon -stop</code> is executed, generating a CSV file path for exporting collected data.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/smartperf-guidelines-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/smartperf-guidelines-V5</a><br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9%E9%B8%BF%E8%92%99%E7%9F%A5%E8%AF%86%E3%80%9124.10.02.png"></p>
+<h2 id="3-Web-component-fails-to-load-URL-content"><a href="#3-Web-component-fails-to-load-URL-content" class="headerlink" title="3. Web component fails to load URL content"></a>3. Web component fails to load URL content</h2><p><strong>Troubleshooting Steps</strong>:  </p>
+<ol>
+<li>Check if the <code>ohos.permission.INTERNET</code> permission is configured in <code>module.json5</code>:</li>
+</ol>
+<pre><code class="language-json">&quot;module&quot;: &#123; &quot;requestPermissions&quot;: [ &#123;&quot;name&quot;: &quot;ohos.permission.INTERNET&quot;&#125; ] &#125; 
+</code></pre>
+<ol start="2">
+<li>If the permission is set but the page still does not display, verify that <code>domStorageAccess</code> is set to <code>true</code>.</li>
+</ol>
+<h2 id="4-InputMethodController-on-sendKeyboardStatus-fails-to-listen-for-keyboard-show-hide-events"><a href="#4-InputMethodController-on-sendKeyboardStatus-fails-to-listen-for-keyboard-show-hide-events" class="headerlink" title="4. InputMethodController.on(&#39;sendKeyboardStatus&#39;) fails to listen for keyboard show&#x2F;hide events"></a>4. <code>InputMethodController.on(&#39;sendKeyboardStatus&#39;)</code> fails to listen for keyboard show&#x2F;hide events</h2><p><strong>Issue</strong>:<br>Subscribing to soft keyboard events via <code>InputMethodController</code> as per the official documentation does not trigger callbacks:  </p>
+<pre><code class="language-typescript">try &#123;
+  inputMethodController.on(&#39;sendKeyboardStatus&#39;, (keyboardStatus: inputMethod.KeyboardStatus) =&gt; &#123;
+    console.log(`Succeeded in subscribing sendKeyboardStatus, keyboardStatus: $&#123;keyboardStatus&#125;`);
+  &#125;);
+&#125; catch(err) &#123;
+  console.error(`Failed to subscribe sendKeyboardStatus: $&#123;JSON.stringify(err)&#125;`);
+&#125;
+</code></pre>
+<p>No console output occurs when the soft keyboard shows&#x2F;hides.  </p>
+<p><strong>Solutions</strong>:<br><strong>Option 1</strong>: Use the input method framework module (<code>@ohos.inputMethod</code>) to listen for soft keyboard status via <code>inputMethodController.on(&#39;sendKeyboardStatus&#39;, callback)</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-inputmethod-V5</a>  </p>
+<p><strong>Option 2</strong>: Use the window module (<code>@ohos.window</code>) to listen for soft keyboard height changes via <code>Window.on(&#39;keyboardHeightChange&#39;)</code> to determine the keyboard status.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5</a>  </p>
+<p><strong>Sample Code</strong>:  </p>
+<pre><code class="language-typescript">let windowClass: window.Window | undefined = undefined;
+try &#123;
+  window.getLastWindow(this.context, (err: BusinessError, data) =&gt; &#123;
+    const errCode: number = err.code;
+    if (errCode) &#123;
+      console.error(&#39;Failed to obtain the top window. Cause: &#39; + JSON.stringify(err));
+      return;
+    &#125;
+    windowClass = data;
+    console.info(&#39;Succeeded in obtaining the top window. Data: &#39; + JSON.stringify(data));
+
+    windowClass.on(&#39;avoidAreaChange&#39;, (data) =&gt; &#123;
+      console.info(&#39;Succeeded in enabling the listener for system avoid area changes. type:&#39; + JSON.stringify(data.type) + &#39;, area: &#39; + JSON.stringify(data.area));
+    &#125;);
+  &#125;);
+&#125; catch (exception) &#123;
+  console.error(&#39;Failed to obtain the top window. Cause: &#39; + JSON.stringify(exception));
+&#125;
+</code></pre>
+<h2 id="5-When-will-key-assets-in-Asset-Store-Kit-be-lost"><a href="#5-When-will-key-assets-in-Asset-Store-Kit-be-lost" class="headerlink" title="5. When will key assets in Asset Store Kit be lost?"></a>5. When will key assets in Asset Store Kit be lost?</h2><p>Key assets will be destroyed in the following scenarios:  </p>
+<ul>
+<li>Application uninstallation  </li>
+<li>User deletion of assets  </li>
+<li>Device factory reset  </li>
+<li>Device flashing</li>
+</ul>
+<p><strong>Note</strong>: The translation maintains technical terms and code structures while ensuring readability in English. For specialized APIs and modules, official documentation terminology is prioritized.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/4103-Daily-HarmonyOS-Next-Knowledge-Sandbox-Directory-Image-Compression-characteristicsArray-gm-crypto-National-Cryptography-Encryption-Decryption-Notification-Permissions/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1120,184 +1247,6 @@ async function aesCBC() &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41012-Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/41012-Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Stress Testing, Web Component Interceptor, NFC Switch Status, Location Capability, and Supported Third-party Libraries for RN</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 10:26:17 / Modified: 11:19:37" itemprop="dateCreated datePublished" datetime="2025-06-29T10:26:17+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN"><a href="#Daily-HarmonyOS-Next-Knowledge-Stress-Testing-Web-Component-Interceptor-NFC-Switch-Status-Location-Capability-and-Supported-Third-party-Libraries-for-RN" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Stress Testing, Web Component Interceptor, NFC Switch Status, Location Capability, and Supported Third-party Libraries for RN"></a>[Daily HarmonyOS Next Knowledge] Stress Testing, Web Component Interceptor, NFC Switch Status, Location Capability, and Supported Third-party Libraries for RN</h1><h2 id="1-Does-HarmonyOS’-Wukong-support-running-Python-scripts-for-stress-or-regular-testing"><a href="#1-Does-HarmonyOS’-Wukong-support-running-Python-scripts-for-stress-or-regular-testing" class="headerlink" title="1. Does HarmonyOS’ Wukong support running Python scripts for stress or regular testing?"></a>1. Does HarmonyOS’ Wukong support running Python scripts for stress or regular testing?</h2><ol>
-<li>Python scripts can call the hdc command to execute <code>hdc shell wukong XXX</code>.  </li>
-<li>Wukong only supports stability stress testing. For general testing, it is recommended to use the arkxtest testing framework.</li>
-</ol>
-<h2 id="2-How-to-handle-custom-WebHeader-during-page-navigation-in-Web-components"><a href="#2-How-to-handle-custom-WebHeader-during-page-navigation-in-Web-components" class="headerlink" title="2. How to handle custom WebHeader during page navigation in Web components?"></a>2. How to handle custom WebHeader during page navigation in Web components?</h2><p>If many businesses are implemented using H5, the httpHeader during page loading may include information such as user details and the current app theme. In HarmonyOS, the header can be added via <code>loadUrl</code> for the first webpage load, but it cannot be added during subsequent page navigations. What solutions are available for this scenario? Attempts to intercept requests using <code>onInterceptRequest</code> and send requests with headers via HTTP have been ineffective.  </p>
-<p>For setting webHeader when using webview in ArkTS, refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#geolocationpermissions">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-webview-V5#geolocationpermissions</a>  </p>
-<p>Requests can be intercepted using the web component’s <code>onInterceptRequest</code> method.<br><strong>Sample code</strong>:  </p>
-<pre><code class="language-typescript">import web_webview from &#39;@ohos.web.webview&#39;;
-@Entry
-@Component
-struct WebComponent &#123;
-  controller: web_webview.WebviewController = new web_webview.WebviewController();
-  build() &#123;
-    Column() &#123;
-      Web(&#123; src: $rawfile(&#39;i.html&#39;), controller: this.controller &#125;)
-        .onInterceptRequest((event) =&gt; &#123;
-          if (event) &#123;
-            console.log(&#39;urldddd:&#39; + event.request.getRequestUrl());
-          &#125;
-          return null;
-        &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p><strong>HTML code</strong>:  </p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;head&gt;
-  &lt;script src=&quot;https://xxx.com/vue/dist/vue.js&quot;&gt;&lt;/script&gt;
-  &lt;script src=&quot;https://xxx.com/vue-router/dist/vue-router.js&quot;&gt;&lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;div id=&quot;app&quot;&gt;
-    &lt;h1&gt;Vue Router Example&lt;/h1&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;router-link to=&quot;/&quot;&gt;Home&lt;/router-link&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;router-link to=&quot;/about&quot;&gt;About&lt;/router-link&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;router-view&gt;&lt;/router-view&gt;
-  &lt;/div&gt;
-  &lt;script&gt;
-    // Define two components
-    var Home = &#123; template: &#39;&lt;div&gt;&lt;h2&gt;This is the home page&lt;/h2&gt;&lt;p&gt;Welcome to my website&lt;/p&gt;&lt;/div&gt;&#39; &#125;;
-    var About = &#123; template: &#39;&lt;div&gt;&lt;h2&gt;This is the about page&lt;/h2&gt;&lt;p&gt;Bing is an intelligent search engine that helps you find the information you need&lt;/p&gt;&lt;/div&gt;&#39; &#125;;
-    // Create a router instance
-    var router = new VueRouter(&#123;
-      // Define routing rules
-      routes: [
-        &#123; path: &#39;/&#39;, component: Home &#125;,
-        &#123; path: &#39;/about&#39;, component: About &#125;
-      ]
-    &#125;);
-    // Create and mount the root instance
-    var app = new Vue(&#123; el: &#39;#app&#39;, router: router &#125;);
-  &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<h2 id="3-How-to-determine-the-switch-status-of-the-system-NFC-in-HarmonyOS"><a href="#3-How-to-determine-the-switch-status-of-the-system-NFC-in-HarmonyOS" class="headerlink" title="3. How to determine the switch status of the system NFC in HarmonyOS?"></a>3. How to determine the switch status of the system NFC in HarmonyOS?</h2><p>The current NFC status can be queried, and changes in the NFC status can be monitored. Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-nfccontroller-V5#nfcstate">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-nfccontroller-V5#nfcstate</a>  </p>
-<p>Testing verifies that <code>controller.isNfcOpen()</code> returns the correct value.<br><strong>Demo</strong>:  </p>
-<pre><code class="language-typescript">import controller from &#39;@ohos.nfc.controller&#39;;
-
-@Entry
-@Component
-struct TestNetConnectionPage &#123;
-  @State monitorNfcState: string = &#39;&#39;;
-  @State queryNfcState: string = &#39;&#39;;
-  @State isNfcOpen: boolean = false;
-
-  aboutToAppear(): void &#123;
-    if (canIUse(&quot;SystemCapability.Communication.NFC.Core&quot;)) &#123;
-      controller.on(&quot;nfcStateChange&quot;, state =&gt; &#123;
-        this.monitorNfcState = state.toString();
-      &#125;);
-    &#125;
-  &#125;
-
-  build() &#123;
-    Row() &#123;
-      Column() &#123;
-        Row() &#123;
-          Text(&#39;Monitor NFC status:&#39;).width(&#39;50%&#39;);
-          Text(this.monitorNfcState).width(&#39;50%&#39;);
-        &#125;.alignSelf(ItemAlign.Start);
-
-        if (canIUse(&quot;SystemCapability.Communication.NFC.Core&quot;)) &#123;
-          Row() &#123;
-            Button(&#39;Query NFC status:&#39;).width(&#39;50%&#39;).onClick(() =&gt; &#123;
-              this.queryNfcState = controller.getNfcState().toString();
-            &#125;);
-            Text(this.queryNfcState).width(&#39;50%&#39;);
-          &#125;.alignSelf(ItemAlign.Start);
-        &#125;
-
-        if (canIUse(&quot;SystemCapability.Communication.NFC.Core&quot;)) &#123;
-          Row() &#123;
-            Button(&#39;Check NFC switch:&#39;).width(&#39;50%&#39;).onClick(() =&gt; &#123;
-              this.isNfcOpen = controller.isNfcOpen();
-            &#125;);
-            Text(this.isNfcOpen + &#39;&#39;).width(&#39;50%&#39;);
-          &#125;.alignSelf(ItemAlign.Start);
-        &#125;
-      &#125;
-      .width(&#39;100%&#39;)
-    &#125;
-    .height(&#39;100%&#39;)
-  &#125;
-&#125;
-</code></pre>
-<h2 id="4-Regarding-location-capabilities-in-HarmonyOS-are-there-any-free-kits-available"><a href="#4-Regarding-location-capabilities-in-HarmonyOS-are-there-any-free-kits-available" class="headerlink" title="4. Regarding location capabilities in HarmonyOS, are there any free kits available?"></a>4. Regarding location capabilities in HarmonyOS, are there any free kits available?</h2><p>For location services, refer to the following document: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/HMSCore-Guides/harmonyos-location-develop-steps-0000001168458553">https://developer.huawei.com/consumer/cn/doc/HMSCore-Guides/harmonyos-location-develop-steps-0000001168458553</a>  </p>
-<h2 id="5-Which-third-party-RN-libraries-are-currently-supported-in-HarmonyOS"><a href="#5-Which-third-party-RN-libraries-are-currently-supported-in-HarmonyOS" class="headerlink" title="5. Which third-party RN libraries are currently supported in HarmonyOS?"></a>5. Which third-party RN libraries are currently supported in HarmonyOS?</h2><p>Currently supported adapted RN third-party libraries: <a target="_blank" rel="noopener" href="https://github.com/orgs/react-native-oh-library/repositories?language=&sort=&type=all">https://github.com/orgs/react-native-oh-library/repositories?language=&amp;sort=&amp;type=all</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1367,7 +1316,7 @@ struct TestNetConnectionPage &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

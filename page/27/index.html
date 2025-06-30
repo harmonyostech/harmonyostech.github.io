@@ -149,6 +149,152 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/616-Daily-HarmonyOS-Next-Knowledge-Global-Font-Non-null-Assertion-Component-Dialog-Usage-List-Scroll-to-Top-Soft-Keyboard-Control/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/616-Daily-HarmonyOS-Next-Knowledge-Global-Font-Non-null-Assertion-Component-Dialog-Usage-List-Scroll-to-Top-Soft-Keyboard-Control/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Global Font, Non-null Assertion, Component Dialog Usage, List Scroll to Top, Soft Keyboard Control</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 11:24:34 / Modified: 11:24:53" itemprop="dateCreated datePublished" datetime="2025-06-25T11:24:34+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Global-Font-Non-null-Assertion-Component-Dialog-Usage-List-Scroll-to-Top-Soft-Keyboard-Control"><a href="#Daily-HarmonyOS-Next-Knowledge-Global-Font-Non-null-Assertion-Component-Dialog-Usage-List-Scroll-to-Top-Soft-Keyboard-Control" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Global Font, Non-null Assertion, Component Dialog Usage, List Scroll to Top, Soft Keyboard Control"></a>[Daily HarmonyOS Next Knowledge] Global Font, Non-null Assertion, Component Dialog Usage, List Scroll to Top, Soft Keyboard Control</h3><h4 id="1、HarmonyOS-Global-Font"><a href="#1、HarmonyOS-Global-Font" class="headerlink" title="1、HarmonyOS Global Font"></a>1、HarmonyOS Global Font</h4><ol>
+<li>How to globally replace the system default font with a custom font without setting it for each page or component?  </li>
+<li>How to globally set the app font to not change with system font size and weight?</li>
+</ol>
+<p><strong>1. Global Font</strong><br>1.1 To use a custom font globally, register it in the <code>onWindowStageCreate</code> lifecycle of <code>EntryAbility.ets</code> via the <code>windowStage.loadContent</code> callback:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import font from &#x27;@ohos.font&#x27;;</span><br><span class="line">onWindowStageCreate(windowStage: window.WindowStage): void &#123;</span><br><span class="line">  windowStage.loadContent(&#x27;pages/registerFont&#x27;, (err, data) =&gt; &#123;</span><br><span class="line">  if (err.code) &#123;</span><br><span class="line">  return;</span><br><span class="line">&#125;</span><br><span class="line">font.registerFont(&#123;</span><br><span class="line">  familyName: &#x27;Beacon&#x27;,</span><br><span class="line">  familySrc: $rawfile(&#x27;font/Beacon.otf&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line">font.registerFont(&#123;</span><br><span class="line">  familyName: &#x27;SF&#x27;,</span><br><span class="line">  familySrc: $rawfile(&#x27;font/SF-Pro-Text-Italic.ttf&#x27;)</span><br><span class="line">&#125;)</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">1.2 In `registerFont.ets`, use the registered `familyName` in the page:  </span><br></pre></td></tr></table></figure>
+<p>@Entry<br>@Component<br>struct registerFont {<br>  @State message: string &#x3D; ‘test’<br>  build() {<br>    Column() {<br>      Text(this.message)<br>        .align(Alignment.Center)<br>        .fontSize(50)<br>        .fontFamily(‘Beacon’)<br>      Text(this.message)<br>        .align(Alignment.Center)<br>        .fontSize(50)<br>        .fontFamily(‘SF’)<br>    }.width(‘100%’)<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Reference link: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-font-V5  </span><br><span class="line"></span><br><span class="line">2. Currently, only font sizes set in `fp` (font pixel) units change with the system. To prevent changes, use `vp` units instead. By default, 1 fp = 1 vp. If the user scales the system font, 1 fp = 1 vp * scale factor.  </span><br><span class="line">- Pixel units: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-pixel-units-V5  </span><br><span class="line">- Font pixel unit (fp): https://developer.huawei.com/consumer/cn/doc/design-guides/design-layout-basics-0000001795579413#section1964738154814  </span><br><span class="line">- Use dynamic attributes or custom classes implementing the `AttributeModifier` interface to define fixed styles for Text components. Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-attribute-modifier-V5  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 2、What is the role of the exclamation mark after a variable in HarmonyOS?  </span><br><span class="line">What does the exclamation mark after a variable do? Multiple exclamation marks can be added without errors. What&#x27;s the difference between one and multiple exclamation marks?  </span><br><span class="line"></span><br><span class="line">**Non-null assertion operator**: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/introduction-to-arkts-V5  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 3、HarmonyOS API12: Component usage scenario for Dialog  </span><br><span class="line">There are two pages, A and B. Page A pops up a CustomDialog, pushes to page B, and returns to page A to refresh the dialog data. Current issues:  </span><br><span class="line">1. The dialog is closed before entering page B (if not closed, it remains when entering page B).  </span><br><span class="line">2. The dialog is reopened when returning from page B to A (unfriendly to users due to repeated openings).  </span><br><span class="line"></span><br><span class="line">Expectation: The dialog should not be closed before entering B, and should not be reopened after returning to A.  </span><br><span class="line">Question: Why does the dialog have a higher hierarchy than pages? The dialog on page A should belong to A, but why does it persist when entering page B?  </span><br><span class="line"></span><br><span class="line">Use `NavDestinationMode.DIALOG` to implement custom popups. Refer to the demo:  </span><br></pre></td></tr></table></figure>
+<p>interface RouterParams {<br>  name?: string,<br>  onPop?: (data: PopInfo) &#x3D;&gt; void<br>}</p>
+<p>&#x2F;&#x2F; Encapsulated routing utility class with custom popup registration<br>class AppRouter {<br>  private static instance &#x3D; new AppRouter();<br>  private pathStack: NavPathStack &#x3D; new NavPathStack();</p>
+<p>  public static getInstance(): AppRouter {<br>    return AppRouter.instance;<br>  }</p>
+<p>  public getPathStack(): NavPathStack {<br>    return this.pathStack;<br>  }</p>
+<p>  private pushPath(name: string): void {<br>    this.pathStack.pushPath({ name: name })<br>  }</p>
+<p>  public static push(name: string): void {<br>    AppRouter.instance.pushPath(name);<br>  }</p>
+<p>  public static openDialog(name: string, params?: RouterParams): void {<br>    AppRouter.instance.pathStack.pushPath({<br>      name: name, param: params, onPop: (data: PopInfo) &#x3D;&gt; {<br>        if (params?.onPop) {<br>          params.onPop!(data);<br>        }<br>      }<br>    });<br>  }</p>
+<p>  public static pop(): void {<br>    AppRouter.instance.pathStack.pop();<br>  }<br>}</p>
+<p>@Component<br>  &#x2F;&#x2F; NavDestinationMode.DIALOG<br>struct DefaultDialog {<br>  build() {<br>    NavDestination() {<br>      Stack({ alignContent: Alignment.Center }) {<br>        Column() {<br>        }<br>        .width(“100%”)<br>        .height(“100%”)<br>        .backgroundColor(‘rgba(0,0,0,0.5)’)<br>        .transition(<br>          TransitionEffect.OPACITY.animation({<br>            duration: 300,<br>            curve: Curve.Friction<br>          })<br>        )<br>        .onClick(() &#x3D;&gt; {<br>          AppRouter.pop();<br>        })</p>
+<pre><code>    Column() &#123;
+      Text(&quot;dialogA&quot;)
+        .fontColor(Color.White)
+      Button(&quot;push pageC&quot;, &#123; stateEffect: true, type: ButtonType.Capsule &#125;)
+        .onClick(() =&gt; &#123;
+          AppRouter.push(&quot;pageC&quot;)
+        &#125;)
+    &#125;
+    .width(&quot;50%&quot;)
+    .height(&quot;30%&quot;)
+    .backgroundColor(&#39;#ffae2d2d&#39;)
+    .transition(
+      TransitionEffect.scale(&#123; x: 0, y: 0 &#125;).animation(&#123;
+        duration: 300,
+        curve: Curve.Friction
+      &#125;)
+    )
+  &#125;
+  .width(&quot;100%&quot;)
+  .height(&quot;100%&quot;)
+&#125;
+.mode(NavDestinationMode.DIALOG)
+.hideTitleBar(true)
+</code></pre>
+<p>  }<br>}</p>
+<p>@Component<br>struct PageA {<br>  @Consume(‘pageInfos’) pageInfos: NavPathStack;</p>
+<p>  build() {<br>    NavDestination() {<br>      Button(‘push dialogA’, { stateEffect: true, type: ButtonType.Capsule })<br>        .onClick(() &#x3D;&gt; {<br>          AppRouter.openDialog(“DefaultDialog”);<br>        }).margin(10)<br>    }.title(‘PageA’)<br>  }<br>}</p>
+<p>@Component<br>struct PageC {<br>  @Consume(‘pageInfos’) pageInfos: NavPathStack;</p>
+<p>  build() {<br>    NavDestination() {<br>      Column() {<br>        Text(‘pageC’)<br>          .margin(10)<br>        Button(‘返回’, { stateEffect: true, type: ButtonType.Capsule })<br>          .onClick(() &#x3D;&gt; {<br>            AppRouter.pop();<br>          }).margin(10)<br>      }<br>    }.mode(NavDestinationMode.STANDARD)<br>  }<br>}</p>
+<p>@Entry<br>@Component<br>struct pageRoot01 {<br>  @Provide(‘pageInfos’) pageInfos: NavPathStack &#x3D; new NavPathStack()<br>  &#x2F;&#x2F; Visibility control set to non-occupying<br>  @State visible: Visibility &#x3D; Visibility.None</p>
+<p>  @Builder<br>  PagesMap(name: string) {<br>    if (name &#x3D;&#x3D; ‘pageA’) {<br>      PageA()<br>    } else if (name &#x3D;&#x3D; ‘pageC’) {<br>      PageC()<br>    } else if (name &#x3D;&#x3D; ‘DefaultDialog’) {<br>      DefaultDialog()<br>    }<br>  }</p>
+<p>  build() {<br>    &#x2F;&#x2F; Register NavPathStack in the root page<br>    Navigation(AppRouter.getInstance().getPathStack()) {<br>      Stack({ alignContent: Alignment.Center }) {<br>        Column() {<br>          Button(‘push PageA’, { stateEffect: true, type: ButtonType.Capsule })<br>            .onClick(() &#x3D;&gt; {<br>              AppRouter.push(‘pageA’)<br>            })<br>        }<br>      }<br>      .height(“100%”)<br>      .width(“100%”)<br>    }<br>    .hideTitleBar(true)<br>    .navDestination(this.PagesMap)<br>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#### 4、HarmonyOS Scroller cannot scroll to the top, and the bottom input box pushes the page up  </span><br></pre></td></tr></table></figure>
+<p>@Entry<br>@Component<br>struct Index {<br>  @State message: string &#x3D; ‘Hello World’;<br>  private list: string[] &#x3D; []<br>  private scroller &#x3D; new Scroller()</p>
+<p>  aboutToAppear(): void {<br>    for (let i &#x3D; 0; i &lt; 200; i++) {<br>      this.list.push(<code>选项$&#123;i&#125;</code>)<br>    }<br>  }</p>
+<p>  build() {<br>    Column() {<br>      Text(‘我是固定标题’)<br>        .fontColor(Color.White)<br>        .backgroundColor(Color.Red)</p>
+<pre><code>  List(&#123; scroller: this.scroller &#125;) &#123;
+    ForEach(this.list, (item: string) =&gt; &#123;
+      ListItem() &#123;
+        Text(item)
+          .padding(10)
+      &#125;
+    &#125;)
+  &#125;
+  .layoutWeight(1)
+  .onAppear(() =&gt; &#123;
+    this.scroller.scrollEdge(Edge.Bottom)
+    this.scroller.scrollToIndex(this.list.length - 1)
+    this.scroller.scrollToIndex(this.list.length)
+  &#125;)
+
+  TextInput()
+&#125;
+.height(&#39;100%&#39;)
+.width(&#39;100%&#39;)
+</code></pre>
+<p>  }<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">**Issues**:  </span><br><span class="line">1. After loading data, the list needs to scroll to the bottom (chat page scenario). Using `this.scroller.scrollEdge` and `this.scroller.scrollToIndex` does not scroll to the bottom.  </span><br><span class="line">2. With a bottom input box, the entire page is pushed up when focused. How to fix the top control and allow normal list scrolling?  </span><br><span class="line"></span><br><span class="line">**Solutions**:  </span><br><span class="line">1. Use `initialIndex: this.list.length - 1`:  </span><br></pre></td></tr></table></figure>
+<p>List({ scroller: this.scroller, initialIndex: this.list.length - 1 }) {<br>  ForEach(this.list, (item: string) &#x3D;&gt; {<br>    ListItem() {<br>      Text(item)<br>        .padding(10)<br>    }<br>  })<br>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. Set `windowStage.getMainWindowSync().getUIContext().setKeyboardAvoidMode(KeyboardAvoidMode.RESIZE)`. Reference: https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-universal-attributes-expand-safe-area-V5#getkeyboardavoidmode  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 5、HarmonyOS methods to actively pop up and close the soft keyboard  </span><br><span class="line">When entering a search page, the soft keyboard needs to be actively popped up before searching and closed after searching.  </span><br></pre></td></tr></table></figure>
+<p>@Entry<br>@Component<br>struct TextInputPage {<br>  controller: TextInputController &#x3D; new TextInputController()<br>  @State inputValue: string &#x3D; “”</p>
+<p>  build() {<br>    RelativeContainer() {<br>      TextInput({ controller: this.controller, text: this.inputValue })<br>        .key(‘TextInput’)<br>        .margin(10)<br>        .border({ width: 1 })<br>        .height(‘48vp’)<br>        .defaultFocus(true)<br>    }<br>    .height(‘100%’)<br>    .width(‘100%’)<br>  }<br>}<br>&#96;&#96;&#96;</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/615-Daily-HarmonyOS-Next-Knowledge-Gesture-Password-Text-Gradient-Page-Return-Value-Passing-Network-Image-Display-Timer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1654,85 +1800,6 @@ export default class EntryAbility extends UIAbility &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/606-Daily-Harmony-Learnings-on-HarmonyOS-Next-Dialog-Controller-ArkUI-X-Marquee-Light-Dark-Mode-Global-Popup-Callback/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/25/606-Daily-Harmony-Learnings-on-HarmonyOS-Next-Dialog-Controller-ArkUI-X-Marquee-Light-Dark-Mode-Global-Popup-Callback/" class="post-title-link" itemprop="url">[Daily Harmony Learnings on HarmonyOS Next] Dialog Controller, ArkUI-X, Marquee, Light/Dark Mode, Global Popup Callback</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-25 11:08:29 / Modified: 12:37:14" itemprop="dateCreated datePublished" datetime="2025-06-25T11:08:29+08:00">2025-06-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="【Daily-HarmonyOS-Next-Knowledge】Removing-Overlays-Navigating-from-Non-Build-Functions-Controlling-Line-Breaks-in-Flow-Layouts-Global-Focus-Events-and-Forcing-Portrait-Orientation-in-Floating-Windows-on-Landscape-Screens"><a href="#【Daily-HarmonyOS-Next-Knowledge】Removing-Overlays-Navigating-from-Non-Build-Functions-Controlling-Line-Breaks-in-Flow-Layouts-Global-Focus-Events-and-Forcing-Portrait-Orientation-in-Floating-Windows-on-Landscape-Screens" class="headerlink" title="【Daily HarmonyOS Next Knowledge】Removing Overlays, Navigating from Non-Build Functions, Controlling Line Breaks in Flow Layouts, Global Focus Events, and Forcing Portrait Orientation in Floating Windows on Landscape Screens"></a>【Daily HarmonyOS Next Knowledge】Removing Overlays, Navigating from Non-Build Functions, Controlling Line Breaks in Flow Layouts, Global Focus Events, and Forcing Portrait Orientation in Floating Windows on Landscape Screens</h3><h4 id="1-How-to-remove-the-overlay-in-HarmonyOS’s-bindsheet"><a href="#1-How-to-remove-the-overlay-in-HarmonyOS’s-bindsheet" class="headerlink" title="1. How to remove the overlay in HarmonyOS’s bindsheet?"></a>1. How to remove the overlay in HarmonyOS’s bindsheet?</h4><p>In the options object, there is a <code>maskColor</code> property used to set the color of the overlay. To ensure the overlay is completely transparent, set <code>maskColor</code> to a transparent value (e.g., <code>Transparent</code>). This will make the overlay invisible.</p>
-<h4 id="2-How-to-use-this-navPathStack-pushDestination-outside-of-the-build-function-in-HarmonyOS"><a href="#2-How-to-use-this-navPathStack-pushDestination-outside-of-the-build-function-in-HarmonyOS" class="headerlink" title="2. How to use this.navPathStack?.pushDestination outside of the build function in HarmonyOS?"></a>2. How to use <code>this.navPathStack?.pushDestination</code> outside of the <code>build</code> function in HarmonyOS?</h4><p>The documentation only shows examples of using <code>this.navPathStack?.pushDestination</code> within the <code>build</code> function, triggered by an <code>onClick</code> event. However, when trying to use it elsewhere (e.g., for a link), it throws an error without any error message.</p>
-<p><strong>Solution</strong>: <code>NavPathStack</code> must be initialized within a <code>Navigation</code> component to enable navigation.</p>
-<h4 id="3-How-to-control-the-spacing-between-lines-in-a-HarmonyOS-flex-flow-layout-when-components-wrap"><a href="#3-How-to-control-the-spacing-between-lines-in-a-HarmonyOS-flex-flow-layout-when-components-wrap" class="headerlink" title="3. How to control the spacing between lines in a HarmonyOS flex flow layout when components wrap?"></a>3. How to control the spacing between lines in a HarmonyOS flex flow layout when components wrap?</h4><p>In earlier API versions, the <code>space</code> property in <code>Flex(&#123; wrap: FlexWrap.Wrap &#125;)</code> might not be available. For older APIs, refer to the documentation:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-flex-V5#Example6">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-container-flex-V5#Example6</a></p>
-<p><strong>Workaround</strong>: Use alternative properties or layout components available in your API version.</p>
-<h4 id="4-Does-HarmonyOS-provide-a-global-focus-event-callback-at-the-application-level-similar-to-OH-NativeXComponent-RegisterFocusEventCallback-for-XComponents"><a href="#4-Does-HarmonyOS-provide-a-global-focus-event-callback-at-the-application-level-similar-to-OH-NativeXComponent-RegisterFocusEventCallback-for-XComponents" class="headerlink" title="4. Does HarmonyOS provide a global focus event callback at the application level, similar to OH_NativeXComponent_RegisterFocusEventCallback for XComponents?"></a>4. Does HarmonyOS provide a global focus event callback at the application level, similar to <code>OH_NativeXComponent_RegisterFocusEventCallback</code> for XComponents?</h4><p>Is there a window-level focus event?</p>
-<p><strong>Answer</strong>: Focus events are component-level; there is no application-level focus event.<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references/js-apis-window">https://developer.huawei.com/consumer/cn/doc/harmonyos-references/js-apis-window</a></p>
-<h4 id="5-How-to-force-a-floating-window-to-display-in-portrait-orientation-on-a-landscape-screen-in-HarmonyOS"><a href="#5-How-to-force-a-floating-window-to-display-in-portrait-orientation-on-a-landscape-screen-in-HarmonyOS" class="headerlink" title="5. How to force a floating window to display in portrait orientation on a landscape screen in HarmonyOS?"></a>5. How to force a floating window to display in portrait orientation on a landscape screen in HarmonyOS?</h4><p>When creating a floating window, setting it to强制 portrait orientation does not work as expected:<br>![[【Daily HarmonyOS Next Knowledge】25.06.06.png]]</p>
-<p><strong>Solution</strong>: Use <code>windowClass.setPreferredOrientation(window.Orientation.LOCKED)</code> to lock the orientation based on the current display. Here’s an example:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="variable language_">window</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.ArkUI&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello World&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">        .<span class="title function_">id</span>(<span class="string">&#x27;Index4HelloWorld&#x27;</span>)</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">        .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">        .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">        .<span class="title function_">alignRules</span>(&#123;</span><br><span class="line">          <span class="attr">center</span>: &#123; <span class="attr">anchor</span>: <span class="string">&#x27;__container__&#x27;</span>, <span class="attr">align</span>: <span class="title class_">VerticalAlign</span>.<span class="property">Center</span> &#125;,</span><br><span class="line">          <span class="attr">middle</span>: &#123; <span class="attr">anchor</span>: <span class="string">&#x27;__container__&#x27;</span>, <span class="attr">align</span>: <span class="title class_">HorizontalAlign</span>.<span class="property">Center</span> &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Lock Orientation&#x27;</span>).<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">window</span>.<span class="title function_">getLastWindow</span>(<span class="title function_">getContext</span>(<span class="variable language_">this</span>), <span class="function">(<span class="params">err, win</span>) =&gt;</span> &#123;</span><br><span class="line">          win.<span class="title function_">setPreferredOrientation</span>(<span class="variable language_">window</span>.<span class="property">Orientation</span>.<span class="property">LOCKED</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">        .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line"></span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Unlock Orientation&#x27;</span>)</span><br><span class="line">        .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">window</span>.<span class="title function_">getLastWindow</span>(<span class="title function_">getContext</span>(<span class="variable language_">this</span>), <span class="function">(<span class="params">err, win</span>) =&gt;</span> &#123;</span><br><span class="line">            win.<span class="title function_">setPreferredOrientation</span>(<span class="variable language_">window</span>.<span class="property">Orientation</span>.<span class="property">AUTO_ROTATION</span>)</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Orange</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>Note</strong>: <code>LOCKED</code> locks the screen to the current orientation (portrait or landscape). Use <code>ORIENTATION_PORTRAIT</code> to force portrait mode regardless of the device orientation.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1802,7 +1869,7 @@ export default class EntryAbility extends UIAbility &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

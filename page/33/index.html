@@ -149,6 +149,333 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/417%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Text-Height-Issues-Long-press-Icon-Menu-Rounded-Gradient-Borders-ArkX-Queries-Progress-Animation-Cancellation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/25/417%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Text-Height-Issues-Long-press-Icon-Menu-Rounded-Gradient-Borders-ArkX-Queries-Progress-Animation-Cancellation/" class="post-title-link" itemprop="url">【Daily HarmonyOS Next Knowledge】 Text Height Issues, Long-press Icon Menu, Rounded Gradient Borders, ArkX Queries, Progress Animation Cancellation</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-25 07:05:28 / Modified: 07:05:59" itemprop="dateCreated datePublished" datetime="2025-06-25T07:05:28+08:00">2025-06-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Text-Height-Issues-Long-press-Icon-Menu-Rounded-Gradient-Borders-ArkX-Queries-Progress-Animation-Cancellation"><a href="#Daily-HarmonyOS-Next-Knowledge-Text-Height-Issues-Long-press-Icon-Menu-Rounded-Gradient-Borders-ArkX-Queries-Progress-Animation-Cancellation" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Text Height Issues, Long-press Icon Menu, Rounded Gradient Borders, ArkX Queries, Progress Animation Cancellation"></a>[Daily HarmonyOS Next Knowledge] Text Height Issues, Long-press Icon Menu, Rounded Gradient Borders, ArkX Queries, Progress Animation Cancellation</h3><h4 id="1-When-pulling-up-a-UIExtension-in-a-HarmonyOS-bindSheet-the-TextArea-component-in-UIAbility-displays-long-text-When-scrolling-the-text-the-bindSheet-page-also-scrolls-How-to-allow-only-text-scrolling-while-keeping-the-bindSheet-page-height-fixed"><a href="#1-When-pulling-up-a-UIExtension-in-a-HarmonyOS-bindSheet-the-TextArea-component-in-UIAbility-displays-long-text-When-scrolling-the-text-the-bindSheet-page-also-scrolls-How-to-allow-only-text-scrolling-while-keeping-the-bindSheet-page-height-fixed" class="headerlink" title="1. When pulling up a UIExtension in a HarmonyOS bindSheet, the TextArea component in UIAbility displays long text. When scrolling the text, the bindSheet page also scrolls. How to allow only text scrolling while keeping the bindSheet page height fixed?"></a>1. When pulling up a UIExtension in a HarmonyOS bindSheet, the TextArea component in UIAbility displays long text. When scrolling the text, the bindSheet page also scrolls. How to allow only text scrolling while keeping the bindSheet page height fixed?</h4><p>Try not using UIExtension and directly pulling up the page layout with bindSheet. In this case, the TextArea component can scroll to display text, and the bindSheet page maintains its height without being affected.  </p>
+<p>Why does using UIExtension cause the bug where both the bindSheet page and TextArea text scroll simultaneously?  </p>
+<p><strong>Pulling Side Code</strong>:  </p>
+<pre><code class="language-typescript">import prompt from &#39;@ohos.prompt&#39;
+import &#123; Button &#125; from &#39;@ohos.multimodalInput.mouseEvent&#39;;
+@Entry
+@Component
+struct Second &#123;
+  @State message1: string = &#39;大江东去，浪淘尽，千古风流人物。故垒西边，人道是：三国周郎赤壁。乱石崩云，惊涛裂岸，卷起千堆雪。江山如画，一时多少豪杰。&#39;
+  @State visible: Visibility = Visibility.Hidden
+  private proxy: UIExtensionProxy | null = null;
+  @State isShow: boolean = false
+  @Builder myBuilder() &#123;
+    Column() &#123;
+      UIExtensionComponent(&#123;
+        bundleName: &quot;com.example.controllablebuildcomponent&quot;,
+        abilityName: &quot;UIExtensionProvider&quot;,
+        parameters: &#123;
+          &quot;ability.want.params.uiExtensionType&quot;: &quot;sys/commonUI&quot;
+        &#125;
+      &#125;)
+        .width(&#39;98%&#39;)
+        .height(&#39;98%&#39;)
+        .onResult((data) =&gt; &#123;
+          console.log(&quot;fengsumei: onResult data : &quot; + JSON.stringify(data))
+        &#125;)
+        .onRelease((code) =&gt; &#123;
+          console.log(&quot;release code : &quot; + code)
+        &#125;)
+        .onReceive((data) =&gt; &#123;
+          console.log(&quot;onReceive data : &quot; + JSON.stringify(data))
+        &#125;)
+        .onRemoteReady((proxy) =&gt; &#123;
+          console.info(&#39;onRemoteReady, for test&#39;)
+          this.proxy = proxy
+          this.proxy.off(&quot;asyncReceiverRegister&quot;);
+        &#125;)
+      // .hitTestBehavior(HitTestMode.None)
+    &#125;
+    .width(&#39;100%&#39;)
+  &#125;
+
+  build() &#123;
+    Row() &#123;
+      Column() &#123;
+        Text(this.message1)
+          .fontSize(20)
+          .margin(20)
+          .copyOption(CopyOptions.InApp)
+          .onClick((event?: ClickEvent) =&gt; &#123;
+            console.log(&quot;fengsumei: ClickEvent!&quot;)
+          &#125;)
+          .textMenuOptions([&#123; content: &quot;Creative&quot;, action: (selectContent: string) =&gt; &#123;
+            console.log(&quot;selectContent: &quot; + selectContent)
+            this.isShow = true
+          &#125;&#125;])
+          .bindSheet($$this.isShow, this.myBuilder(), &#123;
+            showClose: false,
+            shouldDismiss: ((sheetDismiss: SheetDismiss) =&gt; &#123;
+              console.log(&quot;bind sheet shouldDismiss&quot;)
+              sheetDismiss.dismiss()
+            &#125;),
+          &#125;)
+      &#125;
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<p><strong>Problematic Interface Code in the Pulled App</strong>:  </p>
+<pre><code class="language-typescript">Tabs(&#123; barPosition: BarPosition.End, controller: this.tabsController, index: this.currentIndex &#125;) &#123;
+  TabContent() &#123;
+    TextArea(&#123;
+      text: this.textResult,
+      controller: this.textAreaController
+    &#125;)
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+      .fontSize(16)
+      .fontColor(&#39;#182431&#39;)
+      .backgroundColor(&#39;#FFFFFF&#39;)
+      .copyOption(CopyOptions.LocalDevice)
+      .lineSpacing(LengthMetrics.px(20))
+      .letterSpacing(2)
+      .onChange((value: string) =&gt; &#123;
+        this.textResult = value
+      &#125;)
+      .onTouch((event: TouchEvent) =&gt; &#123;
+        console.debug(TAG, &quot;TextArea Touch!&quot;)
+        // event.stopPropagation()
+      &#125;)
+      .onContentScroll(() =&gt; &#123;
+        console.debug(TAG, &quot;TextArea content scroll!&quot;)
+      &#125;)
+  &#125;
+  .backgroundColor(&#39;#FFFFFF&#39;)
+  .borderRadius(15)
+  .margin(&#123; left: 2, right: 2 &#125;)
+
+  TabContent() &#123;
+    TextArea(&#123;
+      text: &#39;this.textResult 222&#39;,
+      controller: this.textAreaController
+    &#125;)
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+      .fontSize(16)
+      .fontColor(&#39;#182431&#39;)
+      .backgroundColor(&#39;#FFFFFF&#39;)
+      .copyOption(CopyOptions.LocalDevice)
+      .lineSpacing(LengthMetrics.px(20))
+      .letterSpacing(2)
+      .onChange((value: string) =&gt; &#123;
+        // this.textResult = value
+      &#125;)
+  &#125;
+  .backgroundColor(&#39;#FFFFFF&#39;)
+  .borderRadius(15)
+  .margin(&#123; left: 2, right: 2 &#125;)
+
+  TabContent() &#123;
+    TextArea(&#123;
+      text: &#39;this.textResult 333&#39;,
+      controller: this.textAreaController
+    &#125;)
+      .width(&#39;100%&#39;)
+      .height(&#39;100%&#39;)
+      .fontSize(16)
+      .fontColor(&#39;#182431&#39;)
+      .backgroundColor(&#39;#FFFFFF&#39;)
+      .copyOption(CopyOptions.LocalDevice)
+      .lineSpacing(LengthMetrics.px(20))
+      .letterSpacing(2)
+      .onChange((value: string) =&gt; &#123;
+        // this.textResult = value
+      &#125;)
+  &#125;
+  .backgroundColor(&#39;#FFFFFF&#39;)
+  .borderRadius(15)
+  .margin(&#123; left: 2, right: 2 &#125;)
+&#125;
+.vertical(false)
+.barHeight(0)
+.onChange((index: number) =&gt; &#123;
+  this.currentIndex = index
+  if (index == 0) &#123;
+    this.previousSource = $r(&#39;app.media.ic_arrow_previous_off&#39;)
+    this.nextSource = $r(&#39;app.media.ic_arrow_next_on&#39;)
+  &#125; else if (index == this.totalPageNums - 1) &#123;
+    this.previousSource = $r(&#39;app.media.ic_arrow_previous_on&#39;)
+    this.nextSource = $r(&#39;app.media.ic_arrow_next_off&#39;)
+  &#125; else &#123;
+    this.previousSource = $r(&#39;app.media.ic_arrow_previous_on&#39;)
+    this.nextSource = $r(&#39;app.media.ic_arrow_next_on&#39;)
+  &#125;
+&#125;)
+.scrollable(true)
+.width(&#39;85%&#39;)
+.height(&#39;85%&#39;)
+.animationDuration(400)
+</code></pre>
+<p><strong>Solution</strong>: Nest a Scroll within bindSheet. In this case, the semi-modal height remains unchanged, and only the content scrolls downward.  </p>
+<h4 id="2-How-to-implement-an-animation-effect-where-a-menu-pops-up-from-a-corner-and-expands-from-small-to-large-when-long-pressing-an-app-icon-in-HarmonyOS"><a href="#2-How-to-implement-an-animation-effect-where-a-menu-pops-up-from-a-corner-and-expands-from-small-to-large-when-long-pressing-an-app-icon-in-HarmonyOS" class="headerlink" title="2. How to implement an animation effect where a menu pops up from a corner and expands from small to large when long-pressing an app icon in HarmonyOS?"></a>2. How to implement an animation effect where a menu pops up from a corner and expands from small to large when long-pressing an app icon in HarmonyOS?</h4><p>Refer to modal transitions: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-modal-transition-V5#%E4%BD%BF%E7%94%A8bindcontentcover%E6%9E%84%E5%BB%BA%E5%85%A8%E5%B1%8F%E6%A8%A1%E6%80%81%E8%BD%AC%E5%9C%BA%E6%95%88%E6%9E%9C">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-modal-transition-V5#%E4%BD%BF%E7%94%A8bindcontentcover%E6%9E%84%E5%BB%BA%E5%85%A8%E5%B1%8F%E6%A8%A1%E6%80%81%E8%BD%AC%E5%9C%BA%E6%95%88%E6%9E%9C</a><br>Use <code>bindContentCover</code> to build full-screen modal transition effects.  </p>
+<ol>
+<li>Define the full-screen modal transition effect with <code>bindContentCover</code>.  </li>
+<li>Define the modal display interface:</li>
+</ol>
+<pre><code class="language-typescript">// Build the modal display interface via @Builder
+@Builder MyBuilder() &#123;
+  Column() &#123;
+    Text(&#39;my model view&#39;)
+  &#125;
+  // Implement appearance and disappearance transition effects via transition animation (transition should be added to the first component under builder)
+  .transition(TransitionEffect.translate(&#123; y: 1000 &#125;).animation(&#123; curve: curves.springMotion(0.6, 0.8) &#125;))
+&#125;
+</code></pre>
+<ol start="3">
+<li>Invoke the modal display interface via the modal API and implement corresponding animation effects via transition or shared element animations:</li>
+</ol>
+<pre><code class="language-typescript">// Modal transition control variable
+@State isPresent: boolean = false;
+
+Button(&#39;Click to present model view&#39;)
+  // Bind the modal display interface via the selected modal API. ModalTransition is the built-in ContentCover transition animation type; None here means the system adds no default animation, and the state variable change is controlled via onDisappear
+  .bindContentCover(this.isPresent, this.MyBuilder(), &#123;
+            modalTransition: ModalTransition.NONE,
+            onDisappear: () =&gt; &#123;
+              if (this.isPresent) &#123;
+                this.isPresent = !this.isPresent;
+              &#125;
+            &#125;
+          &#125;)
+  .onClick(() =&gt; &#123;
+    // Change the state variable to display the modal interface
+    this.isPresent = !this.isPresent;
+  &#125;)
+</code></pre>
+<h4 id="3-How-to-set-a-rounded-gradient-border-in-HarmonyOS"><a href="#3-How-to-set-a-rounded-gradient-border-in-HarmonyOS" class="headerlink" title="3. How to set a rounded gradient border in HarmonyOS?"></a>3. How to set a rounded gradient border in HarmonyOS?</h4><ol>
+<li>How to set a rounded gradient border?  </li>
+<li>Why does BorderImage shift downward, and how to adjust it? Using two layers of gradient backgrounds can achieve the effect, but transparency fails.</li>
+</ol>
+<p>A rounded gradient border can be implemented using the linear gradient <code>linearGradient</code>. Refer to the demo below:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct BorderDemo &#123;
+  build() &#123;
+    Column() &#123;
+        Row()&#123;
+          Text(&#39;This is gradient color.&#39;)
+            .textAlign(TextAlign.Center)
+            .width(&#39;96%&#39;)
+            .height(&#39;80%&#39;)
+            .borderRadius(30)
+            .linearGradient(&#123;
+              direction: GradientDirection.Left, // Gradient direction
+              repeating: true, // Whether gradient colors repeat
+              colors: [[0xDCDCDC, 0.0],  [0xFFFFFF, 1.0]] // When the proportion of the last element in the array is less than 1, it satisfies the repeated coloring effect
+            &#125;)
+        &#125;
+        .width(&#39;90%&#39;)
+        .height(60)
+        .borderRadius(30)
+        .linearGradient(&#123;
+          angle: 90,
+          colors: [[0x87CEEB, 0.0], [0x2E8B57, 1.0]]
+        &#125;)
+        .opacity(0.6)
+        .justifyContent(FlexAlign.Center)
+    &#125;
+    .height(&#39;100%&#39;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-Consultation-on-the-impact-of-HarmonyOS-ArkUI-X-cross-platform-on-host-APP-package-size-and-memory-usage"><a href="#4-Consultation-on-the-impact-of-HarmonyOS-ArkUI-X-cross-platform-on-host-APP-package-size-and-memory-usage" class="headerlink" title="4. Consultation on the impact of HarmonyOS ArkUI-X cross-platform on host APP package size and memory usage?"></a>4. Consultation on the impact of HarmonyOS ArkUI-X cross-platform on host APP package size and memory usage?</h4><p>What is the impact of using ArkUI-X cross-platform technology on the host APP package size (how much static size does it increase), and how much additional memory does the ArkTs runtime occupy? Are there any official data?  </p>
+<ul>
+<li><p>When including only the basic project and packaging only the armv8a architecture so library:  </p>
+<ul>
+<li>APK size: Approximately 12-13MB.  </li>
+<li>Memory: Approximately 200MB.</li>
+</ul>
+</li>
+<li><p>When introducing some device capability, network, etc., so libraries in actual projects:  </p>
+<ul>
+<li>APK size increases by approximately 30-40MB.  </li>
+<li>Memory increases by approximately 80MB+.</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-When-modifying-the-value-of-a-HarmonyOS-Progress-component-how-to-cancel-the-animation"><a href="#5-When-modifying-the-value-of-a-HarmonyOS-Progress-component-how-to-cancel-the-animation" class="headerlink" title="5. When modifying the value of a HarmonyOS Progress component, how to cancel the animation?"></a>5. When modifying the value of a HarmonyOS Progress component, how to cancel the animation?</h4><p>When modifying the <code>value</code> of a <code>Progress</code> component, there is a default animation. How to cancel it?  </p>
+<pre><code class="language-typescript">Progress(&#123; value: this.progress, type: ProgressType.Linear &#125;)
+</code></pre>
+<p>Turn off the smooth progress animation by setting <code>enableSmoothEffect</code> to <code>false</code>. For example:  </p>
+<pre><code class="language-typescript">Progress(&#123; value: this.progressValue, total: 100, type: ProgressType.Linear &#125;)
+  .width(200)
+  .height(50)
+  .style(&#123; enableSmoothEffect: false &#125;)
+</code></pre>
+<p>Documentation reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-progress-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-progress-V5</a>  </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/25/416%E3%80%90Daily-HarmonyOS-Next-Knowledge%E3%80%91-Textbox-Focus-Acquisition-Custom-Component-Subcomponent-Addition-Floating-Button-Dialog-Button-Update-Variable-Name-Component/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2058,111 +2385,6 @@ struct Index &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/24/Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Input Box Focus Color, Text Overflow Handling, Device-Aware Screen Rotation, Basic Control Encapsulation, Global Font Setting</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-24 23:45:36 / Modified: 23:46:06" itemprop="dateCreated datePublished" datetime="2025-06-24T23:45:36+08:00">2025-06-24</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Box-Focus-Color-Text-Overflow-Handling-Device-Aware-Screen-Rotation-Basic-Control-Encapsulation-Global-Font-Setting" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Box Focus Color, Text Overflow Handling, Device-Aware Screen Rotation, Basic Control Encapsulation, Global Font Setting"></a>[Daily HarmonyOS Next Knowledge] Input Box Focus Color, Text Overflow Handling, Device-Aware Screen Rotation, Basic Control Encapsulation, Global Font Setting</h3><h4 id="1-Does-HarmonyOS-support-modifying-the-focus-cursor-color-for-input-boxes"><a href="#1-Does-HarmonyOS-support-modifying-the-focus-cursor-color-for-input-boxes" class="headerlink" title="1. Does HarmonyOS support modifying the focus cursor color for input boxes?"></a>1. Does HarmonyOS support modifying the focus cursor color for input boxes?</h4><ul>
-<li>RichEditor: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-richeditor-V5#ZH-CN_TOPIC_0000001930676557__caretcolor12">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-richeditor-V5#ZH-CN_TOPIC_0000001930676557__caretcolor12</a>  </li>
-<li>TextInput: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-textinput-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-textinput-V5</a>  </li>
-<li>Search: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-search-V5</a></li>
-</ul>
-<h4 id="2-How-to-display-an-“ellipsis-more”-when-text-exceeds-the-limit-in-HarmonyOS"><a href="#2-How-to-display-an-“ellipsis-more”-when-text-exceeds-the-limit-in-HarmonyOS" class="headerlink" title="2. How to display an “ellipsis + more” when text exceeds the limit in HarmonyOS?"></a>2. How to display an “ellipsis + more” when text exceeds the limit in HarmonyOS?</h4><p>Control text overflow with <code>overflow: TextOverflow.Ellipsis</code>.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-text-V5#textoverflow">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-text-V5#textoverflow</a>  </p>
-<p><code>textOverflow(value: &#123; overflow: TextOverflow &#125;)</code>  </p>
-<ul>
-<li>Sets the display mode for overflow text, truncating by character (e.g., words for English). To truncate by letter, use zero-width spaces (<code>\u200B</code>). From API version 11, combine with <code>wordBreak: WordBreak.BREAK_ALL</code> for letter-level truncation.  </li>
-<li>When <code>overflow</code> is set to <code>TextOverflow.None</code>, <code>TextOverflow.Clip</code>, or <code>TextOverflow.Ellipsis</code>, <code>maxLines</code> must be configured; otherwise, it fails. <code>TextOverflow.None</code> and <code>TextOverflow.Clip</code> have the same effect.  </li>
-<li>When <code>overflow</code> is set to <code>TextOverflow.MARQUEE</code>, text scrolls in a single line. <code>maxLines</code> and <code>copyOption</code> are ignored. <code>textAlign</code> works only when text is non-scrollable. The <code>clip</code> property defaults to <code>true</code> in marquee mode, and <code>CustomSpan</code> in attribute strings is unsupported.</li>
-</ul>
-<h4 id="3-How-to-enable-screen-rotation-based-on-device-settings-in-HarmonyOS"><a href="#3-How-to-enable-screen-rotation-based-on-device-settings-in-HarmonyOS" class="headerlink" title="3. How to enable screen rotation based on device settings in HarmonyOS?"></a>3. How to enable screen rotation based on device settings in HarmonyOS?</h4><p>Dynamically detect device types and configure auto-rotation support: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-window-V5#setpreferredorientation9</a>  </p>
-<p><code>setPreferredOrientation(orientation: Orientation, callback: AsyncCallback&lt;void&gt;): void</code>  </p>
-<ul>
-<li>Sets the main window’s display orientation with an async callback. Effective only on devices supporting sensor-driven rotation, not on 2-in-1 devices, free multi-window mode, or sub-windows.</li>
-</ul>
-<p>Use device information APIs to distinguish device types and enable auto-rotation accordingly:<br>Reference: <code>@ohos.distributedDeviceManager</code> (Device Management): <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-distributeddevicemanager-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/js-apis-distributeddevicemanager-V5</a>  </p>
-<p>Key capabilities:  </p>
-<ul>
-<li>Register&#x2F;unregister device online&#x2F;offline listeners.  </li>
-<li>Discover nearby untrusted devices.  </li>
-<li>Authenticate&#x2F;取消认证设备.  </li>
-<li>Query trusted device lists.  </li>
-<li>Retrieve local device info (name, type, ID, etc.).</li>
-</ul>
-<h4 id="4-How-to-encapsulate-commonly-used-basic-controls-e-g-Button-Text-Column-in-HarmonyOS-projects"><a href="#4-How-to-encapsulate-commonly-used-basic-controls-e-g-Button-Text-Column-in-HarmonyOS-projects" class="headerlink" title="4. How to encapsulate commonly used basic controls (e.g., Button, Text, Column) in HarmonyOS projects?"></a>4. How to encapsulate commonly used basic controls (e.g., Button, Text, Column) in HarmonyOS projects?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-create-custom-components-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-create-custom-components-V5</a>  </p>
-<p>In ArkUI, UI elements are components: system-provided or developer-defined (custom components). Custom components enhance code reusability, separate business logic from UI, and facilitate version evolution.  </p>
-<p>Key features:  </p>
-<ul>
-<li><strong>Composability</strong>: Combine system components, properties, and methods.  </li>
-<li><strong>Reusability</strong>: Reuse custom components as instances in different parent components&#x2F;containers.  </li>
-<li><strong>Data-driven UI update</strong>: Modify state variables to trigger UI refreshes.</li>
-</ul>
-<h4 id="5-How-to-set-global-fonts-in-HarmonyOS"><a href="#5-How-to-set-global-fonts-in-HarmonyOS" class="headerlink" title="5. How to set global fonts in HarmonyOS?"></a>5. How to set global fonts in HarmonyOS?</h4><ul>
-<li><strong>Text components</strong>: Use <code>Text.Font.family</code> for custom fonts.<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-types-V5#font">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-types-V5#font</a>  </li>
-<li><strong>Canvas</strong>: Does not support custom fonts. Use <code>RenderingContextSettings.font</code> with supported families (e.g., <code>&#39;sans-serif&#39;</code>, <code>&#39;serif&#39;</code>, <code>&#39;monospace&#39;</code>).<br>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-canvasrenderingcontext2d-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-canvasrenderingcontext2d-V5</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2232,7 +2454,7 @@ struct Index &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

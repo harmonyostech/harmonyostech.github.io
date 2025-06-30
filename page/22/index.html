@@ -149,6 +149,176 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/210-Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/26/210-Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Preventing Repeated Clicks, Dialog Dismissal Interception, Custom Keyboard Focus, Page Hierarchy, Custom Dialog Creation</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 23:15:15 / Modified: 23:15:32" itemprop="dateCreated datePublished" datetime="2025-06-26T23:15:15+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation"><a href="#Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Preventing Repeated Clicks, Dialog Dismissal Interception, Custom Keyboard Focus, Page Hierarchy, Custom Dialog Creation"></a>[Daily HarmonyOS Next Knowledge] Preventing Repeated Clicks, Dialog Dismissal Interception, Custom Keyboard Focus, Page Hierarchy, Custom Dialog Creation</h3><h4 id="1-For-HarmonyOS-onClick-events-how-to-prevent-repeated-clicks-on-the-same-button-or-toggle-if-the-interval-between-two-clicks-is-too-short"><a href="#1-For-HarmonyOS-onClick-events-how-to-prevent-repeated-clicks-on-the-same-button-or-toggle-if-the-interval-between-two-clicks-is-too-short" class="headerlink" title="1. For HarmonyOS onClick events, how to prevent repeated clicks on the same button or toggle if the interval between two clicks is too short?"></a>1. For HarmonyOS onClick events, how to prevent repeated clicks on the same button or toggle if the interval between two clicks is too short?</h4><p>How to implement a mechanism where repeated clicks on the same button or toggle within a short interval are invalid to prevent repeated clicks?  </p>
+<p>Reference demo:  </p>
+<pre><code class="language-typescript">// Define a throttle function
+function throttle(func: Function, interval: number) &#123;
+  let lastTime = 0;
+  return () =&gt; &#123;
+    const nowTime = Date.now();
+    const remainTime = interval - (nowTime - lastTime);
+    if (remainTime &lt;= 0) &#123;
+      lastTime = nowTime;
+      func();
+    &#125;
+  &#125;;
+&#125;
+// Example
+Button(&quot;Prevent Repeated Clicks&quot;).onClick(throttle(() =&gt; &#123;
+
+&#125;, 5000))
+</code></pre>
+<h4 id="2-For-HarmonyOS-CustomDialog-where-can-I-intercept-the-event-that-causes-the-dialog-to-disappear-when-the-user-swipes-back"><a href="#2-For-HarmonyOS-CustomDialog-where-can-I-intercept-the-event-that-causes-the-dialog-to-disappear-when-the-user-swipes-back" class="headerlink" title="2. For HarmonyOS CustomDialog, where can I intercept the event that causes the dialog to disappear when the user swipes back?"></a>2. For HarmonyOS CustomDialog, where can I intercept the event that causes the dialog to disappear when the user swipes back?</h4><p><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5#ZH-CN_TOPIC_0000001884757950__customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5#ZH-CN_TOPIC_0000001884757950__customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E</a>  </p>
+<p><strong>Explanation</strong>:  </p>
+<ol>
+<li>When the user performs actions to close the dialog (e.g., clicking the overlay, swiping left&#x2F;right, using the back button, or pressing ESC), if this callback is registered, the dialog will not close immediately. The callback provides the reason for the dismissal attempt, allowing you to decide whether to allow the dialog to close. Currently, the <code>reason</code> parameter does not support the <code>CLOSE_BUTTON</code> enum value.  </li>
+<li>You cannot use <code>onWillDismiss</code> to intercept dismissals within the <code>onWillDismiss</code> callback itself.</li>
+</ol>
+<h4 id="3-How-to-control-focus-acquisition-and-loss-for-a-custom-keyboard-in-HarmonyOS"><a href="#3-How-to-control-focus-acquisition-and-loss-for-a-custom-keyboard-in-HarmonyOS" class="headerlink" title="3. How to control focus acquisition and loss for a custom keyboard in HarmonyOS?"></a>3. How to control focus acquisition and loss for a custom keyboard in HarmonyOS?</h4><p>Reference demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct TextInputExample &#123;
+  controller: TextInputController = new TextInputController()
+  @State inputValue: string = &quot;&quot;
+
+  // Custom keyboard component
+  @Builder CustomKeyboardBuilder() &#123;
+    Column() &#123;
+      Grid() &#123;
+        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, &#39;*&#39;, 0, &#39;#&#39;], (item: number | string) =&gt; &#123;
+          GridItem() &#123;
+            Button(item + &quot;&quot;)
+              .width(110).onClick(() =&gt; &#123;
+                this.inputValue += item
+              &#125;)
+          &#125;
+        &#125;)
+      &#125;.maxCount(3).columnsGap(10).rowsGap(10).padding(5)
+    &#125;.backgroundColor(Color.Gray)
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Button(&#39;Show Keyboard&#39;).onClick(() =&gt; &#123;
+        focusControl.requestFocus(&#39;txt1&#39;)
+      &#125;)
+        .id(&#39;btn1&#39;)
+      Button(&#39;Hide Keyboard&#39;).onClick(() =&gt; &#123;
+        focusControl.requestFocus(&#39;btn1&#39;)
+      &#125;)
+      TextInput(&#123; controller: this.controller, text: this.inputValue &#125;) // Bind custom keyboard
+        .customKeyboard(this.CustomKeyboardBuilder())
+        .margin(10)
+        .border(&#123; width: 1 &#125;)
+        .height(&#39;48vp&#39;)
+        .id(&#39;txt1&#39;)
+      TextInput(&#123; placeholder: &#39;No custom keyboard&#39; &#125;)
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-In-HarmonyOS-does-the-default-router-of-a-HAR-module-reside-in-the-main-window-or-follow-the-HSP-router-layer-where-it-is-located"><a href="#4-In-HarmonyOS-does-the-default-router-of-a-HAR-module-reside-in-the-main-window-or-follow-the-HSP-router-layer-where-it-is-located" class="headerlink" title="4. In HarmonyOS, does the default router of a HAR module reside in the main window or follow the HSP router layer where it is located?"></a>4. In HarmonyOS, does the default router of a HAR module reside in the main window or follow the HSP router layer where it is located?</h4><p><strong>Scenario</strong>:  </p>
+<ul>
+<li>Main window A contains an HSP biopsy module (Privacy intermediate page -&gt; Face HAR biopsy page).  </li>
+<li>Subwindow B navigates to the HSP privacy intermediate page using <code>getUIContext().getRouter</code>.  </li>
+<li>From the privacy page, navigating to the face HAR page.</li>
+</ul>
+<p><strong>Question</strong>:<br>Does the face HAR page need to use <code>getRouter</code> for navigation? Does its default router belong to the main window or the HSP router layer?  </p>
+<p><strong>Answer</strong>:<br>According to the UIContext documentation, <code>WindowStage/Window</code> uses <code>loadContent</code> to create UI instances, which are bound to specific windows. To access a UI instance via UIContext, a valid window must be traceable from the current context. If the UI context is ambiguous, the call will fail.  </p>
+<ul>
+<li><p><strong>HSP Page Routing</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/in-app-hsp-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/in-app-hsp-V5</a><br>HSP (Harmony Shared Package) is a dynamic shared package containing code, C++ libraries, resources, and configurations. It shares the host app’s process, package name, and lifecycle.  </p>
+</li>
+<li><p><strong>HAR Page Routing (Named Routes)</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-routing-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-routing-V5</a><br>Router module enables page navigation and data transfer via URLs.</p>
+</li>
+</ul>
+<h4 id="5-Issues-with-creating-a-HarmonyOS-CustomDialogController"><a href="#5-Issues-with-creating-a-HarmonyOS-CustomDialogController" class="headerlink" title="5. Issues with creating a HarmonyOS CustomDialogController?"></a>5. Issues with creating a HarmonyOS CustomDialogController?</h4><pre><code class="language-typescript">showCaptch() &#123;
+  let alertDialog: CustomDialogController = new CustomDialogController(&#123;
+    builder: DialogSliderCaptch()
+  &#125;)
+  alertDialog.open()
+&#125;
+// Works when placed in a page, but fails when made a standalone function (easily reproducible)
+
+function showCaptch() &#123;
+  let alertDialog: CustomDialogController = new CustomDialogController(&#123;
+    builder: DialogSliderCaptch()
+  &#125;)
+  alertDialog.open()
+&#125;
+</code></pre>
+<p><strong>Explanation</strong>:<br><code>CustomDialogController</code> is a page-level component whose lifecycle is tied to the page. When exposed as a standalone function, it loses its page context, leading to failures. Specifically:  </p>
+<ul>
+<li>Its lifecycle (initialization, destruction) is managed by the page.  </li>
+<li>Detaching it from the page context breaks lifecycle dependencies (e.g., <code>build</code> method).  </li>
+<li>Thus, exposing it as a function causes unexpected behavior due to lost page bindings.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/209-Daily-HarmonyOS-Next-Knowledge-Pull-to-Refresh-Scroll-Nesting-Web-This-Keyword-Reference-Routing-Scheme-Input-Method-Occlusion/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1238,74 +1408,6 @@ struct ScreenLockEventManageDemo &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/331-Daily-HarmonyOS-Next-Knowledge-Modify-Status-Bar-Background-Input-Box-Height-Adaptation-Immersive-Effect-Call-Methods-Based-on-Strings-Set-Blur-Effect/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/26/331-Daily-HarmonyOS-Next-Knowledge-Modify-Status-Bar-Background-Input-Box-Height-Adaptation-Immersive-Effect-Call-Methods-Based-on-Strings-Set-Blur-Effect/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Modify Status Bar Background, Input Box Height Adaptation, Immersive Effect, Call Methods Based on Strings, Set Blur Effect</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-26 22:41:01 / Modified: 22:41:21" itemprop="dateCreated datePublished" datetime="2025-06-26T22:41:01+08:00">2025-06-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Modify-Status-Bar-Background-Input-Box-Height-Adaptation-Immersive-Effect-Call-Methods-Based-on-Strings-Set-Blur-Effect"><a href="#Daily-HarmonyOS-Next-Knowledge-Modify-Status-Bar-Background-Input-Box-Height-Adaptation-Immersive-Effect-Call-Methods-Based-on-Strings-Set-Blur-Effect" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Modify Status Bar Background, Input Box Height Adaptation, Immersive Effect, Call Methods Based on Strings, Set Blur Effect"></a>[Daily HarmonyOS Next Knowledge] Modify Status Bar Background, Input Box Height Adaptation, Immersive Effect, Call Methods Based on Strings, Set Blur Effect</h3><h4 id="1-How-to-modify-the-status-bar-background-to-black-and-font-to-white-in-HarmonyOS"><a href="#1-How-to-modify-the-status-bar-background-to-black-and-font-to-white-in-HarmonyOS" class="headerlink" title="1. How to modify the status bar background to black and font to white in HarmonyOS?"></a>1. How to modify the status bar background to black and font to white in HarmonyOS?</h4><p>Tool class GlobalContext  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">GlobalContext</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="title function_">constructor</span>(<span class="params"></span>) &#123; &#125;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="attr">instance</span>: <span class="title class_">GlobalContext</span>;</span><br><span class="line">  <span class="keyword">private</span> _objects = <span class="keyword">new</span> <span class="title class_">Map</span>&lt;<span class="built_in">string</span>, <span class="title class_">Object</span>&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">getContext</span>(): <span class="title class_">GlobalContext</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="title class_">GlobalContext</span>.<span class="property">instance</span>) &#123;</span><br><span class="line">      <span class="title class_">GlobalContext</span>.<span class="property">instance</span> = <span class="keyword">new</span> <span class="title class_">GlobalContext</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">GlobalContext</span>.<span class="property">instance</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">getObject</span>(<span class="attr">value</span>: <span class="built_in">string</span>): <span class="title class_">Object</span> | <span class="literal">undefined</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_objects</span>.<span class="title function_">get</span>(value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setObject</span>(<span class="attr">key</span>: <span class="built_in">string</span>, <span class="attr">objectClass</span>: <span class="title class_">Object</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_objects</span>.<span class="title function_">set</span>(key, objectClass);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 2. How to adapt the height of TextInput and cancel the upper and lower spacing in HarmonyOS?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">The height of TextInput is related to the font size. The TextInput box comes with built-in top and bottom margins. To remove them, set the padding attribute and coordinate with the fontSize to make characters fit the input box without margins.  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">customValue</span>: <span class="built_in">string</span> = <span class="string">&#x27;文本内容&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">TextInput</span>(&#123; <span class="attr">text</span>: <span class="variable language_">this</span>.<span class="property">message</span>, <span class="attr">placeholder</span>: <span class="string">&quot;搜索&quot;</span> &#125;)</span><br><span class="line">          .<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">          .<span class="title function_">fontSize</span>(<span class="number">20</span>) <span class="comment">// TextInput height is related to font size</span></span><br><span class="line">          .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">          .<span class="title function_">placeholderColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">          .<span class="title function_">placeholderFont</span>(&#123; <span class="attr">size</span>: <span class="number">20</span> &#125;) <span class="comment">// Hint font size is also related to height; it is recommended to set them uniformly</span></span><br><span class="line">          .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Gray</span>)</span><br><span class="line">          .<span class="title function_">padding</span>(&#123; <span class="attr">left</span>: <span class="number">20</span> &#125;) <span class="comment">// The upper and lower spacing is specified as such</span></span><br><span class="line">          .<span class="title function_">enterKeyType</span>(<span class="title class_">EnterKeyType</span>.<span class="property">Search</span>)</span><br><span class="line">          .<span class="title function_">onChange</span>(<span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">message</span> = value</span><br><span class="line">          &#125;)</span><br><span class="line"></span><br><span class="line">        <span class="title class_">TextInput</span>(&#123; <span class="attr">text</span>: <span class="variable language_">this</span>.<span class="property">customValue</span>, <span class="attr">placeholder</span>: <span class="string">&#x27;自定义&#x27;</span> &#125;)</span><br><span class="line">          .<span class="title function_">padding</span>(<span class="number">0</span>)</span><br><span class="line">          .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">          <span class="comment">// .placeholderFont(&#123;size:40&#125;)</span></span><br><span class="line">          .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Brown</span>)</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 3. Can the expandSafeArea for immersive effect in HarmonyOS development be dynamically refreshed based on parameters?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Dynamic refresh can be achieved through parameters.  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">if</span> (flag) &#123;</span><br><span class="line">  <span class="title class_">Row</span>() &#123;</span><br><span class="line">    <span class="title class_">Text</span>(<span class="string">&#x27;Top Row&#x27;</span>).<span class="title function_">fontSize</span>(<span class="number">40</span>).<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>).<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  .<span class="title function_">backgroundColor</span>(<span class="string">&#x27;#F08080&#x27;</span>)</span><br><span class="line">  <span class="comment">// Set the top drawing to extend to the status bar</span></span><br><span class="line">  .<span class="title function_">expandSafeArea</span>([<span class="title class_">SafeAreaType</span>.<span class="property">SYSTEM</span>], [<span class="title class_">SafeAreaEdge</span>.<span class="property">TOP</span>])</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="title class_">Row</span>() &#123;</span><br><span class="line">    <span class="title class_">Text</span>(<span class="string">&#x27;Top Row&#x27;</span>).<span class="title function_">fontSize</span>(<span class="number">40</span>).<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>).<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  .<span class="title function_">backgroundColor</span>(<span class="string">&quot;blue&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. How to call methods based on configuration strings in HarmonyOS?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">In a List, when an item is clicked, it is desired to call the corresponding function based on the method name (string) configured for the item.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Reference demo:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">dddd</span> &#123;</span><br><span class="line">  <span class="attr">fun</span>: <span class="title class_">Record</span>&lt;<span class="built_in">string</span>, <span class="title class_">Function</span>&gt; = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">fun</span> = &#123; <span class="string">&#x27;ssss&#x27;</span>: <span class="variable language_">this</span>.<span class="property">ddd1</span>, <span class="string">&#x27;sdss&#x27;</span>: <span class="variable language_">this</span>.<span class="property">ccc</span> &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">ddd1</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;ddd1&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">ccc</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;cccc&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// When calling:</span></span><br><span class="line"><span class="keyword">import</span> display <span class="keyword">from</span> <span class="string">&#x27;@ohos.display&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; dddd &#125; <span class="keyword">from</span> <span class="string">&#x27;./FunTest&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">DisplayTest</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="attr">ddd</span>: dddd = <span class="keyword">new</span> <span class="title function_">dddd</span>()</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">20</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;Test&#x27;</span>)</span><br><span class="line">        .<span class="title function_">type</span>(<span class="title class_">ButtonType</span>.<span class="property">Capsule</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">ddd</span>.<span class="property">fun</span>[<span class="string">&#x27;ssss&#x27;</span>]()</span><br><span class="line">          <span class="variable language_">this</span>.<span class="property">ddd</span>.<span class="property">fun</span>[<span class="string">&#x27;sdss&#x27;</span>]()</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;50%&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&quot;100%&quot;</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">Center</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. How to set a blur effect for the current page or application in HarmonyOS?  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">For adding content blur, refer to the documentation: https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-blur-effect-V5  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Animation effects can enrich interface details and enhance the realism and quality of the UI. For example, blur and shadow effects can make objects appear more three-dimensional, making animations more vivid. ArkUI provides rich effect interfaces, allowing developers to quickly create exquisite and personalized effects. This chapter mainly introduces commonly used effect interfaces such as blur, shadow, and color effects.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Blur can be used to reflect the depth of the interface space and distinguish the hierarchical relationship between front and rear elements.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">| Interface               | Description                                                                 |</span></span><br><span class="line"><span class="string">| :--------------------- | :-------------------------------------------------------------------------- |</span></span><br><span class="line"><span class="string">| backdropBlur           | Adds a background blur effect to the current component, with the input being the blur radius.                     |</span></span><br><span class="line"><span class="string">| blur                   | Adds a content blur effect to the current component, with the input being the blur radius.                       |</span></span><br><span class="line"><span class="string">| backgroundBlurStyle    | Adds a background blur effect to the current component, with the input being the blur style.                     |</span></span><br><span class="line"><span class="string">| foregroundBlurStyle    | Adds a content blur effect to the current component, with the input being the blur style.                       |</span></span><br><span class="line"><span class="string">| motionBlur             | Adds a dynamic blur effect during motion caused by scaling or displacement changes to the current component, with inputs being the blur radius and anchor coordinates. |</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Example of using backdropBlur to add background blur to a component:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">BlurEffectsExample</span> &#123;</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>(&#123; <span class="attr">space</span>: <span class="number">10</span> &#125;) &#123;</span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;backdropBlur&#x27;</span>)</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">        .<span class="title function_">height</span>(<span class="string">&#x27;90%&#x27;</span>)</span><br><span class="line">        .<span class="title function_">fontSize</span>(<span class="number">20</span>)</span><br><span class="line">        .<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">        .<span class="title function_">textAlign</span>(<span class="title class_">TextAlign</span>.<span class="property">Center</span>)</span><br><span class="line">        .<span class="title function_">backdropBlur</span>(<span class="number">10</span>) <span class="comment">// Blurs the background</span></span><br><span class="line">        .<span class="title function_">backgroundImage</span>($r(<span class="string">&#x27;app.media.share&#x27;</span>))</span><br><span class="line">        .<span class="title function_">backgroundImageSize</span>(&#123; <span class="attr">width</span>: <span class="number">400</span>, <span class="attr">height</span>: <span class="number">300</span> &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;50%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">margin</span>(&#123; <span class="attr">top</span>: <span class="number">20</span> &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1375,7 +1477,7 @@ struct ScreenLockEventManageDemo &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

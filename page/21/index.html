@@ -149,6 +149,245 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/220-Daily-HarmonyOS-Next-Knowledge-Custom-Object-Parameter-Passing-Page-Lifecycle-Custom-Popup-Routing-to-Open-Dialog-Network-Images/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/26/220-Daily-HarmonyOS-Next-Knowledge-Custom-Object-Parameter-Passing-Page-Lifecycle-Custom-Popup-Routing-to-Open-Dialog-Network-Images/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Custom Object Parameter Passing, Page Lifecycle, Custom Popup, Routing to Open Dialog, Network Images</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-26 23:56:17 / Modified: 23:57:08" itemprop="dateCreated datePublished" datetime="2025-06-26T23:56:17+08:00">2025-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Daily-HarmonyOS-Next-Knowledge-Custom-Object-Parameter-Passing-Page-Lifecycle-Custom-Popup-Routing-to-Open-Dialog-Network-Images"><a href="#Daily-HarmonyOS-Next-Knowledge-Custom-Object-Parameter-Passing-Page-Lifecycle-Custom-Popup-Routing-to-Open-Dialog-Network-Images" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Custom Object Parameter Passing, Page Lifecycle, Custom Popup, Routing to Open Dialog, Network Images"></a>[Daily HarmonyOS Next Knowledge] Custom Object Parameter Passing, Page Lifecycle, Custom Popup, Routing to Open Dialog, Network Images</h3><h4 id="1-How-to-Conveniently-Pass-Custom-Objects-as-Parameters-in-HarmonyOS"><a href="#1-How-to-Conveniently-Pass-Custom-Objects-as-Parameters-in-HarmonyOS" class="headerlink" title="1. How to Conveniently Pass Custom Objects as Parameters in HarmonyOS?"></a>1. How to Conveniently Pass Custom Objects as Parameters in HarmonyOS?</h4><p><strong>Passing Custom Objects as Parameters</strong>  </p>
+<p>In ArkTS syntax, dictionaries have constraints. Using <code>Map</code> requires setting values via <code>set</code>. In ArkTS, object property names cannot be numbers or arbitrary strings (exceptions: string literals or enum string values). Use property names to access class attributes and numeric indices for array elements.  </p>
+<pre><code class="language-typescript">class X &#123;
+  public name: string = &#39;&#39;
+&#125;
+let x: X = &#123; name: &#39;x&#39; &#125;;
+console.log(x.name);
+
+let y = [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;];
+console.log(y[2]);
+</code></pre>
+<p>For scenarios requiring data access via non-identifier keys (e.g., different key types), use <code>Map&lt;Object, some_type&gt;</code>:  </p>
+<pre><code class="language-typescript">let z = new Map&lt;Object, string&gt;();
+z.set(&#39;name&#39;, &#39;1&#39;);
+z.set(2, &#39;2&#39;);
+console.log(z.get(&#39;name&#39;));
+console.log(z.get(2));
+
+enum Test &#123;
+  A = &#39;aaa&#39;,
+  B = &#39;bbb&#39;
+&#125;
+
+let obj: Record&lt;string, number&gt; = &#123;
+  [Test.A]: 1,   // Enum string values
+  [Test.B]: 2,   // Enum string values
+  [&#39;value&#39;]: 3   // String literals
+&#125;
+</code></pre>
+<h4 id="2-In-HarmonyOS-besides-routes-can-we-get-page-related-information-Does-the-page-have-a-“title”-concept"><a href="#2-In-HarmonyOS-besides-routes-can-we-get-page-related-information-Does-the-page-have-a-“title”-concept" class="headerlink" title="2. In HarmonyOS, besides routes, can we get page-related information? Does the page have a “title” concept?"></a>2. In HarmonyOS, besides routes, can we get page-related information? Does the page have a “title” concept?</h4><p>A UI page consists of one or more custom components. The <code>@Entry</code>-decorated component is the page’s entry (root node), and each page has exactly one <code>@Entry</code>. Only <code>@Entry</code> components can call page lifecycle methods, so there is no “title” concept.  </p>
+<p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-page-custom-components-lifecycle-V5</a>  </p>
+<p><strong>Relationship between custom components and pages</strong>:  </p>
+<ul>
+<li><strong>Custom component</strong>: A UI unit decorated with <code>@Component</code>, reusable by combining system components, with component lifecycle callbacks.  </li>
+<li><strong>Page</strong>: A UI page composed of one or more custom components. The <code>@Entry</code>-decorated component is the entry (root node), and only it can call page lifecycle methods.</li>
+</ul>
+<p><strong>Page lifecycle (for <code>@Entry</code> components)</strong>:  </p>
+<ul>
+<li><code>onPageShow</code>: Triggered when the page is displayed (e.g., routing, app foreground).  </li>
+<li><code>onPageHide</code>: Triggered when the page is hidden (e.g., routing, app background).  </li>
+<li><code>onBackPress</code>: Triggered when the user clicks the back button.</li>
+</ul>
+<p><strong>Component lifecycle (for <code>@Component</code> components)</strong>:  </p>
+<ul>
+<li><code>aboutToAppear</code>: Called before the component is rendered, after instance creation.  </li>
+<li><code>onDidBuild</code>: Called after <code>build()</code> execution, suitable for non-UI operations (e.g., data reporting).  </li>
+<li><code>aboutToDisappear</code>: Called before component destruction; avoid modifying state variables.<br><img src="/../images/%E3%80%90%E6%AF%8F%E6%97%A5%E5%AD%A6%E7%82%B9HarmonyOS%20Next%E7%9F%A5%E8%AF%86%E3%80%9125.02.20.png"></li>
+</ul>
+<h4 id="3-Can-the-style-of-HarmonyOS-popups-be-customized"><a href="#3-Can-the-style-of-HarmonyOS-popups-be-customized" class="headerlink" title="3. Can the style of HarmonyOS popups be customized?"></a>3. Can the style of HarmonyOS popups be customized?</h4><p>To implement a drop-down popup with full-screen width, set <code>customStyle: true</code> in <code>CustomDialog</code> to maximize the width:  </p>
+<pre><code class="language-typescript">// xxx.ets
+import &#123; ResizeDirection &#125; from &#39;@kit.TestKit&#39;
+
+@CustomDialog
+struct CustomDialogExampleTwo &#123;
+  controllerTwo?: CustomDialogController
+  build() &#123;
+    Column() &#123;
+      Text(&#39;我是第二个弹窗&#39;)
+        .fontSize(30)
+        .height(100)
+      Button(&#39;点我关闭第二个弹窗&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.controllerTwo != undefined) &#123;
+            this.controllerTwo.close()
+          &#125;
+        &#125;)
+        .margin(20)
+    &#125;
+  &#125;
+&#125;
+@CustomDialog
+struct CustomDialogExample &#123;
+  @Link textValue: string
+  @Link inputValue: string
+  dialogControllerTwo: CustomDialogController | null = new CustomDialogController(&#123;
+    builder: CustomDialogExampleTwo(),
+    alignment: DialogAlignment.Bottom,
+    offset: &#123; dx: 0, dy: -25 &#125; &#125;)
+  controller?: CustomDialogController
+  cancel: () =&gt; void = () =&gt; &#123;
+  &#125;
+  confirm: () =&gt; void = () =&gt; &#123;
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Text(&#39;Change text&#39;).fontSize(20).margin(&#123; top: 10, bottom: 10 &#125;)
+      TextInput(&#123; placeholder: &#39;&#39;, text: this.textValue &#125;).height(60).width(&#39;90%&#39;)
+        .onChange((value: string) =&gt; &#123;
+          this.textValue = value
+        &#125;)
+      Text(&#39;Whether to change a text?&#39;).fontSize(16).margin(&#123; bottom: 10 &#125;)
+      Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
+        Button(&#39;cancel&#39;)
+          .onClick(() =&gt; &#123;
+            if (this.controller != undefined) &#123;
+              this.controller.close()
+              this.cancel()
+            &#125;
+          &#125;).backgroundColor(0xffffff).fontColor(Color.Black)
+        Button(&#39;confirm&#39;)
+          .onClick(() =&gt; &#123;
+            if (this.controller != undefined) &#123;
+              this.inputValue = this.textValue
+              this.controller.close()
+              this.confirm()
+            &#125;
+          &#125;).backgroundColor(0xffffff).fontColor(Color.Red)
+      &#125;.margin(&#123; bottom: 10 &#125;)
+
+      Button(&#39;点我打开第二个弹窗&#39;)
+        .onClick(() =&gt; &#123;
+          if (this.dialogControllerTwo != null) &#123;
+            this.dialogControllerTwo.open()
+          &#125;
+        &#125;)
+        .margin(20)
+    &#125;.borderRadius(10).backgroundColor(0x300aff)
+  &#125;
+&#125;
+@Entry
+@Component
+struct CustomDialogUser &#123;
+  @State textValue: string = &#39;&#39;
+  @State inputValue: string = &#39;click me&#39;
+  dialogController: CustomDialogController | null = new CustomDialogController(&#123;
+    builder: CustomDialogExample(&#123;
+      cancel: ()=&gt; &#123; this.onCancel() &#125;,
+      confirm: ()=&gt; &#123; this.onAccept() &#125;,
+      textValue: $textValue,
+      inputValue: $inputValue
+    &#125;),
+    cancel: this.exitApp,
+    autoCancel: true,
+    alignment: DialogAlignment.Bottom,
+    offset: &#123; dx: 0, dy: -20 &#125;,
+    gridCount: 4,
+    customStyle: true,
+    cornerRadius: 10,
+  &#125;)
+
+  aboutToDisappear() &#123;
+    this.dialogController = null 
+  &#125;
+
+  onCancel() &#123;
+    console.info(&#39;Callback when the first button is clicked&#39;)
+  &#125;
+
+  onAccept() &#123;
+    console.info(&#39;Callback when the second button is clicked&#39;)
+  &#125;
+
+  exitApp() &#123;
+    console.info(&#39;Click the callback in the blank area&#39;)
+  &#125;
+  build() &#123;
+    Column() &#123;
+      Button(this.inputValue)
+        .onClick(() =&gt; &#123;
+          if (this.dialogController != null) &#123;
+            this.dialogController.open()
+          &#125;
+        &#125;).backgroundColor(0x317aff)
+    &#125;.width(&#39;100%&#39;).margin(&#123; top: 5 &#125;)
+  &#125;
+&#125;
+</code></pre>
+<h4 id="4-Issues-when-opening-a-page-via-routing-in-a-HarmonyOS-CustomDialog"><a href="#4-Issues-when-opening-a-page-via-routing-in-a-HarmonyOS-CustomDialog" class="headerlink" title="4. Issues when opening a page via routing in a HarmonyOS CustomDialog"></a>4. Issues when opening a page via routing in a HarmonyOS CustomDialog</h4><p>When opening a dialog in Page1 and navigating to Page2 via a button in the dialog, Page2 is inserted between Page1 and the dialog instead of overlaying it.  </p>
+<p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-navigation-V5</a>  </p>
+<h4 id="5-How-to-access-online-images-in-HarmonyOS"><a href="#5-How-to-access-online-images-in-HarmonyOS" class="headerlink" title="5. How to access online images in HarmonyOS?"></a>5. How to access online images in HarmonyOS?</h4><p>The <code>Image</code> component supports online images. Apply for the <code>ohos.permission.INTERNET</code> permission.  </p>
+<p>Refer to: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/image-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/image-V5</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/219-Daily-HarmonyOS-Next-Knowledge-Routing-Stack-Issues-Image-Rounding-Color-Resource-to-Hex-Conversion-Dataset-Change-Crash-Component-Lifecycle/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1126,176 +1365,6 @@ export struct LoadingPage &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/26/210-Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/26/210-Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Preventing Repeated Clicks, Dialog Dismissal Interception, Custom Keyboard Focus, Page Hierarchy, Custom Dialog Creation</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-26 23:15:15 / Modified: 23:15:32" itemprop="dateCreated datePublished" datetime="2025-06-26T23:15:15+08:00">2025-06-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation"><a href="#Daily-HarmonyOS-Next-Knowledge-Preventing-Repeated-Clicks-Dialog-Dismissal-Interception-Custom-Keyboard-Focus-Page-Hierarchy-Custom-Dialog-Creation" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Preventing Repeated Clicks, Dialog Dismissal Interception, Custom Keyboard Focus, Page Hierarchy, Custom Dialog Creation"></a>[Daily HarmonyOS Next Knowledge] Preventing Repeated Clicks, Dialog Dismissal Interception, Custom Keyboard Focus, Page Hierarchy, Custom Dialog Creation</h3><h4 id="1-For-HarmonyOS-onClick-events-how-to-prevent-repeated-clicks-on-the-same-button-or-toggle-if-the-interval-between-two-clicks-is-too-short"><a href="#1-For-HarmonyOS-onClick-events-how-to-prevent-repeated-clicks-on-the-same-button-or-toggle-if-the-interval-between-two-clicks-is-too-short" class="headerlink" title="1. For HarmonyOS onClick events, how to prevent repeated clicks on the same button or toggle if the interval between two clicks is too short?"></a>1. For HarmonyOS onClick events, how to prevent repeated clicks on the same button or toggle if the interval between two clicks is too short?</h4><p>How to implement a mechanism where repeated clicks on the same button or toggle within a short interval are invalid to prevent repeated clicks?  </p>
-<p>Reference demo:  </p>
-<pre><code class="language-typescript">// Define a throttle function
-function throttle(func: Function, interval: number) &#123;
-  let lastTime = 0;
-  return () =&gt; &#123;
-    const nowTime = Date.now();
-    const remainTime = interval - (nowTime - lastTime);
-    if (remainTime &lt;= 0) &#123;
-      lastTime = nowTime;
-      func();
-    &#125;
-  &#125;;
-&#125;
-// Example
-Button(&quot;Prevent Repeated Clicks&quot;).onClick(throttle(() =&gt; &#123;
-
-&#125;, 5000))
-</code></pre>
-<h4 id="2-For-HarmonyOS-CustomDialog-where-can-I-intercept-the-event-that-causes-the-dialog-to-disappear-when-the-user-swipes-back"><a href="#2-For-HarmonyOS-CustomDialog-where-can-I-intercept-the-event-that-causes-the-dialog-to-disappear-when-the-user-swipes-back" class="headerlink" title="2. For HarmonyOS CustomDialog, where can I intercept the event that causes the dialog to disappear when the user swipes back?"></a>2. For HarmonyOS CustomDialog, where can I intercept the event that causes the dialog to disappear when the user swipes back?</h4><p><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5#ZH-CN_TOPIC_0000001884757950__customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-methods-custom-dialog-box-V5#ZH-CN_TOPIC_0000001884757950__customdialogcontrolleroptions%E5%AF%B9%E8%B1%A1%E8%AF%B4%E6%98%8E</a>  </p>
-<p><strong>Explanation</strong>:  </p>
-<ol>
-<li>When the user performs actions to close the dialog (e.g., clicking the overlay, swiping left&#x2F;right, using the back button, or pressing ESC), if this callback is registered, the dialog will not close immediately. The callback provides the reason for the dismissal attempt, allowing you to decide whether to allow the dialog to close. Currently, the <code>reason</code> parameter does not support the <code>CLOSE_BUTTON</code> enum value.  </li>
-<li>You cannot use <code>onWillDismiss</code> to intercept dismissals within the <code>onWillDismiss</code> callback itself.</li>
-</ol>
-<h4 id="3-How-to-control-focus-acquisition-and-loss-for-a-custom-keyboard-in-HarmonyOS"><a href="#3-How-to-control-focus-acquisition-and-loss-for-a-custom-keyboard-in-HarmonyOS" class="headerlink" title="3. How to control focus acquisition and loss for a custom keyboard in HarmonyOS?"></a>3. How to control focus acquisition and loss for a custom keyboard in HarmonyOS?</h4><p>Reference demo:  </p>
-<pre><code class="language-typescript">@Entry
-@Component
-struct TextInputExample &#123;
-  controller: TextInputController = new TextInputController()
-  @State inputValue: string = &quot;&quot;
-
-  // Custom keyboard component
-  @Builder CustomKeyboardBuilder() &#123;
-    Column() &#123;
-      Grid() &#123;
-        ForEach([1, 2, 3, 4, 5, 6, 7, 8, 9, &#39;*&#39;, 0, &#39;#&#39;], (item: number | string) =&gt; &#123;
-          GridItem() &#123;
-            Button(item + &quot;&quot;)
-              .width(110).onClick(() =&gt; &#123;
-                this.inputValue += item
-              &#125;)
-          &#125;
-        &#125;)
-      &#125;.maxCount(3).columnsGap(10).rowsGap(10).padding(5)
-    &#125;.backgroundColor(Color.Gray)
-  &#125;
-
-  build() &#123;
-    Column() &#123;
-      Button(&#39;Show Keyboard&#39;).onClick(() =&gt; &#123;
-        focusControl.requestFocus(&#39;txt1&#39;)
-      &#125;)
-        .id(&#39;btn1&#39;)
-      Button(&#39;Hide Keyboard&#39;).onClick(() =&gt; &#123;
-        focusControl.requestFocus(&#39;btn1&#39;)
-      &#125;)
-      TextInput(&#123; controller: this.controller, text: this.inputValue &#125;) // Bind custom keyboard
-        .customKeyboard(this.CustomKeyboardBuilder())
-        .margin(10)
-        .border(&#123; width: 1 &#125;)
-        .height(&#39;48vp&#39;)
-        .id(&#39;txt1&#39;)
-      TextInput(&#123; placeholder: &#39;No custom keyboard&#39; &#125;)
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<h4 id="4-In-HarmonyOS-does-the-default-router-of-a-HAR-module-reside-in-the-main-window-or-follow-the-HSP-router-layer-where-it-is-located"><a href="#4-In-HarmonyOS-does-the-default-router-of-a-HAR-module-reside-in-the-main-window-or-follow-the-HSP-router-layer-where-it-is-located" class="headerlink" title="4. In HarmonyOS, does the default router of a HAR module reside in the main window or follow the HSP router layer where it is located?"></a>4. In HarmonyOS, does the default router of a HAR module reside in the main window or follow the HSP router layer where it is located?</h4><p><strong>Scenario</strong>:  </p>
-<ul>
-<li>Main window A contains an HSP biopsy module (Privacy intermediate page -&gt; Face HAR biopsy page).  </li>
-<li>Subwindow B navigates to the HSP privacy intermediate page using <code>getUIContext().getRouter</code>.  </li>
-<li>From the privacy page, navigating to the face HAR page.</li>
-</ul>
-<p><strong>Question</strong>:<br>Does the face HAR page need to use <code>getRouter</code> for navigation? Does its default router belong to the main window or the HSP router layer?  </p>
-<p><strong>Answer</strong>:<br>According to the UIContext documentation, <code>WindowStage/Window</code> uses <code>loadContent</code> to create UI instances, which are bound to specific windows. To access a UI instance via UIContext, a valid window must be traceable from the current context. If the UI context is ambiguous, the call will fail.  </p>
-<ul>
-<li><p><strong>HSP Page Routing</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/in-app-hsp-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/in-app-hsp-V5</a><br>HSP (Harmony Shared Package) is a dynamic shared package containing code, C++ libraries, resources, and configurations. It shares the host app’s process, package name, and lifecycle.  </p>
-</li>
-<li><p><strong>HAR Page Routing (Named Routes)</strong>:<br><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-routing-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-routing-V5</a><br>Router module enables page navigation and data transfer via URLs.</p>
-</li>
-</ul>
-<h4 id="5-Issues-with-creating-a-HarmonyOS-CustomDialogController"><a href="#5-Issues-with-creating-a-HarmonyOS-CustomDialogController" class="headerlink" title="5. Issues with creating a HarmonyOS CustomDialogController?"></a>5. Issues with creating a HarmonyOS CustomDialogController?</h4><pre><code class="language-typescript">showCaptch() &#123;
-  let alertDialog: CustomDialogController = new CustomDialogController(&#123;
-    builder: DialogSliderCaptch()
-  &#125;)
-  alertDialog.open()
-&#125;
-// Works when placed in a page, but fails when made a standalone function (easily reproducible)
-
-function showCaptch() &#123;
-  let alertDialog: CustomDialogController = new CustomDialogController(&#123;
-    builder: DialogSliderCaptch()
-  &#125;)
-  alertDialog.open()
-&#125;
-</code></pre>
-<p><strong>Explanation</strong>:<br><code>CustomDialogController</code> is a page-level component whose lifecycle is tied to the page. When exposed as a standalone function, it loses its page context, leading to failures. Specifically:  </p>
-<ul>
-<li>Its lifecycle (initialization, destruction) is managed by the page.  </li>
-<li>Detaching it from the page context breaks lifecycle dependencies (e.g., <code>build</code> method).  </li>
-<li>Thus, exposing it as a function causes unexpected behavior due to lost page bindings.</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1365,7 +1434,7 @@ function showCaptch() &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

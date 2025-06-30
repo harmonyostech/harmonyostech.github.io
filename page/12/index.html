@@ -149,6 +149,361 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41126-Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingkouwei">
+      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/29/41126-Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-06-29 09:35:32 / Modified: 09:36:10" itemprop="dateCreated datePublished" datetime="2025-06-29T09:35:32+08:00">2025-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps"><a href="#Daily-HarmonyOS-Next-Knowledge-Node-Destruction-Issues-Distinguishing-Between-Mobile-and-Pad-Navigation-Routing-Problems-Tabs-Component-Width-and-How-to-Monitor-Maps" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps"></a>[Daily HarmonyOS Next Knowledge] Node Destruction Issues, Distinguishing Between Mobile and Pad, Navigation Routing Problems, Tabs Component Width, and How to Monitor Maps</h1><h4 id="1-In-HarmonyOS-if-only-the-root-node’s-dispose-is-called-can-its-child-nodes-be-destroyed-or-do-child-nodes-need-to-be-traversed-and-their-dispose-methods-executed-for-proper-destruction"><a href="#1-In-HarmonyOS-if-only-the-root-node’s-dispose-is-called-can-its-child-nodes-be-destroyed-or-do-child-nodes-need-to-be-traversed-and-their-dispose-methods-executed-for-proper-destruction" class="headerlink" title="1. In HarmonyOS, if only the root node’s dispose is called, can its child nodes be destroyed, or do child nodes need to be traversed and their dispose methods executed for proper destruction?"></a>1. In HarmonyOS, if only the root node’s dispose is called, can its child nodes be destroyed, or do child nodes need to be traversed and their dispose methods executed for proper destruction?</h4><p>Frontend-referenced objects need to be disposed, and builderNodes and FrameNodes created with new also require dispose. Calling only the root node’s dispose cannot guarantee that child nodes will be properly released.  </p>
+<h4 id="2-How-to-distinguish-between-mobile-and-pad-devices-in-the-Web-UserAgent-of-HarmonyOS"><a href="#2-How-to-distinguish-between-mobile-and-pad-devices-in-the-Web-UserAgent-of-HarmonyOS" class="headerlink" title="2. How to distinguish between mobile and pad devices in the Web UserAgent of HarmonyOS?"></a>2. How to distinguish between mobile and pad devices in the Web UserAgent of HarmonyOS?</h4><p>Reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/multi-faq-V5#ZH-CN_TOPIC_0000001884757262__%E5%A6%82%E4%BD%95%E6%9F%A5%E8%AF%A2%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/multi-faq-V5#ZH-CN_TOPIC_0000001884757262__%E5%A6%82%E4%BD%95%E6%9F%A5%E8%AF%A2%E8%AE%BE%E5%A4%87%E7%B1%BB%E5%9E%8B</a>  </p>
+<ol>
+<li><p>Query device type via command line.<br>Query the specified system parameter (const.product.devicetype) via command line to determine the device type:  </p>
+<pre><code class="language-bash"># Method 1  
+hdc shell param get &quot;const.product.devicetype&quot;  
+# Method 2  
+hdc shell cat /etc/param/ohos.para | grep const.product.devicetype  
+</code></pre>
+</li>
+<li><p>Query device type during application development.  </p>
+<pre><code class="language-typescript">import &#123; deviceInfo &#125; from &#39;@kit.BasicServicesKit&#39;;
+
+@Entry
+@Component
+struct GetDeviceTypeSample &#123;
+  @State deviceType: string = &#39;unknown&#39;;
+
+  aboutToAppear() &#123;
+    this.deviceType = deviceInfo.deviceType;
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Text(this.deviceType).fontSize(24);
+    &#125;
+    .width(&#39;100%&#39;)
+    .height(&#39;100%&#39;);
+  &#125;
+&#125;
+</code></pre>
+</li>
+</ol>
+<h4 id="3-Navigation-routing-issues-in-HarmonyOS"><a href="#3-Navigation-routing-issues-in-HarmonyOS" class="headerlink" title="3. Navigation routing issues in HarmonyOS?"></a>3. Navigation routing issues in HarmonyOS?</h4><p>When navigating from the Index page to the PageOne page, the navigation bar is hidden (hideNavBar), but why does a white screen appear when returning from PageOne to the previous page?  </p>
+<pre><code class="language-typescript">// Index.ets  
+@Entry
+@Component
+struct Index &#123;
+  @State hideNavBar: boolean = false;
+  private pageStack: NavPathStack = new NavPathStack();
+
+  build() &#123;
+    Navigation(this.pageStack) &#123;
+      Column() &#123;
+        Button(&#39;Jump to PageOne, hide NavBar&#39;)
+          .onClick(() =&gt; &#123;
+            this.hideNavBar = true;
+            this.pageStack.replacePath(&#123;
+              name: &#39;PageOne&#39;
+            &#125;);
+          &#125;);
+      &#125;
+      .height(&#39;100%&#39;)
+      .justifyContent(FlexAlign.Center);
+    &#125;
+    .hideNavBar(this.hideNavBar)
+    .hideTitleBar(true)
+    .hideBackButton(true);
+  &#125;
+&#125;
+
+// PageOne.ets  
+@Builder
+function PageOneBuilder() &#123;
+  PageOne();
+&#125;
+
+@Component
+export struct PageOne &#123;
+  pageStack: NavPathStack | null = null;
+  build() &#123;
+    NavDestination() &#123;
+      Column() &#123;
+        Button(&#39;Return to previous page&#39;)
+          .onClick(() =&gt; &#123;
+            // Return to the previous page here  
+            this.pageStack?.pop?.();
+          &#125;);
+      &#125;.height(&#39;100%&#39;);
+    &#125;
+    .hideTitleBar(true)
+    .onReady((ctx: NavDestinationContext) =&gt; &#123;
+      this.pageStack = ctx.pathStack;
+    &#125;);
+  &#125;
+&#125;
+</code></pre>
+<p>API reference: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-navigation-navigation-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/arkts-navigation-navigation-V5</a>  </p>
+<p><strong>White screen cause</strong>: Hiding the navigation bar via hideNavBar(true) leads to this issue. Setting it to false restores the previous page’s navigation bar buttons. Adding a Button component to Navigation ensures visibility even when Navigation is hidden. Refer to the API documentation for details.  </p>
+<h4 id="4-Width-issues-with-the-HarmonyOS-Tabs-component"><a href="#4-Width-issues-with-the-HarmonyOS-Tabs-component" class="headerlink" title="4. Width issues with the HarmonyOS Tabs component?"></a>4. Width issues with the HarmonyOS Tabs component?</h4><p>Documentation states that the Tabs component’s indicator matches the view width. The app’s home page has numerous columns, with a semi-transparent cover strip and button on the right, causing operational issues—some columns may be unreachable. Is there a way to separate these elements or use alternative components?  </p>
+<p>Refer to the following demo:  </p>
+<pre><code class="language-typescript">@Entry
+@Component
+struct tabTest &#123;
+  @State tabArray: Array&lt;number&gt; = [0, 1, 2, 3, 4];
+  @State focusIndex: number = 0;
+  @State pre: number = 0;
+  @State index: number = 0;
+  private controller: TabsController = new TabsController();
+  @State test: boolean = false;
+  @State animationDuration: number = 300;
+  @State indicatorLeftMargin: number = 0;
+  @State indicatorWidth: number = 0;
+  private tabsWidth: number = 0;
+  private tabWidth: number = 0;
+  private scrollerForScroll: Scroller = new Scroller();
+
+  // Individual tab  
+  @Builder
+  Tab(tabName: string, tabItem: number, tabIndex: number) &#123;
+    Row(&#123; space: 20 &#125;) &#123;
+      Text(tabName)
+        .fontSize(18)
+        .fontColor(tabIndex === this.focusIndex ? Color.Blue : Color.Black)
+        .id(tabIndex.toString())
+        .onAreaChange((oldValue: Area, newValue: Area) =&gt; &#123;
+          if (this.focusIndex === tabIndex &amp;&amp; (this.indicatorLeftMargin === 0 || this.indicatorWidth === 0)) &#123;
+            if (newValue.position.x !== undefined) &#123;
+              let positionX = Number.parseFloat(newValue.position.x.toString());
+              this.indicatorLeftMargin = Number.isNaN(positionX) ? 0 : positionX;
+            &#125;
+            let width = Number.parseFloat(newValue.width.toString());
+            this.tabWidth = Number.isNaN(width) ? 0 : width;
+            this.indicatorWidth = this.tabWidth;
+          &#125;
+        &#125;);
+    &#125;
+    .justifyContent(FlexAlign.Center)
+    .constraintSize(&#123; minWidth: 35 &#125;)
+    .width(100)
+    .height(30)
+    .onClick(() =&gt; &#123;
+      this.controller.changeIndex(tabIndex);
+      this.focusIndex = tabIndex;
+    &#125;)
+    .backgroundColor(&quot;#ffb7b7b7&quot;);
+  &#125;
+
+  @Builder
+  textTest(textName: string) &#123;
+    Row(&#123; space: 20 &#125;) &#123;
+      Text(textName).fontSize(18);
+    &#125;
+    .justifyContent(FlexAlign.Center)
+    .constraintSize(&#123; minWidth: 35 &#125;)
+    .height(30)
+    .backgroundColor(&quot;#ffb7b7b7&quot;);
+  &#125;
+
+  build() &#123;
+    Column() &#123;
+      Stack(&#123; alignContent: Alignment.TopStart &#125;) &#123;
+        Column() &#123;
+          // Tabs  
+          Row(&#123; space: 8 &#125;) &#123;
+            List(&#123; space: 20, initialIndex: 0, scroller: this.scrollerForScroll &#125;) &#123;
+              ForEach(this.tabArray, (item: number, index: number) =&gt; &#123;
+                ListItem() &#123;
+                  this.Tab(&quot;Tab &quot; + item, item, index);
+                &#125;
+              &#125;, (item: string) =&gt; item);
+            &#125;
+            .listDirection(Axis.Horizontal)
+            .height(30)
+            .width(&#39;80%&#39;)
+            .friction(0.6)
+            .alignListItem(ListItemAlign.Start)
+            .scrollBar(BarState.Off)
+            .width(&#39;80%&#39;)
+            .backgroundColor(&quot;#ffb7b7b7&quot;)
+            .onScroll((xOffset: number, yOffset: number) =&gt; &#123;
+              this.indicatorLeftMargin -= xOffset;
+            &#125;);
+            this.textTest(&#39;More&#39;);
+          &#125;
+          .alignItems(VerticalAlign.Bottom)
+          .width(&#39;100%&#39;)
+          .backgroundColor(&quot;#ffb7b7b7&quot;);
+        &#125;
+        .alignItems(HorizontalAlign.Start)
+        .width(&#39;100%&#39;);
+
+        Column()
+          .height(2)
+          .width(this.indicatorWidth)
+          .margin(&#123; left: this.indicatorLeftMargin, top: 30 &#125;)
+          .backgroundColor(Color.Blue);
+        Column()
+          .height(10)
+          .width(&quot;20%&quot;)
+          .margin(&#123; left: &#39;80%&#39;, top: 28 &#125;)
+          .backgroundColor(&quot;#ffb7b7b7&quot;);
+      &#125;
+      .height(40)
+      .width(&#39;100%&#39;)
+      .backgroundColor(&quot;#ffb7b7b7&quot;);
+      // Tabs  
+      Tabs(&#123; barPosition: BarPosition.Start, controller: this.controller &#125;) &#123;
+        ForEach(this.tabArray, (item: number, index: number) =&gt; &#123;
+          TabContent() &#123;
+            Text(&#39;Content of Page &#39; + item)
+              .height(300)
+              .width(&#39;100%&#39;)
+              .fontSize(30);
+          &#125;
+          .backgroundColor(Color.White);
+        &#125;, (item: string) =&gt; item);
+      &#125;
+      .onAreaChange((oldValue: Area, newValue: Area) =&gt; &#123;
+        let width = Number.parseFloat(newValue.width.toString());
+        this.tabsWidth = Number.isNaN(width) ? 0 : width;
+      &#125;)
+      .width(&#39;100%&#39;)
+      .barHeight(0)
+      .animationDuration(100)
+      .onChange((index: number) =&gt; &#123;
+        console.log(&#39;foo change&#39;);
+        this.focusIndex = index;
+        this.scrollerForScroll.scrollToIndex(index - 1, true);
+      &#125;)
+      .onAnimationStart((index: number, targetIndex: number, event: TabsAnimationEvent) =&gt; &#123;
+        // Callback triggered at the start of the tab switch animation. The underline slides with the page.  
+        this.focusIndex = targetIndex;
+        let targetIndexInfo = this.getTextInfo(targetIndex);
+        this.startAnimateTo(this.animationDuration, targetIndexInfo.left, targetIndexInfo.width);
+      &#125;)
+      .onAnimationEnd((index: number, event: TabsAnimationEvent) =&gt; &#123;
+        // Callback triggered at the end of the tab switch animation. The underline animation stops.  
+        let currentIndicatorInfo = this.getCurrentIndicatorInfo(index, event);
+        this.startAnimateTo(0, currentIndicatorInfo.left, currentIndicatorInfo.width);
+      &#125;)
+      .onGestureSwipe((index: number, event: TabsAnimationEvent) =&gt; &#123;
+        // Callback triggered frame-by-frame during page swipe.  
+        let currentIndicatorInfo = this.getCurrentIndicatorInfo(index, event);
+        this.focusIndex = currentIndicatorInfo.index;
+        this.indicatorLeftMargin = currentIndicatorInfo.left;
+        this.tabWidth = currentIndicatorInfo.width;
+        this.indicatorWidth = currentIndicatorInfo.width;
+      &#125;);
+    &#125;
+    .height(&#39;100%&#39;);
+  &#125;
+
+  private getTextInfo(index: number): Record&lt;string, number&gt; &#123;
+    let strJson = getInspectorByKey(index.toString());
+    try &#123;
+      let obj: Record&lt;string, string&gt; = JSON.parse(strJson);
+      let rectInfo: number[][] = JSON.parse(&#39;[&#39; + obj.$rect + &#39;]&#39;);
+      return &#123; &#39;left&#39;: px2vp(rectInfo[0][0]), &#39;width&#39;: px2vp(rectInfo[1][0] - rectInfo[0][0]) &#125;;
+    &#125; catch (error) &#123;
+      return &#123; &#39;left&#39;: 0, &#39;width&#39;: 0 &#125;;
+    &#125;
+  &#125;
+
+  private getCurrentIndicatorInfo(index: number, event: TabsAnimationEvent): Record&lt;string, number&gt; &#123;
+    let nextIndex = index;
+    if (index &gt; 0 &amp;&amp; event.currentOffset &gt; 0) &#123;
+      nextIndex--;
+    &#125; else if (index &lt; 4 &amp;&amp; event.currentOffset &lt; 0) &#123;
+      nextIndex++;
+    &#125;
+    let indexInfo = this.getTextInfo(index);
+    let nextIndexInfo = this.getTextInfo(nextIndex);
+    let swipeRatio = Math.abs(event.currentOffset / this.tabsWidth);
+    let currentIndex = swipeRatio &gt; 0.5 ? nextIndex : index; // Switch to the next tab if the page swipe exceeds half.  
+    let currentLeft = indexInfo.left + (nextIndexInfo.left - indexInfo.left) * swipeRatio;
+    let currentWidth = indexInfo.width + (nextIndexInfo.width - indexInfo.width) * swipeRatio;
+    return &#123; &#39;index&#39;: currentIndex, &#39;left&#39;: currentLeft, &#39;width&#39;: currentWidth &#125;;
+  &#125;
+
+  private startAnimateTo(duration: number, leftMargin: number, width: number) &#123;
+    animateTo(&#123;
+      duration: duration, // Animation duration  
+      curve: Curve.Linear, // Animation curve  
+      iterations: 1, // Number of plays  
+      playMode: PlayMode.Normal, // Animation mode  
+      onFinish: () =&gt; &#123;
+        console.info(&#39;play end&#39;);
+      &#125;
+    &#125;, () =&gt; &#123;
+      this.indicatorLeftMargin = leftMargin;
+      this.tabWidth = width;
+      this.indicatorWidth = width;
+    &#125;);
+  &#125;
+&#125;
+</code></pre>
+<h4 id="5-How-to-monitor-Maps-in-HarmonyOS"><a href="#5-How-to-monitor-Maps-in-HarmonyOS" class="headerlink" title="5. How to monitor Maps in HarmonyOS?"></a>5. How to monitor Maps in HarmonyOS?</h4><p>Map variables can be decorated with @State. Currently, Map and Set types are supported, but HashMap is not.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41127-Daily-HarmonyOS-Next-Knowledge-Web-Height-Adaptation-Variable-Declaration-Specifications-Animation-Cancellation-Signature-Files-and-Package-Size-Optimization-related/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1212,82 +1567,6 @@ window.addEventListener(&quot;resize&quot;, function() &#123;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://harmonyostech.github.io/2025/06/29/41227-Daily-HarmonyOS-Next-Knowledge-Input-Method-Press-Effect-Web-Component-Rebound-H5-Back-Issue-Flex-Two-Line-Limit-Custom-Password-Input-Style/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Qingkouwei">
-      <meta itemprop="description" content="Welcome to the HarmonyOS NEXT Knowledge Charging Station!  This is a hub for knowledge about HarmonyOS Next`s new-generation system. With its self-developed kernel, HarmonyOS NEXT achieves native smoothness, security, intelligence, and interconnectivity. We deeply analyze how its new distributed soft bus revolutionizes device connectivity experiences and explain the principles behind the enhanced perception and reasoning capabilities of the Xiaoyi intelligent agent based on the Pangu large model. Whether you are a developer exploring application development or an ordinary user eager to understand system features, you can "recharge" here and quickly grasp the essence of HarmonyOS NEXT.">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HarmonyOS NEXT Knowledge Charging Station">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/29/41227-Daily-HarmonyOS-Next-Knowledge-Input-Method-Press-Effect-Web-Component-Rebound-H5-Back-Issue-Flex-Two-Line-Limit-Custom-Password-Input-Style/" class="post-title-link" itemprop="url">[Daily HarmonyOS Next Knowledge] Input Method Press Effect, Web Component Rebound, H5 Back Issue, Flex Two-Line Limit, Custom Password Input Style</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2025-06-29 09:21:24 / Modified: 09:36:48" itemprop="dateCreated datePublished" datetime="2025-06-29T09:21:24+08:00">2025-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Daily-HarmonyOS-Next-Knowledge/" itemprop="url" rel="index"><span itemprop="name">Daily HarmonyOS Next Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Daily-HarmonyOS-Next-Knowledge-Input-Method-Press-Effect-Web-Component-Rebound-H5-Back-Issue-Flex-Two-Line-Limit-Custom-Password-Input-Style"><a href="#Daily-HarmonyOS-Next-Knowledge-Input-Method-Press-Effect-Web-Component-Rebound-H5-Back-Issue-Flex-Two-Line-Limit-Custom-Password-Input-Style" class="headerlink" title="[Daily HarmonyOS Next Knowledge] Input Method Press Effect, Web Component Rebound, H5 Back Issue, Flex Two-Line Limit, Custom Password Input Style"></a>[Daily HarmonyOS Next Knowledge] Input Method Press Effect, Web Component Rebound, H5 Back Issue, Flex Two-Line Limit, Custom Password Input Style</h1><h4 id="1-Press-effect-of-input-method-keyboard-keys-in-HarmonyOS"><a href="#1-Press-effect-of-input-method-keyboard-keys-in-HarmonyOS" class="headerlink" title="1. Press effect of input method keyboard keys in HarmonyOS"></a>1. Press effect of input method keyboard keys in HarmonyOS</h4><p>The Button component can use the <code>stateEffect</code> attribute to set whether to enable the press state display effect when the button is pressed. Refer to the links below:  </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-button-V5">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-button-V5</a>  </li>
-<li><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/blog/topic/03113927877624007">https://developer.huawei.com/consumer/cn/blog/topic/03113927877624007</a></li>
-</ul>
-<p>Key events refer to events triggered when components interact with key devices such as keyboards and remote controls, applicable to all focusable components (e.g., Button). For components like Text and Image that are not focusable by default, key events can be used by setting the <code>focusable</code> attribute to <code>true</code>.  </p>
-<h4 id="2-Does-the-HarmonyOS-Web-component-have-a-rebound-capability-when-sliding-to-the-boundary"><a href="#2-Does-the-HarmonyOS-Web-component-have-a-rebound-capability-when-sliding-to-the-boundary" class="headerlink" title="2. Does the HarmonyOS Web component have a rebound capability when sliding to the boundary?"></a>2. Does the HarmonyOS Web component have a rebound capability when sliding to the boundary?</h4><p><code>overscrollmode</code> attribute: <a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#overscrollmode11">https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ts-basic-components-web-V5#overscrollmode11</a>  </p>
-<p><code>overScrollMode(mode: OverScrollMode)</code><br>Sets the Web over-scroll mode (disabled by default). When over-scroll mode is enabled, the Web uses elastic animation to rebound the interface when the user slides to the edge of the Web root page; internal pages within the root page do not trigger rebound.  </p>
-<p>Sample code:  </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// xxx.ets</span></span><br><span class="line"><span class="keyword">import</span> &#123; webview &#125; <span class="keyword">from</span> <span class="string">&#x27;@kit.ArkWeb&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">WebComponent</span> &#123;</span><br><span class="line">  <span class="attr">controller</span>: webview.<span class="property">WebviewController</span> = <span class="keyword">new</span> webview.<span class="title class_">WebviewController</span>();</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">mode</span>: <span class="title class_">OverScrollMode</span> = <span class="title class_">OverScrollMode</span>.<span class="property">ALWAYS</span>;</span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Web</span>(&#123; <span class="attr">src</span>: <span class="string">&#x27;www.example.com&#x27;</span>, <span class="attr">controller</span>: <span class="variable language_">this</span>.<span class="property">controller</span> &#125;)</span><br><span class="line">        .<span class="title function_">overScrollMode</span>(<span class="variable language_">this</span>.<span class="property">mode</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 3. Issues with H5 hash routing back navigation in HarmonyOS  </span></span><br><span class="line"><span class="string">When H5 uses hash routing, clicking the back button closes the page directly without performing route back navigation; history routing works normally.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Causes**:  </span></span><br><span class="line"><span class="string">1. Incorrect route configuration: HarmonyOS system route configuration requires correct settings for route paths and data request interfaces. Incorrect route table or data request interface configuration may cause back navigation issues.  </span></span><br><span class="line"><span class="string">2. Improper page lifecycle management: On HarmonyOS, page lifecycle management requires special attention. For example, if a data request interface is called in `</span>onInit<span class="string">` but not handled in `</span>onError<span class="string">` or other lifecycle methods, the data request may not execute correctly, affecting back navigation.  </span></span><br><span class="line"><span class="string">3. Data acquisition and assignment issues: On HarmonyOS, data acquisition and assignment need careful handling. For example, if data returned by the request interface is not correctly assigned to the page data model, data inconsistency may occur, affecting back navigation.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">**Solutions**:  </span></span><br><span class="line"><span class="string">1. Check route configuration: Ensure correct route paths and data request interface configurations, and clear route跳转 logic.  </span></span><br><span class="line"><span class="string">2. Properly manage page lifecycles: Handle data requests and assignments in lifecycle methods (e.g., `</span>onInit<span class="string">`, `</span>onError<span class="string">`) to ensure data is processed in the correct lifecycle phase.  </span></span><br><span class="line"><span class="string">3. Properly handle data acquisition and assignment: Ensure data returned by request interfaces is correctly processed and assigned to avoid data inconsistency.  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 4. How to use Flex to limit content to 2 lines with folding for overflow in HarmonyOS  </span></span><br><span class="line"><span class="string">Refer to the demo below:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="keyword">import</span> measure <span class="keyword">from</span> <span class="string">&#x27;@ohos.measure&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> display <span class="keyword">from</span> <span class="string">&#x27;@ohos.display&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">childMaxWidth</span>: <span class="built_in">number</span> = <span class="number">500</span>; <span class="comment">// Width in px for subsequent calculations</span></span><br><span class="line"><span class="keyword">let</span> <span class="attr">displayClass</span>: display.<span class="property">Display</span> | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">componentWidth</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  displayClass = display.<span class="title function_">getDefaultDisplaySync</span>();</span><br><span class="line">  componentWidth = displayClass.<span class="property">width</span>;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Flex_overNumber displayClass.width:&#x27;</span> + displayClass.<span class="property">width</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (exception) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;Flex_overNumber Failed to obtain the default display object. Code: &#x27;</span> + <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(exception));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">TextItem</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="meta">@Prop</span> <span class="attr">fontSizeData</span>: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">      .<span class="title function_">fontSize</span>(<span class="variable language_">this</span>.<span class="property">fontSizeData</span>)</span><br><span class="line">      .<span class="title function_">margin</span>(&#123; <span class="attr">left</span>: <span class="number">10</span>, <span class="attr">top</span>: <span class="number">10</span> &#125;)</span><br><span class="line">      .<span class="title function_">backgroundColor</span>(<span class="string">&#x27;#c4c2cc&#x27;</span>)</span><br><span class="line">      .<span class="title function_">constraintSize</span>(&#123; <span class="attr">maxWidth</span>: childMaxWidth + <span class="string">&#x27;px&#x27;</span> &#125;)</span><br><span class="line">      .<span class="title function_">maxLines</span>(<span class="number">1</span>)</span><br><span class="line">      .<span class="title function_">textOverflow</span>(&#123; <span class="attr">overflow</span>: <span class="title class_">TextOverflow</span>.<span class="property">Ellipsis</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Flex</span>_overNumber &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="meta">@Watch</span>(<span class="string">&#x27;IndexChange&#x27;</span>) <span class="attr">index</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="meta">@Watch</span>(<span class="string">&#x27;textChange&#x27;</span>) <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="title class_">FlexWidth</span>: <span class="built_in">string</span> = <span class="string">&#x27;80%&#x27;</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">newIndex</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">heightControl</span>: <span class="built_in">number</span> | <span class="built_in">string</span> = <span class="number">100</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="title class_">ButtonText</span>: <span class="built_in">string</span> = <span class="string">&#x27;∨&#x27;</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="title class_">AllData</span>: <span class="built_in">string</span>[] = [<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;22&#x27;</span>, <span class="string">&#x27;333&#x27;</span>, <span class="string">&#x27;44444&#x27;</span>, <span class="string">&#x27;55&#x27;</span>, <span class="string">&#x27;666&#x27;</span>, <span class="string">&#x27;7777&#x27;</span>, <span class="string">&#x27;8888888888888&#x27;</span>, <span class="string">&#x27;99&#x27;</span>, <span class="string">&#x27;3434&#x27;</span>, <span class="string">&#x27;5656&#x27;</span>, <span class="string">&#x27;7878&#x27;</span>, <span class="string">&#x27;141414141&#x27;</span>, <span class="string">&#x27;68681&#x27;</span>];</span><br><span class="line">  <span class="meta">@State</span> <span class="title class_">SomeData</span>: <span class="built_in">string</span>[] = [];</span><br><span class="line">  <span class="meta">@State</span> <span class="title class_">ShowData</span>: <span class="built_in">string</span>[] = [];</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">fontSizeData</span>: <span class="built_in">number</span> = <span class="number">30</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="title class_">AllWidth</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">textWidth</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">restrictWidth</span>: <span class="built_in">number</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title class_">IndexChange</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">AllWidth</span> &gt;= (<span class="variable language_">this</span>.<span class="property">restrictWidth</span> - childMaxWidth) &amp;&amp; <span class="variable language_">this</span>.<span class="property">AllWidth</span> &lt;= (<span class="variable language_">this</span>.<span class="property">restrictWidth</span>)) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">newIndex</span> = <span class="variable language_">this</span>.<span class="property">index</span>;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Flex_overNumber text1 newIndex&#x27;</span>, <span class="variable language_">this</span>.<span class="property">newIndex</span>);</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Flex_overNumber text1 change&#x27;</span>, <span class="variable language_">this</span>.<span class="property">newIndex</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">textChange</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">content</span>: <span class="built_in">string</span> = <span class="variable language_">this</span>.<span class="property">message</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">textWidth</span> = measure.<span class="title function_">measureText</span>(&#123;</span><br><span class="line">      <span class="attr">textContent</span>: content,</span><br><span class="line">      <span class="attr">fontSize</span>: <span class="variable language_">this</span>.<span class="property">fontSizeData</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">textWidth</span> &gt; childMaxWidth) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">AllWidth</span> += childMaxWidth;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">AllWidth</span> += <span class="variable language_">this</span>.<span class="property">textWidth</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Flex_overNumber text1 content&#x27;</span>, content);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Flex_overNumber text1 Width&#x27;</span>, <span class="variable language_">this</span>.<span class="property">textWidth</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">aboutToAppear</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (componentWidth != <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">restrictWidth</span> = componentWidth * <span class="number">1.2</span>;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Flex_overNumber text1 componentWidth&#x27;</span>, componentWidth);</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">info</span>(<span class="string">&#x27;Flex_overNumber text1 restrictWidth&#x27;</span>, <span class="variable language_">this</span>.<span class="property">restrictWidth</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="variable language_">this</span>.<span class="property">AllData</span>.<span class="property">length</span>; i++) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">message</span> = <span class="variable language_">this</span>.<span class="property">AllData</span>[i];</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">index</span> = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;text1 change newIndex&#x27;</span>, <span class="variable language_">this</span>.<span class="property">newIndex</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">SomeData</span> = <span class="variable language_">this</span>.<span class="property">AllData</span>.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="variable language_">this</span>.<span class="property">newIndex</span> + <span class="number">1</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">ShowData</span> = <span class="variable language_">this</span>.<span class="property">SomeData</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Row</span>() &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Flex</span>(&#123; <span class="attr">wrap</span>: <span class="title class_">FlexWrap</span>.<span class="property">Wrap</span> &#125;) &#123;</span><br><span class="line">          <span class="title class_">ForEach</span>(</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">ShowData</span>,</span><br><span class="line">            <span class="function">(<span class="params"><span class="attr">item</span>: <span class="built_in">string</span></span>) =&gt;</span> &#123;</span><br><span class="line">              <span class="title class_">TextItem</span>(&#123; <span class="attr">message</span>: item, <span class="attr">fontSizeData</span>: <span class="variable language_">this</span>.<span class="property">fontSizeData</span> &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">          );</span><br><span class="line">          <span class="title class_">Button</span>(<span class="variable language_">this</span>.<span class="property">ButtonText</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">heightControl</span> === <span class="number">100</span>) &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">heightControl</span> = <span class="string">&#x27;100%&#x27;</span>;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">ButtonText</span> = <span class="string">&#x27;^&#x27;</span>;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">ShowData</span> = <span class="variable language_">this</span>.<span class="property">AllData</span>;</span><br><span class="line">              &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">heightControl</span> = <span class="number">100</span>;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">ButtonText</span> = <span class="string">&#x27;v&#x27;</span>;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">ShowData</span> = <span class="variable language_">this</span>.<span class="property">SomeData</span>;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="number">40</span>)</span><br><span class="line">            .<span class="title function_">height</span>(<span class="number">30</span>)</span><br><span class="line">            .<span class="title function_">margin</span>(&#123; <span class="attr">left</span>: <span class="number">10</span>, <span class="attr">top</span>: <span class="number">10</span> &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">constraintSize</span>(&#123; <span class="attr">maxHeight</span>: <span class="variable language_">this</span>.<span class="property">heightControl</span> &#125;)</span><br><span class="line">        .<span class="title function_">border</span>(&#123; <span class="attr">width</span>: <span class="number">1</span> &#125;)</span><br><span class="line">        .<span class="title function_">width</span>(<span class="variable language_">this</span>.<span class="property">FlexWidth</span>)</span><br><span class="line">        .<span class="title function_">margin</span>(&#123; <span class="attr">left</span>: <span class="string">&#x27;5%&#x27;</span> &#125;)</span><br><span class="line">        .<span class="title function_">clip</span>(<span class="literal">true</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">``</span><span class="string">`  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 5. How to customize the style of TextInput password input in HarmonyOS  </span></span><br><span class="line"><span class="string">Refer to the code below:  </span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>typescript</span><br><span class="line"><span class="title class_">Column</span>() &#123;</span><br><span class="line">  <span class="title class_">TextInput</span>(&#123; <span class="attr">placeholder</span>: <span class="string">&quot;请输入密码&quot;</span> &#125;)</span><br><span class="line">    .<span class="title function_">margin</span>(&#123; <span class="attr">top</span>: <span class="number">100</span>, <span class="attr">left</span>: <span class="string">&#x27;10%&#x27;</span> &#125;)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;80%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">type</span>(<span class="title class_">InputType</span>.<span class="property">Password</span>)</span><br><span class="line">    .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">White</span>)</span><br><span class="line">    .<span class="title function_">showPasswordIcon</span>(<span class="literal">false</span>);</span><br><span class="line">  <span class="title class_">Line</span>()</span><br><span class="line">    .<span class="title function_">height</span>(<span class="number">0.5</span>)</span><br><span class="line">    .<span class="title function_">width</span>(<span class="string">&#x27;80%&#x27;</span>)</span><br><span class="line">    .<span class="title function_">margin</span>(&#123; <span class="attr">left</span>: <span class="string">&#x27;10%&#x27;</span> &#125;)</span><br><span class="line">    .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Gray</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1357,7 +1636,7 @@ window.addEventListener(&quot;resize&quot;, function() &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">343</span>
+          <span class="site-state-item-count">344</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
