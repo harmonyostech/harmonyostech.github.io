@@ -28,7 +28,7 @@
 <meta property="og:description" content="[Daily Harmony Learnings on HarmonyOS Next] Font Size, Mirror Language Spacing, Disable Split Screen, Router vs Navigation1. How to modify font size without affecting in-app fonts, but have in-app fon">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-06-30T09:33:06.000Z">
-<meta property="article:modified_time" content="2025-06-30T09:43:42.992Z">
+<meta property="article:modified_time" content="2025-07-13T10:00:25.294Z">
 <meta property="article:author" content="Qingkouwei">
 <meta property="article:tag" content="HarmonyOS Next">
 <meta name="twitter:card" content="summary">
@@ -174,10 +174,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2025-06-30 17:33:06 / Modified: 17:43:42" itemprop="dateCreated datePublished" datetime="2025-06-30T17:33:06+08:00">2025-06-30</time>
+              <time title="Created: 2025-06-30 17:33:06" itemprop="dateCreated datePublished" datetime="2025-06-30T17:33:06+08:00">2025-06-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-07-13 18:00:25" itemprop="dateModified" datetime="2025-07-13T18:00:25+08:00">2025-07-13</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -208,256 +214,15 @@
 <li>API 12 provides <code>LocalizedMargin</code> and <code>LocalizedPadding</code> for margin&#x2F;padding, which can be used to set different spacing for mirrored layouts.</li>
 </ul>
 <h2 id="3-How-to-disable-split-screen-mode"><a href="#3-How-to-disable-split-screen-mode" class="headerlink" title="3. How to disable split-screen mode?"></a>3. How to disable split-screen mode?</h2><p>Refer to the document <a target="_blank" rel="noopener" href="https://link.segmentfault.com/?enc=mDYE4QJoLIZ9soXi1i+pAw==.OvdySs2esrOzgVvrbg+s3nJAH+r3co/R24VStK6DKbnjoIx2qF6nHt9Y4sy/+XvDd2TLm0HXh8bZkD/TsOtuT5pqGM/OkrO1EnOQM76SWCvJB3J9mhOeK/uxiA6u1qPx8G2jFLcbFI9177Bjiwo54w==">https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/multi-window-support-V5#section2205081316</a> and set in <code>module.json5</code>:  </p>
-<pre><code class="language-json">&quot;supportWindowMode&quot;: [&quot;fullscreen&quot;]
-</code></pre>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;supportWindowMode&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;fullscreen&quot;</span><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+
 <h2 id="4-How-to-control-the-display-hierarchy-of-CustomDialog"><a href="#4-How-to-control-the-display-hierarchy-of-CustomDialog" class="headerlink" title="4. How to control the display hierarchy of CustomDialog?"></a>4. How to control the display hierarchy of CustomDialog?</h2><p>When a CustomDialog is popped up on Page A and you navigate from Page A to Page B without closing the dialog, the dialog from Page A may appear above Page B. How to ensure Page B covers the dialog?  </p>
-<h3 id="Solution-via-router-navigation"><a href="#Solution-via-router-navigation" class="headerlink" title="Solution via router navigation:"></a>Solution via router navigation:</h3><pre><code class="language-typescript">import router from &#39;@ohos.router&#39;;
+<h3 id="Solution-via-router-navigation"><a href="#Solution-via-router-navigation" class="headerlink" title="Solution via router navigation:"></a>Solution via router navigation:</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;@ohos.router&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@CustomDialog</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> struct <span class="title class_">UserPrivacyDialog</span> &#123;</span><br><span class="line">  <span class="attr">controller</span>: <span class="title class_">CustomDialogController</span> = <span class="keyword">new</span> <span class="title class_">CustomDialogController</span>(&#123; <span class="attr">builder</span>: <span class="string">&#x27;&#x27;</span> &#125;);</span><br><span class="line">  <span class="attr">cancel</span>: <span class="title class_">Function</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="attr">confirm</span>: <span class="title class_">Function</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="attr">visible</span>: <span class="title class_">Visibility</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Column</span>() &#123;</span><br><span class="line">      <span class="title class_">Button</span>(<span class="string">&#x27;jump&#x27;</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          router.<span class="title function_">pushUrl</span>(&#123;</span><br><span class="line">            <span class="attr">url</span>: <span class="string">&#x27;pages/PageTwo&#x27;</span></span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;).<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>).<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    .<span class="title function_">margin</span>(&#123; <span class="attr">top</span>: <span class="number">22</span> &#125;)</span><br><span class="line">    .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">SpaceEvenly</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">textValue</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello World&#x27;</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">visible</span>: <span class="title class_">Visibility</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Stack</span>() &#123;</span><br><span class="line">      <span class="title class_">Row</span>() &#123;</span><br><span class="line">        <span class="title class_">Column</span>() &#123;</span><br><span class="line">          <span class="title class_">Button</span>(<span class="string">&#x27;click&#x27;</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">visible</span> == <span class="title class_">Visibility</span>.<span class="property">Visible</span>) &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line">              &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">Visible</span></span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="number">0x777474</span>)</span><br><span class="line">            .<span class="title function_">fontColor</span>(<span class="number">0x000000</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      .<span class="title function_">backgroundColor</span>(<span class="number">0x885555</span>)</span><br><span class="line"></span><br><span class="line">      <span class="title class_">Text</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">visible</span> == <span class="title class_">Visibility</span>.<span class="property">Visible</span>) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">Visible</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">        .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)<span class="comment">// Adjust opacity as needed</span></span><br><span class="line">        .<span class="title function_">opacity</span>(<span class="number">0.16</span>)</span><br><span class="line">        .<span class="title function_">backgroundColor</span>(<span class="number">0x000000</span>)</span><br><span class="line">        .<span class="title function_">visibility</span>(<span class="variable language_">this</span>.<span class="property">visible</span>)</span><br><span class="line"></span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">GridRow</span>(&#123;</span><br><span class="line">          <span class="attr">columns</span>: &#123;</span><br><span class="line">            <span class="attr">xs</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="attr">sm</span>: <span class="number">4</span>,</span><br><span class="line">            <span class="attr">md</span>: <span class="number">8</span>,</span><br><span class="line">            <span class="attr">lg</span>: <span class="number">12</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">breakpoints</span>: &#123;</span><br><span class="line">            <span class="attr">value</span>: [<span class="string">&quot;400vp&quot;</span>, <span class="string">&quot;600vp&quot;</span>, <span class="string">&quot;800vp&quot;</span>],</span><br><span class="line">            <span class="attr">reference</span>: <span class="title class_">BreakpointsReference</span>.<span class="property">WindowSize</span></span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;) &#123;</span><br><span class="line">          <span class="title class_">GridCol</span>(&#123;</span><br><span class="line">            <span class="attr">span</span>: &#123;</span><br><span class="line">              <span class="attr">xs</span>: <span class="number">1</span>,</span><br><span class="line">              <span class="attr">sm</span>: <span class="number">2</span>,</span><br><span class="line">              <span class="attr">md</span>: <span class="number">4</span>,</span><br><span class="line">              <span class="attr">lg</span>: <span class="number">8</span></span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">offset</span>: &#123;</span><br><span class="line">              <span class="attr">xs</span>: <span class="number">0</span>,</span><br><span class="line">              <span class="attr">sm</span>: <span class="number">1</span>,</span><br><span class="line">              <span class="attr">md</span>: <span class="number">2</span>,</span><br><span class="line">              <span class="attr">lg</span>: <span class="number">2</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;) &#123;</span><br><span class="line">            <span class="title class_">Column</span>() &#123;</span><br><span class="line">              <span class="title class_">Flex</span>(&#123; <span class="attr">justifyContent</span>: <span class="title class_">FlexAlign</span>.<span class="property">SpaceAround</span> &#125;) &#123;</span><br><span class="line">                <span class="title class_">UserPrivacyDialog</span>();</span><br><span class="line">              &#125;.<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="number">10</span> &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>)</span><br><span class="line">            .<span class="title function_">visibility</span>(<span class="variable language_">this</span>.<span class="property">visible</span>)</span><br><span class="line">            .<span class="title function_">clip</span>(<span class="literal">true</span>)</span><br><span class="line">            .<span class="title function_">borderRadius</span>(<span class="number">20</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;.<span class="title function_">width</span>(<span class="string">&#x27;95%&#x27;</span>) <span class="comment">// Set dialog width</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-@CustomDialog
-export default struct UserPrivacyDialog &#123;
-  controller: CustomDialogController = new CustomDialogController(&#123; builder: &#39;&#39; &#125;);
-  cancel: Function = () =&gt; &#123;
-  &#125;;
-  confirm: Function = () =&gt; &#123;
-  &#125;;
-  visible: Visibility = Visibility.None
+<h3 id="Solution-via-Navigation"><a href="#Solution-via-Navigation" class="headerlink" title="Solution via Navigation:"></a>Solution via Navigation:</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> promptAction <span class="keyword">from</span> <span class="string">&#x27;@ohos.promptAction&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">export</span> struct <span class="title class_">Test1</span> &#123;</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">message</span>: <span class="built_in">string</span> = <span class="string">&#x27;Hello World&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">NavDestination</span>() &#123;</span><br><span class="line">      <span class="title class_">Row</span>() &#123;</span><br><span class="line">        <span class="title class_">Column</span>() &#123;</span><br><span class="line">          <span class="title class_">Text</span>(<span class="variable language_">this</span>.<span class="property">message</span>)</span><br><span class="line">            .<span class="title function_">fontSize</span>(<span class="number">50</span>)</span><br><span class="line">            .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">    &#125;.<span class="title function_">onBackPressed</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      promptAction.<span class="title function_">showToast</span>(&#123; <span class="attr">message</span>: <span class="string">&#x27;123&#x27;</span> &#125;)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entry</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line">struct <span class="title class_">Index</span> &#123;</span><br><span class="line">  <span class="meta">@Provide</span>(<span class="string">&#x27;pageInfos&#x27;</span>) <span class="attr">pageInfos</span>: <span class="title class_">NavPathStack</span> = <span class="keyword">new</span> <span class="title class_">NavPathStack</span>()</span><br><span class="line">  <span class="meta">@State</span> <span class="attr">textValue</span>: <span class="built_in">string</span> = <span class="string">&#x27;输入&#x27;</span></span><br><span class="line">  <span class="comment">// Visibility control with no layout occupation</span></span><br><span class="line">  <span class="meta">@State</span> <span class="attr">visible</span>: <span class="title class_">Visibility</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Builder</span></span><br><span class="line">  <span class="title class_">PageMap</span>(<span class="attr">name</span>: <span class="built_in">string</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (name === <span class="string">&#x27;pageOne&#x27;</span>) &#123;</span><br><span class="line">      <span class="title class_">Test1</span>()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">build</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title class_">Navigation</span>(<span class="variable language_">this</span>.<span class="property">pageInfos</span>) &#123;</span><br><span class="line">      <span class="title class_">Column</span>() &#123;</span><br><span class="line">        <span class="title class_">Stack</span>() &#123;</span><br><span class="line">          <span class="title class_">Row</span>() &#123;</span><br><span class="line">            <span class="title class_">Column</span>() &#123;</span><br><span class="line">              <span class="title class_">Text</span>(<span class="string">&#x27;我是第一个页面&#x27;</span>)</span><br><span class="line">                .<span class="title function_">fontSize</span>(<span class="number">30</span>)</span><br><span class="line">                .<span class="title function_">fontWeight</span>(<span class="title class_">FontWeight</span>.<span class="property">Bold</span>)</span><br><span class="line">              <span class="title class_">Button</span>(<span class="string">&#x27;按钮&#x27;</span>)</span><br><span class="line">                .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hit me!&quot;</span>)</span><br><span class="line">                  <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">visible</span> == <span class="title class_">Visibility</span>.<span class="property">Visible</span>) &#123;</span><br><span class="line">                    <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line">                  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">Visible</span></span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">                .<span class="title function_">backgroundColor</span>(<span class="number">0x777474</span>)</span><br><span class="line">                .<span class="title function_">fontColor</span>(<span class="number">0x000000</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">            .<span class="title function_">justifyContent</span>(<span class="title class_">FlexAlign</span>.<span class="property">Start</span>)</span><br><span class="line">            .<span class="title function_">alignItems</span>(<span class="title class_">HorizontalAlign</span>.<span class="property">Center</span>)</span><br><span class="line">          &#125;</span><br><span class="line">          .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">          .<span class="title function_">backgroundColor</span>(<span class="string">&#x27;#FFF&#x27;</span>)</span><br><span class="line"></span><br><span class="line">          <span class="title class_">Text</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">visible</span> == <span class="title class_">Visibility</span>.<span class="property">Visible</span>) &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line">              &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">Visible</span></span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>)</span><br><span class="line">            .<span class="title function_">height</span>(<span class="string">&#x27;100%&#x27;</span>)<span class="comment">// Adjust opacity as needed</span></span><br><span class="line">            .<span class="title function_">opacity</span>(<span class="number">0.5</span>)</span><br><span class="line">            .<span class="title function_">backgroundColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">            .<span class="title function_">visibility</span>(<span class="variable language_">this</span>.<span class="property">visible</span>)</span><br><span class="line">          <span class="title class_">Column</span>() &#123;</span><br><span class="line">            <span class="title class_">GridRow</span>(&#123;</span><br><span class="line">              <span class="attr">columns</span>: &#123;</span><br><span class="line">                <span class="attr">xs</span>: <span class="number">1</span>,</span><br><span class="line">                <span class="attr">sm</span>: <span class="number">4</span>,</span><br><span class="line">                <span class="attr">md</span>: <span class="number">8</span>,</span><br><span class="line">                <span class="attr">lg</span>: <span class="number">12</span></span><br><span class="line">              &#125;,</span><br><span class="line">              <span class="attr">breakpoints</span>: &#123;</span><br><span class="line">                <span class="attr">value</span>: [<span class="string">&quot;400vp&quot;</span>, <span class="string">&quot;600vp&quot;</span>, <span class="string">&quot;800vp&quot;</span>],</span><br><span class="line">                <span class="attr">reference</span>: <span class="title class_">BreakpointsReference</span>.<span class="property">WindowSize</span></span><br><span class="line">              &#125;,</span><br><span class="line">            &#125;) &#123;</span><br><span class="line">              <span class="title class_">GridCol</span>(&#123;</span><br><span class="line">                <span class="attr">span</span>: &#123;</span><br><span class="line">                  <span class="attr">xs</span>: <span class="number">1</span>,</span><br><span class="line">                  <span class="attr">sm</span>: <span class="number">2</span>,</span><br><span class="line">                  <span class="attr">md</span>: <span class="number">4</span>,</span><br><span class="line">                  <span class="attr">lg</span>: <span class="number">8</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="attr">offset</span>: &#123;</span><br><span class="line">                  <span class="attr">xs</span>: <span class="number">0</span>,</span><br><span class="line">                  <span class="attr">sm</span>: <span class="number">1</span>,</span><br><span class="line">                  <span class="attr">md</span>: <span class="number">2</span>,</span><br><span class="line">                  <span class="attr">lg</span>: <span class="number">2</span></span><br><span class="line">                &#125;</span><br><span class="line">              &#125;) &#123;</span><br><span class="line">                <span class="title class_">Column</span>() &#123;</span><br><span class="line">                  <span class="title class_">Text</span>(<span class="string">&#x27;安全隐私&#x27;</span>).<span class="title function_">fontSize</span>(<span class="number">20</span>).<span class="title function_">margin</span>(&#123; <span class="attr">top</span>: <span class="number">10</span>, <span class="attr">bottom</span>: <span class="number">10</span> &#125;)</span><br><span class="line">                  <span class="title class_">Text</span>(<span class="string">&#x27;是否跳转到隐私详情页面?&#x27;</span>).<span class="title function_">fontSize</span>(<span class="number">16</span>).<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="number">10</span> &#125;)</span><br><span class="line">                  <span class="title class_">Flex</span>(&#123; <span class="attr">justifyContent</span>: <span class="title class_">FlexAlign</span>.<span class="property">SpaceAround</span> &#125;) &#123;</span><br><span class="line">                    <span class="title class_">Button</span>(<span class="string">&#x27;取消&#x27;</span>)</span><br><span class="line">                      .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                        <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">visible</span> == <span class="title class_">Visibility</span>.<span class="property">Visible</span>) &#123;</span><br><span class="line">                          <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">None</span></span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                          <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="title class_">Visibility</span>.<span class="property">Visible</span></span><br><span class="line">                        &#125;</span><br><span class="line">                      &#125;).<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>).<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Black</span>)</span><br><span class="line">                    <span class="title class_">Button</span>(<span class="string">&#x27;确定&#x27;</span>)</span><br><span class="line">                      .<span class="title function_">onClick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                        <span class="variable language_">this</span>.<span class="property">pageInfos</span>.<span class="title function_">pushPath</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;pageOne&#x27;</span> &#125;)</span><br><span class="line">                      &#125;).<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>).<span class="title function_">fontColor</span>(<span class="title class_">Color</span>.<span class="property">Red</span>)</span><br><span class="line">                  &#125;.<span class="title function_">margin</span>(&#123; <span class="attr">bottom</span>: <span class="number">10</span> &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">                .<span class="title function_">backgroundColor</span>(<span class="number">0xffffff</span>)</span><br><span class="line">                .<span class="title function_">visibility</span>(<span class="variable language_">this</span>.<span class="property">visible</span>)</span><br><span class="line">                .<span class="title function_">clip</span>(<span class="literal">true</span>)</span><br><span class="line">                .<span class="title function_">borderRadius</span>(<span class="number">20</span>)</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;.<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>) <span class="comment">// Set dialog width</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;.<span class="title function_">width</span>(<span class="string">&#x27;100%&#x27;</span>).<span class="title function_">margin</span>(&#123; <span class="attr">top</span>: <span class="number">5</span> &#125;)</span><br><span class="line">    &#125;.<span class="title function_">navDestination</span>(<span class="variable language_">this</span>.<span class="property">PageMap</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-  build() &#123;
-    Column() &#123;
-      Button(&#39;jump&#39;)
-        .onClick(() =&gt; &#123;
-          router.pushUrl(&#123;
-            url: &#39;pages/PageTwo&#39;
-          &#125;)
-        &#125;).backgroundColor(0xffffff).fontColor(Color.Red)
-    &#125;
-    .margin(&#123; top: 22 &#125;)
-    .justifyContent(FlexAlign.SpaceEvenly)
-  &#125;
-&#125;
 
-@Entry
-@Component
-struct Index &#123;
-  @State textValue: string = &#39;Hello World&#39;
-  @State visible: Visibility = Visibility.None
-
-  build() &#123;
-    Stack() &#123;
-      Row() &#123;
-        Column() &#123;
-          Button(&#39;click&#39;)
-            .onClick(() =&gt; &#123;
-              if (this.visible == Visibility.Visible) &#123;
-                this.visible = Visibility.None
-              &#125; else &#123;
-                this.visible = Visibility.Visible
-              &#125;
-            &#125;)
-            .backgroundColor(0x777474)
-            .fontColor(0x000000)
-        &#125;
-        .width(&#39;100%&#39;)
-      &#125;
-      .height(&#39;100%&#39;)
-      .backgroundColor(0x885555)
-
-      Text(&#39;&#39;)
-        .onClick(() =&gt; &#123;
-          if (this.visible == Visibility.Visible) &#123;
-            this.visible = Visibility.None
-          &#125; else &#123;
-            this.visible = Visibility.Visible
-          &#125;
-        &#125;)
-        .width(&#39;100%&#39;)
-        .height(&#39;100%&#39;)// Adjust opacity as needed
-        .opacity(0.16)
-        .backgroundColor(0x000000)
-        .visibility(this.visible)
-
-      Column() &#123;
-        GridRow(&#123;
-          columns: &#123;
-            xs: 1,
-            sm: 4,
-            md: 8,
-            lg: 12
-          &#125;,
-          breakpoints: &#123;
-            value: [&quot;400vp&quot;, &quot;600vp&quot;, &quot;800vp&quot;],
-            reference: BreakpointsReference.WindowSize
-          &#125;,
-        &#125;) &#123;
-          GridCol(&#123;
-            span: &#123;
-              xs: 1,
-              sm: 2,
-              md: 4,
-              lg: 8
-            &#125;,
-            offset: &#123;
-              xs: 0,
-              sm: 1,
-              md: 2,
-              lg: 2
-            &#125;
-          &#125;) &#123;
-            Column() &#123;
-              Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
-                UserPrivacyDialog();
-              &#125;.margin(&#123; bottom: 10 &#125;)
-            &#125;
-            .backgroundColor(0xffffff)
-            .visibility(this.visible)
-            .clip(true)
-            .borderRadius(20)
-          &#125;
-        &#125;
-      &#125;.width(&#39;95%&#39;) // Set dialog width
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<h3 id="Solution-via-Navigation"><a href="#Solution-via-Navigation" class="headerlink" title="Solution via Navigation:"></a>Solution via Navigation:</h3><pre><code class="language-typescript">import promptAction from &#39;@ohos.promptAction&#39;;
-
-@Component
-export struct Test1 &#123;
-  @State message: string = &#39;Hello World&#39;;
-
-  build() &#123;
-    NavDestination() &#123;
-      Row() &#123;
-        Column() &#123;
-          Text(this.message)
-            .fontSize(50)
-            .fontWeight(FontWeight.Bold)
-        &#125;
-        .width(&#39;100%&#39;)
-      &#125;
-      .height(&#39;100%&#39;)
-    &#125;.onBackPressed(() =&gt; &#123;
-      promptAction.showToast(&#123; message: &#39;123&#39; &#125;)
-      return false
-    &#125;)
-  &#125;
-&#125;
-
-@Entry
-@Component
-struct Index &#123;
-  @Provide(&#39;pageInfos&#39;) pageInfos: NavPathStack = new NavPathStack()
-  @State textValue: string = &#39;输入&#39;
-  // Visibility control with no layout occupation
-  @State visible: Visibility = Visibility.None
-
-  @Builder
-  PageMap(name: string) &#123;
-    if (name === &#39;pageOne&#39;) &#123;
-      Test1()
-    &#125;
-  &#125;
-
-  build() &#123;
-    Navigation(this.pageInfos) &#123;
-      Column() &#123;
-        Stack() &#123;
-          Row() &#123;
-            Column() &#123;
-              Text(&#39;我是第一个页面&#39;)
-                .fontSize(30)
-                .fontWeight(FontWeight.Bold)
-              Button(&#39;按钮&#39;)
-                .onClick(() =&gt; &#123;
-                  console.log(&quot;hit me!&quot;)
-                  if (this.visible == Visibility.Visible) &#123;
-                    this.visible = Visibility.None
-                  &#125; else &#123;
-                    this.visible = Visibility.Visible
-                  &#125;
-                &#125;)
-                .backgroundColor(0x777474)
-                .fontColor(0x000000)
-            &#125;
-            .height(&#39;100%&#39;)
-            .width(&#39;100%&#39;)
-            .justifyContent(FlexAlign.Start)
-            .alignItems(HorizontalAlign.Center)
-          &#125;
-          .height(&#39;100%&#39;)
-          .backgroundColor(&#39;#FFF&#39;)
-
-          Text(&#39;&#39;)
-            .onClick(() =&gt; &#123;
-              if (this.visible == Visibility.Visible) &#123;
-                this.visible = Visibility.None
-              &#125; else &#123;
-                this.visible = Visibility.Visible
-              &#125;
-            &#125;)
-            .width(&#39;100%&#39;)
-            .height(&#39;100%&#39;)// Adjust opacity as needed
-            .opacity(0.5)
-            .backgroundColor(Color.Black)
-            .visibility(this.visible)
-          Column() &#123;
-            GridRow(&#123;
-              columns: &#123;
-                xs: 1,
-                sm: 4,
-                md: 8,
-                lg: 12
-              &#125;,
-              breakpoints: &#123;
-                value: [&quot;400vp&quot;, &quot;600vp&quot;, &quot;800vp&quot;],
-                reference: BreakpointsReference.WindowSize
-              &#125;,
-            &#125;) &#123;
-              GridCol(&#123;
-                span: &#123;
-                  xs: 1,
-                  sm: 2,
-                  md: 4,
-                  lg: 8
-                &#125;,
-                offset: &#123;
-                  xs: 0,
-                  sm: 1,
-                  md: 2,
-                  lg: 2
-                &#125;
-              &#125;) &#123;
-                Column() &#123;
-                  Text(&#39;安全隐私&#39;).fontSize(20).margin(&#123; top: 10, bottom: 10 &#125;)
-                  Text(&#39;是否跳转到隐私详情页面?&#39;).fontSize(16).margin(&#123; bottom: 10 &#125;)
-                  Flex(&#123; justifyContent: FlexAlign.SpaceAround &#125;) &#123;
-                    Button(&#39;取消&#39;)
-                      .onClick(() =&gt; &#123;
-                        if (this.visible == Visibility.Visible) &#123;
-                          this.visible = Visibility.None
-                        &#125; else &#123;
-                          this.visible = Visibility.Visible
-                        &#125;
-                      &#125;).backgroundColor(0xffffff).fontColor(Color.Black)
-                    Button(&#39;确定&#39;)
-                      .onClick(() =&gt; &#123;
-                        this.pageInfos.pushPath(&#123; name: &#39;pageOne&#39; &#125;)
-                      &#125;).backgroundColor(0xffffff).fontColor(Color.Red)
-                  &#125;.margin(&#123; bottom: 10 &#125;)
-                &#125;
-                .backgroundColor(0xffffff)
-                .visibility(this.visible)
-                .clip(true)
-                .borderRadius(20)
-              &#125;
-            &#125;
-          &#125;.width(&#39;100%&#39;) // Set dialog width
-        &#125;
-      &#125;.width(&#39;100%&#39;).margin(&#123; top: 5 &#125;)
-    &#125;.navDestination(this.PageMap)
-  &#125;
-&#125;
-</code></pre>
 <h2 id="5-How-to-use-LocalStorage-in-Navigation"><a href="#5-How-to-use-LocalStorage-in-Navigation" class="headerlink" title="5. How to use LocalStorage in Navigation?"></a>5. How to use LocalStorage in Navigation?</h2><p>For route-based pages, shared data can be bound via <code>@Entry(storage)</code>. How to use LocalStorage with Navigation?  </p>
 <ul>
 <li>A LocalStorage instance is shared only within an <code>@Entry</code>-decorated component and its child components (one page). Use the <code>@LocalStorageProp</code> and <code>@LocalStorageLink</code> decorators to access state variables stored in the LocalStorage instance within UI components.  <ul>
